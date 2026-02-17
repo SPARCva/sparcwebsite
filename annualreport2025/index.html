@@ -964,6 +964,233 @@
             max-width: 260px;
         }
 
+        /* ========== PANCAKE BREAKFAST SECTION ========== */
+        .pancake-section {
+            padding: 0;
+            background: var(--white);
+        }
+
+        .pancake-header {
+            background: linear-gradient(135deg, #1a365d 0%, var(--sparc-dark-navy) 50%, #2d3748 100%);
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pancake-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .pancake-header h2 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pancake-header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pancake-hero {
+            padding: 50px 0 30px;
+            background: var(--off-white);
+        }
+
+        .pancake-hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .pancake-hero-content img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+        }
+
+        .pancake-description {
+            font-size: 1.15rem;
+            color: var(--sparc-charcoal);
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pancake-sponsors {
+            padding: 60px 0 0;
+        }
+
+        .pancake-sponsor-tier {
+            padding: 40px 0;
+        }
+
+        .pancake-sponsor-tier:nth-child(odd) {
+            background: var(--white);
+        }
+
+        .pancake-sponsor-tier:nth-child(even) {
+            background: var(--off-white);
+        }
+
+        .pancake-tier-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .pancake-tier-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--sparc-dark-navy);
+            font-family: var(--font-heading);
+        }
+
+        .pancake-tier-title::before,
+        .pancake-tier-title::after {
+            content: '';
+            width: 50px;
+            height: 2px;
+            background: var(--sparc-kelly-green);
+        }
+
+        .pancake-tier-title.featured {
+            font-size: 1.1rem;
+            color: var(--sparc-royal-blue);
+        }
+
+        .pancake-tier-title.featured::before,
+        .pancake-tier-title.featured::after {
+            width: 70px;
+            height: 3px;
+            background: var(--sparc-royal-blue);
+        }
+
+        .pancake-sponsor-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .pancake-logo-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .pancake-logo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .pancake-sponsor-tier:nth-child(odd) .pancake-logo-card {
+            background: var(--off-white);
+        }
+
+        .pancake-logo-card img {
+            max-height: 100px;
+            max-width: 220px;
+            object-fit: contain;
+        }
+
+        .pancake-logo-card.large img {
+            max-height: 130px;
+            max-width: 280px;
+        }
+
+        .pancake-auction-section {
+            background: var(--sparc-dark-navy);
+            padding: 60px 0 80px;
+        }
+
+        .pancake-auction-section h3 {
+            color: var(--white);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .pancake-auction-section > .container > p {
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+        }
+
+        .auction-donor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .auction-donor-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            min-height: 90px;
+        }
+
+        .auction-donor-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-3px);
+        }
+
+        .auction-donor-card img {
+            max-height: 70px;
+            max-width: 140px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .pancake-header h2 {
+                font-size: 2.2rem;
+            }
+            .pancake-description {
+                font-size: 1rem;
+            }
+            .auction-donor-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 12px;
+            }
+            .pancake-logo-card {
+                padding: 15px 20px;
+            }
+            .pancake-logo-card img {
+                max-height: 70px;
+                max-width: 160px;
+            }
+        }
+
         /* ========== FINANCIALS SECTION ========== */
         .financials-section {
             padding: 80px 0;
@@ -2286,6 +2513,57 @@
                 -webkit-mask-image: none !important;
             }
 
+            /* ===== PANCAKE BREAKFAST PRINT ===== */
+            .pancake-header {
+                background: #1a365d !important;
+                padding: 25px 15px;
+            }
+            .pancake-header h2 {
+                font-size: 1.5rem;
+                color: white !important;
+            }
+            .pancake-header p {
+                font-size: 0.85rem;
+                color: white !important;
+            }
+            .pancake-hero {
+                padding: 15px 0;
+            }
+            .pancake-hero-content img {
+                max-height: 250px;
+                object-fit: cover;
+            }
+            .pancake-description {
+                font-size: 0.8rem;
+            }
+            .pancake-sponsor-tier {
+                padding: 15px 0;
+            }
+            .pancake-logo-card {
+                padding: 10px 15px;
+            }
+            .pancake-logo-card img {
+                max-height: 60px;
+                max-width: 150px;
+            }
+            .pancake-auction-section {
+                background: #002B50 !important;
+                padding: 25px 15px;
+            }
+            .pancake-auction-section h3 {
+                font-size: 1.2rem;
+                color: white !important;
+            }
+            .auction-donor-card {
+                background: rgba(255,255,255,0.1) !important;
+                padding: 8px;
+                min-height: 50px;
+            }
+            .auction-donor-card img {
+                max-height: 40px;
+                max-width: 100px;
+            }
+
             /* ===== GENERAL PRINT OPTIMIZATIONS ===== */
             h2, h3 {
                 page-break-after: avoid;
@@ -2945,6 +3223,310 @@
                                 <img src="/images/sponsors/hannah-irsfeld.svg" alt="Hannah Irsfeld, JD" class="sponsor-logo">
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PANCAKE BREAKFAST SECTION ========== -->
+    <section class="pancake-section">
+        <div class="pancake-header">
+            <div class="container">
+                <h2>Annual Pancake Breakfast</h2>
+                <p>Celebrating community, inclusion, and the spirit of giving</p>
+            </div>
+        </div>
+
+        <div class="pancake-hero">
+            <div class="container">
+                <div class="pancake-hero-content">
+                    <img src="/images/Pancake%20breakfast.jpg" alt="SPARC Annual Pancake Breakfast 2025 — families and supporters gathered for a morning of celebration">
+                    <div class="pancake-description">
+                        <p>SPARC's Annual Pancake Breakfast brings together families, community leaders, and supporters for a morning of celebration, live entertainment, and a silent auction&mdash;all in support of adults with severe and multiple disabilities. The 2025 event honored Senator Jennifer Boysko, Senator Kannan Srinivasan, and Delegate Dave Reid with the Hero Award for their leadership in justice, inclusion, and action.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pancake-sponsors">
+            <!-- Event Sponsors ($1,000) -->
+            <div class="pancake-sponsor-tier">
+                <div class="container">
+                    <div class="pancake-tier-header">
+                        <span class="pancake-tier-title featured">Event Sponsors</span>
+                    </div>
+                    <div class="pancake-sponsor-grid">
+                        <div class="pancake-logo-card large">
+                            <img src="/images/pancake-breakfast/The%20Washington%20Group.jpg" alt="The Washington Group Special Care Planning Team">
+                        </div>
+                        <div class="pancake-logo-card large">
+                            <img src="/images/pancake-breakfast/NOVEC%20HELPS.jpg" alt="NOVEC Helps">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In-Kind Event Sponsors -->
+            <div class="pancake-sponsor-tier">
+                <div class="container">
+                    <div class="pancake-tier-header">
+                        <span class="pancake-tier-title">In-Kind Event Sponsors</span>
+                    </div>
+                    <div class="pancake-sponsor-grid">
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/speedpro.jpg" alt="SpeedPro">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/silverbeaconmarketing%20(1).png" alt="Silver Beacon Marketing">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/anna-sudha.webp" alt="Anna Sudha Community Kitchen">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gold Sponsors ($500) -->
+            <div class="pancake-sponsor-tier">
+                <div class="container">
+                    <div class="pancake-tier-header">
+                        <span class="pancake-tier-title featured">Gold Sponsors</span>
+                    </div>
+                    <div class="pancake-sponsor-grid">
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/exterior-medics.png" alt="Exterior Medics">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/jim-ellen-dyke.svg" alt="Jim &amp; Ellen Dyke">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/jane-karpick.svg" alt="Jane Karpick">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/goldbranson-family.svg" alt="The Goldbranson Family">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/patti-maxwell.svg" alt="Patti Maxwell">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/anonymous-gold.svg" alt="Anonymous">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Silver Sponsors ($250) -->
+            <div class="pancake-sponsor-tier">
+                <div class="container">
+                    <div class="pancake-tier-header">
+                        <span class="pancake-tier-title">Silver Sponsors</span>
+                    </div>
+                    <div class="pancake-sponsor-grid">
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/Aglow%20Dental%20Studio.png" alt="Aglow Dental Studio">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/Powered%20by%20Coldwell%20Banker%20Realty.png" alt="Coldwell Banker — Dave &amp; JoAnne Adams">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/Candle%20%26%20Mirror%20Strategies%20Logo.jpg" alt="Candle &amp; Mirror Strategies">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/john-foust.svg" alt="John Foust">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/McCabe_s%20Printing.png" alt="McCabe's Printing">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/nwfcu.jpg" alt="Northwest Federal Credit Union">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/debi-alexander.svg" alt="Debi Alexander">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/michael-toobin.svg" alt="Michael Toobin">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/supervisor-bierman.svg" alt="Supervisor Jimmy Bierman">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bronze Sponsors ($150) -->
+            <div class="pancake-sponsor-tier">
+                <div class="container">
+                    <div class="pancake-tier-header">
+                        <span class="pancake-tier-title">Bronze Sponsors</span>
+                    </div>
+                    <div class="pancake-sponsor-grid">
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/inclusion%20consultants.jpg" alt="Inclusion Consultants">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/rikki-epstein.svg" alt="Rikki Epstein">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/scherff-consulting-logo-a1.JPG" alt="Scherff Consulting">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/shelia-grant.svg" alt="Shelia Grant">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/komal-romail.svg" alt="Komal Romail">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/nancy-lu.svg" alt="Nancy Lu">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/7Q%20Foundation.png" alt="7Q Foundation">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/jd-spain.svg" alt="JD Spain">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/jill-campbell.svg" alt="Jill Campbell">
+                        </div>
+                        <div class="pancake-logo-card">
+                            <img src="/images/pancake-breakfast/steve-ann-marie-dasher.svg" alt="Steve &amp; Ann Marie Dasher">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auction Donors -->
+        <div class="pancake-auction-section">
+            <div class="container">
+                <h3>Silent Auction Donors</h3>
+                <p>Thank you to the generous businesses and individuals who donated items for our silent auction</p>
+                <div class="auction-donor-grid">
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Elite%20Island%20Resort.png" alt="Elite Island Resorts">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/jack-rinker.svg" alt="Jack Rinker">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/accounting-doctor.png" alt="The Accounting Doctor">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/mjlstudio.jpg" alt="MJL Studio">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Raspberry%20Golf.png" alt="Raspberry Golf">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/fogo_logo_new.png" alt="Fogo de Chao">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/dhill-financial.svg" alt="DHill Financial">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Capital%20Genealogy.png" alt="Capital Genealogy">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/SixFlags.png" alt="Six Flags America">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/lavender-fields.svg" alt="Lavender Fields">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/dreamcatchers.png" alt="Dreamcatchers">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/handmade-by-lmc.webp" alt="Handmade by LMC">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/fragrancenet.webp" alt="FragranceNet.com">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/cookin-genie.png" alt="CookinGenie">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/fortress-acupuncture.png" alt="Fortress Acupuncture">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Kendra-Scott-Logo.png" alt="Kendra Scott">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/bobby-mckeys.png" alt="Bobby McKey's Dueling Piano Bar">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/OLD%20BUST%20HEAD%20BREWING%20COMPANY.png" alt="Old Bust Head Brewing Company">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/StageCoach-Theatre-Company-Logo-2013.png" alt="StageCoach Theatre Company">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/gorjana-horiz-gold.png" alt="gorjana">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Tosche.png" alt="Tosche Station">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/international%20spy%20museum.jpg" alt="International Spy Museum">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/DMV%20Logo.png" alt="DMV Chocolate &amp; Coffee Festival">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Giant.png" alt="Giant">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Wegmans.webp" alt="Wegmans">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Pinot_s_Palette_new_logo.png" alt="Pinot's Palette">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/k1speed.jpg" alt="K1 Speed">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/BARK_logo_blue.png" alt="BarkBox">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Fairfax%20Ice%20Arena.jpg" alt="Fairfax Ice Arena">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/luray.jpg" alt="Luray Caverns">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/glory-days.png" alt="Glory Days Grill">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/VSC_Logo.png" alt="Virginia Stage Company">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/ICCNavyLogo.webp" alt="International Country Club">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/Wheelchair%20Action%20Art.jpg" alt="Wheelchair Action Art">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/fleur-de-cuisine.svg" alt="Fleur de Cuisine">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/karins-florist.svg" alt="Karin's Florist">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/thompson-restaurants.svg" alt="Thompson Restaurants">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/clydes.svg" alt="Clyde's Restaurant">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/national-comedy-center.svg" alt="National Comedy Center &amp; Lucille Ball Museum">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/debi-alexander.svg" alt="Debi Alexander">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/total-wine.svg" alt="Total Wine &amp; More">
+                    </div>
+                    <div class="auction-donor-card">
+                        <img src="/images/pancake-breakfast/all%20about%20word%20art.avif" alt="All About Word Art">
                     </div>
                 </div>
             </div>

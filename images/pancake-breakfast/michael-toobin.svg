@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
+  <rect width="400" height="100" fill="#002B50" rx="8"/>
+  <text x="200" y="45" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="white">Michael Toobin</text>
+  <text x="200" y="75" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#90cdf4">Attorney at Law</text>
+</svg>
