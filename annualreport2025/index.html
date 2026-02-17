@@ -1196,10 +1196,11 @@
 
         /* ========== THANK YOU SECTION ========== */
         .thank-you-section {
-            padding: 100px 0;
+            padding: 80px 0 0;
             text-align: center;
-            background: var(--sparc-kelly-green);
+            background: linear-gradient(180deg, var(--sparc-dark-navy) 0%, #0a0a0a 40%);
             position: relative;
+            overflow: hidden;
         }
 
         .thank-you-section::before {
@@ -1208,32 +1209,87 @@
             top: 0;
             left: 0;
             right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--sparc-kelly-green), var(--sparc-royal-blue), var(--sparc-kelly-green));
+        }
+
+        .thank-you-sparkles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .thank-you-sparkles span {
+            position: absolute;
+            width: 6px;
             height: 6px;
-            background: var(--sparc-dark-navy);
+            border-radius: 50%;
+            animation: sparkle-float 4s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .thank-you-sparkles span:nth-child(1) { left: 10%; top: 20%; background: #4CBB17; animation-delay: 0s; }
+        .thank-you-sparkles span:nth-child(2) { left: 25%; top: 40%; background: #FFD700; animation-delay: 0.8s; }
+        .thank-you-sparkles span:nth-child(3) { left: 75%; top: 15%; background: #00a8e8; animation-delay: 1.6s; }
+        .thank-you-sparkles span:nth-child(4) { left: 85%; top: 35%; background: #ff6b35; animation-delay: 0.4s; }
+        .thank-you-sparkles span:nth-child(5) { left: 50%; top: 10%; background: #a855f7; animation-delay: 1.2s; }
+        .thank-you-sparkles span:nth-child(6) { left: 15%; top: 60%; background: #FFD700; animation-delay: 2s; }
+        .thank-you-sparkles span:nth-child(7) { left: 90%; top: 55%; background: #4CBB17; animation-delay: 2.8s; }
+        .thank-you-sparkles span:nth-child(8) { left: 40%; top: 25%; background: #00a8e8; animation-delay: 3.2s; }
+
+        @keyframes sparkle-float {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
+            50% { opacity: 0.8; transform: translateY(-20px) scale(1.2); }
         }
 
         .thank-you-content h2 {
             font-size: clamp(3rem, 7vw, 5rem);
-            color: var(--white);
-            margin-bottom: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #4CBB17 40%, #FFD700 60%, #ffffff 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
             font-weight: 900;
             letter-spacing: -2px;
+            animation: gradient-shift 5s ease-in-out infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .thank-you-content p {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.95);
-            max-width: 650px;
-            margin: 0 auto 45px;
-            line-height: 1.7;
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .thank-you-content p .highlight {
+            color: var(--sparc-kelly-green);
+            font-weight: 600;
+            font-style: normal;
         }
 
         .thank-you-image {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-            overflow: hidden;
-            border-radius: 12px;
+            position: relative;
+        }
+
+        .thank-you-image img {
+            width: 100%;
+            display: block;
+            mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
         }
 
         /* ========== FOOTER ========== */
@@ -2188,12 +2244,13 @@
             /* ===== THANK YOU SECTION ===== */
             .thank-you-section {
                 padding: 30px 20px;
-                background: linear-gradient(135deg, #4CBB17 0%, #3a9212 100%) !important;
+                background: #001f3f !important;
                 text-align: center;
                 margin-top: 15px;
             }
 
             .thank-you-section::before { display: none; }
+            .thank-you-sparkles { display: none; }
 
             .thank-you-content {
                 max-width: 100%;
@@ -2202,6 +2259,8 @@
             .thank-you-content h2 {
                 font-size: 1.5rem;
                 color: white !important;
+                -webkit-text-fill-color: white !important;
+                background: none !important;
                 margin-bottom: 10px;
             }
 
@@ -2210,13 +2269,21 @@
                 color: white !important;
                 line-height: 1.5;
                 margin-bottom: 15px;
+                font-style: normal;
+            }
+
+            .thank-you-content p .highlight {
+                color: #4CBB17 !important;
             }
 
             .thank-you-image {
-                max-width: 300px;
-                border-radius: 8px;
-                border: 3px solid white;
+                max-width: 350px;
                 margin: 0 auto;
+            }
+
+            .thank-you-image img {
+                mask-image: none !important;
+                -webkit-mask-image: none !important;
             }
 
             /* ===== GENERAL PRINT OPTIMIZATIONS ===== */
@@ -2842,10 +2909,7 @@
                                 <img src="/images/sponsors/Spin%20City.png" alt="Spin City" class="sponsor-logo">
                             </div>
                             <div class="sponsor-logo-wrapper">
-                                <img src="/images/sponsors/Next%20Day%20Access.png" alt="Next Day Access" class="sponsor-logo">
-                            </div>
-                            <div class="sponsor-logo-wrapper">
-                                <img src="/images/sponsors/Google.png" alt="Google" class="sponsor-logo">
+                                <img src="/images/sponsors/Next%20Day%20Access.png" alt="Next Day Access" class="sponsor-logo" style="min-width: 200px; transform: scale(1.5);">
                             </div>
                         </div>
                     </div>
@@ -2953,191 +3017,190 @@
             </div>
             <div class="donors-list">
                 <span>7Q Foundation</span>
-                <span>Aarush Gupta</span>
-                <span>Aaryan Mantri</span>
-                <span>Abigail (Abbie) Fine</span>
-                <span>Abraham J. Gafni</span>
-                <span>Adam Toobin</span>
-                <span>Adithya Pillai</span>
-                <span>Aglow Dental LLC</span>
-                <span>Ala Najjar</span>
-                <span>Alex Jeon</span>
-                <span>Alexander Levine</span>
-                <span>Andras Kovacs</span>
-                <span>Andy Johnson</span>
-                <span>Angela Creed</span>
-                <span>Angela Erschens</span>
-                <span>Ann Huggins-Lawler</span>
-                <span>Ann Marie Dasher</span>
-                <span>Anna Sowinska</span>
-                <span>Anne Jang</span>
-                <span>Anthony Howard</span>
-                <span>Baby Raman</span>
-                <span>Beatrice Webster</span>
-                <span>Beth Trent</span>
-                <span>Beth Walker Ehrich</span>
-                <span>Beverly Gray</span>
-                <span>Bina Syed</span>
-                <span>Bob Buchanan</span>
-                <span>BrandMirror</span>
-                <span>Brian Nutt</span>
-                <span>Caleb Nichols</span>
-                <span>Carol Davidson</span>
-                <span>Caroline Feil</span>
-                <span>Caroline Young</span>
-                <span>Cheri Danaher</span>
-                <span>Cheryl Coughlin</span>
-                <span>Chuck Malacarne</span>
-                <span>Claire P. Calland</span>
-                <span>Clare Bachner</span>
-                <span>Courtney Gaskins</span>
-                <span>Damaris Alvarenga</span>
-                <span>Darsh Murarka</span>
-                <span>Daryl Pendelton</span>
-                <span>Dave Adams</span>
-                <span>David Morton</span>
-                <span>Debi Alexander</span>
-                <span>Donielle Scherff</span>
-                <span>Donna Goldbranson</span>
-                <span>Elijah Tracey</span>
-                <span>Elise Woodworth</span>
-                <span>Elizabeth Bowen Gilman</span>
-                <span>Ellen Dyke</span>
-                <span>Ellen Rickerson</span>
-                <span>Emily Schulte</span>
-                <span>Erica Gaffney</span>
-                <span>Forrest Montagne</span>
                 <span>Gaston Aaroz</span>
-                <span>Gayle Peterman</span>
-                <span>George Bounacos</span>
-                <span>Google</span>
-                <span>Helen Switzer</span>
-                <span>Henry Davies</span>
-                <span>Hon. JD Spain, Sr.</span>
-                <span>Ilryong Moon</span>
+                <span>Dave Adams</span>
+                <span>Aglow Dental LLC</span>
                 <span>Jacob Albert</span>
+                <span>Walter Alcorn</span>
+                <span>Debi Alexander</span>
+                <span>Damaris Alvarenga</span>
+                <span>Mary W. Ambrosio</span>
+                <span>Clare Bachner</span>
+                <span>Theresa Benincasa</span>
                 <span>James Bierman Jr.</span>
-                <span>Jane Karpick</span>
-                <span>Jane Plum</span>
-                <span>Janet Clarke</span>
-                <span>Jay Jeon</span>
-                <span>Jennifer Dalton</span>
-                <span>Jennifer King</span>
-                <span>Jennifer Rodriguez</span>
-                <span>Jenny Burmester</span>
-                <span>Jessica Torres Cervetto</span>
-                <span>Jill Campbell</span>
-                <span>Jim Dyke</span>
-                <span>Jim Kirkpatrick</span>
-                <span>Joan O'Brien</span>
-                <span>Joan S. Piccariello</span>
-                <span>Joanne Trimmer</span>
-                <span>John Foust</span>
-                <span>Jordan Potash</span>
-                <span>Joseph Sher</span>
+                <span>Shaun Bigley</span>
                 <span>Josh Bond</span>
-                <span>Joshua Liu</span>
-                <span>Joshua Nichols</span>
-                <span>Julie Strandlie</span>
-                <span>Julius D. Spain Sr.</span>
-                <span>Kara Emmart</span>
-                <span>Kashfia Islam</span>
-                <span>Katherine Webster</span>
-                <span>Kathleen Sheilds</span>
-                <span>Katie Nelson</span>
-                <span>Kevin Su</span>
+                <span>George Bounacos</span>
+                <span>Treca Bourne</span>
+                <span>Susan Bowmaster</span>
+                <span>BrandMirror</span>
+                <span>Bob Buchanan</span>
+                <span>Mary P. Burger</span>
+                <span>Jenny Burmester</span>
                 <span>Kim Calder</span>
-                <span>Komal Romail</span>
-                <span>Kyle Young</span>
-                <span>Lanning Young</span>
-                <span>Larry Henderson</span>
+                <span>Claire P. Calland</span>
+                <span>Jill Campbell</span>
                 <span>Laura Casillas</span>
+                <span>Jessica Torres Cervetto</span>
+                <span>Janet Clarke</span>
+                <span>Sherri Coles</span>
+                <span>Cheryl Coughlin</span>
+                <span>Angela Creed</span>
+                <span>Sally Crosen</span>
+                <span>Steve Crump</span>
+                <span>Jennifer Dalton</span>
+                <span>Lori Daly</span>
+                <span>Cheri Danaher</span>
+                <span>Ann Marie Dasher</span>
+                <span>Carol Davidson</span>
+                <span>Henry Davies</span>
+                <span>Stephen J. Dienstfrey</span>
+                <span>Ellen Dyke</span>
+                <span>Jim Dyke</span>
                 <span>Lauren Dyke</span>
                 <span>Lauren Edwards</span>
-                <span>Lawrence Henderson</span>
-                <span>Leilani Taylor</span>
-                <span>Linda M. Wilder-Curtis</span>
-                <span>Linda Stanley</span>
-                <span>Linda Zanin</span>
-                <span>Lisa Williams</span>
-                <span>Lori Daly</span>
-                <span>Lyndsay O'Dell</span>
-                <span>Mark Frey</span>
-                <span>Marvin Nells</span>
-                <span>Mary Lanaghan</span>
-                <span>Mary P. Burger</span>
-                <span>Mary W. Ambrosio</span>
-                <span>Mejdaleen Najjar</span>
-                <span>Merle L. Toobin</span>
-                <span>Michael A. Shea</span>
-                <span>Michael D. Toobin</span>
-                <span>Michael Gilman</span>
-                <span>Michael Mort</span>
-                <span>Micron</span>
-                <span>Mlisha Kidemu</span>
-                <span>Moaz Ramadan</span>
-                <span>Murugan Ayyappan Vadivel</span>
-                <span>Nainoksha Kaushal</span>
-                <span>Nancy Lu</span>
-                <span>Nancy Mercer</span>
-                <span>Olam Tikvah Congregation</span>
-                <span>Patti Maxwell</span>
-                <span>Paul Gould</span>
-                <span>Pearl Hartley</span>
-                <span>Peggy Mocarski</span>
-                <span>Peter Maer</span>
-                <span>Qing Zeng</span>
-                <span>Rachelle Palley</span>
-                <span>Rajani Gorantla</span>
-                <span>Remy Pangelinan</span>
+                <span>Beth Walker Ehrich</span>
+                <span>Kara Emmart</span>
                 <span>Rikki Epstein</span>
-                <span>Robert Slate</span>
-                <span>Rodney Lusk</span>
-                <span>Sally Crosen</span>
-                <span>Sarah Morgan</span>
-                <span>Shaun Bigley</span>
-                <span>Shawn Flaherty</span>
-                <span>Shelby L. O'Connor</span>
-                <span>Shelia Grant</span>
-                <span>Sherri Coles</span>
-                <span>Shilpa Vaidya</span>
-                <span>Shivam Sitapara</span>
-                <span>Shuo Yang</span>
-                <span>Stella Pekarsky</span>
-                <span>Stephen J. Dienstfrey</span>
-                <span>Steve Crump</span>
-                <span>Steven S. Zahniser</span>
-                <span>Sue G. Mitchell</span>
-                <span>Sumeet Shrivastava</span>
-                <span>Supervisor Sylvia Glass</span>
-                <span>Susan Bowmaster</span>
-                <span>Susan Warrick</span>
-                <span>Tanvi Sinha</span>
-                <span>Tavena Walker</span>
-                <span>Taylor Werner</span>
-                <span>Terri Ann Stephens</span>
-                <span>The Washington Group Special Care Planning Team</span>
-                <span>Theresa Benincasa</span>
-                <span>Theresa Kim</span>
-                <span>Timothy Paper</span>
-                <span>Toll Road Investors Partnership II (Dulles Greenway)</span>
-                <span>Tracy Fitzsimmons</span>
-                <span>Treca Bourne</span>
-                <span>Tricia Montoney</span>
+                <span>Angela Erschens</span>
+                <span>Caroline Feil</span>
                 <span>Trisann Ferrigno</span>
+                <span>Abigail (Abbie) Fine</span>
+                <span>Tracy Fitzsimmons</span>
+                <span>Shawn Flaherty</span>
+                <span>John Foust</span>
                 <span>Troy Freeman</span>
-                <span>Trudy Roddick</span>
+                <span>Mark Frey</span>
+                <span>Erica Gaffney</span>
+                <span>Abraham J. Gafni</span>
                 <span>Vihaan Gangshettiwar</span>
-                <span>Virginia Wright</span>
-                <span>Vivekanand Sista</span>
-                <span>Walter Alcorn</span>
+                <span>Courtney Gaskins</span>
+                <span>Elizabeth Bowen Gilman</span>
+                <span>Michael Gilman</span>
+                <span>Supervisor Sylvia Glass</span>
+                <span>Donna Goldbranson</span>
+                <span>Rajani Gorantla</span>
+                <span>Paul Gould</span>
+                <span>Shelia Grant</span>
+                <span>Beverly Gray</span>
+                <span>Aarush Gupta</span>
+                <span>Pearl Hartley</span>
+                <span>Larry Henderson</span>
+                <span>Lawrence Henderson</span>
+                <span>Anthony Howard</span>
+                <span>Ann Huggins-Lawler</span>
+                <span>Kashfia Islam</span>
+                <span>Anne Jang</span>
+                <span>Alex Jeon</span>
+                <span>Jay Jeon</span>
+                <span>Andy Johnson</span>
+                <span>Jane Karpick</span>
+                <span>Nainoksha Kaushal</span>
+                <span>Mlisha Kidemu</span>
+                <span>Theresa Kim</span>
+                <span>Jennifer King</span>
+                <span>Jim Kirkpatrick</span>
+                <span>Andras Kovacs</span>
+                <span>Mary Lanaghan</span>
                 <span>Xiong Lang</span>
-                <span>Yan Tsang</span>
-                <span>Yanjia Wang</span>
-                <span>Yoon Law Firm PLLC</span>
+                <span>Alexander Levine</span>
+                <span>Joshua Liu</span>
+                <span>Nancy Lu</span>
+                <span>Rodney Lusk</span>
+                <span>Peter Maer</span>
+                <span>Chuck Malacarne</span>
+                <span>Aaryan Mantri</span>
+                <span>Patti Maxwell</span>
+                <span>Nancy Mercer</span>
+                <span>Micron</span>
+                <span>Sue G. Mitchell</span>
+                <span>Peggy Mocarski</span>
+                <span>Forrest Montagne</span>
+                <span>Tricia Montoney</span>
+                <span>Ilryong Moon</span>
+                <span>Sarah Morgan</span>
+                <span>Michael Mort</span>
+                <span>David Morton</span>
+                <span>Darsh Murarka</span>
                 <span>Yug Naik</span>
-                <span>Zijin Yang</span>
+                <span>Ala Najjar</span>
+                <span>Mejdaleen Najjar</span>
+                <span>Marvin Nells</span>
+                <span>Katie Nelson</span>
+                <span>Caleb Nichols</span>
+                <span>Joshua Nichols</span>
+                <span>Brian Nutt</span>
+                <span>Joan O'Brien</span>
+                <span>Shelby L. O'Connor</span>
+                <span>Lyndsay O'Dell</span>
+                <span>Olam Tikvah Congregation</span>
+                <span>Rachelle Palley</span>
+                <span>Remy Pangelinan</span>
+                <span>Timothy Paper</span>
+                <span>Stella Pekarsky</span>
+                <span>Daryl Pendelton</span>
+                <span>Gayle Peterman</span>
+                <span>Joan S. Piccariello</span>
+                <span>Adithya Pillai</span>
+                <span>Jane Plum</span>
+                <span>Jordan Potash</span>
+                <span>Moaz Ramadan</span>
+                <span>Baby Raman</span>
+                <span>Ellen Rickerson</span>
+                <span>Trudy Roddick</span>
+                <span>Jennifer Rodriguez</span>
+                <span>Komal Romail</span>
+                <span>Donielle Scherff</span>
+                <span>Emily Schulte</span>
+                <span>Michael A. Shea</span>
+                <span>Kathleen Sheilds</span>
+                <span>Joseph Sher</span>
+                <span>Sumeet Shrivastava</span>
+                <span>Tanvi Sinha</span>
+                <span>Vivekanand Sista</span>
+                <span>Shivam Sitapara</span>
+                <span>Robert Slate</span>
+                <span>Anna Sowinska</span>
+                <span>Hon. JD Spain, Sr.</span>
+                <span>Julius D. Spain Sr.</span>
+                <span>Linda Stanley</span>
                 <span>Zuzana Steen</span>
+                <span>Terri Ann Stephens</span>
+                <span>Julie Strandlie</span>
+                <span>Kevin Su</span>
+                <span>Helen Switzer</span>
+                <span>Bina Syed</span>
+                <span>Leilani Taylor</span>
+                <span>Toll Road Investors Partnership II (Dulles Greenway)</span>
+                <span>Adam Toobin</span>
+                <span>Merle L. Toobin</span>
+                <span>Michael D. Toobin</span>
+                <span>Elijah Tracey</span>
+                <span>Beth Trent</span>
+                <span>Joanne Trimmer</span>
+                <span>Yan Tsang</span>
+                <span>Murugan Ayyappan Vadivel</span>
+                <span>Shilpa Vaidya</span>
+                <span>Tavena Walker</span>
+                <span>Yanjia Wang</span>
+                <span>Susan Warrick</span>
+                <span>The Washington Group Special Care Planning Team</span>
+                <span>Beatrice Webster</span>
+                <span>Katherine Webster</span>
+                <span>Taylor Werner</span>
+                <span>Linda M. Wilder-Curtis</span>
+                <span>Lisa Williams</span>
+                <span>Elise Woodworth</span>
+                <span>Virginia Wright</span>
+                <span>Shuo Yang</span>
+                <span>Zijin Yang</span>
+                <span>Yoon Law Firm PLLC</span>
+                <span>Caroline Young</span>
+                <span>Kyle Young</span>
+                <span>Lanning Young</span>
+                <span>Steven S. Zahniser</span>
+                <span>Linda Zanin</span>
+                <span>Qing Zeng</span>
             </div>
         </div>
     </section>
@@ -3183,10 +3246,14 @@
 
     <!-- ========== THANK YOU SECTION ========== -->
     <section class="thank-you-section">
+        <div class="thank-you-sparkles">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+        </div>
         <div class="container">
             <div class="thank-you-content">
                 <h2>Thank You</h2>
-                <p>Your support makes it possible for adults with severe and multiple disabilities to find belonging, purpose, and joy. Together, we are building fearless futures.</p>
+                <p>Your support makes it possible for adults with severe and multiple disabilities to find <span class="highlight">belonging</span>, <span class="highlight">purpose</span>, and <span class="highlight">joy</span>. Together, we are building <span class="highlight">fearless futures</span>.</p>
             </div>
             <div class="thank-you-image">
                 <img src="thankyou.png" alt="Thank You from SPARC">
