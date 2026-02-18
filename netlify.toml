@@ -3,6 +3,12 @@
 [build]
   publish = "."
 
+# Redirect board-portal.html to board-portal directory
+[[redirects]]
+  from = "/board-portal.html"
+  to = "/board-portal/"
+  status = 301
+
 # Enable pretty URLs (removes .html extension)
 [[redirects]]
   from = "/*"
