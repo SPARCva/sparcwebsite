@@ -1,4 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
-  <rect width="400" height="100" fill="#002B50" rx="8"/>
-  <text x="200" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="white">Total Wine &amp; More</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 210" width="900" height="210">
+  <rect width="900" height="210" fill="white"/>
+
+  <!-- "Total" — black outline + red fill -->
+  <text x="182" y="158" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="150" fill="#D41921" font-weight="900" font-style="italic"
+        stroke="#1a1a1a" stroke-width="7" paint-order="stroke fill">Total</text>
+
+  <!-- Grape cluster centered ~x=442 -->
+  <!-- Stem -->
+  <line x1="442" y1="14" x2="442" y2="44" stroke="#5a4020" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Left leaf -->
+  <ellipse cx="416" cy="30" rx="34" ry="19" fill="#2e7d22"
+           stroke="#1a1a1a" stroke-width="2.5" transform="rotate(-28,416,30)"/>
+  <line x1="441" y1="24" x2="406" y2="40" stroke="#1a5a14" stroke-width="1.5"/>
+  <line x1="428" y1="14" x2="416" y2="32" stroke="#1a5a14" stroke-width="1"/>
+
+  <!-- Right leaf -->
+  <ellipse cx="472" cy="22" rx="36" ry="20" fill="#4cae40"
+           stroke="#1a1a1a" stroke-width="2.5" transform="rotate(18,472,22)"/>
+  <line x1="441" y1="24" x2="480" y2="36" stroke="#1a5a14" stroke-width="1.5"/>
+  <line x1="462" y1="10" x2="478" y2="28" stroke="#1a5a14" stroke-width="1"/>
+
+  <!-- Grapes — 2-3-3-2 rows, top to bottom -->
+  <!-- Row 1 (top) -->
+  <circle cx="428" cy="74" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="458" cy="74" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <!-- Row 2 -->
+  <circle cx="412" cy="114" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="443" cy="114" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="474" cy="114" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <!-- Row 3 -->
+  <circle cx="412" cy="154" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="443" cy="154" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="474" cy="154" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <!-- Row 4 (bottom) -->
+  <circle cx="428" cy="190" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="458" cy="190" r="22" fill="#7B5EAF" stroke="#1a1a1a" stroke-width="2.5"/>
+  <!-- Highlights -->
+  <circle cx="420" cy="66" r="7" fill="rgba(255,255,255,0.28)"/>
+  <circle cx="450" cy="66" r="6" fill="rgba(255,255,255,0.25)"/>
+
+  <!-- "Wine" — black outline + red fill -->
+  <text x="698" y="158" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="150" fill="#D41921" font-weight="900" font-style="italic"
+        stroke="#1a1a1a" stroke-width="7" paint-order="stroke fill">Wine</text>
+  <!-- ® superscript -->
+  <text x="805" y="62" font-family="Arial, Helvetica, sans-serif"
+        font-size="32" fill="#D41921" font-weight="bold">®</text>
+
+  <!-- & MORE in teal -->
+  <text x="618" y="205" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="54" fill="#006B5E" font-weight="900" font-style="italic">&amp; MORE</text>
 </svg>

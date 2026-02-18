@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
-  <rect width="400" height="100" fill="#002B50" rx="8"/>
-  <text x="200" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="white">Clyde&#x27;s Restaurant</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <rect width="600" height="200" fill="white"/>
+  <text x="280" y="150" text-anchor="middle"
+        font-family="'Brush Script MT', 'Segoe Script', 'URW Chancery L', cursive"
+        font-size="130" fill="#B8952A" font-weight="400">Clyde's</text>
+  <text x="455" y="188" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="26" fill="#B8952A" font-style="italic">An American Bar</text>
 </svg>

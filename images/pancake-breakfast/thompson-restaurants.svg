@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
-  <rect width="400" height="100" fill="#002B50" rx="8"/>
-  <text x="200" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="bold" fill="white">Thompson Restaurants</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180" width="600" height="180">
+  <rect width="600" height="180" fill="white"/>
+  <text x="300" y="105" text-anchor="middle"
+        font-family="'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif"
+        font-size="80" fill="#111111" font-weight="300" letter-spacing="6">THOMPSON</text>
+  <text x="300" y="148" text-anchor="middle"
+        font-family="'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif"
+        font-size="26" fill="#111111" font-weight="600" letter-spacing="10">RESTAURANTS</text>
 </svg>
