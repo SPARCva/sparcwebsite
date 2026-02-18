@@ -1143,8 +1143,8 @@
 
         .auction-donor-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -1154,10 +1154,10 @@
             align-items: center;
             justify-content: center;
             background: #ffffff;
-            padding: 20px;
+            padding: 35px;
             border-radius: 8px;
             transition: all 0.3s ease;
-            min-height: 130px;
+            min-height: 160px;
         }
 
         .auction-donor-card:hover {
@@ -1167,7 +1167,7 @@
 
         .auction-donor-card img {
             max-height: 140px;
-            max-width: 280px;
+            max-width: 100%;
             object-fit: contain;
         }
 
@@ -1179,8 +1179,12 @@
                 font-size: 1rem;
             }
             .auction-donor-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 12px;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 20px;
+            }
+            .auction-donor-card {
+                padding: 25px;
+                min-height: 130px;
             }
             .pancake-logo-card {
                 padding: 15px 20px;
