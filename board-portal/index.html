@@ -20,6 +20,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
+    <!-- FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+
     <!-- Styles -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
@@ -101,6 +104,86 @@
             text-align: center;
             color: var(--sparc-dark-navy);
             margin-bottom: 30px;
+        }
+
+        #board-calendar {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 100%;
+        }
+
+        #board-calendar .fc-toolbar-title {
+            color: var(--sparc-dark-navy);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #board-calendar .fc-button-primary {
+            background-color: var(--sparc-royal-blue);
+            border-color: var(--sparc-royal-blue);
+        }
+
+        #board-calendar .fc-button-primary:hover {
+            background-color: var(--sparc-dark-navy);
+            border-color: var(--sparc-dark-navy);
+        }
+
+        #board-calendar .fc-button-active {
+            background-color: var(--sparc-dark-navy) !important;
+            border-color: var(--sparc-dark-navy) !important;
+        }
+
+        #board-calendar .fc-event {
+            border-radius: 4px;
+            padding: 2px 4px;
+            font-size: 0.85rem;
+        }
+
+        #board-calendar .fc-daygrid-day.fc-day-today {
+            background-color: rgba(0, 102, 204, 0.08);
+        }
+
+        .calendar-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--sparc-charcoal);
+            font-size: 1.1rem;
+        }
+
+        .calendar-error {
+            text-align: center;
+            padding: 30px;
+            background: #fff3e0;
+            border-radius: 12px;
+            color: #e65100;
+            margin-top: 20px;
+        }
+
+        /* Event tooltip */
+        .fc-event-tooltip {
+            position: absolute;
+            z-index: 10001;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 300px;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .fc-event-tooltip h4 {
+            margin: 0 0 6px 0;
+            color: var(--sparc-dark-navy);
+            font-size: 1rem;
+        }
+
+        .fc-event-tooltip p {
+            margin: 4px 0;
+            color: var(--sparc-charcoal);
+            line-height: 1.4;
         }
 
         /* Login styles for direct access protection */
@@ -307,7 +390,10 @@
             <section class="calendar-section">
                 <div class="container">
                     <h2>Board Calendar</h2>
-                    <iframe src="https://calendar.google.com/calendar/embed?src=c_e95f9ddb4970bbe83f8d31c7ab6cc84b9edd6228cbcf11e40cfd7a908739f332%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                    <div id="board-calendar-wrapper">
+                        <div class="calendar-loading" id="calendar-loading">Loading calendar events...</div>
+                        <div id="board-calendar"></div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -387,6 +473,7 @@
     </div>
 
     <script src="/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script>
         (function() {
             const validCredentials = {
@@ -403,6 +490,7 @@
             if (sessionStorage.getItem('sparc_board_authenticated') === 'true') {
                 loginSection.style.display = 'none';
                 protectedContent.style.display = 'block';
+                initCalendar();
             }
 
             loginForm.addEventListener('submit', function(e) {
@@ -416,10 +504,137 @@
                     loginSection.style.display = 'none';
                     protectedContent.style.display = 'block';
                     loginError.style.display = 'none';
+                    initCalendar();
                 } else {
                     loginError.style.display = 'block';
                 }
             });
+
+            /*
+             * GOOGLE APPS SCRIPT SETUP INSTRUCTIONS
+             * =====================================
+             * To make this calendar work, deploy the following as a Google Apps Script Web App:
+             *
+             * 1. Go to https://script.google.com and create a new project
+             * 2. Paste this code:
+             *
+             *    function doGet(e) {
+             *      var calendarId = 'c_e95f9ddb4970bbe83f8d31c7ab6cc84b9edd6228cbcf11e40cfd7a908739f332@group.calendar.google.com';
+             *      var calendar = CalendarApp.getCalendarById(calendarId);
+             *      if (!calendar) {
+             *        return ContentService.createTextOutput(JSON.stringify({error: 'Calendar not found'}))
+             *          .setMimeType(ContentService.MimeType.JSON);
+             *      }
+             *      var now = new Date();
+             *      var start = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+             *      var end = new Date(now.getFullYear(), now.getMonth() + 6, 0);
+             *      var events = calendar.getEvents(start, end);
+             *      var output = [];
+             *      for (var i = 0; i < events.length; i++) {
+             *        output.push({
+             *          title: events[i].getTitle(),
+             *          start: events[i].getStartTime().toISOString(),
+             *          end: events[i].getEndTime().toISOString(),
+             *          description: events[i].getDescription(),
+             *          location: events[i].getLocation(),
+             *          allDay: events[i].isAllDayEvent()
+             *        });
+             *      }
+             *      return ContentService.createTextOutput(JSON.stringify(output))
+             *        .setMimeType(ContentService.MimeType.JSON);
+             *    }
+             *
+             * 3. Click Deploy > New deployment
+             * 4. Select "Web app"
+             * 5. Set "Execute as" to YOUR account (the one with calendar access)
+             * 6. Set "Who has access" to "Anyone"
+             * 7. Click Deploy and copy the URL
+             * 8. Replace the APPS_SCRIPT_URL below with your deployed URL
+             */
+
+            // REPLACE THIS URL with your deployed Google Apps Script web app URL
+            var APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+            function initCalendar() {
+                var calendarEl = document.getElementById('board-calendar');
+                var loadingEl = document.getElementById('calendar-loading');
+                if (!calendarEl) return;
+
+                // If Apps Script URL hasn't been configured yet, show the iframe fallback
+                if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+                    loadingEl.style.display = 'none';
+                    calendarEl.innerHTML = '<iframe src="https://calendar.google.com/calendar/embed?src=c_e95f9ddb4970bbe83f8d31c7ab6cc84b9edd6228cbcf11e40cfd7a908739f332%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);" width="100%" height="600" frameborder="0" scrolling="no"></iframe>';
+                    return;
+                }
+
+                // Fetch events from Google Apps Script proxy
+                fetch(APPS_SCRIPT_URL)
+                    .then(function(response) { return response.json(); })
+                    .then(function(events) {
+                        loadingEl.style.display = 'none';
+
+                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                            initialView: 'dayGridMonth',
+                            timeZone: 'America/New_York',
+                            headerToolbar: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'dayGridMonth,timeGridWeek,listMonth'
+                            },
+                            buttonText: {
+                                today: 'Today',
+                                month: 'Month',
+                                week: 'Week',
+                                list: 'List'
+                            },
+                            events: events.map(function(evt) {
+                                return {
+                                    title: evt.title,
+                                    start: evt.start,
+                                    end: evt.end,
+                                    allDay: evt.allDay,
+                                    extendedProps: {
+                                        description: evt.description,
+                                        location: evt.location
+                                    }
+                                };
+                            }),
+                            eventColor: '#0066cc',
+                            height: 650,
+                            eventDidMount: function(info) {
+                                // Tooltip on hover
+                                var tooltip = null;
+                                info.el.addEventListener('mouseenter', function(e) {
+                                    var desc = info.event.extendedProps.description;
+                                    var loc = info.event.extendedProps.location;
+                                    if (!desc && !loc) return;
+
+                                    tooltip = document.createElement('div');
+                                    tooltip.className = 'fc-event-tooltip';
+                                    tooltip.innerHTML = '<h4>' + info.event.title + '</h4>' +
+                                        (loc ? '<p><strong>Location:</strong> ' + loc + '</p>' : '') +
+                                        (desc ? '<p>' + desc + '</p>' : '');
+                                    document.body.appendChild(tooltip);
+                                    tooltip.style.left = e.pageX + 10 + 'px';
+                                    tooltip.style.top = e.pageY + 10 + 'px';
+                                });
+                                info.el.addEventListener('mouseleave', function() {
+                                    if (tooltip) {
+                                        tooltip.remove();
+                                        tooltip = null;
+                                    }
+                                });
+                            }
+                        });
+                        calendar.render();
+                    })
+                    .catch(function(err) {
+                        console.error('Calendar fetch error:', err);
+                        loadingEl.style.display = 'none';
+                        // Fallback to iframe on error
+                        calendarEl.innerHTML = '<iframe src="https://calendar.google.com/calendar/embed?src=c_e95f9ddb4970bbe83f8d31c7ab6cc84b9edd6228cbcf11e40cfd7a908739f332%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);" width="100%" height="600" frameborder="0" scrolling="no"></iframe>';
+                    });
+            }
         })();
     </script>
 </body>
