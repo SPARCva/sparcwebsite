@@ -1143,7 +1143,7 @@
 
         .auction-donor-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
@@ -1157,7 +1157,7 @@
             padding: 15px;
             border-radius: 8px;
             transition: all 0.3s ease;
-            min-height: 90px;
+            min-height: 110px;
         }
 
         .auction-donor-card:hover {
@@ -1166,8 +1166,8 @@
         }
 
         .auction-donor-card img {
-            max-height: 70px;
-            max-width: 140px;
+            max-height: 100px;
+            max-width: 220px;
             object-fit: contain;
         }
 
@@ -2556,12 +2556,88 @@
             }
             .auction-donor-card {
                 background: rgba(255,255,255,0.1) !important;
-                padding: 8px;
-                min-height: 50px;
+                padding: 10px;
+                min-height: 70px;
             }
             .auction-donor-card img {
-                max-height: 40px;
-                max-width: 100px;
+                max-height: 60px;
+                max-width: 150px;
+            }
+
+            /* ===== HANNAH IRSFELD SPOTLIGHT ===== */
+            section[style*="sparc-dark-navy"],
+            section[style*="background: var(--sparc-dark-navy)"] {
+                background: #002B50 !important;
+                padding: 0 !important;
+                margin: 15px 0;
+                page-break-inside: avoid;
+            }
+
+            /* ===== DONORS SECTION ===== */
+            .donors-section {
+                padding: 20px 0;
+                background: white !important;
+                page-break-before: always;
+            }
+
+            .donors-section .section-header {
+                text-align: center;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #4CBB17;
+            }
+
+            .donors-section .section-header h2 {
+                font-size: 1.4rem;
+                color: #002B50 !important;
+                margin-bottom: 3px;
+            }
+
+            .donors-section .section-header p {
+                font-size: 0.75rem;
+                color: #666;
+            }
+
+            .donors-list {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2px 12px;
+                column-count: 4;
+            }
+
+            .donors-list span {
+                font-size: 0.62rem;
+                line-height: 1.6;
+                color: #333;
+                padding: 1px 0;
+                border-bottom: 1px solid #f0f0f0;
+                display: block;
+            }
+
+            /* ===== PANCAKE AUCTION - MAGAZINE STYLE ===== */
+            .pancake-auction-section {
+                background: #002B50 !important;
+                padding: 20px 15px;
+                page-break-before: always;
+            }
+
+            .pancake-auction-section h3 {
+                font-size: 1.3rem;
+                color: white !important;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+
+            .pancake-auction-section > .container > p {
+                color: rgba(255,255,255,0.85) !important;
+                font-size: 0.8rem;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .auction-donor-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
             }
 
             /* ===== GENERAL PRINT OPTIMIZATIONS ===== */
@@ -2574,8 +2650,36 @@
                 padding: 0;
             }
 
-            /* Force content to flow naturally */
+            /* Allow sections to break across pages for magazine flow */
             section {
+                page-break-inside: auto;
+            }
+
+            /* Keep small self-contained blocks together */
+            .stat-card,
+            .program-card,
+            .letter-card,
+            .financial-card,
+            .sponsor-tier,
+            .pancake-sponsor-tier {
+                page-break-inside: avoid;
+            }
+
+            /* Magazine-style section dividers */
+            .sponsors-header,
+            .pancake-header,
+            .gala-section {
+                page-break-after: avoid;
+            }
+
+            /* Keep tier headers with their content */
+            .tier-header,
+            .pancake-tier-header {
+                page-break-after: avoid;
+            }
+
+            /* Participant story sections stay together */
+            .split-section {
                 page-break-inside: avoid;
             }
         }
@@ -3154,9 +3258,6 @@
                             <div class="sponsor-logo-wrapper">
                                 <img src="/images/sponsors/alex alexander.jpg" alt="Alex Alexander & Angelica" class="sponsor-logo">
                             </div>
-                            <a href="https://www.google.com/" target="_blank" rel="noopener" class="sponsor-logo-wrapper">
-                                <img src="/images/sponsors/Google.png" alt="Google" class="sponsor-logo">
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -3218,9 +3319,6 @@
                             </div>
                             <div class="sponsor-logo-wrapper">
                                 <img src="/images/sponsors/Next%20Day%20Access.png" alt="Next Day Access" class="sponsor-logo" style="min-width: 200px; transform: scale(1.5);">
-                            </div>
-                            <div class="sponsor-logo-wrapper">
-                                <img src="/images/sponsors/hannah-irsfeld.svg" alt="Hannah Irsfeld, JD" class="sponsor-logo">
                             </div>
                         </div>
                     </div>
@@ -3634,12 +3732,14 @@
                 <span>7Q Foundation</span>
                 <span>Gaston Aaroz</span>
                 <span>Dave Adams</span>
+                <span>JoAnne Adams</span>
                 <span>Aglow Dental LLC</span>
                 <span>Jacob Albert</span>
                 <span>Walter Alcorn</span>
                 <span>Debi Alexander</span>
                 <span>Damaris Alvarenga</span>
                 <span>Mary W. Ambrosio</span>
+                <span>Anna Sudha Community Kitchen</span>
                 <span>Clare Bachner</span>
                 <span>Theresa Benincasa</span>
                 <span>James Bierman Jr.</span>
@@ -3655,6 +3755,7 @@
                 <span>Kim Calder</span>
                 <span>Claire P. Calland</span>
                 <span>Jill Campbell</span>
+                <span>Candle &amp; Mirror Strategies</span>
                 <span>Laura Casillas</span>
                 <span>Jessica Torres Cervetto</span>
                 <span>Janet Clarke</span>
@@ -3667,6 +3768,7 @@
                 <span>Lori Daly</span>
                 <span>Cheri Danaher</span>
                 <span>Ann Marie Dasher</span>
+                <span>Steve Dasher</span>
                 <span>Carol Davidson</span>
                 <span>Henry Davies</span>
                 <span>Stephen J. Dienstfrey</span>
@@ -3678,6 +3780,7 @@
                 <span>Kara Emmart</span>
                 <span>Rikki Epstein</span>
                 <span>Angela Erschens</span>
+                <span>Exterior Medics</span>
                 <span>Caroline Feil</span>
                 <span>Trisann Ferrigno</span>
                 <span>Abigail (Abbie) Fine</span>
@@ -3694,6 +3797,7 @@
                 <span>Michael Gilman</span>
                 <span>Supervisor Sylvia Glass</span>
                 <span>Donna Goldbranson</span>
+                <span>Google</span>
                 <span>Rajani Gorantla</span>
                 <span>Paul Gould</span>
                 <span>Shelia Grant</span>
@@ -3704,6 +3808,8 @@
                 <span>Lawrence Henderson</span>
                 <span>Anthony Howard</span>
                 <span>Ann Huggins-Lawler</span>
+                <span>Inclusion Consultants</span>
+                <span>Hannah Irsfeld</span>
                 <span>Kashfia Islam</span>
                 <span>Anne Jang</span>
                 <span>Alex Jeon</span>
@@ -3726,6 +3832,7 @@
                 <span>Chuck Malacarne</span>
                 <span>Aaryan Mantri</span>
                 <span>Patti Maxwell</span>
+                <span>McCabe's Printing</span>
                 <span>Nancy Mercer</span>
                 <span>Micron</span>
                 <span>Sue G. Mitchell</span>
@@ -3744,6 +3851,8 @@
                 <span>Katie Nelson</span>
                 <span>Caleb Nichols</span>
                 <span>Joshua Nichols</span>
+                <span>Northwest Federal Credit Union</span>
+                <span>NOVEC Helps</span>
                 <span>Brian Nutt</span>
                 <span>Joan O'Brien</span>
                 <span>Shelby L. O'Connor</span>
@@ -3771,6 +3880,7 @@
                 <span>Kathleen Sheilds</span>
                 <span>Joseph Sher</span>
                 <span>Sumeet Shrivastava</span>
+                <span>Silver Beacon Marketing</span>
                 <span>Tanvi Sinha</span>
                 <span>Vivekanand Sista</span>
                 <span>Shivam Sitapara</span>
@@ -3778,6 +3888,7 @@
                 <span>Anna Sowinska</span>
                 <span>Hon. JD Spain, Sr.</span>
                 <span>Julius D. Spain Sr.</span>
+                <span>SpeedPro Northern Virginia</span>
                 <span>Linda Stanley</span>
                 <span>Zuzana Steen</span>
                 <span>Terri Ann Stephens</span>
