@@ -515,41 +515,66 @@
              * =====================================
              * To make this calendar work, deploy the following as a Google Apps Script Web App:
              *
+             * PREREQUISITE: The deployer's Google account MUST have "See all event details"
+             * (or higher) access to the calendar. If the account only has "See only free/busy"
+             * access, event titles will show as "Busy" instead of the actual event name.
+             * To fix this: Go to Google Calendar > Settings > calendar settings > Share with
+             * specific people > ensure the deployer's account has "See all event details".
+             *
              * 1. Go to https://script.google.com and create a new project
-             * 2. Paste this code:
+             * 2. Enable the Google Calendar Advanced Service:
+             *    - In the Apps Script editor, click "Services" (+ icon) on the left sidebar
+             *    - Find "Google Calendar API" and click "Add"
+             *    - This enables the Calendar Advanced Service used by the script below
+             * 3. Paste this code:
              *
              *    function doGet(e) {
              *      var calendarId = 'c_e95f9ddb4970bbe83f8d31c7ab6cc84b9edd6228cbcf11e40cfd7a908739f332@group.calendar.google.com';
-             *      var calendar = CalendarApp.getCalendarById(calendarId);
-             *      if (!calendar) {
-             *        return ContentService.createTextOutput(JSON.stringify({error: 'Calendar not found'}))
+             *
+             *      try {
+             *        var now = new Date();
+             *        var start = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+             *        var end = new Date(now.getFullYear(), now.getMonth() + 6, 0);
+             *
+             *        var events = Calendar.Events.list(calendarId, {
+             *          timeMin: start.toISOString(),
+             *          timeMax: end.toISOString(),
+             *          singleEvents: true,
+             *          orderBy: 'startTime'
+             *        });
+             *
+             *        var output = [];
+             *        if (events.items) {
+             *          for (var i = 0; i < events.items.length; i++) {
+             *            var event = events.items[i];
+             *            output.push({
+             *              title: event.summary || '',
+             *              start: event.start.dateTime || event.start.date,
+             *              end: event.end.dateTime || event.end.date,
+             *              description: event.description || '',
+             *              location: event.location || '',
+             *              allDay: !!event.start.date
+             *            });
+             *          }
+             *        }
+             *
+             *        return ContentService.createTextOutput(JSON.stringify(output))
+             *          .setMimeType(ContentService.MimeType.JSON);
+             *      } catch (err) {
+             *        return ContentService.createTextOutput(JSON.stringify({error: err.message}))
              *          .setMimeType(ContentService.MimeType.JSON);
              *      }
-             *      var now = new Date();
-             *      var start = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-             *      var end = new Date(now.getFullYear(), now.getMonth() + 6, 0);
-             *      var events = calendar.getEvents(start, end);
-             *      var output = [];
-             *      for (var i = 0; i < events.length; i++) {
-             *        output.push({
-             *          title: events[i].getTitle(),
-             *          start: events[i].getStartTime().toISOString(),
-             *          end: events[i].getEndTime().toISOString(),
-             *          description: events[i].getDescription(),
-             *          location: events[i].getLocation(),
-             *          allDay: events[i].isAllDayEvent()
-             *        });
-             *      }
-             *      return ContentService.createTextOutput(JSON.stringify(output))
-             *        .setMimeType(ContentService.MimeType.JSON);
              *    }
              *
-             * 3. Click Deploy > New deployment
-             * 4. Select "Web app"
-             * 5. Set "Execute as" to YOUR account (the one with calendar access)
-             * 6. Set "Who has access" to "Anyone"
-             * 7. Click Deploy and copy the URL
-             * 8. Replace the APPS_SCRIPT_URL below with your deployed URL
+             * 4. Click Deploy > New deployment
+             * 5. Select "Web app"
+             * 6. Set "Execute as" to YOUR account (the one with calendar access)
+             * 7. Set "Who has access" to "Anyone"
+             * 8. Click Deploy and copy the URL
+             * 9. Replace the APPS_SCRIPT_URL below with your deployed URL
+             *
+             * NOTE: If events still show as "Busy" after redeploying, the deployer's account
+             * needs higher permissions on the calendar (see PREREQUISITE above).
              */
 
             // REPLACE THIS URL with your deployed Google Apps Script web app URL
@@ -571,6 +596,16 @@
                 fetch(APPS_SCRIPT_URL)
                     .then(function(response) { return response.json(); })
                     .then(function(events) {
+                        // Check if the Apps Script returned an error
+                        if (events.error) {
+                            console.error('Calendar API error:', events.error);
+                            throw new Error(events.error);
+                        }
+                        // Ensure events is an array
+                        if (!Array.isArray(events)) {
+                            console.error('Unexpected calendar response:', events);
+                            throw new Error('Invalid calendar data');
+                        }
                         loadingEl.style.display = 'none';
 
                         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -588,8 +623,13 @@
                                 list: 'List'
                             },
                             events: events.map(function(evt) {
+                                var eventTitle = evt.title;
+                                // Handle cases where calendar permissions only show free/busy
+                                if (!eventTitle || eventTitle === 'Busy' || eventTitle === 'busy') {
+                                    eventTitle = '(Event details unavailable)';
+                                }
                                 return {
-                                    title: evt.title,
+                                    title: eventTitle,
                                     start: evt.start,
                                     end: evt.end,
                                     allDay: evt.allDay,
