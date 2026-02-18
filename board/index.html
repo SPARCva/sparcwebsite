@@ -798,7 +798,7 @@
 
                 if (username === validCredentials.username && password === validCredentials.password) {
                     sessionStorage.setItem('sparc_board_authenticated', 'true');
-                    window.location.href = 'board-portal.html';
+                    window.location.href = '/board-portal/';
                 } else {
                     loginError.style.display = 'block';
                 }
