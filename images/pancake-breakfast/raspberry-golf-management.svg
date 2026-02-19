@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&amp;display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&amp;display=swap');
+    </style>
+  </defs>
+  <!-- Raspberry/Strawberry icon -->
+  <g transform="translate(200, 30)">
+    <!-- Leaves -->
+    <path d="M-2,-8 C-8,-20 -20,-18 -14,-8 C-10,-2 -4,-2 -2,-8Z" fill="#4CBB17"/>
+    <path d="M2,-8 C8,-20 20,-18 14,-8 C10,-2 4,-2 2,-8Z" fill="#4CBB17"/>
+    <path d="M0,-10 C0,-24 2,-24 0,-10Z" fill="#3a9212" stroke="#3a9212" stroke-width="1.5"/>
+    <!-- Berry body -->
+    <ellipse cx="0" cy="12" rx="16" ry="22" fill="#cc2936"/>
+    <ellipse cx="0" cy="12" rx="14" ry="20" fill="#e63946"/>
+    <!-- Seeds -->
+    <ellipse cx="-6" cy="4" rx="1.5" ry="2" fill="#ffb3b3" transform="rotate(-15,-6,4)"/>
+    <ellipse cx="6" cy="4" rx="1.5" ry="2" fill="#ffb3b3" transform="rotate(15,6,4)"/>
+    <ellipse cx="-8" cy="14" rx="1.5" ry="2" fill="#ffb3b3" transform="rotate(-10,-8,14)"/>
+    <ellipse cx="8" cy="14" rx="1.5" ry="2" fill="#ffb3b3" transform="rotate(10,8,14)"/>
+    <ellipse cx="0" cy="10" rx="1.5" ry="2" fill="#ffb3b3"/>
+    <ellipse cx="-5" cy="22" rx="1.5" ry="2" fill="#ffb3b3" transform="rotate(-5,-5,22)"/>
+    <ellipse cx="5" cy="22" rx="1.5" ry="2" fill="#ffb3b3" transform="rotate(5,5,22)"/>
+    <ellipse cx="0" cy="28" rx="1.5" ry="1.5" fill="#ffb3b3"/>
+  </g>
+  <!-- Golf tee below berry -->
+  <line x1="200" y1="64" x2="200" y2="85" stroke="white" stroke-width="2.5"/>
+  <line x1="193" y1="85" x2="207" y2="85" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Script text: Raspberry -->
+  <text x="200" y="125" text-anchor="middle" fill="white" font-family="'Great Vibes', 'Brush Script MT', 'Segoe Script', cursive" font-size="52" letter-spacing="1">Raspberry</text>
+  <!-- Text: Golf Management -->
+  <text x="200" y="165" text-anchor="middle" fill="white" font-family="'Cormorant Garamond', 'Garamond', 'Georgia', serif" font-size="32" font-weight="400" letter-spacing="4">Golf Management</text>
+</svg>
