@@ -12,171 +12,471 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign up for SPARC Weekly Bingo! Choose your bingo card (1-30) and join us on Zoom every week for fun and community.">
+    <meta name="description" content="Sign up for SPARC Weekly Bingo! Pick your bingo card (1-30) and join us on Zoom every week for fun and community.">
     <title>Weekly Bingo | SPARC - Specially Adapted Resource Centers</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
+        /* ===================== BINGO PAGE STYLES ===================== */
+        :root {
+            --sparc-orange: #F5841F;
+            --sparc-orange-hover: #e0730d;
+            --bingo-navy: #1B365D;
+            --bingo-navy-light: #264a7a;
+            --bingo-green: #2E8B57;
+            --bingo-green-hover: #257a4a;
+            --bingo-red: #CC4444;
+            --bingo-bg: #FFF8F0;
+            --bingo-card-bg: #FFFFFF;
+            --bingo-text: #1B365D;
+            --bingo-text-light: #5a6d82;
+            --bingo-taken-bg: #f0e8e0;
+            --bingo-taken-text: #999;
+            --bingo-shadow: 0 4px 20px rgba(27, 54, 93, 0.12);
+            --bingo-shadow-lg: 0 8px 40px rgba(27, 54, 93, 0.18);
+            --bingo-radius: 16px;
+            --bingo-radius-sm: 10px;
+        }
+
+        /* Bingo hero */
         .bingo-hero {
-            background: linear-gradient(135deg, var(--sparc-orange) 0%, #e8a530 100%);
-            padding: 80px 0;
+            background: linear-gradient(135deg, var(--bingo-navy) 0%, var(--bingo-navy-light) 100%);
+            padding: 48px 20px 40px;
             text-align: center;
-            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .bingo-hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: rgba(245, 132, 31, 0.15);
+            border-radius: 50%;
+        }
+        .bingo-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 150px;
+            height: 150px;
+            background: rgba(245, 132, 31, 0.1);
+            border-radius: 50%;
         }
         .bingo-hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2rem, 6vw, 3rem);
+            color: white;
+            margin-bottom: 6px;
+            position: relative;
+            letter-spacing: 1px;
+        }
+        .bingo-hero h1 span {
+            color: var(--sparc-orange);
         }
         .bingo-hero p {
-            font-size: 1.25rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            opacity: 0.95;
+            color: rgba(255,255,255,0.85);
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 600;
+            position: relative;
         }
-        .btn-bingo-signup {
-            display: inline-block;
-            background: #4CBB17;
-            color: white;
-            padding: 18px 50px;
-            font-size: 1.25rem;
+
+        /* Bingo main content area */
+        .bingo-main {
+            background: var(--bingo-bg);
+            padding: 24px 0 60px;
+        }
+        .bingo-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Status bar */
+        .status-bar {
+            background: var(--bingo-card-bg);
+            border-radius: var(--bingo-radius);
+            padding: 18px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--bingo-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .status-bar .count {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            color: var(--bingo-green);
             font-weight: 700;
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(76, 187, 23, 0.4);
-            transition: all 0.3s ease;
         }
-        .btn-bingo-signup:hover {
-            background: #3da314;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(76, 187, 23, 0.5);
+        .status-bar .count.zero {
+            color: var(--bingo-red);
         }
-        .bingo-info {
-            padding: 60px 0;
-            background: var(--sparc-soft-gray);
+        .status-bar .label {
+            font-size: 0.95rem;
+            color: var(--bingo-text-light);
+            font-weight: 600;
         }
-        .bingo-info-grid {
+
+        /* Instructions */
+        .bingo-instructions {
+            background: var(--bingo-card-bg);
+            border-radius: var(--bingo-radius);
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: var(--bingo-shadow);
+            border-left: 6px solid var(--sparc-orange);
+        }
+        .bingo-instructions h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--bingo-navy);
+        }
+        .bingo-instructions ol {
+            padding-left: 24px;
+            font-size: 1.1rem;
+            color: var(--bingo-text);
+        }
+        .bingo-instructions ol li {
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+        .bingo-instructions ol li::marker {
+            font-weight: 700;
+            color: var(--sparc-orange);
+        }
+
+        /* Step screens */
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+
+        /* Card grid */
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
         }
-        .bingo-info-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
+        .card-btn {
+            aspect-ratio: 1;
+            border: 3px solid transparent;
+            border-radius: var(--bingo-radius-sm);
+            background: var(--bingo-card-bg);
+            box-shadow: var(--bingo-shadow);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--bingo-navy);
+            transition: all 0.15s ease;
+            position: relative;
+            min-height: 80px;
+            min-width: 80px;
+        }
+        .card-btn:hover:not(.taken):not(.selected) {
+            border-color: var(--sparc-orange);
+            transform: translateY(-2px);
+            box-shadow: var(--bingo-shadow-lg);
+        }
+        .card-btn:focus-visible {
+            outline: 4px solid var(--sparc-orange);
+            outline-offset: 3px;
+        }
+        .card-btn.selected {
+            border-color: var(--bingo-green);
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px var(--bingo-green), var(--bingo-shadow-lg);
+        }
+        .card-btn.selected::after {
+            content: '\2713';
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 0.9rem;
+            color: var(--bingo-green);
+        }
+        .card-btn.taken {
+            background: var(--bingo-taken-bg);
+            color: var(--bingo-taken-text);
+            cursor: not-allowed;
+            box-shadow: none;
+            text-decoration: line-through;
+        }
+        .card-btn .sr-taken {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+        }
+
+        /* Form section */
+        .bingo-form-section {
+            background: var(--bingo-card-bg);
+            border-radius: var(--bingo-radius);
+            padding: 28px 24px;
+            box-shadow: var(--bingo-shadow);
+            margin-bottom: 24px;
+        }
+        .bingo-form-section h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            color: var(--bingo-navy);
+        }
+        .bingo-form-section .selected-card-display {
+            font-size: 1.1rem;
+            color: var(--bingo-green);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .bingo-field {
+            margin-bottom: 20px;
+        }
+        .bingo-field label {
+            display: block;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: var(--bingo-navy);
+        }
+        .bingo-field input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #d0d8e0;
+            border-radius: var(--bingo-radius-sm);
+            font-size: 1.1rem;
+            font-family: 'Nunito', sans-serif;
+            color: var(--bingo-text);
+            transition: border-color 0.15s;
+            background: #fdfdfd;
+        }
+        .bingo-field input:focus {
+            outline: none;
+            border-color: var(--sparc-orange);
+            box-shadow: 0 0 0 3px rgba(245, 132, 31, 0.2);
+        }
+        .bingo-field input::placeholder {
+            color: #aab4c0;
+        }
+        .bingo-field .error-msg {
+            color: var(--bingo-red);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 4px;
+            display: none;
+        }
+        .bingo-field.has-error input {
+            border-color: var(--bingo-red);
+        }
+        .bingo-field.has-error .error-msg {
+            display: block;
+        }
+
+        /* Big action buttons */
+        .btn-bingo {
+            display: block;
+            width: 100%;
+            padding: 18px 24px;
+            border: none;
+            border-radius: var(--bingo-radius-sm);
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-decoration: none;
         }
-        .bingo-info-card .icon {
-            width: 70px;
-            height: 70px;
+        .btn-bingo:focus-visible {
+            outline: 4px solid var(--sparc-orange);
+            outline-offset: 3px;
+        }
+        .btn-bingo-orange {
             background: var(--sparc-orange);
+            color: white;
+        }
+        .btn-bingo-orange:hover {
+            background: var(--sparc-orange-hover);
+            color: white;
+        }
+        .btn-bingo-green {
+            background: var(--bingo-green);
+            color: white;
+        }
+        .btn-bingo-green:hover {
+            background: var(--bingo-green-hover);
+            color: white;
+        }
+        .btn-bingo-navy {
+            background: var(--bingo-navy);
+            color: white;
+        }
+        .btn-bingo-navy:hover {
+            background: var(--bingo-navy-light);
+            color: white;
+        }
+        .btn-bingo-secondary {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: 3px solid var(--bingo-navy);
+            border-radius: var(--bingo-radius-sm);
+            background: transparent;
+            color: var(--bingo-navy);
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.15s;
+        }
+        .btn-bingo-secondary:hover {
+            background: var(--bingo-navy);
+            color: white;
+        }
+
+        /* Success screen */
+        .success-card {
+            background: var(--bingo-card-bg);
+            border-radius: var(--bingo-radius);
+            padding: 36px 28px;
+            box-shadow: var(--bingo-shadow-lg);
+            text-align: center;
+        }
+        .success-card .checkmark {
+            width: 80px;
+            height: 80px;
+            background: var(--bingo-green);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
+            font-size: 2.4rem;
+            color: white;
+            animation: popIn 0.4s cubic-bezier(0.17, 0.67, 0.29, 1.2);
         }
-        .bingo-info-card .icon svg {
-            width: 35px;
-            height: 35px;
-            fill: white;
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
         }
-        .bingo-info-card h3 {
-            color: var(--sparc-dark-navy);
-            margin-bottom: 10px;
+        .success-card h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            color: var(--bingo-navy);
+            margin-bottom: 8px;
         }
-        .bingo-info-card p {
-            color: var(--sparc-charcoal);
-            line-height: 1.6;
+        .success-card .card-number-big {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3rem;
+            color: var(--sparc-orange);
+            font-weight: 700;
+            margin: 16px 0;
         }
-        .bingo-form-section {
-            padding: 80px 0;
-            background: linear-gradient(180deg, #f8f9fa 0%, white 100%);
-        }
-        .bingo-form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .bingo-form-container h2 {
-            color: var(--sparc-dark-navy);
-            margin-bottom: 10px;
-            font-size: 2.2rem;
-        }
-        .bingo-form-container > p {
-            color: var(--sparc-charcoal);
-            margin-bottom: 40px;
+        .success-card p {
             font-size: 1.1rem;
+            color: var(--bingo-text-light);
+            margin-bottom: 8px;
         }
-        .bingo-form-embed {
-            background: white;
-            border-radius: 20px;
-            padding: 0;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05);
+        .success-links {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-        .bingo-form-embed iframe {
-            width: 100%;
-            min-height: 900px;
-            border: none;
+
+        /* Loading spinner */
+        .bingo-spinner {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: bingoSpin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes bingoSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error alert */
+        .bingo-alert {
+            background: #fef2f2;
+            border: 2px solid var(--bingo-red);
+            border-radius: var(--bingo-radius-sm);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            color: #991b1b;
+            font-weight: 600;
+            display: none;
+        }
+        .bingo-alert.visible {
             display: block;
         }
-        .bingo-rules {
-            padding: 60px 0;
-            background: var(--sparc-dark-navy);
-            color: white;
+
+        /* Grid heading */
+        .grid-heading {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 14px;
+            color: var(--bingo-navy);
         }
-        .bingo-rules h2 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .rules-list {
-            max-width: 800px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        .rule-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
-        .rule-number {
-            background: var(--sparc-orange);
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        .rule-text {
-            color: rgba(255,255,255,0.9);
-            line-height: 1.5;
-        }
-        @media (max-width: 768px) {
-            .bingo-hero h1 {
-                font-size: 2rem;
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
             }
-            .bingo-info-grid {
-                grid-template-columns: 1fr;
+            .card-btn {
+                font-size: 1.3rem;
+                min-height: 64px;
             }
-            .rules-list {
-                grid-template-columns: 1fr;
+            .bingo-content {
+                padding: 0 12px;
+            }
+            .bingo-form-section,
+            .bingo-instructions {
+                padding: 20px 16px;
+            }
+        }
+        @media (min-width: 600px) {
+            .card-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -246,107 +546,95 @@
 
     <!-- Hero Section -->
     <section class="bingo-hero">
-        <div class="container">
-            <h1>SPARC Weekly Bingo</h1>
-            <p>Join us every week for a fun-filled game of Bingo with the SPARC community! Sign up below to claim your card and get the Zoom link.</p>
-            <a href="#bingo-form" class="btn-bingo-signup">Sign Up for Bingo</a>
-        </div>
+        <h1><span>SPARC</span> Bingo</h1>
+        <p>Pick a card &amp; play along on Zoom!</p>
     </section>
 
     <!-- Main Content -->
-    <main id="main-content">
-        <!-- How It Works -->
-        <section class="bingo-info">
-            <div class="container">
-                <div class="section-header fade-in" style="text-align: center;">
-                    <h2>How It Works</h2>
-                    <p>It's easy to join SPARC Bingo!</p>
-                </div>
-                <div class="bingo-info-grid">
-                    <div class="bingo-info-card fade-in">
-                        <div class="icon">
-                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14h-2V9h-2V7h4v10z"/></svg>
-                        </div>
-                        <h3>Step 1: Sign Up</h3>
-                        <p>Fill out the form below with your name, email, and choose an available bingo card number (1-30).</p>
-                    </div>
-                    <div class="bingo-info-card fade-in">
-                        <div class="icon">
-                            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                        </div>
-                        <h3>Step 2: Get Your Card</h3>
-                        <p>We'll email you a confirmation with your bingo card and the Zoom meeting link to join the game.</p>
-                    </div>
-                    <div class="bingo-info-card fade-in">
-                        <div class="icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                        </div>
-                        <h3>Step 3: Play!</h3>
-                        <p>Join the Zoom call at game time with your bingo card ready. First to get BINGO wins!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <main id="main-content" class="bingo-main">
+        <div class="bingo-content">
 
-        <!-- Sign Up Form -->
-        <section class="bingo-form-section" id="bingo-form">
-            <div class="container">
-                <div class="bingo-form-container fade-in">
-                    <h2>Sign Up for This Week's Bingo</h2>
-                    <p>Cards reset every Friday at midnight. Choose an available card number below!</p>
-                    <div class="bingo-form-embed">
-                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfDcG2QaQKPeXW0MG11TILow13t09HqKbJ84QDomh5pFSfFbA/viewform?embedded=true" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0" style="border-radius: 8px;">Loading…</iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <!-- ==================== STEP 1: PICK A CARD ==================== -->
+            <div id="step-pick" class="step active" role="region" aria-label="Step 1: Pick a bingo card">
 
-        <!-- Rules -->
-        <section class="bingo-rules">
-            <div class="container">
-                <h2>Bingo Rules</h2>
-                <div class="rules-list">
-                    <div class="rule-item">
-                        <div class="rule-number">1</div>
-                        <div class="rule-text">Each player can only sign up for one card per week.</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-number">2</div>
-                        <div class="rule-text">Cards reset every Friday at midnight - sign up early!</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-number">3</div>
-                        <div class="rule-text">Join the Zoom call with your camera on so we can see you.</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-number">4</div>
-                        <div class="rule-text">Mark your card as numbers are called out.</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-number">5</div>
-                        <div class="rule-text">Shout "BINGO!" when you complete a line or pattern.</div>
-                    </div>
-                    <div class="rule-item">
-                        <div class="rule-number">6</div>
-                        <div class="rule-text">Have fun and be respectful to other players!</div>
+                <div class="status-bar" aria-live="polite">
+                    <div>
+                        <span class="count" id="available-count">30</span>
+                        <span class="label"> cards available</span>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- CTA Section -->
-        <section class="cta-section">
-            <div class="container">
-                <div class="cta-content fade-in">
-                    <h2>Questions About Bingo?</h2>
-                    <p>Contact us if you have any questions or need help signing up.</p>
-                    <div class="cta-buttons">
-                        <a href="mailto:debi@sparcsolutions.org" class="btn btn-white btn-lg">Email Us</a>
-                        <a href="/contact/" class="btn btn-secondary btn-lg">Contact Page</a>
+                <div class="bingo-instructions">
+                    <h2>How to Play</h2>
+                    <ol>
+                        <li>Tap a <strong>numbered card</strong> below to pick it</li>
+                        <li>Enter your <strong>name and email</strong></li>
+                        <li>Get your bingo card link &amp; <strong>Zoom link</strong> instantly</li>
+                    </ol>
+                </div>
+
+                <div id="alert-pick" class="bingo-alert" role="alert"></div>
+
+                <h2 id="grid-label" class="grid-heading">Choose Your Card</h2>
+
+                <div class="card-grid" role="grid" aria-labelledby="grid-label" id="card-grid">
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <button id="btn-next" class="btn-bingo btn-bingo-orange" disabled aria-disabled="true">
+                    Next &rarr; Enter Your Info
+                </button>
+            </div>
+
+            <!-- ==================== STEP 2: ENTER INFO ==================== -->
+            <div id="step-info" class="step" role="region" aria-label="Step 2: Enter your information">
+                <div class="bingo-form-section">
+                    <h2>Almost There!</h2>
+                    <p class="selected-card-display" id="selected-display">Card #&mdash;</p>
+
+                    <div id="alert-info" class="bingo-alert" role="alert"></div>
+
+                    <div class="bingo-field" id="field-name">
+                        <label for="input-name">Your Name</label>
+                        <input type="text" id="input-name" placeholder="First and last name" autocomplete="name" required>
+                        <div class="error-msg" id="error-name">Please enter your name</div>
                     </div>
+
+                    <div class="bingo-field" id="field-email">
+                        <label for="input-email">Email Address</label>
+                        <input type="email" id="input-email" placeholder="you@example.com" autocomplete="email" required>
+                        <div class="error-msg" id="error-email">Please enter a valid email</div>
+                    </div>
+
+                    <button id="btn-submit" class="btn-bingo btn-bingo-green">
+                        Get My Bingo Card!
+                    </button>
+                    <button id="btn-back" class="btn-bingo-secondary" type="button">
+                        &larr; Pick a Different Card
+                    </button>
                 </div>
             </div>
-        </section>
+
+            <!-- ==================== STEP 3: SUCCESS ==================== -->
+            <div id="step-success" class="step" role="region" aria-label="Success! Your card is reserved">
+                <div class="success-card">
+                    <div class="checkmark" aria-hidden="true">&#10003;</div>
+                    <h2>You're All Set!</h2>
+                    <p id="success-name">&mdash;</p>
+                    <div class="card-number-big" id="success-card-number">#&mdash;</div>
+                    <div class="success-links">
+                        <a id="link-card" href="#" target="_blank" class="btn-bingo btn-bingo-orange">
+                            Open Your Bingo Card
+                        </a>
+                        <a id="link-zoom" href="#" target="_blank" class="btn-bingo btn-bingo-navy">
+                            Join Zoom Meeting
+                        </a>
+                    </div>
+                    <p style="margin-top:20px; font-size:0.95rem;">A confirmation email has also been sent.</p>
+                </div>
+            </div>
+
+        </div>
     </main>
 
     <!-- Footer -->
@@ -423,6 +711,242 @@
     </div>
 
     <script src="/js/main.js"></script>
+
+    <!-- Bingo Card Selection Logic -->
+    <script>
+    // =================================================================
+    // CONFIGURATION
+    // =================================================================
+    const CONFIG = {
+        // Google Apps Script Web App URL
+        API_URL: "https://script.google.com/macros/s/AKfycbzFQHHl4kD4-0rGb0gNz2xHaVe-98RHdgcXfai7XWSiCl8htdIFN4KHHfOWzP8ZH_YEGw/exec",
+
+        // Zoom meeting link
+        ZOOM_LINK: "https://us02web.zoom.us/j/81485938546",
+
+        // Bingo card URL pattern (card number gets appended)
+        CARD_BASE_URL: "https://mfbc.us/m/qb5rxc/",
+
+        // Total bingo cards
+        TOTAL_CARDS: 30
+    };
+
+    // =================================================================
+    // STATE
+    // =================================================================
+    let selectedCard = null;
+    let takenCards = new Set();
+    let isSubmitting = false;
+
+    // =================================================================
+    // DOM REFS
+    // =================================================================
+    const $grid = document.getElementById('card-grid');
+    const $btnNext = document.getElementById('btn-next');
+    const $btnBack = document.getElementById('btn-back');
+    const $btnSubmit = document.getElementById('btn-submit');
+    const $stepPick = document.getElementById('step-pick');
+    const $stepInfo = document.getElementById('step-info');
+    const $stepSuccess = document.getElementById('step-success');
+    const $availableCount = document.getElementById('available-count');
+    const $selectedDisplay = document.getElementById('selected-display');
+    const $alertPick = document.getElementById('alert-pick');
+    const $alertInfo = document.getElementById('alert-info');
+    const $inputName = document.getElementById('input-name');
+    const $inputEmail = document.getElementById('input-email');
+
+    // =================================================================
+    // BUILD CARD GRID
+    // =================================================================
+    function buildGrid() {
+        $grid.innerHTML = '';
+        for (let i = 1; i <= CONFIG.TOTAL_CARDS; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'card-btn';
+            btn.textContent = i;
+            btn.dataset.card = i;
+            btn.setAttribute('aria-label', 'Bingo card number ' + i);
+            btn.setAttribute('role', 'gridcell');
+
+            if (takenCards.has(i)) {
+                btn.classList.add('taken');
+                btn.disabled = true;
+                btn.setAttribute('aria-label', 'Card ' + i + ' – already taken');
+                btn.setAttribute('aria-disabled', 'true');
+                const sr = document.createElement('span');
+                sr.className = 'sr-taken';
+                sr.textContent = '(taken)';
+                btn.appendChild(sr);
+            }
+
+            btn.addEventListener('click', function() { selectCard(i, btn); });
+            $grid.appendChild(btn);
+        }
+        updateAvailableCount();
+    }
+
+    function selectCard(num, btn) {
+        if (takenCards.has(num) || isSubmitting) return;
+
+        // Deselect previous
+        var prev = $grid.querySelector('.selected');
+        if (prev) {
+            prev.classList.remove('selected');
+            prev.removeAttribute('aria-pressed');
+        }
+
+        selectedCard = num;
+        btn.classList.add('selected');
+        btn.setAttribute('aria-pressed', 'true');
+        $btnNext.disabled = false;
+        $btnNext.setAttribute('aria-disabled', 'false');
+        hideAlert($alertPick);
+    }
+
+    function updateAvailableCount() {
+        var avail = CONFIG.TOTAL_CARDS - takenCards.size;
+        $availableCount.textContent = avail;
+        $availableCount.classList.toggle('zero', avail === 0);
+    }
+
+    // =================================================================
+    // NAVIGATION
+    // =================================================================
+    function showStep(step) {
+        [$stepPick, $stepInfo, $stepSuccess].forEach(function(s) {
+            s.classList.remove('active');
+        });
+        step.classList.add('active');
+        step.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Focus first interactive element
+        var focusTarget = step.querySelector('h2, input, a, button:not([disabled])');
+        if (focusTarget) {
+            setTimeout(function() { focusTarget.focus(); }, 300);
+        }
+    }
+
+    $btnNext.addEventListener('click', function() {
+        if (!selectedCard) return;
+        $selectedDisplay.textContent = 'Card #' + selectedCard;
+        showStep($stepInfo);
+    });
+
+    $btnBack.addEventListener('click', function() {
+        showStep($stepPick);
+    });
+
+    // =================================================================
+    // FORM VALIDATION & SUBMISSION
+    // =================================================================
+    function validateForm() {
+        var valid = true;
+        var name = $inputName.value.trim();
+        var email = $inputEmail.value.trim();
+        var fieldName = document.getElementById('field-name');
+        var fieldEmail = document.getElementById('field-email');
+
+        fieldName.classList.remove('has-error');
+        fieldEmail.classList.remove('has-error');
+
+        if (!name) {
+            fieldName.classList.add('has-error');
+            valid = false;
+        }
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            fieldEmail.classList.add('has-error');
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    $btnSubmit.addEventListener('click', async function() {
+        hideAlert($alertInfo);
+        if (!validateForm()) return;
+        if (isSubmitting) return;
+
+        isSubmitting = true;
+        $btnSubmit.innerHTML = '<span class="bingo-spinner"></span> Reserving...';
+        $btnSubmit.disabled = true;
+
+        var name = $inputName.value.trim();
+        var email = $inputEmail.value.trim();
+
+        try {
+            var res = await fetch(CONFIG.API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    action: 'signup',
+                    name: name,
+                    email: email,
+                    card: selectedCard
+                })
+            });
+
+            var data = await res.json();
+
+            if (data.status === 'success') {
+                document.getElementById('success-name').textContent = name;
+                document.getElementById('success-card-number').textContent = '#' + selectedCard;
+                document.getElementById('link-card').href = CONFIG.CARD_BASE_URL + selectedCard;
+                document.getElementById('link-zoom').href = CONFIG.ZOOM_LINK;
+                showStep($stepSuccess);
+            } else if (data.status === 'taken') {
+                takenCards.add(selectedCard);
+                buildGrid();
+                selectedCard = null;
+                showStep($stepPick);
+                showAlert($alertPick, 'Card #' + data.card + ' was just taken! Please pick another.');
+            } else {
+                showAlert($alertInfo, data.message || 'Something went wrong. Please try again.');
+            }
+        } catch (err) {
+            showAlert($alertInfo, 'Could not connect. Please check your internet and try again.');
+            console.error(err);
+        } finally {
+            isSubmitting = false;
+            $btnSubmit.innerHTML = 'Get My Bingo Card!';
+            $btnSubmit.disabled = false;
+        }
+    });
+
+    // =================================================================
+    // LOAD TAKEN CARDS ON PAGE LOAD
+    // =================================================================
+    async function loadTakenCards() {
+        try {
+            var res = await fetch(CONFIG.API_URL + '?action=status');
+            var data = await res.json();
+            if (data.taken && Array.isArray(data.taken)) {
+                data.taken.forEach(function(c) { takenCards.add(c); });
+            }
+        } catch (e) {
+            // Silently fail – all cards will show as available
+            console.warn('Could not load card status:', e);
+        }
+        buildGrid();
+    }
+
+    // =================================================================
+    // HELPERS
+    // =================================================================
+    function showAlert(el, msg) {
+        el.textContent = msg;
+        el.classList.add('visible');
+    }
+
+    function hideAlert(el) {
+        el.classList.remove('visible');
+    }
+
+    // =================================================================
+    // INIT
+    // =================================================================
+    loadTakenCards();
+    </script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">
