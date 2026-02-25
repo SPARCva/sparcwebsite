@@ -1,5 +1,23 @@
+# Video generation
 moviepy>=2.0
 Pillow>=10.0
 numpy>=1.24
+
+# Google Drive sync (optional — for Drive API access)
 google-api-python-client>=2.100
 google-auth-oauthlib>=1.1
+
+# Google Photos album scraping
+requests>=2.31
+
+# Trail detection (EXIF GPS + OpenStreetMap lookup)
+# Pillow already listed above — also used for EXIF reading
+# requests already listed above — also used for Overpass/Nominatim APIs
+
+# Browser-based scraping (optional — for large albums)
+# pip install playwright && playwright install chromium
+
+# Video GPS extraction (optional — requires system exiftool)
+# sudo apt install libimage-exiftool-perl  (Linux)
+# brew install exiftool  (macOS)
+# pip install pyexiftool  (optional Python wrapper)
