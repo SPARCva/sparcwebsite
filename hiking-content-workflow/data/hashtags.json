@@ -1,0 +1,116 @@
+{
+  "instructions": "Use 3-5 hashtags per post. Pick 1 from broad, 1-2 from niche, and 1 location-specific. Rotate sets across posts to avoid repetition penalties.",
+
+  "broad": {
+    "description": "High-volume tags for discovery. Use sparingly (1 per post max).",
+    "tiktok": [
+      "#hiking",
+      "#nature",
+      "#adventure",
+      "#outdoors",
+      "#explore",
+      "#travel",
+      "#mountains"
+    ],
+    "instagram": [
+      "#hiking",
+      "#nature",
+      "#adventure",
+      "#outdoors",
+      "#exploremore",
+      "#wanderlust",
+      "#getoutside"
+    ]
+  },
+
+  "niche_community": {
+    "description": "Mid-volume community tags. Great for reaching engaged hiking audiences.",
+    "tiktok": [
+      "#hikertok",
+      "#trailviews",
+      "#hikinglife",
+      "#trailfinds",
+      "#optoutside",
+      "#hikingadventures",
+      "#solohiker",
+      "#dayhike",
+      "#hikingcommunity",
+      "#peakbagging"
+    ],
+    "instagram": [
+      "#hikingadventures",
+      "#hikersofinstagram",
+      "#traillife",
+      "#hikingculture",
+      "#getoutside",
+      "#idhikethat",
+      "#hikingtrails",
+      "#naturelover",
+      "#mountainlife",
+      "#adventureawaits"
+    ]
+  },
+
+  "content_type": {
+    "description": "Tags that describe the format or visual style. Match to your content.",
+    "sunset": ["#sunsetreels", "#goldenhour", "#sunsetviews", "#chasinggoldenhour"],
+    "waterfall": ["#waterfallhike", "#chasewaterfalls", "#waterfallviews"],
+    "scramble": ["#scramblehike", "#rockscramble", "#bouldering"],
+    "winter": ["#winterhiking", "#snowhike", "#wintertrails"],
+    "fall_colors": ["#fallhiking", "#autumnhike", "#fallcolors", "#fallfoliage"],
+    "wildflowers": ["#wildflowerhike", "#superbloom", "#wildflowers"],
+    "summit": ["#summitviews", "#peakbagging", "#summitpush", "#mountaintop"],
+    "lake": ["#alpinelake", "#lakehike", "#mountainlake"],
+    "forest": ["#forestbathing", "#forestwalk", "#treesofinstagram"],
+    "desert": ["#deserthiking", "#desertvibes", "#redrocks"]
+  },
+
+  "location_templates": {
+    "description": "Replace [State], [City], [TrailName] with your actual location.",
+    "patterns": [
+      "#[State]hiking",
+      "#[State]trails",
+      "#[City]hikes",
+      "#[TrailName]",
+      "#explore[State]",
+      "#[RegionName]trails",
+      "#hiking[State]"
+    ],
+    "examples": {
+      "arizona": ["#arizonahiking", "#arizonatrails", "#sedonahiking", "#explorearizona"],
+      "colorado": ["#coloradohiking", "#coloradotrails", "#14ers", "#explorecolorado"],
+      "california": ["#californiahiking", "#socalhikes", "#norcalhiking", "#explorecalifornia"],
+      "virginia": ["#virginiahiking", "#vahikes", "#shenandoah", "#blueridgemountains"],
+      "north_carolina": ["#nchiking", "#nctrails", "#blueridgeparkway", "#smokymountains"],
+      "washington": ["#pnwhiking", "#washingtontrails", "#pnw", "#explorewashington"],
+      "oregon": ["#oregonhiking", "#oregontrails", "#pnwhikes", "#exploreoregon"],
+      "utah": ["#utahhiking", "#mightyfive", "#utahtrails", "#exploreutah"],
+      "montana": ["#montanahiking", "#glaciernationalpark", "#bigskycountry"],
+      "new_york": ["#nyhiking", "#adirondacks", "#catskills", "#hudsonvalleyhikes"]
+    }
+  },
+
+  "avoid": {
+    "description": "These tags provide no value and may signal spam to algorithms.",
+    "tags": [
+      "#fyp",
+      "#foryou",
+      "#foryoupage",
+      "#viral",
+      "#trending",
+      "#followme",
+      "#like4like",
+      "#follow4follow",
+      "#instagood",
+      "#photooftheday"
+    ]
+  },
+
+  "rotation_strategy": {
+    "description": "Pre-built sets to rotate across posts. Never reuse the same set back-to-back.",
+    "set_a": ["#hiking", "#hikertok", "#trailviews", "#[location]hiking", "#[feature]"],
+    "set_b": ["#adventure", "#hikingadventures", "#traillife", "#explore[state]", "#[feature]"],
+    "set_c": ["#outdoors", "#hikingculture", "#solohiker", "#[city]hikes", "#[feature]"],
+    "set_d": ["#nature", "#getoutside", "#hikersofinstagram", "#[trail]", "#[feature]"]
+  }
+}
