@@ -657,6 +657,263 @@
                 align-items: center;
             }
         }
+
+        /* Letters of Support Carousel */
+        .support-letters {
+            padding: 100px 0;
+            background: white;
+        }
+        .support-letters h2 {
+            color: var(--sparc-dark-navy);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .support-letters .subtitle {
+            text-align: center;
+            color: var(--sparc-charcoal);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+        .letters-carousel-wrapper {
+            position: relative;
+            padding: 0 50px;
+        }
+        .letters-carousel {
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .letters-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .letters-carousel-track {
+            display: flex;
+            gap: 25px;
+            padding: 10px 0 20px;
+        }
+        .letter-card {
+            min-width: 280px;
+            max-width: 280px;
+            cursor: pointer;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--sparc-soft-gray);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .letter-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        .letter-card-thumb {
+            width: 100%;
+            height: 360px;
+            overflow: hidden;
+            background: white;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            position: relative;
+        }
+        .letter-card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+        .letter-card-thumb .pdf-preview {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+        }
+        .letter-card-thumb .doc-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+        }
+        .letter-card-thumb .doc-icon svg {
+            width: 80px;
+            height: 80px;
+            color: var(--sparc-royal-blue);
+            margin-bottom: 15px;
+        }
+        .letter-card-thumb .doc-icon span {
+            font-size: 0.85rem;
+            color: var(--sparc-charcoal);
+            text-align: center;
+            line-height: 1.4;
+        }
+        .letter-card-info {
+            padding: 20px;
+            text-align: center;
+            background: var(--sparc-dark-navy);
+        }
+        .letter-card-info h4 {
+            color: white;
+            font-size: 1rem;
+            margin: 0 0 5px;
+            line-height: 1.3;
+        }
+        .letter-card-info p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--sparc-dark-navy);
+            background: white;
+            color: var(--sparc-dark-navy);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        .carousel-arrow:hover {
+            background: var(--sparc-dark-navy);
+            color: white;
+        }
+        .carousel-arrow-left {
+            left: 0;
+        }
+        .carousel-arrow-right {
+            right: 0;
+        }
+        .carousel-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Letter Modal */
+        .letter-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        .letter-modal-overlay.active {
+            display: flex;
+        }
+        .letter-modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .letter-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            background: var(--sparc-dark-navy);
+            color: white;
+        }
+        .letter-modal-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 1.15rem;
+            padding-right: 15px;
+        }
+        .letter-modal-close {
+            background: none;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .letter-modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: white;
+        }
+        .letter-modal-body {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: #f0f0f0;
+        }
+        .letter-modal-body iframe {
+            width: 100%;
+            height: 75vh;
+            border: none;
+        }
+        .letter-modal-body img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Letters Carousel Responsive */
+        @media (max-width: 768px) {
+            .letters-carousel-wrapper {
+                padding: 0 10px;
+            }
+            .carousel-arrow {
+                display: none;
+            }
+            .letter-card {
+                min-width: 240px;
+                max-width: 240px;
+            }
+            .letter-card-thumb {
+                height: 300px;
+            }
+            .letter-modal {
+                width: 98%;
+                max-height: 95vh;
+            }
+            .letter-modal-header {
+                padding: 15px 20px;
+            }
+            .letter-modal-body iframe {
+                height: 70vh;
+            }
+            .support-letters {
+                padding: 60px 0;
+            }
+            .support-letters h2 {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -760,6 +1017,132 @@
                 </div>
             </div>
         </section>
+
+        <!-- Letters of Support Section -->
+        <section class="support-letters">
+            <div class="container">
+                <h2>Letters of Support</h2>
+                <p class="subtitle">Leaders across Virginia are standing with SPARC. Browse letters of support from elected officials and community advocates.</p>
+
+                <div class="letters-carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" onclick="scrollLetters(-1)" aria-label="Scroll left">
+                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+
+                    <div class="letters-carousel" id="lettersCarousel">
+                        <div class="letters-carousel-track">
+
+                            <div class="letter-card" onclick="openLetterModal('Arlington County Letter of Support', '/advocate/021926%20-%20Arlington%20County.%20LOS.%20SPARC%20Budget%20Request%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <div class="doc-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                        <span>Arlington County<br>Letter of Support<br>SPARC Budget Request</span>
+                                    </div>
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Arlington County Board</h4>
+                                    <p>Budget Request Letter</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Virginia Legislature Leaders Letter', '/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <div class="doc-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                        <span>Letter from Virginia<br>Legislature Leaders<br>to Judge Gibney</span>
+                                    </div>
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Virginia Legislature Leaders</h4>
+                                    <p>Letter to Judge Gibney</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Chairman McKay &amp; Chairman Jimenez Letter', '/advocate/Chairman%20McKay%20and%20Legislative%20Chairman%20Jimenez%20-%20Letter%20on%20SPARC%20Budget%20Amendment%20to%20SFAC%20(2)%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <div class="doc-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                        <span>Chairman McKay &amp;<br>Chairman Jimenez<br>Budget Amendment to SFAC</span>
+                                    </div>
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Chairman McKay & Chairman Jimenez</h4>
+                                    <p>SPARC Budget Amendment</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Letter of Support for Debi Alexander', '/advocate/Letter%20of%20Support%20for%20Debi%20Alexander%2C%20SPARC%20CEO%20(1)%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <div class="doc-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                        <span>Letter of Support for<br>Debi Alexander<br>SPARC CEO</span>
+                                    </div>
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Community Leaders</h4>
+                                    <p>Support for Debi Alexander, CEO</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Supervisor Sylvia Glass - Budget Amendment Support', '/advocate/SPARC%20Budget%20Amendment%20Support%20Letter%20-%20Supervisor%20Sylvia%20Glass%20-%20Senate%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <div class="doc-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                        <span>Budget Amendment<br>Support Letter<br>to the Senate</span>
+                                    </div>
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Supervisor Sylvia Glass</h4>
+                                    <p>Senate Budget Amendment Support</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('SPARC Budget Request', '/advocate/SPARC%20budget%20request%20(2)%20(2).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <div class="doc-icon">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                        <span>SPARC<br>Budget Request</span>
+                                    </div>
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>SPARC</h4>
+                                    <p>Budget Request</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Senate Finance &amp; Appropriations Committee', '/advocate/httpssfac.virginia.govpdfcommittee_meeting_presentations2026Reporting20Out20Materials20Feb20221.20Health20and20Hu%20(1).PNG', 'image')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/httpssfac.virginia.govpdfcommittee_meeting_presentations2026Reporting20Out20Materials20Feb20221.20Health20and20Hu%20(1).PNG" alt="Senate Finance and Appropriations Committee Presentation" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Senate Finance & Appropriations</h4>
+                                    <p>Committee Presentation</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button class="carousel-arrow carousel-arrow-right" onclick="scrollLetters(1)" aria-label="Scroll right">
+                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Letter Modal -->
+        <div class="letter-modal-overlay" id="letterModalOverlay" onclick="closeLetterModal(event)">
+            <div class="letter-modal" onclick="event.stopPropagation()">
+                <div class="letter-modal-header">
+                    <h3 id="letterModalTitle">Letter</h3>
+                    <button class="letter-modal-close" onclick="closeLetterModal()" aria-label="Close">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="letter-modal-body" id="letterModalBody">
+                </div>
+            </div>
+        </div>
 
         <!-- Letter Section -->
         <section class="letter-section">
@@ -1480,6 +1863,53 @@ ${senderName}`;
             // Open email client
             window.location.href = `mailto:?subject=${subject}&body=${encodedBody}`;
         }
+
+        // Letters of Support Carousel
+        function scrollLetters(direction) {
+            const carousel = document.getElementById('lettersCarousel');
+            const scrollAmount = 310;
+            carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        // Letter Modal
+        function openLetterModal(title, src, type) {
+            const overlay = document.getElementById('letterModalOverlay');
+            const modalTitle = document.getElementById('letterModalTitle');
+            const modalBody = document.getElementById('letterModalBody');
+
+            modalTitle.textContent = title;
+            modalBody.innerHTML = '';
+
+            if (type === 'pdf') {
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                iframe.title = title;
+                modalBody.appendChild(iframe);
+            } else {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = title;
+                modalBody.appendChild(img);
+            }
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLetterModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const overlay = document.getElementById('letterModalOverlay');
+            overlay.classList.remove('active');
+            document.getElementById('letterModalBody').innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLetterModal();
+            }
+        });
 
         // County panel toggle functionality
         function showCounty(county) {
