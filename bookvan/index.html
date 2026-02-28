@@ -12,107 +12,64 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SPARC Participants and Families - Calendar, Newsletter, and Resources">
-    <title>Participants & Families | SPARC</title>
-    <link rel="icon" type="image/png" href="/images/favicon.png">
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta name="description" content="Book the Exploration Sensory Lab - SPARC's mobile multisensory environment. Check availability and schedule the van for your center, event, or community outing.">
+    <title>Book the Exploration Sensory Lab | SPARC - Specially Adapted Resource Centers</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        .login-container {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+        .booking-section {
+            padding: 60px 0;
         }
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        .login-box h2 {
-            margin-bottom: 10px;
-            color: var(--sparc-dark-navy, #1a1a2e);
-        }
-        .login-box p {
-            margin-bottom: 30px;
-            color: #666;
-        }
-        .login-form .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .login-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-        .login-form input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .login-form input:focus {
-            outline: none;
-            border-color: var(--sparc-kelly-green, #4CAF50);
-        }
-        .login-form button {
-            width: 100%;
-            padding: 14px;
-            background: var(--sparc-kelly-green, #4CAF50);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .login-form button:hover {
-            background: var(--sparc-royal-blue, #2196F3);
-        }
-        .login-error {
-            color: #d32f2f;
-            margin-top: 15px;
-            display: none;
-        }
-        .protected-content {
-            display: none;
-        }
-        .calendar-section, .newsletter-section {
-            margin-bottom: 60px;
-        }
-        .calendar-section h3, .newsletter-section h3 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .calendar-section > p, .newsletter-section > p {
-            text-align: center;
-            margin-bottom: 30px;
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
         }
         .calendar-wrapper {
-            display: flex;
-            justify-content: center;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .calendar-wrapper h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
         }
         .calendar-wrapper iframe {
-            max-width: 100%;
+            border: none;
+            border-radius: 8px;
         }
-        .newsletter-wrapper {
-            text-align: center;
+        .booking-form-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .booking-form-wrapper h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .booking-form-wrapper iframe {
+            border: none;
+            border-radius: 8px;
+        }
+        @media (max-width: 768px) {
+            .booking-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Skip to Content Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Header -->
@@ -154,7 +111,7 @@
                     </div>
                 </li>
                 <li class="nav-item-dropdown">
-                    <a href="/get-involved/" class="nav-link active">Get Involved</a>
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
                     <div class="dropdown-menu">
                         <a href="/advocate/">Advocate for SPARC</a>
                         <a href="/get-involved/">Volunteer</a>
@@ -175,115 +132,45 @@
         </nav>
     </header>
 
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Book the Exploration Sensory Lab</h1>
+            <p>Check availability and schedule the mobile sensory lab for your center, event, or community outing</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
     <main id="main-content">
-        <!-- Page Header -->
-        <section class="page-hero" style="background: linear-gradient(135deg, var(--sparc-kelly-green) 0%, var(--sparc-royal-blue) 100%);">
+        <section class="booking-section">
             <div class="container">
-                <h1>Participants & Families</h1>
-                <p class="hero-subtitle">Resources, calendar, and updates for our SPARC community</p>
+                <div class="booking-grid">
+                    <!-- Calendar Availability -->
+                    <div class="calendar-wrapper fade-in">
+                        <h2>Availability</h2>
+                        <p style="margin-bottom: 15px; color: var(--medium-gray);">View the calendar below to see when the Exploration Sensory Lab is available.</p>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=c_50c1d2b84332733813c1d51efb7cfabdb762cd7d5335c197b0ebebbdbc33c223%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <div class="booking-form-wrapper fade-in">
+                        <h2>Request a Booking</h2>
+                        <p style="margin-bottom: 15px; color: var(--medium-gray);">Select a date and time to book the Exploration Sensory Lab.</p>
+                        <iframe src="https://calendar.app.google/EpT8ntcKvfkQMJhf7" width="100%" height="600" frameborder="0" style="border: 0;" allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Login Section -->
-        <section class="login-container" id="login-section">
-            <div class="login-box">
-                <h2>Family Portal Login</h2>
-                <p>Please enter your credentials to access this page</p>
-                <form class="login-form" id="login-form">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required placeholder="Enter your username">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required placeholder="Enter your password">
-                    </div>
-                    <button type="submit">Log In</button>
-                    <p class="login-error" id="login-error">Invalid username or password. Please try again.</p>
-                    <p class="forgot-password" style="margin-top: 20px;">
-                        <a href="#" id="forgot-password-link" style="color: var(--sparc-royal-blue, #2196F3); text-decoration: none;">Forgot your password?</a>
-                    </p>
-                    <div id="reset-message" style="display: none; margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: left;">
-                        <p style="margin: 0 0 10px 0; font-weight: 500;">Password Reset Request</p>
-                        <p style="margin: 0 0 15px 0; font-size: 14px; color: #555;">Click the button below to send a password reset request to SPARC administration.</p>
-                        <a href="mailto:erica@sparcsolutions.org?subject=Password%20Reset%20Request%20-%20SPARC%20Family%20Portal&body=Hello%2C%0A%0AI%20need%20to%20reset%20my%20password%20for%20the%20SPARC%20Participants%20%26%20Families%20portal.%0A%0AMy%20email%20address%20is%3A%20%0A%0AThank%20you!" class="btn btn-outline" style="display: inline-block; padding: 10px 20px; font-size: 14px;">Request Password Reset</a>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- Protected Content -->
-        <section class="section protected-content" id="protected-content" style="background-color: var(--sparc-soft-gray, #f5f5f5);">
-            <div class="container">
-                <!-- Announcements Section -->
-                <div class="announcements-section" style="margin-bottom: 60px;">
-                    <h3 style="text-align: center; margin-bottom: 20px;">Announcements</h3>
-                    <div class="announcements-container" style="max-width: 800px; margin: 0 auto;">
-                        <!-- Announcement Item -->
-                        <div class="announcement-item" style="background: white; border-left: 4px solid var(--sparc-kelly-green, #4CAF50); padding: 20px 25px; margin-bottom: 15px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div class="announcement-date" style="font-size: 13px; color: #888; margin-bottom: 8px; font-weight: 500;">January 23, 2026</div>
-                            <h4 style="margin: 0 0 10px 0; color: var(--sparc-dark-navy, #1a1a2e); font-size: 18px;">Welcome to the SPARC Family Portal!</h4>
-                            <p style="margin: 0; color: #555; line-height: 1.6;">This is your new hub for staying connected with SPARC. Here you'll find our activities calendar, weekly bulletins, and important announcements. Check back regularly for updates!</p>
-                        </div>
-                        <!-- Add more announcement items as needed -->
-                        <!--
-                        <div class="announcement-item" style="background: white; border-left: 4px solid var(--sparc-kelly-green, #4CAF50); padding: 20px 25px; margin-bottom: 15px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div class="announcement-date" style="font-size: 13px; color: #888; margin-bottom: 8px; font-weight: 500;">Date Here</div>
-                            <h4 style="margin: 0 0 10px 0; color: var(--sparc-dark-navy, #1a1a2e); font-size: 18px;">Announcement Title</h4>
-                            <p style="margin: 0; color: #555; line-height: 1.6;">Announcement content goes here.</p>
-                        </div>
-                        -->
-                    </div>
-                </div>
-
-                <!-- SPARC Activities Calendar -->
-                <div class="calendar-section">
-                    <h3>SPARC Activities Calendar</h3>
-                    <p>Stay up to date with all SPARC events and activities</p>
-                    <div class="calendar-wrapper">
-                        <iframe src="https://calendar.google.com/calendar/embed?src=c_430ef27f7f3dc2fc59f092fb2051557b988f589d9ef05d162b9b84506af493ad%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0;" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-                    </div>
-                </div>
-
-                <!-- Weekly Bulletins Section -->
-                <div class="newsletter-section">
-                    <h3>📬 Weekly Bulletins</h3>
-                    <p>Latest updates and announcements for SPARC families</p>
-                    <div class="bulletin-wrapper" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); max-width: 900px; margin: 0 auto;">
-                        <iframe
-                            src="https://script.google.com/macros/s/AKfycbzVZqzOy5mwbUoXJJ21nXaMVV3VY_aZgmZOoCdxHOBBdn_cnm_JfY_TdQnjAcdjJNcNuw/exec"
-                            style="width: 100%; height: 900px; border: none;"
-                            title="SPARC Weekly Bulletin">
-                        </iframe>
-                    </div>
-                </div>
-
-                <!-- Newsletter Section -->
-                <div class="newsletter-section">
-                    <h3>SPARC Newsletter</h3>
-                    <p>Read our latest news and updates</p>
-                    <div class="newsletter-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto;">
-                        <a href="https://conta.cc/3MCe9Ew" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">November 2025</div>
-                            <div style="font-size: 14px; color: #666;">Fall Edition - You Don't Want to Miss This</div>
-                        </a>
-                        <a href="https://conta.cc/3VUA4Iw" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">August/September 2025</div>
-                            <div style="font-size: 14px; color: #666;">Back to School Edition</div>
-                        </a>
-                        <a href="https://conta.cc/41EQQyN" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">August 2025</div>
-                            <div style="font-size: 14px; color: #666;">Summer Edition - 80% Attendance!</div>
-                        </a>
-                        <a href="https://conta.cc/4sHUKT4" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">Earlier 2025</div>
-                            <div style="font-size: 14px; color: #666;">Archive</div>
-                        </a>
-                    </div>
-                </div>
+        <!-- Back Link -->
+        <section class="about-content" style="padding: 40px 0 80px;">
+            <div class="container" style="text-align: center;">
+                <a href="/programs/sensory-lab/" class="btn btn-primary">Learn More About the Sensory Lab</a>
+                <a href="/programs/" class="btn btn-outline" style="margin-left: 15px;">Back to Programs</a>
             </div>
         </section>
     </main>
+
     <!-- Footer -->
     <footer class="footer" style="color: white;">
         <div class="container">
@@ -358,50 +245,6 @@
     </div>
 
     <script src="/js/main.js"></script>
-    <script>
-        (function() {
-            const validCredentials = {
-                username: 'SPARCfamily',
-                password: 'SPARC2026!@'
-            };
-
-            const loginSection = document.getElementById('login-section');
-            const protectedContent = document.getElementById('protected-content');
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
-
-            // Check if already logged in this session
-            if (sessionStorage.getItem('sparc_authenticated') === 'true') {
-                loginSection.style.display = 'none';
-                protectedContent.style.display = 'block';
-            }
-
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-                if (username === validCredentials.username && password === validCredentials.password) {
-                    sessionStorage.setItem('sparc_authenticated', 'true');
-                    loginSection.style.display = 'none';
-                    protectedContent.style.display = 'block';
-                    loginError.style.display = 'none';
-                } else {
-                    loginError.style.display = 'block';
-                }
-            });
-
-            // Forgot password functionality
-            const forgotPasswordLink = document.getElementById('forgot-password-link');
-            const resetMessage = document.getElementById('reset-message');
-
-            forgotPasswordLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                resetMessage.style.display = resetMessage.style.display === 'none' ? 'block' : 'none';
-            });
-        })();
-    </script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">

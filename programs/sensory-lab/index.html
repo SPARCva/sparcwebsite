@@ -12,107 +12,128 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SPARC Participants and Families - Calendar, Newsletter, and Resources">
-    <title>Participants & Families | SPARC</title>
-    <link rel="icon" type="image/png" href="/images/favicon.png">
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta name="description" content="The Exploration Sensory Lab - SPARC's mobile multisensory environment designed to support regulation, engagement, and emotional well-being for individuals with disabilities.">
+    <title>The Exploration Sensory Lab | SPARC - Specially Adapted Resource Centers</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        .login-container {
-            min-height: 60vh;
+        .sensory-lab-video {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            padding: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 400px;
+        }
+        .sensory-lab-video iframe {
+            border: none;
+            border-radius: 12px;
+        }
+        .sensory-features {
+            padding: 80px 0;
+        }
+        .sensory-features h3 {
+            color: var(--sparc-dark-navy);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .sensory-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sensory-features ul li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .sensory-features ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--sparc-teal);
+            border-radius: 50%;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .feature-block {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .feature-block h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--sparc-teal);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            flex-shrink: 0;
         }
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
+        .feature-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
         }
-        .login-box h2 {
-            margin-bottom: 10px;
-            color: var(--sparc-dark-navy, #1a1a2e);
-        }
-        .login-box p {
-            margin-bottom: 30px;
-            color: #666;
-        }
-        .login-form .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .login-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-        .login-form input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .login-form input:focus {
-            outline: none;
-            border-color: var(--sparc-kelly-green, #4CAF50);
-        }
-        .login-form button {
-            width: 100%;
-            padding: 14px;
-            background: var(--sparc-kelly-green, #4CAF50);
+        .mobility-benefits {
+            background: var(--sparc-dark-navy);
             color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
+            padding: 80px 0;
         }
-        .login-form button:hover {
-            background: var(--sparc-royal-blue, #2196F3);
+        .mobility-benefits h2 {
+            color: white;
         }
-        .login-error {
-            color: #d32f2f;
-            margin-top: 15px;
-            display: none;
+        .mobility-benefits p {
+            color: rgba(255,255,255,0.9);
         }
-        .protected-content {
-            display: none;
+        .mobility-benefits ul {
+            list-style: none;
+            padding: 0;
         }
-        .calendar-section, .newsletter-section {
-            margin-bottom: 60px;
+        .mobility-benefits ul li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
         }
-        .calendar-section h3, .newsletter-section h3 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .calendar-section > p, .newsletter-section > p {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .calendar-wrapper {
-            display: flex;
-            justify-content: center;
-        }
-        .calendar-wrapper iframe {
-            max-width: 100%;
-        }
-        .newsletter-wrapper {
-            text-align: center;
+        .mobility-benefits ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--sparc-teal);
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
+    <!-- Skip to Content Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Header -->
@@ -135,7 +156,7 @@
                         <a href="/compliance/">ADA Compliance</a>
                     </div>
                 </li>
-                <li><a href="/programs/" class="nav-link">Programs</a></li>
+                <li><a href="/programs/" class="nav-link active">Programs</a></li>
                 <li><a href="/locations/" class="nav-link">Locations</a></li>
                 <li class="nav-item-dropdown">
                     <a href="/stories/" class="nav-link">Stories</a>
@@ -154,7 +175,7 @@
                     </div>
                 </li>
                 <li class="nav-item-dropdown">
-                    <a href="/get-involved/" class="nav-link active">Get Involved</a>
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
                     <div class="dropdown-menu">
                         <a href="/advocate/">Advocate for SPARC</a>
                         <a href="/get-involved/">Volunteer</a>
@@ -175,115 +196,107 @@
         </nav>
     </header>
 
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>The Exploration Sensory Lab</h1>
+            <p>A mobile, controlled multisensory environment supporting regulation, engagement, and emotional well-being</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
     <main id="main-content">
-        <!-- Page Header -->
-        <section class="page-hero" style="background: linear-gradient(135deg, var(--sparc-kelly-green) 0%, var(--sparc-royal-blue) 100%);">
+        <!-- Overview with Video -->
+        <section class="about-content">
             <div class="container">
-                <h1>Participants & Families</h1>
-                <p class="hero-subtitle">Resources, calendar, and updates for our SPARC community</p>
+                <div class="about-grid">
+                    <div class="about-text fade-in">
+                        <h2>A Sensory Environment on Wheels</h2>
+                        <p>The Exploration Sensory Lab functions as a mobile, controlled multisensory environment designed to support regulation, engagement, and emotional well-being for individuals with disabilities. Instead of relying on moment-to-moment interactions, its value comes from the way its engineered features consistently meet a wide range of sensory needs.</p>
+                        <p style="margin-top: 20px;">
+                            <a href="/bookvan/" class="btn btn-primary">Book the Exploration Sensory Lab</a>
+                        </p>
+                    </div>
+                    <div class="about-image fade-in sensory-lab-video">
+                        <iframe id="sensoryLabVideo" width="360" height="640" src="https://www.youtube.com/embed/wIFYwObWr34" title="The Exploration Sensory Lab" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Login Section -->
-        <section class="login-container" id="login-section">
-            <div class="login-box">
-                <h2>Family Portal Login</h2>
-                <p>Please enter your credentials to access this page</p>
-                <form class="login-form" id="login-form">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required placeholder="Enter your username">
+        <!-- Calming & Regulation + Exploration & Engagement -->
+        <section class="sensory-features bg-light">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-block fade-in">
+                        <h3>
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </span>
+                            Calming &amp; Regulation
+                        </h3>
+                        <p>The van incorporates soft lighting, gentle music, tactile surfaces, and adaptive seating, all of which work together to create a predictable sensory landscape. For participants who become overstimulated or anxious, this combination provides:</p>
+                        <ul>
+                            <li>Immediate down-regulation through dimmable lights and sound-dampening materials</li>
+                            <li>Repetitive, controlled sensory input, which is especially beneficial for individuals who rely on consistent patterns to self-soothe</li>
+                            <li>A dedicated respite space where participants can step away from busy programming, reset, and return with improved focus and readiness</li>
+                        </ul>
+                        <p>These features transform the van into a therapeutic environment that reduces stress and supports emotional stability.</p>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <div class="feature-block fade-in">
+                        <h3>
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                            </span>
+                            Exploration &amp; Engagement
+                        </h3>
+                        <p>The Lab is also designed for participants who seek stimulation and active engagement. Features include:</p>
+                        <ul>
+                            <li>Interactive wall panels and games</li>
+                            <li>Varied textures and materials</li>
+                            <li>Visually dynamic lighting options</li>
+                        </ul>
+                        <p>These elements encourage curiosity, motor planning, and cognitive engagement. The space allows participants to explore at their own pace, supporting both sensory-seeking behaviors and skill development.</p>
                     </div>
-                    <button type="submit">Log In</button>
-                    <p class="login-error" id="login-error">Invalid username or password. Please try again.</p>
-                    <p class="forgot-password" style="margin-top: 20px;">
-                        <a href="#" id="forgot-password-link" style="color: var(--sparc-royal-blue, #2196F3); text-decoration: none;">Forgot your password?</a>
-                    </p>
-                    <div id="reset-message" style="display: none; margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: left;">
-                        <p style="margin: 0 0 10px 0; font-weight: 500;">Password Reset Request</p>
-                        <p style="margin: 0 0 15px 0; font-size: 14px; color: #555;">Click the button below to send a password reset request to SPARC administration.</p>
-                        <a href="mailto:erica@sparcsolutions.org?subject=Password%20Reset%20Request%20-%20SPARC%20Family%20Portal&body=Hello%2C%0A%0AI%20need%20to%20reset%20my%20password%20for%20the%20SPARC%20Participants%20%26%20Families%20portal.%0A%0AMy%20email%20address%20is%3A%20%0A%0AThank%20you!" class="btn btn-outline" style="display: inline-block; padding: 10px 20px; font-size: 14px;">Request Password Reset</a>
-                    </div>
-                </form>
+                </div>
             </div>
         </section>
 
-        <!-- Protected Content -->
-        <section class="section protected-content" id="protected-content" style="background-color: var(--sparc-soft-gray, #f5f5f5);">
+        <!-- Mobility Benefits -->
+        <section class="mobility-benefits">
             <div class="container">
-                <!-- Announcements Section -->
-                <div class="announcements-section" style="margin-bottom: 60px;">
-                    <h3 style="text-align: center; margin-bottom: 20px;">Announcements</h3>
-                    <div class="announcements-container" style="max-width: 800px; margin: 0 auto;">
-                        <!-- Announcement Item -->
-                        <div class="announcement-item" style="background: white; border-left: 4px solid var(--sparc-kelly-green, #4CAF50); padding: 20px 25px; margin-bottom: 15px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div class="announcement-date" style="font-size: 13px; color: #888; margin-bottom: 8px; font-weight: 500;">January 23, 2026</div>
-                            <h4 style="margin: 0 0 10px 0; color: var(--sparc-dark-navy, #1a1a2e); font-size: 18px;">Welcome to the SPARC Family Portal!</h4>
-                            <p style="margin: 0; color: #555; line-height: 1.6;">This is your new hub for staying connected with SPARC. Here you'll find our activities calendar, weekly bulletins, and important announcements. Check back regularly for updates!</p>
-                        </div>
-                        <!-- Add more announcement items as needed -->
-                        <!--
-                        <div class="announcement-item" style="background: white; border-left: 4px solid var(--sparc-kelly-green, #4CAF50); padding: 20px 25px; margin-bottom: 15px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div class="announcement-date" style="font-size: 13px; color: #888; margin-bottom: 8px; font-weight: 500;">Date Here</div>
-                            <h4 style="margin: 0 0 10px 0; color: var(--sparc-dark-navy, #1a1a2e); font-size: 18px;">Announcement Title</h4>
-                            <p style="margin: 0; color: #555; line-height: 1.6;">Announcement content goes here.</p>
-                        </div>
-                        -->
+                <div class="section-header fade-in" style="margin-bottom: 40px;">
+                    <h2>Benefits of Mobility Across SPARC's Programs</h2>
+                    <p>Because the sensory lab is fully mobile, SPARC can deliver these benefits:</p>
+                </div>
+                <div class="features-grid">
+                    <div class="fade-in" style="max-width: 700px;">
+                        <ul>
+                            <li><strong>Across all five SPARC centers,</strong> ensuring consistent access to sensory supports</li>
+                            <li><strong>During community outings,</strong> where participants may encounter unpredictable environments</li>
+                            <li><strong>As an on-demand regulation tool,</strong> available wherever participants need a calming or engaging sensory experience</li>
+                        </ul>
+                        <p style="margin-top: 20px;">This mobility significantly expands SPARC's capacity to provide individualized sensory support, reduce barriers to participation, and enhance the overall accessibility of programming.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- SPARC Activities Calendar -->
-                <div class="calendar-section">
-                    <h3>SPARC Activities Calendar</h3>
-                    <p>Stay up to date with all SPARC events and activities</p>
-                    <div class="calendar-wrapper">
-                        <iframe src="https://calendar.google.com/calendar/embed?src=c_430ef27f7f3dc2fc59f092fb2051557b988f589d9ef05d162b9b84506af493ad%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0;" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-                    </div>
-                </div>
-
-                <!-- Weekly Bulletins Section -->
-                <div class="newsletter-section">
-                    <h3>📬 Weekly Bulletins</h3>
-                    <p>Latest updates and announcements for SPARC families</p>
-                    <div class="bulletin-wrapper" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); max-width: 900px; margin: 0 auto;">
-                        <iframe
-                            src="https://script.google.com/macros/s/AKfycbzVZqzOy5mwbUoXJJ21nXaMVV3VY_aZgmZOoCdxHOBBdn_cnm_JfY_TdQnjAcdjJNcNuw/exec"
-                            style="width: 100%; height: 900px; border: none;"
-                            title="SPARC Weekly Bulletin">
-                        </iframe>
-                    </div>
-                </div>
-
-                <!-- Newsletter Section -->
-                <div class="newsletter-section">
-                    <h3>SPARC Newsletter</h3>
-                    <p>Read our latest news and updates</p>
-                    <div class="newsletter-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto;">
-                        <a href="https://conta.cc/3MCe9Ew" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">November 2025</div>
-                            <div style="font-size: 14px; color: #666;">Fall Edition - You Don't Want to Miss This</div>
-                        </a>
-                        <a href="https://conta.cc/3VUA4Iw" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">August/September 2025</div>
-                            <div style="font-size: 14px; color: #666;">Back to School Edition</div>
-                        </a>
-                        <a href="https://conta.cc/41EQQyN" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">August 2025</div>
-                            <div style="font-size: 14px; color: #666;">Summer Edition - 80% Attendance!</div>
-                        </a>
-                        <a href="https://conta.cc/4sHUKT4" target="_blank" style="display: block; background: white; padding: 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;">
-                            <div style="font-weight: 600; color: var(--sparc-dark-navy); margin-bottom: 5px;">Earlier 2025</div>
-                            <div style="font-size: 14px; color: #666;">Archive</div>
-                        </a>
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content fade-in">
+                    <h2>Book the Exploration Sensory Lab</h2>
+                    <p>Bring the Exploration Sensory Lab to your center, event, or community outing.</p>
+                    <div class="cta-buttons">
+                        <a href="/bookvan/" class="btn btn-white btn-lg">Book Now</a>
+                        <a href="/programs/" class="btn btn-secondary btn-lg">Back to Programs</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
     <!-- Footer -->
     <footer class="footer" style="color: white;">
         <div class="container">
@@ -358,50 +371,6 @@
     </div>
 
     <script src="/js/main.js"></script>
-    <script>
-        (function() {
-            const validCredentials = {
-                username: 'SPARCfamily',
-                password: 'SPARC2026!@'
-            };
-
-            const loginSection = document.getElementById('login-section');
-            const protectedContent = document.getElementById('protected-content');
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
-
-            // Check if already logged in this session
-            if (sessionStorage.getItem('sparc_authenticated') === 'true') {
-                loginSection.style.display = 'none';
-                protectedContent.style.display = 'block';
-            }
-
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-                if (username === validCredentials.username && password === validCredentials.password) {
-                    sessionStorage.setItem('sparc_authenticated', 'true');
-                    loginSection.style.display = 'none';
-                    protectedContent.style.display = 'block';
-                    loginError.style.display = 'none';
-                } else {
-                    loginError.style.display = 'block';
-                }
-            });
-
-            // Forgot password functionality
-            const forgotPasswordLink = document.getElementById('forgot-password-link');
-            const resetMessage = document.getElementById('reset-message');
-
-            forgotPasswordLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                resetMessage.style.display = resetMessage.style.display === 'none' ? 'block' : 'none';
-            });
-        })();
-    </script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">
