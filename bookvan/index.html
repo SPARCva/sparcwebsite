@@ -12,8 +12,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore SPARC's community-integrated day programs including art therapy, social engagement, life skills, and community integration for adults with disabilities.">
-    <title>Our Programs | SPARC - Specially Adapted Resource Centers</title>
+    <meta name="description" content="Book the Exploration Sensory Lab - SPARC's mobile multisensory environment. Check availability and schedule the van for your center, event, or community outing.">
+    <title>Book the Exploration Sensory Lab | SPARC - Specially Adapted Resource Centers</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +23,50 @@
     <!-- Styles -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .booking-section {
+            padding: 60px 0;
+        }
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .calendar-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .calendar-wrapper h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .calendar-wrapper iframe {
+            border: none;
+            border-radius: 8px;
+        }
+        .booking-form-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .booking-form-wrapper h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .booking-form-wrapper iframe {
+            border: none;
+            border-radius: 8px;
+        }
+        @media (max-width: 768px) {
+            .booking-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Skip to Content Link -->
@@ -48,7 +92,7 @@
                         <a href="/compliance/">ADA Compliance</a>
                     </div>
                 </li>
-                <li><a href="/programs/" class="nav-link active">Programs</a></li>
+                <li><a href="/programs/" class="nav-link">Programs</a></li>
                 <li><a href="/locations/" class="nav-link">Locations</a></li>
                 <li class="nav-item-dropdown">
                     <a href="/stories/" class="nav-link">Stories</a>
@@ -90,236 +134,42 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <h1>Our Programs</h1>
-            <p>Community-based, person-centered day programs designed for adults with severe and multiple disabilities</p>
+            <h1>Book the Exploration Sensory Lab</h1>
+            <p>Check availability and schedule the mobile sensory lab for your center, event, or community outing</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <main id="main-content">
-        <!-- Program Overview -->
-        <section class="about-content">
+        <section class="booking-section">
             <div class="container">
-                <div class="about-grid">
-                    <div class="about-text fade-in">
-                        <h2>Person-Centered Programming</h2>
-                        <p>SPARC provides integrated, community-based day programs that include meaningful learning experiences, social connection, and a rightful place in the community. Our programs are designed specifically for adults with severe and multiple disabilities who require specialized one-to-one support.</p>
-                        <p>Each participant's experience is tailored to their individual goals, abilities, and interests. Our participant-directed model allows individuals to bring their own Direct Support Professional, ensuring continuity of care and highly personalized service delivery.</p>
+                <div class="booking-grid">
+                    <!-- Calendar Availability -->
+                    <div class="calendar-wrapper fade-in">
+                        <h2>Availability</h2>
+                        <p style="margin-bottom: 15px; color: var(--medium-gray);">View the calendar below to see when the Exploration Sensory Lab is available.</p>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=c_50c1d2b84332733813c1d51efb7cfabdb762cd7d5335c197b0ebebbdbc33c223%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
                     </div>
-                    <div class="about-image fade-in">
-                        <img src="/images/sensory skills.jpg" alt="Sensory skills program">
+
+                    <!-- Booking Form -->
+                    <div class="booking-form-wrapper fade-in">
+                        <h2>Request a Booking</h2>
+                        <p style="margin-bottom: 15px; color: var(--medium-gray);">Select a date and time to book the Exploration Sensory Lab.</p>
+                        <iframe src="https://calendar.app.google/EpT8ntcKvfkQMJhf7" width="100%" height="600" frameborder="0" style="border: 0;" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Programs Grid -->
-        <section class="programs-section">
-            <div class="container">
-                <div class="section-header fade-in">
-                    <h2>What We Offer</h2>
-                    <p>Our diverse programming supports the whole person - social, emotional, physical, and cognitive development</p>
-                </div>
-                <div class="programs-grid">
-                    <div class="program-card fade-in">
-                        <div class="program-image">
-                            <img src="/images/Field trip.jpg" alt="Community Integration">
-                        </div>
-                        <div class="program-content">
-                            <h3>Community Integration</h3>
-                            <p>Meaningful participation in everyday community life through outings, local partnerships, and engagement with neighbors and businesses. Participants develop independence and build connections that foster true belonging.</p>
-                        </div>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-image">
-                            <img src="/images/AI empowered art.jpg" alt="Art Therapy">
-                        </div>
-                        <div class="program-content">
-                            <h3>Art Therapy</h3>
-                            <p>Led by our certified Art Therapist, these sessions use creative expression to support participants' identified social and emotional goals. Adapted directives ensure every participant can engage meaningfully with art-making.</p>
-                        </div>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-image">
-                            <img src="/images/social group.jpeg" alt="Social Groups">
-                        </div>
-                        <div class="program-content">
-                            <h3>Social Groups</h3>
-                            <p>Weekly social groups provide opportunities to build friendships, practice communication skills, and navigate social situations with peer support. Activities range from games and crafts to discussions and celebrations.</p>
-                        </div>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-image">
-                            <img src="/images/cooking skills.jpg" alt="Life Skills Development">
-                        </div>
-                        <div class="program-content">
-                            <h3>Life Skills Development</h3>
-                            <p>Practical skills training adapted to individual abilities, including cooking, personal care, money management, and daily living activities. Our goal is to maximize independence and self-determination for every participant.</p>
-                        </div>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-image">
-                            <img src="/images/art therapy station at mclean.jpg" alt="Recreation and Leisure" style="object-position: center 35%;">
-                        </div>
-                        <div class="program-content">
-                            <h3>Recreation & Leisure</h3>
-                            <p>Adapted recreational activities including sports, games, music, gardening, and special interest clubs. Our hydroponic gardening initiative and after-hours programs like bingo provide engaging leisure options.</p>
-                        </div>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-image">
-                            <img src="/images/Pancake breakfast.jpg" alt="Special Events" style="transform: scale(1.6); object-position: 75% 60%;">
-                        </div>
-                        <div class="program-content">
-                            <h3>Special Events</h3>
-                            <p>Monthly community events, holiday celebrations, and our signature An Evening to SPARCle bring together participants, families, staff, and community supporters for memorable experiences that celebrate our community.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- AIM AHEAD Program -->
-        <section class="about-content bg-light">
-            <div class="container">
-                <div class="about-grid reverse">
-                    <div class="about-text fade-in">
-                        <h2>Innovation: AIM AHEAD Project</h2>
-                        <p>SPARC is proud to partner with George Washington University on the AIM AHEAD research project, utilizing Artificial Intelligence programs to create art, music, and 3D print and design with adults with severe and multiple disabilities.</p>
-                        <p>This groundbreaking research study explores how AI can foster and support self-expression for participants who may face significant barriers to traditional creative methods. The project demonstrates SPARC's commitment to innovation and expanding what's possible for adults with disabilities.</p>
-                    </div>
-                    <div class="about-image fade-in" style="display: flex; justify-content: center; align-items: center; width: fit-content; margin: 0 auto; padding: 0; border-radius: 12px;">
-                        <iframe id="aimAheadVideo" src="https://www.facebook.com/plugins/video.php?height=700&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1580200276727127%2F&show_text=false&width=400&t=0&muted=1" width="400" height="700" style="border:none;overflow:hidden; display:block; border-radius: 12px;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Agents of Change -->
-        <section class="about-content">
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-text fade-in">
-                        <h2>Agents of Change</h2>
-                        <p>Our Agents of Change program empowers participants to become advocates for themselves and their community. Through this initiative, individuals develop self-advocacy skills, learn about their rights, and participate in meaningful civic engagement.</p>
-                        <p>Participants have opportunities to share their experiences, educate others about disability issues, and contribute to SPARC's mission of creating a more inclusive society.</p>
-                    </div>
-                    <div class="about-image fade-in">
-                        <img src="/images/Pitch Day.JPEG" alt="Agents of Change">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Access Trails NOVA -->
-        <section class="about-content bg-light">
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-text fade-in">
-                        <h2>Access Trails NOVA</h2>
-                        <p>Created by SPARC Programmer Andrew O'Dell, Access Trails NOVA is a guide to ADA-accessible parks and trails across Northern Virginia. The directory helps SPARC participants and others with disabilities discover inclusive outdoor recreation options organized by location — Alexandria, Arlington, Leesburg, and McLean.</p>
-                        <p>"Too often, adults with disabilities face barriers that keep them from fully experiencing nature. My hope is that this guide opens doors to parks and trails that everyone can enjoy."</p>
-                        <p style="margin-top: 20px;">
-                            <a href="https://www.accesstrailsnova.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Explore Access Trails NOVA</a>
-                        </p>
-                    </div>
-                    <div class="about-image fade-in">
-                        <img src="/images/adapted sports.jpg" alt="SPARC participants enjoying outdoor activities">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- The Exploration Sensory Lab -->
-        <section class="about-content">
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-text fade-in">
-                        <h2>The Exploration Sensory Lab</h2>
-                        <p>SPARC's mobile, controlled multisensory environment is designed to support regulation, engagement, and emotional well-being for individuals with disabilities. The van incorporates soft lighting, gentle music, tactile surfaces, interactive wall panels, and adaptive seating to meet a wide range of sensory needs.</p>
-                        <p>Because the sensory lab is fully mobile, SPARC can deliver sensory support across all five centers, during community outings, and as an on-demand regulation tool wherever participants need it.</p>
-                        <p style="margin-top: 20px;">
-                            <a href="/programs/sensory-lab/" class="btn btn-primary">Learn More</a>
-                            <a href="/bookvan/" class="btn btn-outline" style="margin-left: 10px;">Book the Sensory Lab</a>
-                        </p>
-                    </div>
-                    <div class="about-image fade-in" style="display: flex; justify-content: center; align-items: center; width: fit-content; margin: 0 auto; padding: 0; border-radius: 12px;">
-                        <iframe width="360" height="640" src="https://www.youtube.com/embed/wIFYwObWr34" title="The Exploration Sensory Lab" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 12px;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section class="stats-section">
-            <div class="container">
-                <div class="section-header fade-in" style="margin-bottom: 60px;">
-                    <h2 class="text-white">How Our Model Works</h2>
-                    <p style="color: rgba(255,255,255,0.9);">SPARC's participant-directed approach ensures personalized, cost-effective care</p>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">1</div>
-                        <div class="stat-label">Participants Bring Their Own DSP</div>
-                    </div>
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">2</div>
-                        <div class="stat-label">SPARC Provides Programming & Community</div>
-                    </div>
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">3</div>
-                        <div class="stat-label">Continuity of Care is Maintained</div>
-                    </div>
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">4</div>
-                        <div class="stat-label">Costs Stay Sustainable</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Enrollment Info -->
-        <section class="about-content">
-            <div class="container">
-                <div class="section-header fade-in">
-                    <h2>Enrollment Information</h2>
-                    <p>SPARC welcomes adults with severe and multiple disabilities who require 1:1 support for all daily living activities and are unable to work</p>
-                </div>
-                <div class="programs-grid" style="grid-template-columns: repeat(2, 1fr);">
-                    <div class="program-card fade-in">
-                        <div class="program-content">
-                            <h3>Who We Serve</h3>
-                            <p>Adults (18+) with severe and multiple disabilities who require specialized one-to-one support. Our participants have complex medical needs and cannot attend traditional day programs without their own Direct Support Professional.</p>
-                            <p>All of SPARC's participants live below the federal poverty line. Those that can pay tuition do so, and those who cannot do not - access is guaranteed regardless of ability to pay.</p>
-                        </div>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-content">
-                            <h3>How to Enroll</h3>
-                            <p>Interested families should contact us to schedule a visit and learn more about our programs. We'll discuss your loved one's needs, goals, and how SPARC can support their growth and community participation.</p>
-                            <p style="margin-top: 20px;">
-                                <a href="/contact/" class="btn btn-primary">Contact Us to Learn More</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="cta-section">
-            <div class="container">
-                <div class="cta-content fade-in">
-                    <h2>Support Our Programs</h2>
-                    <p>Your donation helps us continue providing life-changing programs to adults who have nowhere else to turn.</p>
-                    <div class="cta-buttons">
-                        <a href="/donate-checkout/" class="btn btn-white btn-lg">Donate Now</a>
-                        <a href="/locations/" class="btn btn-secondary btn-lg">Visit a Center</a>
-                    </div>
-                </div>
+        <!-- Back Link -->
+        <section class="about-content" style="padding: 40px 0 80px;">
+            <div class="container" style="text-align: center;">
+                <a href="/programs/sensory-lab/" class="btn btn-primary">Learn More About the Sensory Lab</a>
+                <a href="/programs/" class="btn btn-outline" style="margin-left: 15px;">Back to Programs</a>
             </div>
         </section>
     </main>
+
     <!-- Footer -->
     <footer class="footer" style="color: white;">
         <div class="container">
@@ -394,23 +244,6 @@
     </div>
 
     <script src="/js/main.js"></script>
-    <script>
-        // Autoplay video when scrolled into view
-        document.addEventListener('DOMContentLoaded', function() {
-            var video = document.getElementById('aimAheadVideo');
-            var baseSrc = video.src.replace('&autoplay=1', '');
-            var played = false;
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting && !played) {
-                        video.src = baseSrc + '&autoplay=1';
-                        played = true;
-                    }
-                });
-            }, { threshold: 0.5 });
-            observer.observe(video);
-        });
-    </script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">
