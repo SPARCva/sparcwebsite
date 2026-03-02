@@ -1775,7 +1775,7 @@
     </div>
 </div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     var insertForm4934657 = function() {
         var html4934657 = '<style text=\'text/css\'>' + 
 '.registration-form label{color: #404040;' + 
@@ -1913,7 +1913,7 @@
 '<label for="7162880"><input id="7162880" name="registration-type" class="required" type="radio" value="10.000000" maxlength="255" data-short-name="Student Attendee" data-ticket-quantity="1" data-registration-type-value="7160833" data-non-deductible-amount="0.000000"></input><span class="label">$10.00 - Student Attendee</span></label>' + 
 '</div>' + 
 '<div class="field radio 7162881 required" >' + 
-'<label for="7162881"><input id="7162881" name="registration-type" class="required" type="radio" value="100.000000" maxlength="255" data-short-name="Event Attendee" data-ticket-quantity="1" data-registration-type-value="7160834" data-non-deductible-amount="0.000000"></input><span class="label">$100.00 - Event Attendee</span></label>' + 
+'<label for="7162881"><input id="7162881" name="registration-type" class="required" type="radio" value="50.000000" maxlength="255" data-short-name="Event Attendee" data-ticket-quantity="1" data-registration-type-value="7160834" data-non-deductible-amount="0.000000"></input><span class="label">$50.00 - Event Attendee</span></label>' + 
 '</div>' + 
 '<div class="field radio 4938756 required" >' + 
 '<label for="4938756"><input id="4938756" name="registration-type" class="required" type="radio" value="15000.000000" maxlength="255" data-short-name="Event Sponsor" data-ticket-quantity="4" data-registration-type-value="4942850" data-non-deductible-amount="0.000000"></input><span class="label">$15,000.00 - Event Sponsor</span></label>' + 
@@ -1923,6 +1923,9 @@
 '</div>' + 
 '<div class="field radio 4938758 required" >' + 
 '<label for="4938758"><input id="4938758" name="registration-type" class="required" type="radio" value="1000.000000" maxlength="255" data-short-name="Community Sponsor" data-ticket-quantity="2" data-registration-type-value="4942852" data-non-deductible-amount="0.000000"></input><span class="label">$1,000.00 - Community Sponsor</span></label>' + 
+'</div>' + 
+'<div class="field radio cannot-attend required" >' + 
+'<label for="cannot-attend"><input id="cannot-attend" name="registration-type" class="required" type="radio" maxlength="255" data-short-name="Donation" data-registration-type-value="658433"></input><span class="label">Sorry, I can\'t attend, but I would like to show my support by making a donation</span></label>' + 
 '</div>' + 
 '' + 
 '</div>' + 
@@ -1942,6 +1945,13 @@
 '                            <td><span id="unitPrice"></span></td>' + 
 '                        </tr>' + 
 '                        ' + 
+'                        <tr class="additional-donation">' + 
+'                            <td></td>' + 
+'                            <td>Additional Donation</td>' + 
+'                            <td></td>' + 
+'                            <td><input id="additional-donation-amount" name="additionalDonationAmount" type="text" class="currency amount-field minimum1" placeholder="$0.00">' + 
+'                                <label for="additional-donation-amount" class="error" style="display: none" generated="true"></label></input></td>' + 
+'                        </tr>' + 
 '                        <tr class="cannot-attend-donation" style="display: none">      ' + 
 '                            <td></td>' + 
 '                            <td>Donation</td>' + 
@@ -2424,7 +2434,6 @@
                          Bloomerang.Util.requireStripe(function() {
                                         Bloomerang.Util.Stripe = Stripe('pk_live_iZYXFefCkt380zu63aqUIo7y'); 
                                         let elements = null;
-
                                             // Create an instance of the stripe card element.
                                             elements = Bloomerang.Util.Stripe.elements();
                                             Bloomerang.Util.StripeCard = elements.create('card', {
@@ -2468,7 +2477,6 @@
                                           }
                                         });
                                       });
-
                                       jQuery(".donation-form #express-submit").val("Donate Now");
                                       jQuery(".registration-form #express-submit").val("Register Now");
                                       jQuery(".membership-form #express-submit").val("Join");
@@ -2492,7 +2500,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                       
                         Bloomerang.reCaptchaV3SiteKey = '6LeH9PUrAAAAAN0wv9VTVahiByfF9sGDQglOBEYK';
                         Bloomerang.gRecaptchaV3Threshold = 0.5;
-
                         window.captchaLoadCallback = function() {
                             Bloomerang.gRecaptchaLoaded = true;
                         };
@@ -2500,7 +2507,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                         window.captchaV3LoadCallback = function() {
                             Bloomerang.gRecaptchaV3Loaded = true;
                         };
-
                         if(Bloomerang.donationFormReCaptchaV3SelfHostedFlag === undefined) {
                             function success (result) {
                                 Bloomerang.donationFormReCaptchaV3SelfHostedFlag = result.DonationFormReCaptchaV3SelfHostedFlag;
@@ -2511,12 +2517,10 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                                 Bloomerang.donationFormReCaptchaV3SelfHostedFlag = false;
                                 initializeCaptcha();
                             } 
-
                             Bloomerang.Api._post('v1/ReCaptchaV3SelfHostedFlag', {}, success, failure);
                         } else {
                             initializeCaptcha();
                         }
-
                         async function getRecaptchaV3Token() {
                               const token = await new Promise((resolve, reject) => {
                                  grecaptcha.ready(function() {
@@ -2525,7 +2529,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                                      });
                                   });
                                 });
-
                                 return token;
                         }
                         
@@ -2554,15 +2557,11 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                                                     Bloomerang.isForcePuzzle = true;
                                                     jQuery('.section.captcha').attr('style', 'display: block');
                                                 } else {
-
                                                     const initialRecaptchaV3Token = await getRecaptchaV3Token();
-
                                                      // Append to the form data container to be included when submitting the form on bloomerangV2.js
                                                      Bloomerang.captchaResponseV3(initialRecaptchaV3Token);
-
                                                      setInterval(async ()=> {
                                                          const recaptchaV3Token = await getRecaptchaV3Token();
-
                                                         // Append to the form data container to be included when submitting the form on bloomerangV2.js
                                                         Bloomerang.captchaResponseV3(recaptchaV3Token);
                                                      }, 80000);
@@ -2597,7 +2596,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                     Bloomerang.transactionFeeRatePayPal = 0.032; 
                     
                     Bloomerang.useKey('pub_0671a94c-634e-11f0-9fbb-06179723032d');
-
         if (typeof isPreviewMode !== 'undefined' && isPreviewMode) {
           document.querySelector('#preview-text').style.display = 'block';
         }
@@ -2625,13 +2623,11 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                       .homeEmail(val(".registration-form #email-address"))
                       .homePhone(val(".registration-form #phone-number"))
                       .applyEventRegistrationCustomFields();
-
             if (jQuery(".registration-form #consent-all").prop("checked")) {
               Bloomerang.Account.optedInStatus(jQuery(".registration-form #consent-email").prop("checked"),
                                                jQuery(".registration-form #consent-mail").prop("checked"),
                                                jQuery(".registration-form #consent-phone").prop("checked"));
             }
-
             var amount = Bloomerang.Util.getRegistrationAmount() + Bloomerang.Util.getRegistrationTrueImpactAmount();
             var nonDeductibleAmount = jQuery("#totalPrice").data("non-deductible") || 0;
             var ticketQuantity = jQuery("#totalTicketQty").text();
@@ -2645,7 +2641,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                       .customPickField(jQuery("table.registration-summary").data("registration-type-field-id"), 
                                        jQuery(".registration-form .section.registrationType input[name='registration-type']:checked").data("registration-type-value"))
                       .customFreeformField(jQuery("table.registration-summary").data("ticket-quantity-field-id"), ticketQuantity);
-
             // Need to do a null-check here because they might have a cached version of Bloomerang-v2.js
             if (Bloomerang.Donation.trueImpactEnabled && Bloomerang.Donation.trueImpactUsed) {
               Bloomerang.Donation
@@ -2791,11 +2786,9 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
           jQuery("#totalPrice").data("non-deductible", nonDeductibleForSelectedRegistration * jQuery("#numberOfRegistrations").val());
       
           jQuery("#totalTicketQty").text(jQuery("#numberOfRegistrations").val() * (jQuery(".registrationType input[name='registration-type']:checked").data("ticket-quantity") || 0));
-
           Bloomerang.Util.calculateRegistrationTrueImpact();
           Bloomerang.Util.updateRegisterButtonText();
         };
-
         if (jQuery(".registration-form .true-impact label").length) {
           jQuery(".registration-form .true-impact label")[0].innerHTML = jQuery(".registration-form .true-impact label")[0].innerHTML.replace("[amount]", "<span class='fee-amount'>$0</span>");
         }
@@ -2807,7 +2800,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
             jQuery(".registration-form .true-impact .fee-amount").text(accounting.formatMoney(0));
             return 0;
           }
-
           var impactAmount;
           
           // If this is a OnePay form, use the transaction fee formula/data to calculate the impactAmount
@@ -2824,7 +2816,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
               ? Number((Math.floor((newTotal - amount)*100)/100).toFixed(2))
               : Number((newTotal - amount).toFixed(2));
           }
-
           jQuery(".registration-form .true-impact .fee-amount").text(accounting.formatMoney(impactAmount));
           return impactAmount;
         };
@@ -2853,7 +2844,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
             jQuery(".btn-submit-registration").val("Register Now");
           }
         };
-
         jQuery(".registration-form .registrationType input, .registration-form .registration-summary input")
           .change(updateRegistrationAmounts)
           .keyup(updateRegistrationAmounts);
@@ -2862,7 +2852,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
             var digits = phone_number.replace(/\D/g, "");
             return this.optional(element) || digits.length == 7 || digits.length == 10 || digits.length == 11;
         }, "Please specify a valid phone number or use '+' for international.");
-
         jQuery.validator.addMethod("phoneInternational", function (phone_number, element) {
             return this.optional(element) || /^\+[0-9\-\(\)\s.]+$/i.test(phone_number);
         }, "Please specify a valid phone number.");
@@ -2871,7 +2860,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
         jQuery.validator.addMethod("zipcodeUS", function (value, element) {
             return this.optional(element) || /\d{5}-\d{4}$|^\d{5}$/.test(value)
         }, "The specified US ZIP Code is invalid");
-
         jQuery.validator.addMethod("currency", function (value, element, options) {
             return !value ||
                 value
@@ -2880,9 +2868,7 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                   .split(",").join("")
                   .match(/^\d+$/g);
         }, "Not a valid currency");
-
         jQuery.validator.classRuleSettings.currency = { currency: true };
-
         jQuery.validator.addMethod("number", function (value, element, options) {
             return !value ||
                 value
@@ -2890,7 +2876,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                   .split(",").join("")
                   .match(/^\d+$/g);
         }, "Not a valid number");
-
         jQuery.validator.classRuleSettings.number = { number: true };
         
         jQuery.validator.addMethod("validYear", function (value, element, options) {
@@ -2901,9 +2886,7 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                 return false;
             }
         }, function () { return "Must be a 4 digit year"; });
-
         jQuery.validator.classRuleSettings.validYear = { validYear: true };
-
         // Validate that the donation amount is at least $1
         jQuery.validator.methods.min = function( value, element, param ) {
           if (typeof (accounting) === "undefined") { // rip out $ and ,
@@ -2916,7 +2899,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
         };
         jQuery.validator.classRuleSettings.minimum1 = { min: 1 };
         jQuery.validator.messages.min = 'Please enter a value of at least {0}.'
-
         jQuery(".registration-form #country").change(function(event) {
           var element = jQuery(event.target || event.srcElement); // cross-browser event target selection
           var isInternational = (element.val() != "US" && element.val() != "CA" && element.val() != "BM");
@@ -2949,25 +2931,19 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
           phoneField.toggleClass("phoneUS", !internationalNumber);
           phoneField.toggleClass("phoneInternational", internationalNumber);
         })
-
         collectPayment = function () {
           var form = jQuery("#registration-form");
-
           if (!Bloomerang.ValidateEventRegistrationFormCaptcha()) {
             return false;
           }
-
           if (!form.valid()) {
             return false;
           }
-
           var isEft = jQuery("#registration-form #CreditCard").length > 0 && !jQuery("#registration-form #CreditCard").prop("checked");
-
           if (Bloomerang.Util.isProcessorStripe() && !isEft && !Bloomerang.Util.StripeCardIsValid) {
             document.getElementById('card-errors').textContent = "Valid card info is required";
             return false;
           }
-
           if (isEft) {
             submitDonation();
           }
@@ -2986,7 +2962,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
             }
             jQuery('meta[name="viewport"]').attr('content', 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1');
             jQuery('meta[name="viewport"]').attr('content', oldMeta);
-
             if (Bloomerang.Util.isProcessorStripe() || Bloomerang.Util.isProcessorOnePay()) {
               submitDonation();
             } else {
@@ -3020,7 +2995,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
               Bloomerang.Api.OnSubmit = Bloomerang.Widget.Donation.OnSubmit;
               Bloomerang.Api.OnSuccess = Bloomerang.Widget.Donation.OnSuccess;
               Bloomerang.Api.OnError = Bloomerang.Widget.Donation.OnError;
-
               var processingMessage = jQuery("#registration-processing-container");
               processingMessage.show();
               jQuery("#registration-form-container").hide();
@@ -3056,7 +3030,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
         jQuery("#registration-form #true-impact").change(function() {
           Bloomerang.Util.updateRegisterButtonText();
         });
-
         // Show opt-in options based on the setting of the global opt-in
         jQuery(".registration-form .field.consent-all").change(function() { 
           jQuery(".registration-form .field.consent-all").siblings().each(function(i, e) { 
@@ -3080,7 +3053,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                         waitForBloomerangLoad(function() { Bloomerang.Util.requireJQueryValidationAndStripe(function() { insertForm4934657(); })});
                     }
                 };
-
                 var waitForBloomerangLoad = function(callback) {
                     if (typeof(Bloomerang) === 'undefined' || !Bloomerang._isReady) {
                         setTimeout(function () { waitForBloomerangLoad(callback) }, 500);
@@ -3095,7 +3067,6 @@ Bloomerang.Data.PayPal.IsPayPalPaymentMethodVaultingEnabled = false;Bloomerang.D
                         }
                     }
                 };
-
                 startBloomerangLoad();
 </script>
 
