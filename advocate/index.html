@@ -1031,104 +1031,6 @@
             </div>
         </section>
 
-        <!-- Letters of Support Section -->
-        <section class="support-letters">
-            <div class="container">
-                <h2>Letters of Support</h2>
-                <p class="subtitle">Leaders across Virginia are standing with SPARC. Browse letters of support from elected officials and community advocates.</p>
-
-                <div class="letters-carousel-wrapper">
-                    <button class="carousel-arrow carousel-arrow-left" onclick="scrollLetters(-1)" aria-label="Scroll left">
-                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-                    </button>
-
-                    <div class="letters-carousel" id="lettersCarousel">
-                        <div class="letters-carousel-track">
-
-                            <div class="letter-card" onclick="openLetterModal('Arlington County Letter of Support', '/advocate/021926%20-%20Arlington%20County.%20LOS.%20SPARC%20Budget%20Request%20(1).pdf', 'pdf')">
-                                <div class="letter-card-thumb">
-                                    <img src="/advocate/previews/021926--Arlington-County-LOS-SPARC-Budget-Request-1-preview.png" alt="Arlington County Letter of Support" loading="lazy">
-                                </div>
-                                <div class="letter-card-info">
-                                    <h4>Arlington County Board</h4>
-                                    <p>Budget Request Letter</p>
-                                </div>
-                            </div>
-
-                            <div class="letter-card" onclick="openLetterModal('Virginia Legislature Leaders Letter', '/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf#page=2', 'pdf')">
-                                <div class="letter-card-thumb">
-                                    <img src="/advocate/previews/2024-11-21-Letter-from-Virginia-Legislature-Leaders-to-Judge-Gibney-544-1-1-preview.png" alt="Virginia Legislature Leaders Letter" loading="lazy">
-                                </div>
-                                <div class="letter-card-info">
-                                    <h4>Virginia Legislature Leaders</h4>
-                                    <p>Letter to Judge Gibney</p>
-                                </div>
-                            </div>
-
-                            <div class="letter-card" onclick="openLetterModal('Chairman McKay &amp; Chairman Jimenez Letter', '/advocate/Chairman%20McKay%20and%20Legislative%20Chairman%20Jimenez%20-%20Letter%20on%20SPARC%20Budget%20Amendment%20to%20SFAC%20(2)%20(1).pdf', 'pdf')">
-                                <div class="letter-card-thumb">
-                                    <img src="/advocate/previews/Chairman-McKay-and-Legislative-Chairman-Jimenez--Letter-on-SPARC-Budget-Amendment-to-SFAC-2-1-preview.png" alt="Chairman McKay and Chairman Jimenez Letter" loading="lazy">
-                                </div>
-                                <div class="letter-card-info">
-                                    <h4>Chairman McKay & Chairman Jimenez</h4>
-                                    <p>SPARC Budget Amendment</p>
-                                </div>
-                            </div>
-
-                            <div class="letter-card" onclick="openLetterModal('Letter of Support for Debi Alexander', '/advocate/Letter%20of%20Support%20for%20Debi%20Alexander%2C%20SPARC%20CEO%20(1)%20(1).pdf', 'pdf')">
-                                <div class="letter-card-thumb">
-                                    <img src="/advocate/previews/Letter-of-Support-for-Debi-Alexander-SPARC-CEO-1-1-preview.png" alt="Letter of Support for Debi Alexander" loading="lazy">
-                                </div>
-                                <div class="letter-card-info">
-                                    <h4>Community Leaders</h4>
-                                    <p>Support for Debi Alexander, CEO</p>
-                                </div>
-                            </div>
-
-                            <div class="letter-card" onclick="openLetterModal('Supervisor Sylvia Glass - Budget Amendment Support', '/advocate/SPARC%20Budget%20Amendment%20Support%20Letter%20-%20Supervisor%20Sylvia%20Glass%20-%20Senate%20(1).pdf', 'pdf')">
-                                <div class="letter-card-thumb">
-                                    <img src="/advocate/previews/SPARC-Budget-Amendment-Support-Letter--Supervisor-Sylvia-Glass--Senate-1-preview.png" alt="Supervisor Sylvia Glass Budget Amendment Support Letter" loading="lazy">
-                                </div>
-                                <div class="letter-card-info">
-                                    <h4>Supervisor Sylvia Glass</h4>
-                                    <p>Senate Budget Amendment Support</p>
-                                </div>
-                            </div>
-
-                            <div class="letter-card" onclick="openLetterModal('SPARC Budget Request', '/advocate/SPARC%20budget%20request%20(2)%20(2).pdf', 'pdf')">
-                                <div class="letter-card-thumb">
-                                    <img src="/advocate/previews/SPARC-budget-request-2-2-preview.png" alt="SPARC Budget Request" loading="lazy">
-                                </div>
-                                <div class="letter-card-info">
-                                    <h4>SPARC</h4>
-                                    <p>Budget Request</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button class="carousel-arrow carousel-arrow-right" onclick="scrollLetters(1)" aria-label="Scroll right">
-                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Letter Modal -->
-        <div class="letter-modal-overlay" id="letterModalOverlay" onclick="closeLetterModal(event)">
-            <div class="letter-modal" onclick="event.stopPropagation()">
-                <div class="letter-modal-header">
-                    <h3 id="letterModalTitle">Letter</h3>
-                    <button class="letter-modal-close" onclick="closeLetterModal()" aria-label="Close">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                    </button>
-                </div>
-                <div class="letter-modal-body" id="letterModalBody">
-                </div>
-            </div>
-        </div>
-
         <!-- Letter Section -->
         <section class="letter-section">
             <div class="container">
@@ -1229,6 +1131,104 @@
                 </div>
             </div>
         </section>
+
+        <!-- Letters of Support Section -->
+        <section class="support-letters">
+            <div class="container">
+                <h2>Letters of Support</h2>
+                <p class="subtitle">Leaders across Virginia are standing with SPARC. Browse letters of support from elected officials and community advocates.</p>
+
+                <div class="letters-carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" onclick="scrollLetters(-1)" aria-label="Scroll left">
+                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+
+                    <div class="letters-carousel" id="lettersCarousel">
+                        <div class="letters-carousel-track">
+
+                            <div class="letter-card" onclick="openLetterModal('Arlington County Letter of Support', '/advocate/021926%20-%20Arlington%20County.%20LOS.%20SPARC%20Budget%20Request%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/previews/021926--Arlington-County-LOS-SPARC-Budget-Request-1-preview.png" alt="Arlington County Letter of Support" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Arlington County Board</h4>
+                                    <p>Budget Request Letter</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Virginia Legislature Leaders Letter', '/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf#page=2', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/previews/2024-11-21-Letter-from-Virginia-Legislature-Leaders-to-Judge-Gibney-544-1-1-preview.png" alt="Virginia Legislature Leaders Letter" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Virginia Legislature Leaders</h4>
+                                    <p>Letter to Judge Gibney</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Chairman McKay &amp; Chairman Jimenez Letter', '/advocate/Chairman%20McKay%20and%20Legislative%20Chairman%20Jimenez%20-%20Letter%20on%20SPARC%20Budget%20Amendment%20to%20SFAC%20(2)%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/previews/Chairman-McKay-and-Legislative-Chairman-Jimenez--Letter-on-SPARC-Budget-Amendment-to-SFAC-2-1-preview.png" alt="Chairman McKay and Chairman Jimenez Letter" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Chairman McKay & Chairman Jimenez</h4>
+                                    <p>SPARC Budget Amendment</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Letter of Support for Debi Alexander', '/advocate/Letter%20of%20Support%20for%20Debi%20Alexander%2C%20SPARC%20CEO%20(1)%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/previews/Letter-of-Support-for-Debi-Alexander-SPARC-CEO-1-1-preview.png" alt="Letter of Support for Debi Alexander" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Community Leaders</h4>
+                                    <p>Support for Debi Alexander, CEO</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('Supervisor Sylvia Glass - Budget Amendment Support', '/advocate/SPARC%20Budget%20Amendment%20Support%20Letter%20-%20Supervisor%20Sylvia%20Glass%20-%20Senate%20(1).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/previews/SPARC-Budget-Amendment-Support-Letter--Supervisor-Sylvia-Glass--Senate-1-preview.png" alt="Supervisor Sylvia Glass Budget Amendment Support Letter" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>Supervisor Sylvia Glass</h4>
+                                    <p>Senate Budget Amendment Support</p>
+                                </div>
+                            </div>
+
+                            <div class="letter-card" onclick="openLetterModal('SPARC Budget Request', '/advocate/SPARC%20budget%20request%20(2)%20(2).pdf', 'pdf')">
+                                <div class="letter-card-thumb">
+                                    <img src="/advocate/previews/SPARC-budget-request-2-2-preview.png" alt="SPARC Budget Request" loading="lazy">
+                                </div>
+                                <div class="letter-card-info">
+                                    <h4>SPARC</h4>
+                                    <p>Budget Request</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button class="carousel-arrow carousel-arrow-right" onclick="scrollLetters(1)" aria-label="Scroll right">
+                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Letter Modal -->
+        <div class="letter-modal-overlay" id="letterModalOverlay" onclick="closeLetterModal(event)">
+            <div class="letter-modal" onclick="event.stopPropagation()">
+                <div class="letter-modal-header">
+                    <h3 id="letterModalTitle">Letter</h3>
+                    <button class="letter-modal-close" onclick="closeLetterModal()" aria-label="Close">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="letter-modal-body" id="letterModalBody">
+                </div>
+            </div>
+        </div>
 
         <!-- Lookup Section -->
         <section class="lookup-section">
