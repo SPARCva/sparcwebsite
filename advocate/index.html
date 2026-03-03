@@ -1174,21 +1174,29 @@
                         </div>
                     </div>
                     <div class="letter-body" id="letterBody">
-                        <p class="salutation">
-                            Dear Budget Conferee,
-                        </p>
+                        <div class="address-block">
+                            <span class="fill-in" contenteditable="true" data-placeholder="Your Name"></span><br>
+                            <span class="fill-in" contenteditable="true" data-placeholder="Your Street Address"></span><br>
+                            <span class="fill-in" contenteditable="true" data-placeholder="City, State ZIP"></span>
+                        </div>
+
+                        <div class="date-line">
+                            <span class="fill-in" contenteditable="true" data-placeholder="Date"></span>
+                        </div>
+
+                        <p class="salutation">Dear Budget Conferee,</p>
 
                         <p>I am writing as <span class="fill-in" contenteditable="true" data-placeholder="your relationship to SPARC" style="min-width: 280px;"></span> <span class="example-text">(e.g., "a parent of a SPARC participant," "a supporter of disability services," or "a constituent who cares about disability rights")</span> who lives in your district. I respectfully ask you to support the Senate budget amendment for SPARC in conference.</p>
 
                         <p>The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s &ndash; Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.</p>
 
-                        <p>SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one-to-one personal care support. This population represents the very individuals Virginia has struggled &mdash; over decades &mdash; to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in <em>United States v. Virginia</em>.</p>
+                        <p>SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one&#8209;to&#8209;one personal care support. This population represents the very individuals Virginia has struggled&mdash;over decades&mdash;to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in <em>United States v. Virginia</em>.</p>
 
                         <p id="personal-sentence-paragraph"><span class="fill-in" id="personal-sentence" contenteditable="true" data-placeholder="Add a personal sentence about why SPARC matters to you (optional)" style="min-width: 100%; display: block; min-height: 50px;"></span></p>
 
-                        <p>SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide &mdash; and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.</p>
+                        <p>SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide&mdash;and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.</p>
 
-                        <p>Supporting the Senate's budget amendment is a strategic, cost-effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high-quality community-based services that adults with severe disabilities deserve.</p>
+                        <p>Supporting the Senate&rsquo;s budget amendment is a strategic, cost&#8209;effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high&#8209;quality community&#8209;based services that adults with severe disabilities deserve.</p>
 
                         <p>I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.</p>
 
@@ -1806,9 +1814,11 @@
                 return text === placeholder ? '' : text;
             };
 
-            const relationship = getName('.fill-in[data-placeholder="your relationship to SPARC"]') || 'your relationship to SPARC';
-            const senderName = getName('.signature-block .fill-in[data-placeholder="Your Name"]') || '[Your Name]';
-            const senderAddress = getName('.signature-block .fill-in[data-placeholder="Your Address"]') || '[Your Address]';
+            const senderName = getName('.address-block .fill-in:first-child') || 'Your Name';
+            const senderAddress = getName('.address-block .fill-in:nth-child(2)') || 'Your Street Address';
+            const senderCityState = getName('.address-block .fill-in:nth-child(3)') || 'City, State ZIP';
+            const dateField = getName('.date-line .fill-in') || 'Date';
+            const relationship = getName('p:not(.salutation):not(.closing) .fill-in[data-placeholder="your relationship to SPARC"]') || 'your relationship to SPARC';
 
             // Check personal sentence
             const personalSentence = document.getElementById('personal-sentence');
@@ -1819,15 +1829,17 @@
             // Build email body
             let body = `Dear Budget Conferee,
 
+Dear Budget Conferee,
+
 I am writing as ${relationship} who lives in your district. I respectfully ask you to support the Senate budget amendment for SPARC in conference.
 
-The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s - Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.
+The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s \u2013 Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.
 
-SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one-to-one personal care support. This population represents the very individuals Virginia has struggled - over decades - to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in United States v. Virginia.
+SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one\u2011to\u2011one personal care support. This population represents the very individuals Virginia has struggled\u2014over decades\u2014to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in United States v. Virginia.
 
-${includePersonal ? personalText + '\n\n' : ''}SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide - and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.
+${includePersonal ? personalText + '\n\n' : ''}SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide\u2014and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.
 
-Supporting the Senate's budget amendment is a strategic, cost-effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high-quality community-based services that adults with severe disabilities deserve.
+Supporting the Senate\u2019s budget amendment is a strategic, cost\u2011effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high\u2011quality community\u2011based services that adults with severe disabilities deserve.
 
 I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.
 
