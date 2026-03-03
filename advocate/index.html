@@ -644,7 +644,7 @@
                 font-size: 2.5rem;
             }
             .why-grid, .supervisor-list {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
             .county-grid {
                 grid-template-columns: 1fr;
@@ -988,34 +988,42 @@
         <section class="advocate-hero">
             <div class="container">
                 <h1>Advocate for SPARC</h1>
-                <p>Your voice matters. Help us secure funding for community-based day services that serve adults with severe and multiple disabilities in Virginia.</p>
+                <p>We need your voice right now. SPARC's $500,000 in state funding is on the line. The Senate included this critical investment in their budget &mdash; but the House version did not. Budget conferees are meeting now to decide what stays and what gets cut.</p>
+                <p style="margin-top: 1rem; font-weight: 600; font-size: 1.4rem;">This is the moment that matters. A few letters from real people in real districts can make the difference.</p>
             </div>
         </section>
 
-        <!-- Why This Matters Section -->
+        <!-- What We're Asking Section -->
         <section class="why-matters">
             <div class="container">
-                <h2>Why This Matters Now</h2>
-                <p class="subtitle">Virginia has a legal obligation to provide integrated, community-based services. SPARC is already delivering what the Commonwealth needs.</p>
+                <h2>What We're Asking You To Do</h2>
+                <p class="subtitle">Send a brief letter to your budget conferee asking them to adopt the Senate position on SPARC funding. We've drafted a template below that you can personalize and send. It takes less than 5 minutes.</p>
 
-                <div class="why-grid">
+                <!-- Who To Send It To -->
+                <div class="why-grid" style="grid-template-columns: 1fr 1fr; max-width: 900px; margin: 0 auto 50px;">
                     <div class="why-card">
-                        <h3>Legal Compliance</h3>
-                        <p>Virginia is under a Permanent Injunction in <em>United States v. Virginia</em> requiring the state to provide integrated, community-based services for people with disabilities.</p>
+                        <h3>House of Delegates</h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 10px;">Delegate Luke Torian: <a href="mailto:DelLTorian@house.virginia.gov">DelLTorian@house.virginia.gov</a></li>
+                            <li style="margin-bottom: 10px;">Delegate Don Scott: <a href="mailto:DelDScott@house.virginia.gov">DelDScott@house.virginia.gov</a></li>
+                            <li style="margin-bottom: 10px;">Delegate Rodney Willett: <a href="mailto:DelRWillett@house.virginia.gov">DelRWillett@house.virginia.gov</a></li>
+                            <li style="margin-bottom: 10px;">Delegate Charniele Herring: <a href="mailto:DelCHerring@house.virginia.gov">DelCHerring@house.virginia.gov</a></li>
+                            <li style="margin-bottom: 10px;">Delegate Betsy Carr: <a href="mailto:DelBCarr@house.virginia.gov">DelBCarr@house.virginia.gov</a></li>
+                            <li style="margin-bottom: 10px;">Delegate Terry Austin: <a href="mailto:DelTAustin@house.virginia.gov">DelTAustin@house.virginia.gov</a></li>
+                            <li>Delegate Robert Bloxom Jr.: <a href="mailto:DelRBloxom@house.virginia.gov">DelRBloxom@house.virginia.gov</a></li>
+                        </ul>
                     </div>
                     <div class="why-card">
-                        <h3>Proven Model</h3>
-                        <p>SPARC is not a pilot or proposal - it's an established, fully operating program already delivering the exact services Virginia is legally required to provide.</p>
-                    </div>
-                    <div class="why-card">
-                        <h3>Cost Effective</h3>
-                        <p>SPARC operates at substantially lower cost than Medicaid-funded day programs while providing significantly higher quality programming and community integration.</p>
+                        <h3>Senate</h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li>Senator L. Louise Lucas: <a href="mailto:senatorlucas@senate.virginia.gov">senatorlucas@senate.virginia.gov</a></li>
+                        </ul>
                     </div>
                 </div>
 
                 <div class="compliance-box">
-                    <h3>A Strategic Path to Compliance</h3>
-                    <p>Funding SPARC is a direct, measurable, and cost-effective way for Virginia to demonstrate progress toward compliance with the ADA and the Permanent Injunction. Our participants are the exact population Virginia has struggled - over decades - to serve appropriately.</p>
+                    <h3>Why This Matters</h3>
+                    <p>SPARC serves adults with the most complex disabilities in Virginia &mdash; people who need continuous one-to-one support and have very few options for meaningful community-based services. This $500,000 investment helps Virginia meet its legal obligations under the Permanent Injunction while delivering better outcomes at lower cost than existing Medicaid day programs. We cannot let this funding disappear in conference. Your letter can help make sure it doesn't.</p>
                     <div style="text-align: center; margin-top: 30px;">
                         <a href="/compliance/" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem; font-weight: 600; background-color: white; color: var(--sparc-dark-navy); text-decoration: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">Learn More About ADA Compliance →</a>
                     </div>
@@ -1144,8 +1152,8 @@
                     </div>
                 </div>
 
-                <h2 style="margin-top: 60px;">Write to Your Legislators</h2>
-                <p class="subtitle" style="margin-bottom: 40px;">Help us secure funding for community-based day services that serve adults with severe and multiple disabilities in Virginia by writing to your legislators.</p>
+                <h2 style="margin-top: 60px;">Your Letter Template</h2>
+                <p class="subtitle" style="margin-bottom: 40px;">Personalize the template below and send it to the budget conferees listed above. It takes less than 5 minutes.</p>
 
                 <div class="letter-container" id="letterContainer">
                     <div class="letter-header">
@@ -1166,46 +1174,50 @@
                         </div>
                     </div>
                     <div class="letter-body" id="letterBody">
-                        <div class="address-block">
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Name"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Street Address"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="City, State ZIP"></span>
-                        </div>
-
-                        <div class="date-line">
-                            <span class="fill-in" contenteditable="true" data-placeholder="Date"></span>
-                        </div>
-
                         <p class="salutation">
-                            Dear <span class="fill-in" contenteditable="true" data-placeholder="Title & Name" style="min-width: 180px;"></span>, <span class="example-text">(e.g., Senator Smith, Delegate Jones)</span>
+                            Dear Budget Conferee,
                         </p>
 
-                        <p>I am writing as <span class="fill-in" contenteditable="true" data-placeholder="your relationship to SPARC" style="min-width: 280px;"></span> <span class="example-text">(e.g., "a parent of a SPARC participant," "a supporter of disability services," "a constituent who cares about disability rights")</span> who lives in your district. I am asking you to support the SPARC budget amendments currently before the General Assembly:</p>
+                        <p>I am writing as <span class="fill-in" contenteditable="true" data-placeholder="your relationship to SPARC" style="min-width: 280px;"></span> <span class="example-text">(e.g., "a parent of a SPARC participant," "a supporter of disability services," or "a constituent who cares about disability rights")</span> who lives in your district. I respectfully ask you to support the Senate budget amendment for SPARC in conference.</p>
 
-                        <ul style="margin: 15px 0 15px 20px; line-height: 1.8;">
-                            <li><strong>House:</strong> HB30 Item 300 #7h - Specially Adapted Resources Clubs (SPARC)</li>
-                            <li><strong>Senate:</strong> SB30 Item 300 #8s - Specially Adapted Resources Clubs (SPARC)</li>
-                        </ul>
+                        <p>The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s &ndash; Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.</p>
 
-                        <p>SPARC provides integrated, community-based day services for adults with complex disabilities who are unable to work and require continuous one-to-one personal care support. This is the exact population Virginia has struggled - over decades - to serve in compliance with the Americans with Disabilities Act and the Permanent Injunction issued against Virginia in <em>United States v. Virginia</em>.</p>
+                        <p>SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one-to-one personal care support. This population represents the very individuals Virginia has struggled &mdash; over decades &mdash; to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in <em>United States v. Virginia</em>.</p>
 
                         <p id="personal-sentence-paragraph"><span class="fill-in" id="personal-sentence" contenteditable="true" data-placeholder="Add a personal sentence about why SPARC matters to you (optional)" style="min-width: 100%; display: block; min-height: 50px;"></span></p>
 
-                        <p>SPARC is not a pilot or a proposal. It is an established, fully operating program already delivering the integrated services the Commonwealth is legally required to provide - at substantially lower cost than Medicaid-funded day programs and with a significantly higher level of programming, including richer community integration, individualized engagement, and meaningful daily activities that far exceed the programs currently serving adults with complex needs.</p>
+                        <p>SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide &mdash; and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.</p>
 
-                        <p>Funding SPARC is a strategic, direct, and cost effective way for Virginia to demonstrate measurable progress toward compliance with the Permanent Injunction.</p>
+                        <p>Supporting the Senate's budget amendment is a strategic, cost-effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high-quality community-based services that adults with severe disabilities deserve.</p>
 
-                        <p>I urge you to support these budget amendments and help ensure that adults with severe disabilities in Virginia have access to the quality community-based services they deserve.</p>
+                        <p>I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.</p>
 
                         <p class="closing">Sincerely,</p>
 
                         <div class="signature-block">
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Signature" style="min-width: 200px;"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Printed Name"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Phone Number"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Email Address"></span>
+                            <span class="fill-in" contenteditable="true" data-placeholder="Your Name" style="min-width: 200px;"></span><br>
+                            <span class="fill-in" contenteditable="true" data-placeholder="Your Address"></span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div style="max-width: 800px; margin: 50px auto 0; background: white; border-radius: 16px; padding: 40px 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--sparc-dark-navy); font-size: 1.5rem; margin-bottom: 25px; text-align: center;">A Few Tips to Make Your Letter Stand Out</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 20px; padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                            <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                            <strong>Personalize it.</strong> Even one sentence about your connection to SPARC &mdash; as a family member, participant, staff member, or community supporter &mdash; makes your letter far more powerful than a form letter.
+                        </li>
+                        <li style="margin-bottom: 20px; padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                            <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                            <strong>Mention your district.</strong> Conferees pay attention to constituents. Include your name and address.
+                        </li>
+                        <li style="padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                            <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                            <strong>Send it today.</strong> The conference process moves quickly, and every day counts.
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -1507,8 +1519,8 @@
         <!-- CTA Section -->
         <section class="advocate-cta">
             <div class="container">
-                <h2>Your Voice Makes a Difference</h2>
-                <p>Every letter, email, and phone call helps demonstrate the community support for integrated services for adults with severe disabilities. Thank you for advocating for SPARC.</p>
+                <h2>Thank You for Standing with SPARC</h2>
+                <p>We cannot let this funding disappear in conference. Your letter can help make sure it doesn't. Every voice matters &mdash; send your letter today.</p>
                 <a href="/contact/" class="btn btn-white btn-lg">Questions? Contact Us</a>
             </div>
         </section>
@@ -1794,12 +1806,9 @@
                 return text === placeholder ? '' : text;
             };
 
-            const senderName = getName('.address-block .fill-in:first-child') || 'Your Name';
-            const senderAddress = getName('.address-block .fill-in:nth-child(2)') || 'Your Street Address';
-            const senderCityState = getName('.address-block .fill-in:nth-child(3)') || 'City, State ZIP';
-            const dateField = getName('.date-line .fill-in') || 'Date';
-            const recipientName = getName('.salutation .fill-in') || 'Title & Name';
-            const relationship = getName('p:not(.salutation):not(.closing) .fill-in[data-placeholder="your relationship to SPARC"]') || 'your relationship to SPARC';
+            const relationship = getName('.fill-in[data-placeholder="your relationship to SPARC"]') || 'your relationship to SPARC';
+            const senderName = getName('.signature-block .fill-in[data-placeholder="Your Name"]') || '[Your Name]';
+            const senderAddress = getName('.signature-block .fill-in[data-placeholder="Your Address"]') || '[Your Address]';
 
             // Check personal sentence
             const personalSentence = document.getElementById('personal-sentence');
@@ -1808,37 +1817,42 @@
             const includePersonal = personalText && personalText !== personalPlaceholder;
 
             // Build email body
-            let body = `${senderName}
-${senderAddress}
-${senderCityState}
+            let body = `Dear Budget Conferee,
 
-${dateField}
+I am writing as ${relationship} who lives in your district. I respectfully ask you to support the Senate budget amendment for SPARC in conference.
 
-Dear ${recipientName},
+The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s - Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.
 
-I am writing as ${relationship} who lives in your district. I am asking you to support the SPARC budget amendments currently before the General Assembly:
+SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one-to-one personal care support. This population represents the very individuals Virginia has struggled - over decades - to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in United States v. Virginia.
 
-• House: HB30 Item 300 #7h - Specially Adapted Resources Clubs (SPARC)
-• Senate: SB30 Item 300 #8s - Specially Adapted Resources Clubs (SPARC)
+${includePersonal ? personalText + '\n\n' : ''}SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide - and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.
 
-SPARC provides integrated, community-based day services for adults with complex disabilities who are unable to work and require continuous one-to-one personal care support. This is the exact population Virginia has struggled - over decades - to serve in compliance with the Americans with Disabilities Act and the Permanent Injunction issued against Virginia in United States v. Virginia.
+Supporting the Senate's budget amendment is a strategic, cost-effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high-quality community-based services that adults with severe disabilities deserve.
 
-${includePersonal ? personalText + '\n\n' : ''}SPARC is not a pilot or a proposal. It is an established, fully operating program already delivering the integrated services the Commonwealth is legally required to provide - at substantially lower cost than Medicaid-funded day programs and with a significantly higher level of programming, including richer community integration, individualized engagement, and meaningful daily activities that far exceed the programs currently serving adults with complex needs.
-
-Funding SPARC is a strategic, direct, and cost effective way for Virginia to demonstrate measurable progress toward compliance with the Permanent Injunction.
-
-I urge you to support these budget amendments and help ensure that adults with severe disabilities in Virginia have access to the quality community-based services they deserve.
+I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.
 
 Sincerely,
+${senderName}
+${senderAddress}`;
 
-${senderName}`;
+            // Budget conferee email addresses
+            const confereeEmails = [
+                'DelLTorian@house.virginia.gov',
+                'DelDScott@house.virginia.gov',
+                'DelRWillett@house.virginia.gov',
+                'DelCHerring@house.virginia.gov',
+                'DelBCarr@house.virginia.gov',
+                'DelTAustin@house.virginia.gov',
+                'DelRBloxom@house.virginia.gov',
+                'senatorlucas@senate.virginia.gov'
+            ].join(',');
 
             // Create mailto link
-            const subject = encodeURIComponent('Support for SPARC Budget Amendments');
+            const subject = encodeURIComponent('Support for Senate SPARC Budget Amendment');
             const encodedBody = encodeURIComponent(body);
 
-            // Open email client
-            window.location.href = `mailto:?subject=${subject}&body=${encodedBody}`;
+            // Open email client with all conferee emails
+            window.location.href = `mailto:${confereeEmails}?subject=${subject}&body=${encodedBody}`;
         }
 
         // Letters of Support Carousel
