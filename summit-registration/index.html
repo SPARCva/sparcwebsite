@@ -325,12 +325,23 @@
         }
         .reg-form-body {
             padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        .reg-form-body > * {
+
+        /* Center the Bloomerang registration form widget */
+        .reg-form-body #registration-form-container {
             width: 100%;
+        }
+        .reg-form-body .registration-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .reg-form-body .registration-form .field input,
+        .reg-form-body .registration-form .field select,
+        .reg-form-body .registration-form .field textarea,
+        .reg-form-body .registration-form #card-element {
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box;
         }
 
         /* ===== What You'll Experience ===== */
