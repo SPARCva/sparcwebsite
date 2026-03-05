@@ -888,7 +888,7 @@
                             <span class="fill-in" contenteditable="true" data-placeholder="Date"></span>
                         </div>
 
-                        <p class="salutation">Dear Budget Conferee,</p>
+                        <p class="salutation">Dear Delegate/Senator <span class="fill-in" contenteditable="true" data-placeholder="Last Name"></span>,</p>
 
                         <p>I am writing as <span class="fill-in" contenteditable="true" data-placeholder="your relationship to SPARC" style="min-width: 280px;"></span> <span class="example-text">(e.g., "a parent of a SPARC participant," "a supporter of disability services," or "a constituent who cares about disability rights")</span> who lives in your district. I respectfully ask you to support the Senate budget amendment for SPARC in conference.</p>
 
@@ -1362,9 +1362,13 @@
             const includePersonal = personalText && personalText !== personalPlaceholder;
 
             // Build email body
-            let body = `Dear Budget Conferee,
+            // Get the last name from the salutation field
+            const lastNameField = document.querySelector('.salutation .fill-in');
+            const lastNamePlaceholder = lastNameField ? lastNameField.getAttribute('data-placeholder') : '';
+            const lastNameText = lastNameField ? lastNameField.textContent.trim() : '';
+            const lastName = (lastNameText && lastNameText !== lastNamePlaceholder) ? lastNameText : 'Last Name';
 
-Dear Budget Conferee,
+            let body = `Dear Delegate/Senator ${lastName},
 
 I am writing as ${relationship} who lives in your district. I respectfully ask you to support the Senate budget amendment for SPARC in conference.
 
