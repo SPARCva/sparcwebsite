@@ -225,80 +225,9 @@
         }
         .contact-box p {
             opacity: 0.95;
-            margin-bottom: 30px;
-            font-size: 1.05rem;
+            margin-bottom: 0;
+            font-size: 1.15rem;
             line-height: 1.6;
-        }
-        .contact-form {
-            display: grid;
-            gap: 15px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-            box-sizing: border-box;
-        }
-        .contact-form input::placeholder,
-        .contact-form textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            outline: none;
-            border-color: white;
-            background: rgba(255, 255, 255, 0.25);
-        }
-        .contact-form textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-        .contact-form .btn-white {
-            background: white;
-            color: var(--primary-blue);
-            border: none;
-            padding: 14px 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .contact-form .btn-white:hover {
-            background: var(--off-white);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .contact-info-row {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-        .contact-info-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
-        }
-        .contact-info-item a {
-            color: white;
-            text-decoration: none;
-        }
-        .contact-info-item a:hover {
-            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
@@ -314,10 +243,6 @@
             }
             .contact-box {
                 padding: 35px 25px;
-            }
-            .contact-info-row {
-                flex-direction: column;
-                align-items: center;
             }
         }
     </style>
@@ -532,29 +457,12 @@
             </div>
         </section>
 
-        <!-- Contact Us -->
+        <!-- Contact Info -->
         <section class="contact-section">
             <div class="container">
                 <div class="contact-box fade-in">
-                    <h2>Get in Touch</h2>
-                    <p>Interested in enrolling a loved one or learning more about SPARC? Fill out the form below and our enrollment coordinator will reach out to you.</p>
-                    <form class="contact-form" id="enrollmentContactForm" onsubmit="sendEnrollmentEmail(event)">
-                        <input type="text" id="contactName" placeholder="Your Name" required>
-                        <input type="email" id="contactEmail" placeholder="Your Email" required>
-                        <input type="text" id="contactPhone" placeholder="Phone Number (optional)">
-                        <textarea id="contactMessage" placeholder="Tell us about your loved one and what you're looking for..."></textarea>
-                        <button type="submit" class="btn-white">Send Message</button>
-                    </form>
-                    <div class="contact-info-row">
-                        <div class="contact-info-item">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
-                            <a href="mailto:kat@sparcsolutions.org">kat@sparcsolutions.org</a>
-                        </div>
-                        <div class="contact-info-item">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                            <a href="tel:571-407-1807">(571) 407-1807</a>
-                        </div>
-                    </div>
+                    <h2>Interested in Enrolling?</h2>
+                    <p>For more information contact Kat Rader at <a href="mailto:Kat@sparcsolutions.org" style="color: white; text-decoration: underline;">Kat@sparcsolutions.org</a></p>
                 </div>
             </div>
         </section>
@@ -648,25 +556,6 @@
     </div>
 
     <script src="/js/main.js"></script>
-    <script>
-        function sendEnrollmentEmail(event) {
-            event.preventDefault();
-            var name = document.getElementById('contactName').value;
-            var email = document.getElementById('contactEmail').value;
-            var phone = document.getElementById('contactPhone').value;
-            var message = document.getElementById('contactMessage').value;
-
-            var subject = encodeURIComponent('Enrollment Inquiry from ' + name);
-            var body = encodeURIComponent(
-                'Name: ' + name + '\n' +
-                'Email: ' + email + '\n' +
-                'Phone: ' + (phone || 'Not provided') + '\n\n' +
-                'Message:\n' + message
-            );
-
-            window.location.href = 'mailto:kat@sparcsolutions.org?subject=' + subject + '&body=' + body;
-        }
-    </script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">
