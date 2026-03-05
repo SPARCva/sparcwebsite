@@ -265,12 +265,28 @@
         }
         .rc-form-body {
             padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        .rc-form-body > * {
+        .rc-form-body iframe,
+        .rc-form-body form,
+        .rc-form-body > div,
+        .rc-form-body > span {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+        }
+        .rc-form-body input[type="text"],
+        .rc-form-body input[type="email"],
+        .rc-form-body input[type="tel"],
+        .rc-form-body select,
+        .rc-form-body textarea {
             width: 100%;
+            box-sizing: border-box;
+        }
+        .rc-form-body table {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* ===== Video Section ===== */
