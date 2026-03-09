@@ -111,6 +111,51 @@
             }
         }
 
+        /* Hero Award Honoree */
+        .hero-award-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--sparc-dark-navy) 0%, #1a3a5c 100%);
+            text-align: center;
+        }
+        .hero-award-section h2 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .hero-award-section .award-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+        }
+        .hero-award-card {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px 50px;
+            max-width: 500px;
+        }
+        .hero-award-card .award-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .hero-award-card .honoree-name {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .hero-award-card .honoree-title {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .hero-award-card {
+                padding: 30px 25px;
+                margin: 0 15px;
+            }
+        }
+
         /* Sponsor Carousel Styles */
         .sponsor-carousel-section {
             padding: 60px 0;
@@ -1030,6 +1075,19 @@
                         </ul>
                         <p>An Evening to SPARCle is our largest fundraising event of the year, raising critical funds to support programs for adults with severe and multiple disabilities.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hero Award Honoree -->
+        <section class="hero-award-section">
+            <div class="container">
+                <h2 class="fade-in">SPARC Hero Award</h2>
+                <p class="award-subtitle fade-in">This year, we are proud to honor</p>
+                <div class="hero-award-card fade-in">
+                    <div class="award-icon">&#127942;</div>
+                    <div class="honoree-name">Supervisor Jeffrey McKay</div>
+                    <div class="honoree-title">Chairman, Fairfax County Board of Supervisors</div>
                 </div>
             </div>
         </section>
