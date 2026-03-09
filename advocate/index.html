@@ -821,8 +821,8 @@
         <section class="advocate-hero">
             <div class="container">
                 <h1>Advocate for SPARC</h1>
-                <p>We need your voice right now. SPARC's $500,000 in state funding is on the line. The Senate included this critical investment in their budget &mdash; but the House version did not. Budget conferees are meeting now to decide what stays and what gets cut.</p>
-                <p style="margin-top: 1rem; font-weight: 600; font-size: 1.4rem;">This is the moment that matters. A few letters from real people in real districts can make the difference.</p>
+                <p>The conference committee is meeting now. The conferees have heard about the Permanent Injunction, the ADA, and the cost comparison. After meeting with Chairman Rodney Willet on Friday, it is clear that we need to drive home one point: <strong>funding SPARC helps with compliance.</strong></p>
+                <p style="margin-top: 1rem; font-weight: 600; font-size: 1.4rem;">Conference negotiations are active. Send your letter today or tomorrow at the latest.</p>
             </div>
         </section>
 
@@ -830,9 +830,28 @@
         <section class="why-matters">
             <div class="container">
                 <h2>What We're Asking You To Do</h2>
-                <p class="subtitle">Send a brief letter to the conferees asking them to adopt the Senate position on SPARC funding. We've drafted a template below that you can personalize and send. It takes less than 5 minutes.</p>
-                <p class="subtitle" style="margin-top: 0; font-weight: 600; color: #c0392b;">We need these letters sent before March 14th.</p>
+                <p class="subtitle">Choose the option that applies to you below. Whether you've already written or this is your first time, we need your voice right now.</p>
+                <p class="subtitle" style="margin-top: 0; font-weight: 600; color: #c0392b;">Send today or tomorrow at the latest. The window is closing.</p>
                 <p class="subtitle" style="margin-top: 0; font-weight: 600;">Please share with as many people you can and ask them to do the same.</p>
+
+                <!-- Important Reminders -->
+                <div style="max-width: 800px; margin: 0 auto 40px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 16px; padding: 30px 40px;">
+                    <h3 style="color: #856404; font-size: 1.3rem; margin-bottom: 15px; text-align: center;">Important Reminders for All Letters</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 12px; padding-left: 30px; position: relative; line-height: 1.7; color: #856404;">
+                            <span style="position: absolute; left: 0; font-weight: 700; font-size: 1.2rem;">&#9888;</span>
+                            <strong>Send individually</strong> to each conferee. Do not send as a mass email.
+                        </li>
+                        <li style="margin-bottom: 12px; padding-left: 30px; position: relative; line-height: 1.7; color: #856404;">
+                            <span style="position: absolute; left: 0; font-weight: 700; font-size: 1.2rem;">&#128206;</span>
+                            <strong>Attach the letter</strong> from Virginia Legislature Leaders to Judge Gibney to every email you send. <a href="/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf" download style="color: #856404; font-weight: 600;">Download it here.</a>
+                        </li>
+                        <li style="padding-left: 30px; position: relative; line-height: 1.7; color: #856404;">
+                            <span style="position: absolute; left: 0; font-weight: 700; font-size: 1.2rem;">&#9200;</span>
+                            <strong>Timing:</strong> Send today or tomorrow at the latest. Conference negotiations are active.
+                        </li>
+                    </ul>
+                </div>
 
                 <!-- Who To Send It To -->
                 <div class="why-grid" style="grid-template-columns: 1fr 1fr; max-width: 900px; margin: 0 auto 50px;">
@@ -859,83 +878,161 @@
                     </div>
                 </div>
 
-                <h2 style="margin-top: 60px;">Your Letter Template</h2>
-                <p class="subtitle" style="margin-bottom: 40px;">Personalize the template below and send it to the budget conferees listed above. It takes less than 5 minutes.</p>
+                <!-- ===== TRACK 1: FOLLOW-UP LETTER ===== -->
+                <div id="followup-section" style="max-width: 800px; margin: 0 auto 60px; scroll-margin-top: 100px;">
+                    <h2 style="margin-top: 60px; text-align: center;">If You Have Already Written to the Conferees</h2>
+                    <p class="subtitle" style="margin-bottom: 15px;">Send one short follow-up. You do not need to restate the case. Just make this one point: <strong>every dollar appropriated to SPARC counts directly toward compliance with the Permanent Injunction.</strong></p>
+                    <p class="subtitle" style="margin-top: 0; margin-bottom: 40px;">Suggested Subject Line: <strong>SPARC &mdash; SB30 Item 300 #8s &mdash; Compliance with the Permanent Injunction</strong></p>
 
-                <div class="letter-container" id="letterContainer">
-                    <div class="letter-header">
-                        <h3>Letter Template <span class="example-text">- Click fields to edit, then download</span></h3>
-                        <div class="letter-header-buttons" style="display: flex; gap: 10px;">
-                            <button class="download-btn" onclick="downloadLetter()">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                Download PDF
-                            </button>
-                            <button class="download-btn" onclick="downloadLetterWord()" style="background-color: #2b579a;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                Download Word
-                            </button>
-                            <button class="download-btn" onclick="emailLetter()" style="background-color: #ea4335;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                Email This Letter
-                            </button>
+                    <div class="letter-container" id="followupLetterContainer">
+                        <div class="letter-header">
+                            <h3>Follow-Up Letter <span class="example-text">- Click fields to edit, then download or email</span></h3>
+                            <div class="letter-header-buttons" style="display: flex; gap: 10px;">
+                                <button class="download-btn" onclick="downloadFollowupLetter()">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Download PDF
+                                </button>
+                                <button class="download-btn" onclick="downloadFollowupLetterWord()" style="background-color: #2b579a;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Download Word
+                                </button>
+                                <button class="download-btn" onclick="emailFollowupLetter()" style="background-color: #ea4335;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    Email This Letter
+                                </button>
+                            </div>
+                        </div>
+                        <div class="letter-body" id="followupLetterBody">
+                            <p class="salutation">Dear <span class="fill-in" contenteditable="true" data-placeholder="Senator/Delegate Name"></span>,</p>
+
+                            <p>I am following up on my earlier email regarding SPARC&rsquo;s funding in the conference report (SB30 Item 300 #8s).</p>
+
+                            <p>SPARC is already in the budget and already reports participant data to DBHDS. This is not a new program seeking funding &mdash; it is a compliance mechanism seeking additional funding to support a population that lives below the federal poverty line and is excluded from participation in Medicaid funded services.</p>
+
+                            <p>I want to make sure one point is clear: every dollar the General Assembly appropriates to SPARC is a dollar that counts directly toward Virginia&rsquo;s compliance with the Permanent Injunction in <em>United States v. Virginia</em>. The Virginia legislature has already made clear that it would rather appropriate funds to serve this population than divert resources to contempt penalties.</p>
+
+                            <p>Please adopt the Senate&rsquo;s position.</p>
+
+                            <p class="closing">Respectfully,</p>
+
+                            <div class="signature-block">
+                                <span class="fill-in" contenteditable="true" data-placeholder="Your Name" style="min-width: 200px;"></span><br>
+                                <span class="fill-in" contenteditable="true" data-placeholder="Your Title/Role (optional)"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="letter-body" id="letterBody">
-                        <div class="address-block">
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Name"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Street Address"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="City, State ZIP"></span>
-                        </div>
 
-                        <div class="date-line">
-                            <span class="fill-in" contenteditable="true" data-placeholder="Date"></span>
-                        </div>
-
-                        <p class="salutation">Dear Delegate/Senator <span class="fill-in" contenteditable="true" data-placeholder="Last Name"></span>,</p>
-
-                        <p>I am writing as <span class="fill-in" contenteditable="true" data-placeholder="your relationship to SPARC" style="min-width: 280px;"></span> <span class="example-text">(e.g., "a parent of a SPARC participant," "a supporter of disability services," or "a constituent who cares about disability rights")</span>. I respectfully ask you to support the Senate budget amendment for SPARC in conference.</p>
-
-                        <p>The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s &ndash; Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.</p>
-
-                        <p>SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one&#8209;to&#8209;one personal care support. This population represents the very individuals Virginia has struggled&mdash;over decades&mdash;to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in <em>United States v. Virginia</em>.</p>
-
-                        <p id="personal-sentence-paragraph"><span class="fill-in" id="personal-sentence" contenteditable="true" data-placeholder="Add a personal sentence about why SPARC matters to you (optional)" style="min-width: 100%; display: block; min-height: 50px;"></span></p>
-
-                        <p>SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide&mdash;and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.</p>
-
-                        <p>Supporting the Senate&rsquo;s budget amendment is a strategic, cost&#8209;effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high&#8209;quality community&#8209;based services that adults with severe disabilities deserve.</p>
-
-                        <p>I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.</p>
-
-                        <p class="closing">Sincerely,</p>
-
-                        <div class="signature-block">
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Name" style="min-width: 200px;"></span><br>
-                            <span class="fill-in" contenteditable="true" data-placeholder="Your Address"></span>
-                        </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="color: var(--sparc-charcoal); font-style: italic;">Don&rsquo;t forget to attach the <a href="/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf" download style="color: var(--sparc-royal-blue); font-weight: 600;">Letter from Virginia Legislature Leaders to Judge Gibney</a> to your email.</p>
                     </div>
                 </div>
 
-                <!-- Tips Section -->
-                <div style="max-width: 800px; margin: 50px auto 0; background: white; border-radius: 16px; padding: 40px 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
-                    <h3 style="color: var(--sparc-dark-navy); font-size: 1.5rem; margin-bottom: 25px; text-align: center;">A Few Tips to Make Your Letter Stand Out</h3>
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="margin-bottom: 20px; padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
-                            <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
-                            <strong>Personalize it.</strong> Even one sentence about your connection to SPARC &mdash; as a family member, participant, staff member, or community supporter &mdash; makes your letter far more powerful than a form letter.
-                        </li>
-                        <li style="padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
-                            <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
-                            <strong>Send it today.</strong> The conference process moves quickly, and every day counts.
-                        </li>
-                    </ul>
+                <!-- ===== TRACK 2: FULL LETTER FOR FIRST-TIME WRITERS ===== -->
+                <div id="full-letter-section" style="max-width: 800px; margin: 0 auto 60px; scroll-margin-top: 100px;">
+                    <h2 style="margin-top: 60px; text-align: center;">If You Have Not Yet Written to the Conferees</h2>
+                    <p class="subtitle" style="margin-bottom: 15px;">Please send a full letter today if possible &mdash; the window is closing. You can use the template below or download the suggested letter to personalize and send.</p>
+                    <p class="subtitle" style="margin-top: 0; margin-bottom: 40px;">Suggested Subject Line: <strong>SPARC &mdash; SB30 Item 300 #8s &mdash; Support Senate Position in Conference</strong></p>
+
+                    <div style="text-align: center; margin-bottom: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <a href="/advocate/Parent%20friend%20participant%20letter%20to%20conferees%203.9.26.docx" download class="download-btn" style="font-size: 1rem; padding: 14px 28px;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download Full Suggested Letter (Word)
+                        </a>
+                        <a href="/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf" download class="download-btn" style="font-size: 1rem; padding: 14px 28px; background-color: #2b579a;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download Judge Gibney Letter (PDF)
+                        </a>
+                    </div>
+
+                    <div class="letter-container" id="letterContainer">
+                        <div class="letter-header">
+                            <h3>Full Letter Template <span class="example-text">- Click fields to edit, then download or email</span></h3>
+                            <div class="letter-header-buttons" style="display: flex; gap: 10px;">
+                                <button class="download-btn" onclick="downloadLetter()">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Download PDF
+                                </button>
+                                <button class="download-btn" onclick="downloadLetterWord()" style="background-color: #2b579a;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Download Word
+                                </button>
+                                <button class="download-btn" onclick="emailLetter()" style="background-color: #ea4335;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    Email This Letter
+                                </button>
+                            </div>
+                        </div>
+                        <div class="letter-body" id="letterBody">
+                            <div class="address-block">
+                                <span class="fill-in" contenteditable="true" data-placeholder="Your Name"></span><br>
+                                <span class="fill-in" contenteditable="true" data-placeholder="Your Street Address"></span><br>
+                                <span class="fill-in" contenteditable="true" data-placeholder="City, State ZIP"></span>
+                            </div>
+
+                            <div class="date-line">
+                                <span class="fill-in" contenteditable="true" data-placeholder="Date"></span>
+                            </div>
+
+                            <p class="salutation">Dear Delegate/Senator <span class="fill-in" contenteditable="true" data-placeholder="Last Name"></span>,</p>
+
+                            <p>I am writing as <span class="fill-in" contenteditable="true" data-placeholder="your relationship to SPARC" style="min-width: 280px;"></span> <span class="example-text">(e.g., "a parent of a SPARC participant," "a supporter of disability services," or "a constituent who cares about disability rights")</span>. I respectfully ask you to support the Senate budget amendment for SPARC in conference.</p>
+
+                            <p>The Senate budget currently includes $500,000 for SPARC under SB30 Item 300 #8s &ndash; Specially Adapted Resources Clubs (SPARC). The House version (HB30 Item 300 #7h) does not include this funding. I urge you to adopt the Senate position in the final budget.</p>
+
+                            <p>SPARC provides integrated, community-based day services for adults with complex disabilities who cannot work and require continuous one&#8209;to&#8209;one personal care support. This population represents the very individuals Virginia has struggled&mdash;over decades&mdash;to support in compliance with the Americans with Disabilities Act and the Permanent Injunction in <em>United States v. Virginia</em>.</p>
+
+                            <p id="personal-sentence-paragraph"><span class="fill-in" id="personal-sentence" contenteditable="true" data-placeholder="Write 2-4 sentences about your personal connection to SPARC — this is important" style="min-width: 100%; display: block; min-height: 50px;"></span> <span class="example-text">(The personal paragraph is important. Please write 2&ndash;4 sentences about your connection to SPARC.)</span></p>
+
+                            <p>SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide&mdash;and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.</p>
+
+                            <p>Every dollar the General Assembly appropriates to SPARC is a dollar that counts directly toward Virginia&rsquo;s compliance with the Permanent Injunction in <em>United States v. Virginia</em>. The Virginia legislature has already made clear that it would rather appropriate funds to serve this population than divert resources to contempt penalties.</p>
+
+                            <p>Supporting the Senate&rsquo;s budget amendment is a strategic, cost&#8209;effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high&#8209;quality community&#8209;based services that adults with severe disabilities deserve.</p>
+
+                            <p>I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.</p>
+
+                            <p class="closing">Sincerely,</p>
+
+                            <div class="signature-block">
+                                <span class="fill-in" contenteditable="true" data-placeholder="Your Name" style="min-width: 200px;"></span><br>
+                                <span class="fill-in" contenteditable="true" data-placeholder="Your Address"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section for Full Letter -->
+                    <div style="max-width: 800px; margin: 50px auto 0; background: white; border-radius: 16px; padding: 40px 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--sparc-dark-navy); font-size: 1.5rem; margin-bottom: 25px; text-align: center;">Tips for Your Full Letter</h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 20px; padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                                <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                                <strong>The personal paragraph is important.</strong> Please write 2&ndash;4 sentences about your connection to SPARC &mdash; as a family member, participant, staff member, or community supporter.
+                            </li>
+                            <li style="margin-bottom: 20px; padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                                <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                                <strong>Send individually</strong> to each conferee. Do not send as a mass email.
+                            </li>
+                            <li style="margin-bottom: 20px; padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                                <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                                <strong>Attach the letter</strong> from Virginia Legislature Leaders to Judge Gibney to your email.
+                            </li>
+                            <li style="padding-left: 30px; position: relative; line-height: 1.7; color: var(--sparc-charcoal);">
+                                <span style="position: absolute; left: 0; color: var(--sparc-kelly-green); font-weight: 700; font-size: 1.2rem;">&#10003;</span>
+                                <strong>Send it today.</strong> The conference process moves quickly, and every day counts.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="color: var(--sparc-charcoal); font-style: italic;">Don&rsquo;t forget to attach the <a href="/advocate/2024.11.21%20Letter%20from%20Virginia%20Legislature%20Leaders%20to%20Judge%20Gibney%20%5B544-1%5D%20(1).pdf" download style="color: var(--sparc-royal-blue); font-weight: 600;">Letter from Virginia Legislature Leaders to Judge Gibney</a> to your email.</p>
+                    </div>
                 </div>
 
                 <div class="compliance-box">
-                    <h3>Why This Matters</h3>
-                    <p>SPARC serves adults with the most complex disabilities in Virginia &mdash; people who need continuous one-to-one support and have very few options for meaningful community-based services. This $500,000 investment helps Virginia meet its legal obligations under the Permanent Injunction while delivering better outcomes at lower cost than existing Medicaid day programs. We cannot let this funding disappear in conference. Your letter can help make sure it doesn't.</p>
+                    <h3>Why This Matters Now</h3>
+                    <p>The conference committee is meeting now. After meeting with Chairman Rodney Willet, it is clear we need to drive home the point: <strong>funding SPARC helps with compliance.</strong> Every dollar appropriated to SPARC counts directly toward Virginia&rsquo;s compliance with the Permanent Injunction in <em>United States v. Virginia</em>. SPARC is already in the budget, already reports participant data to DBHDS, and serves adults who live below the federal poverty line and are excluded from Medicaid funded services. This is not new funding &mdash; it is a compliance mechanism. Your letter can make the difference.</p>
                     <div style="text-align: center; margin-top: 30px;">
-                        <a href="/compliance/" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem; font-weight: 600; background-color: white; color: var(--sparc-dark-navy); text-decoration: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">Learn More About ADA Compliance →</a>
+                        <a href="/compliance/" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem; font-weight: 600; background-color: white; color: var(--sparc-dark-navy); text-decoration: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">Learn More About ADA Compliance &rarr;</a>
                     </div>
                 </div>
 
@@ -1062,7 +1159,7 @@
         <section class="advocate-cta">
             <div class="container">
                 <h2>Thank You for Standing with SPARC</h2>
-                <p>We cannot let this funding disappear in conference. Your letter can help make sure it doesn't. Every voice matters &mdash; send your letter today.</p>
+                <p>The conference committee is meeting now and the window is closing. Every dollar appropriated to SPARC counts toward compliance. Every voice matters &mdash; send your letter today.</p>
                 <a href="/contact/" class="btn btn-white btn-lg">Questions? Contact Us</a>
             </div>
         </section>
@@ -1146,7 +1243,7 @@
     <script>
         // Initialize fillable letter fields
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.letter-body .fill-in').forEach(field => {
+            document.querySelectorAll('#letterBody .fill-in, #followupLetterBody .fill-in').forEach(field => {
                 const placeholder = field.getAttribute('data-placeholder');
 
                 // Set initial placeholder text
@@ -1377,6 +1474,8 @@ SPARC provides integrated, community-based day services for adults with complex 
 
 ${includePersonal ? personalText + '\n\n' : ''}SPARC is not a pilot or a concept. It is a fully operating, proven program delivering exactly the type of integrated services the Commonwealth is legally required to provide\u2014and doing so at substantially lower cost than Medicaid day programs. SPARC offers a significantly higher level of programming, community integration, individualized engagement, and meaningful daily activities than what is currently available to adults with the most complex needs.
 
+Every dollar the General Assembly appropriates to SPARC is a dollar that counts directly toward Virginia\u2019s compliance with the Permanent Injunction in United States v. Virginia. The Virginia legislature has already made clear that it would rather appropriate funds to serve this population than divert resources to contempt penalties.
+
 Supporting the Senate\u2019s budget amendment is a strategic, cost\u2011effective way for Virginia to show measurable progress toward compliance with the Permanent Injunction while expanding access to the high\u2011quality community\u2011based services that adults with severe disabilities deserve.
 
 I respectfully urge you to maintain the Senate funding for SPARC in the final conference report.
@@ -1401,11 +1500,129 @@ ${senderAddress}`;
             ].join(',');
 
             // Create mailto link
-            const subject = encodeURIComponent('Support for Senate SPARC Budget Amendment');
+            const subject = encodeURIComponent('SPARC \u2014 SB30 Item 300 #8s \u2014 Support Senate Position in Conference');
             const encodedBody = encodeURIComponent(body);
 
-            // Open email client with all conferee emails
-            window.location.href = `mailto:${confereeEmails}?subject=${subject}&body=${encodedBody}`;
+            // Open email client - note: send individually to each conferee, not as mass email
+            window.location.href = `mailto:?subject=${subject}&body=${encodedBody}`;
+        }
+
+        // ===== FOLLOW-UP LETTER FUNCTIONS =====
+
+        // Download follow-up letter as PDF
+        function downloadFollowupLetter() {
+            gtag('event', 'download', {'event_category': 'advocacy', 'event_label': 'followup_letter_pdf'});
+
+            // Temporarily swap which letter-body is visible for print
+            const fullLetterBody = document.getElementById('letterBody');
+            const followupLetterBody = document.getElementById('followupLetterBody');
+            if (fullLetterBody) fullLetterBody.style.display = 'none';
+
+            // Add a temporary class to make the followup letter printable
+            followupLetterBody.classList.add('print-target');
+            const style = document.createElement('style');
+            style.id = 'followup-print-style';
+            style.textContent = `
+                @media print {
+                    .letter-body { display: none !important; }
+                    .letter-body.print-target { display: block !important; visibility: visible !important; position: absolute; left: 0; top: 0; width: 100%; padding: 0; box-shadow: none; font-size: 10pt; line-height: 1.3; }
+                    .letter-body.print-target * { visibility: visible !important; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            window.print();
+
+            // Restore
+            if (fullLetterBody) fullLetterBody.style.display = '';
+            followupLetterBody.classList.remove('print-target');
+            document.getElementById('followup-print-style').remove();
+        }
+
+        // Download follow-up letter as Word
+        function downloadFollowupLetterWord() {
+            gtag('event', 'download', {'event_category': 'advocacy', 'event_label': 'followup_letter_word'});
+
+            const letterBody = document.getElementById('followupLetterBody');
+            const clonedLetter = letterBody.cloneNode(true);
+
+            clonedLetter.querySelectorAll('.example-text').forEach(el => el.remove());
+            clonedLetter.querySelectorAll('.fill-in').forEach(field => {
+                const text = field.textContent;
+                const span = document.createElement('span');
+                span.textContent = text;
+                span.style.textDecoration = 'underline';
+                field.parentNode.replaceChild(span, field);
+            });
+
+            const html = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset="utf-8">
+                    <title>SPARC Follow-Up Letter</title>
+                    <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+                    <style>
+                        @page { margin: 0.5in; }
+                        body { font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.25; margin: 0.5in; }
+                        p { margin: 6pt 0; }
+                        .salutation { margin-bottom: 6pt; }
+                        .closing { margin-top: 10pt; margin-bottom: 4pt; }
+                        .signature-block { margin-top: 18pt; }
+                    </style>
+                </head>
+                <body>${clonedLetter.innerHTML}</body>
+                </html>
+            `;
+
+            const blob = new Blob([html], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'SPARC_Followup_Letter.doc';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Email follow-up letter
+        function emailFollowupLetter() {
+            gtag('event', 'email', {'event_category': 'advocacy', 'event_label': 'followup_letter_email'});
+
+            // Get the name fields
+            const nameField = document.querySelector('#followupLetterBody .signature-block .fill-in:first-child');
+            const namePlaceholder = nameField ? nameField.getAttribute('data-placeholder') : '';
+            const nameText = nameField ? nameField.textContent.trim() : '';
+            const senderName = (nameText && nameText !== namePlaceholder) ? nameText : 'Your Name';
+
+            const titleField = document.querySelector('#followupLetterBody .signature-block .fill-in:nth-child(2)');
+            const titlePlaceholder = titleField ? titleField.getAttribute('data-placeholder') : '';
+            const titleText = titleField ? titleField.textContent.trim() : '';
+            const senderTitle = (titleText && titleText !== titlePlaceholder) ? titleText : '';
+
+            const salutationField = document.querySelector('#followupLetterBody .salutation .fill-in');
+            const salPlaceholder = salutationField ? salutationField.getAttribute('data-placeholder') : '';
+            const salText = salutationField ? salutationField.textContent.trim() : '';
+            const recipientName = (salText && salText !== salPlaceholder) ? salText : 'Senator/Delegate Name';
+
+            let body = `Dear ${recipientName},
+
+I am following up on my earlier email regarding SPARC\u2019s funding in the conference report (SB30 Item 300 #8s).
+
+SPARC is already in the budget and already reports participant data to DBHDS. This is not a new program seeking funding \u2014 it is a compliance mechanism seeking additional funding to support a population that lives below the federal poverty line and is excluded from participation in Medicaid funded services.
+
+I want to make sure one point is clear: every dollar the General Assembly appropriates to SPARC is a dollar that counts directly toward Virginia\u2019s compliance with the Permanent Injunction in United States v. Virginia. The Virginia legislature has already made clear that it would rather appropriate funds to serve this population than divert resources to contempt penalties.
+
+Please adopt the Senate\u2019s position.
+
+Respectfully,
+${senderName}${senderTitle ? '\n' + senderTitle : ''}`;
+
+            const subject = encodeURIComponent('SPARC \u2014 SB30 Item 300 #8s \u2014 Compliance with the Permanent Injunction');
+            const encodedBody = encodeURIComponent(body);
+
+            // Open email client - send individually, not as mass email
+            window.location.href = `mailto:?subject=${subject}&body=${encodedBody}`;
         }
 
         // Letters of Support Carousel
