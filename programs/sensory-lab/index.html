@@ -130,6 +130,45 @@
             background: var(--sparc-teal);
             border-radius: 50%;
         }
+        .adf-section {
+            padding: 80px 0;
+            background: var(--sparc-light-gray, #f8f9fa);
+        }
+        .adf-section .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        .adf-section .section-header p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #555;
+        }
+        .adf-link {
+            color: var(--sparc-teal);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        .adf-link:hover {
+            color: var(--sparc-dark-navy);
+        }
+        .adf-video-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+        .adf-video-wrapper iframe {
+            border: none;
+            border-radius: 12px;
+            max-width: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+        @media (max-width: 600px) {
+            .adf-video-wrapper iframe {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+        }
     </style>
 </head>
 <body>
@@ -223,7 +262,7 @@
                         </p>
                     </div>
                     <div class="about-image fade-in sensory-lab-video">
-                        <iframe id="sensoryLabVideo" width="360" height="640" src="https://www.youtube.com/embed/lin7fs_bCeI" title="The Mobile Exploration Lab" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <iframe id="sensoryLabVideo" width="360" height="640" src="https://www.youtube.com/embed/wIFYwObWr34" title="The Mobile Exploration Lab" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -281,6 +320,19 @@
                         <li><strong>As an on-demand regulation tool,</strong> available wherever participants need a calming or engaging sensory experience</li>
                     </ul>
                     <p style="margin-top: 20px;">This mobility significantly expands SPARC's capacity to provide individualized sensory support, reduce barriers to participation, and enhance the overall accessibility of programming.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Built by ADF Section -->
+        <section class="adf-section">
+            <div class="container">
+                <div class="section-header fade-in" style="margin-bottom: 40px;">
+                    <h2>Built by Automotive Designs &amp; Fabrication</h2>
+                    <p>The Mobile Exploration Lab was custom-built by <a href="https://automotivedesignsandfab.com/adventure-van/mobile-sensory-room/" target="_blank" rel="noopener noreferrer" class="adf-link">Automotive Designs &amp; Fabrication (ADF Sprinters)</a>, specialists in custom van conversions. Their team engineered every detail — from the ADA-accessible wheelchair lift to the interactive sensory panels and projection systems — creating a fully immersive therapeutic environment on wheels.</p>
+                </div>
+                <div class="adf-video-wrapper fade-in">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/lin7fs_bCeI" title="Mobile Exploration Lab - Built by ADF Sprinters" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
         </section>
