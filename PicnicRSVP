@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPARC Spring Picnic — RSVP</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #f0fdf4 0%, #fffbeb 50%, #f0fdf4 100%); min-height: 100vh; color: #1f2937; }
+.header { background: linear-gradient(to right, #16a34a, #15803d); color: #fff; text-align: center; padding: 2rem 1.5rem; }
+.header .icon { font-size: 2.5rem; margin-bottom: 0.25rem; }
+.header h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.15rem; }
+.header .date { color: #bbf7d0; font-size: 1.1rem; font-weight: 500; }
+.container { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; }
+.details-banner { background: #fff; border-radius: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 1.5rem; border: 1px solid #dcfce7; margin-top: -1rem; position: relative; z-index: 2; }
+.details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; }
+@media (max-width: 500px) { .details-grid { grid-template-columns: 1fr; } }
+.details-grid .icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+.details-grid .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: #6b7280; }
+.details-grid .value { font-size: 0.875rem; font-weight: 600; color: #1f2937; }
+.details-note { text-align: center; font-size: 0.8rem; color: #6b7280; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f3f4f6; }
+.card { background: #fff; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 1.75rem; border: 1px solid #f3f4f6; margin-top: 1.5rem; }
+.card h2 { font-size: 1.2rem; font-weight: 700; color: #1f2937; margin-bottom: 1.25rem; }
+label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 0.25rem; }
+label .req { color: #ef4444; }
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+width: 100%; padding: 0.6rem 0.9rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;
+outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus { border-color: #86efac; box-shadow: 0 0 0 3px rgba(134,239,172,0.3); }
+input.err { border-color: #fca5a5; }
+.err-msg { font-size: 0.7rem; color: #ef4444; margin-top: 0.2rem; display: none; }
+.err-msg.show { display: block; }
+.field { margin-bottom: 1.1rem; }
+.num-input { width: 5rem; }
+.guest-section { background: #f0fdf4; border-radius: 0.75rem; padding: 1rem; border: 1px solid #bbf7d0; margin-bottom: 1.1rem; display: none; }
+.guest-section.show { display: block; }
+.guest-section .section-title { font-size: 0.8rem; font-weight: 600; color: #166534; margin-bottom: 0.75rem; }
+.guest-row { display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 0.5rem; }
+.guest-row input { flex: 1; }
+.remove-btn { background: none; border: none; color: #f87171; font-size: 1.3rem; font-weight: 700; cursor: pointer; padding: 0.3rem 0.4rem; line-height: 1; }
+.remove-btn:hover { color: #dc2626; }
+.btn { padding: 0.7rem 1.75rem; border: none; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.15s; }
+.btn-green { background: #16a34a; color: #fff; }
+.btn-green:hover { background: #15803d; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.success-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
+.success-overlay.show { display: flex; }
+.success-box { background: #fff; border-radius: 1rem; padding: 2rem; text-align: center; max-width: 400px; margin: 1rem; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+.success-box .check { font-size: 3rem; margin-bottom: 0.5rem; }
+.success-box h3 { font-size: 1.25rem; font-weight: 700; color: #166534; margin-bottom: 0.5rem; }
+.success-box p { font-size: 0.85rem; color: #6b7280; margin-bottom: 1.25rem; line-height: 1.5; }
+.success-box .btn-outline { padding: 0.5rem 1.5rem; border: 2px solid #16a34a; background: #fff; color: #16a34a; border-radius: 0.5rem; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+.success-box .btn-outline:hover { background: #f0fdf4; }
+.edit-link { text-align: center; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #f3f4f6; }
+.edit-link a { color: #2563eb; font-size: 0.8rem; font-weight: 500; cursor: pointer; text-decoration: underline; }
+.edit-section { display: none; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #f3f4f6; }
+.edit-section.show { display: block; }
+.edit-section .lookup-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+.edit-section .lookup-row .field { flex: 1; margin-bottom: 0; }
+.btn-amber { background: #f59e0b; color: #fff; padding: 0.6rem 1.25rem; }
+.btn-amber:hover { background: #d97706; }
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2.5px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 0.4rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.footer { text-align: center; padding: 1.5rem; font-size: 0.7rem; color: #9ca3af; }
+.setup-banner { background: #fef3c7; border: 1px solid #fde68a; border-radius: 0.75rem; padding: 1rem 1.25rem; margin-top: 1.5rem; font-size: 0.8rem; color: #92400e; line-height: 1.5; }
+.setup-banner strong { color: #78350f; }
+.setup-banner code { background: #fef9c3; padding: 0.1rem 0.35rem; border-radius: 0.25rem; font-size: 0.75rem; }
+</style>
+</head>
+<body>
+
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+<div class="icon">&#127793;</div>
+<h1>SPARC Spring Picnic</h1>
+<div class="date">Wednesday, May 20, 2026</div>
+</div>
+
+
+<div class="container">
+<!-- ═══════ EVENT DETAILS ═══════ -->
+<div class="details-banner">
+<div class="details-grid">
+<div><div class="icon">&#128205;</div><div class="label">Location</div><div class="value">Burke Lake Park, Pavilion B</div></div>
+<div><div class="icon">&#128336;</div><div class="label">Time</div><div class="value">10:00 AM – 2:00 PM</div></div>
+<div><div class="icon">&#127828;</div><div class="label">Menu</div><div class="value">Burgers, Hot Dogs, Sides & Water Bottles</div></div>
+</div>
+<div class="details-note">Please RSVP to Erica and let her know if you are bringing guests — include their name and email!</div>
+</div>
+
+
+<!-- ═══════ SETUP NOTICE (remove after configuring) ═══════ -->
+<div class="setup-banner" id="setupBanner">
+<strong>Setup needed:</strong> This form requires a Google Sheets backend. Open the included <code>SETUP-INSTRUCTIONS.html</code> file for step-by-step directions. Once configured, replace <code>YOUR_SCRIPT_URL_HERE</code> in this file's source code and delete this banner.
+</div>
+
+
+<!-- ═══════ RSVP FORM ═══════ -->
+<div class="card">
+<h2 id="formTitle">RSVP for the Picnic</h2>
+<form id="rsvpForm" onsubmit="handleSubmit(event)">
+<div class="field">
+<label>Your Full Name <span class="req">*</span></label>
+<input type="text" id="fName" placeholder="Jane Smith">
+<div class="err-msg" id="errName"></div>
+</div>
+<div class="field">
+<label>Email Address <span class="req">*</span></label>
+<input type="email" id="fEmail" placeholder="jane@company.com">
+<div class="err-msg" id="errEmail"></div>
+</div>
+<div class="field">
+<label>Phone Number <span class="req">*</span></label>
+<input type="tel" id="fPhone" placeholder="(555) 123-4567">
+<div class="err-msg" id="errPhone"></div>
+</div>
+<div class="field">
+<label>Number of Additional Guests</label>
+<input type="number" id="fNumGuests" class="num-input" min="0" max="20" value="0" oninput="updateGuestRows()">
+</div>
+<div id="guestSection" class="guest-section">
+<div class="section-title">Guest Details (name & email required)</div>
+<div id="guestRows"></div>
+</div>
+<button type="submit" class="btn btn-green" id="submitBtn">Submit RSVP</button>
+</form>
+
+
+<!-- Edit existing RSVP link -->
+<div class="edit-link">
+<a onclick="toggleEditSection()">Need to update an existing RSVP?</a>
+</div>
+<div class="edit-section" id="editSection">
+<p style="font-size:0.8rem; color:#6b7280; margin-bottom:0.75rem;">Enter the email you used to RSVP and we'll load your info so you can update it.</p>
+<div class="lookup-row">
+<div class="field">
+<label>Your email address</label>
+<input type="email" id="lookupEmail" placeholder="jane@company.com">
+<div class="err-msg" id="errLookup"></div>
+</div>
+<button type="button" class="btn btn-amber" onclick="handleLookup()">Find</button>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- ═══════ SUCCESS OVERLAY ═══════ -->
+<div class="success-overlay" id="successOverlay">
+<div class="success-box">
+<div class="check">&#9989;</div>
+<h3 id="successTitle">RSVP Submitted!</h3>
+<p id="successMsg">Thanks! We've got you down for the picnic. See you on May 20th!</p>
+<button class="btn-outline" onclick="closeSuccess()">Done</button>
+</div>
+</div>
+
+
+<div class="container"><div class="footer">Questions? Reach out to Erica &bull; See you at the picnic!</div></div>
+
+
+<script>
+// ╔═══════════════════════════════════════════════════════════════════╗
+// ║ CONFIGURATION — Replace with your Google Apps Script Web App URL ║
+// ╚═══════════════════════════════════════════════════════════════════╝
+const SCRIPT_URL = 'YOUR_SCRIPT_URL_HERE';
+
+
+let editingEmail = null; // tracks if we're updating an existing RSVP
+
+
+// ─── Guest rows ───
+function updateGuestRows() {
+const n = Math.max(0, Math.min(20, parseInt(document.getElementById('fNumGuests').value) || 0));
+const section = document.getElementById('guestSection');
+const container = document.getElementById('guestRows');
+section.classList.toggle('show', n > 0);
+// Preserve existing values
+const existing = [];
+for (let i = 0; i < 20; i++) {
+const ne = document.getElementById('gName' + i);
+const ee = document.getElementById('gEmail' + i);
+if (ne) existing.push({ name: ne.value, email: ee?.value || '' });
+else break;
+}
+container.innerHTML = '';
+for (let i = 0; i < n; i++) {
+const row = document.createElement('div');
+row.className = 'guest-row';
+row.innerHTML = `
+<input type="text" placeholder="Guest ${i + 1} full name" id="gName${i}" value="${esc(existing[i]?.name || '')}">
+<input type="email" placeholder="Guest ${i + 1} email" id="gEmail${i}" value="${esc(existing[i]?.email || '')}">
+<button type="button" class="remove-btn" onclick="removeGuest(${i})">&times;</button>`;
+container.appendChild(row);
+}
+}
+
+
+function removeGuest(idx) {
+const numEl = document.getElementById('fNumGuests');
+const current = parseInt(numEl.value) || 0;
+const guests = [];
+for (let i = 0; i < current; i++) {
+if (i === idx) continue;
+guests.push({ name: document.getElementById('gName' + i)?.value || '', email: document.getElementById('gEmail' + i)?.value || '' });
+}
+numEl.value = guests.length;
+updateGuestRows();
+guests.forEach((g, i) => { document.getElementById('gName' + i).value = g.name; document.getElementById('gEmail' + i).value = g.email; });
+}
+
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+
+// ─── Validation ───
+function clearErrors() {
+document.querySelectorAll('.err-msg').forEach(e => { e.classList.remove('show'); e.textContent = ''; });
+document.querySelectorAll('input.err').forEach(e => e.classList.remove('err'));
+}
+
+
+function showErr(msgId, inputId, msg) {
+document.getElementById(msgId).textContent = msg;
+document.getElementById(msgId).classList.add('show');
+if (inputId) document.getElementById(inputId)?.classList.add('err');
+}
+
+
+// ─── Submit ───
+function handleSubmit(e) {
+e.preventDefault();
+clearErrors();
+let valid = true;
+const name = document.getElementById('fName').value.trim();
+const email = document.getElementById('fEmail').value.trim();
+const phone = document.getElementById('fPhone').value.trim();
+const numGuests = parseInt(document.getElementById('fNumGuests').value) || 0;
+
+
+if (!name) { showErr('errName', 'fName', 'Name is required'); valid = false; }
+if (!email) { showErr('errEmail', 'fEmail', 'Email is required'); valid = false; }
+else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('errEmail', 'fEmail', 'Enter a valid email'); valid = false; }
+if (!phone) { showErr('errPhone', 'fPhone', 'Phone number is required'); valid = false; }
+
+
+const guests = [];
+for (let i = 0; i < numGuests; i++) {
+const gn = document.getElementById('gName' + i)?.value.trim() || '';
+const ge = document.getElementById('gEmail' + i)?.value.trim() || '';
+if (!gn) { valid = false; }
+guests.push({ name: gn, email: ge });
+}
+if (!valid) return;
+
+
+const btn = document.getElementById('submitBtn');
+btn.disabled = true;
+btn.innerHTML = '<span class="spinner"></span>Submitting...';
+
+
+const payload = {
+action: editingEmail ? 'update' : 'submit',
+originalEmail: editingEmail || email,
+name, email, phone, numGuests,
+guestNames: guests.map(g => g.name).join('; '),
+guestEmails: guests.map(g => g.email).join('; '),
+submittedAt: new Date().toLocaleString()
+};
+
+
+if (SCRIPT_URL === 'YOUR_SCRIPT_URL_HERE') {
+// Demo mode — no backend configured yet
+btn.disabled = false;
+btn.textContent = editingEmail ? 'Update RSVP' : 'Submit RSVP';
+showSuccessOverlay(editingEmail ? 'update' : 'submit');
+resetForm();
+return;
+}
+
+
+fetch(SCRIPT_URL, {
+method: 'POST',
+mode: 'no-cors',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+})
+.then(() => {
+btn.disabled = false;
+btn.textContent = editingEmail ? 'Update RSVP' : 'Submit RSVP';
+showSuccessOverlay(editingEmail ? 'update' : 'submit');
+resetForm();
+})
+.catch(err => {
+btn.disabled = false;
+btn.textContent = editingEmail ? 'Update RSVP' : 'Submit RSVP';
+alert('Something went wrong. Please try again or contact Erica directly.');
+console.error(err);
+});
+}
+
+
+function resetForm() {
+document.getElementById('rsvpForm').reset();
+document.getElementById('fNumGuests').value = 0;
+updateGuestRows();
+editingEmail = null;
+document.getElementById('formTitle').textContent = 'RSVP for the Picnic';
+document.getElementById('submitBtn').textContent = 'Submit RSVP';
+clearErrors();
+}
+
+
+// ─── Success overlay ───
+function showSuccessOverlay(type) {
+if (type === 'update') {
+document.getElementById('successTitle').textContent = 'RSVP Updated!';
+document.getElementById('successMsg').textContent = 'Your changes have been saved. See you at the picnic!';
+} else {
+document.getElementById('successTitle').textContent = 'RSVP Submitted!';
+document.getElementById('successMsg').textContent = "Thanks! We've got you down for the picnic. See you on May 20th!";
+}
+document.getElementById('successOverlay').classList.add('show');
+}
+
+
+function closeSuccess() {
+document.getElementById('successOverlay').classList.remove('show');
+}
+
+
+// ─── Edit / Lookup ───
+function toggleEditSection() {
+document.getElementById('editSection').classList.toggle('show');
+}
+
+
+function handleLookup() {
+const email = document.getElementById('lookupEmail').value.trim();
+const errEl = document.getElementById('errLookup');
+errEl.classList.remove('show');
+if (!email) { errEl.textContent = 'Enter your email'; errEl.classList.add('show'); return; }
+
+
+if (SCRIPT_URL === 'YOUR_SCRIPT_URL_HERE') {
+errEl.textContent = 'Backend not configured yet. See setup instructions.';
+errEl.classList.add('show');
+return;
+}
+
+
+const lookupUrl = SCRIPT_URL + '?action=lookup&email=' + encodeURIComponent(email);
+fetch(lookupUrl)
+.then(r => r.json())
+.then(data => {
+if (data.status === 'not_found') {
+errEl.textContent = 'No RSVP found for that email address.';
+errEl.classList.add('show');
+return;
+}
+// Populate the form with existing data
+document.getElementById('fName').value = data.name || '';
+document.getElementById('fEmail').value = data.email || '';
+document.getElementById('fPhone').value = data.phone || '';
+const gNames = (data.guestNames || '').split('; ').filter(Boolean);
+const gEmails = (data.guestEmails || '').split('; ').filter(Boolean);
+document.getElementById('fNumGuests').value = gNames.length;
+updateGuestRows();
+gNames.forEach((n, i) => { if (document.getElementById('gName' + i)) document.getElementById('gName' + i).value = n; });
+gEmails.forEach((e, i) => { if (document.getElementById('gEmail' + i)) document.getElementById('gEmail' + i).value = e; });
+editingEmail = email;
+document.getElementById('formTitle').textContent = 'Update RSVP for ' + data.name;
+document.getElementById('submitBtn').textContent = 'Update RSVP';
+document.getElementById('editSection').classList.remove('show');
+document.getElementById('lookupEmail').value = '';
+window.scrollTo({ top: 0, behavior: 'smooth' });
+})
+.catch(() => {
+errEl.textContent = 'Could not reach the server. Try again.';
+errEl.classList.add('show');
+});
+}
+
+
+// Hide setup banner if configured
+if (SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbw-aCyoc1qlNtAfKzytrfjv7lpuh5LRoQutpcc3jKE4_aI_cbksxhE7qI9g2d76HR6f/exec') {
+document.getElementById('setupBanner').style.display = 'none';
+}
+</script>
+</body>
+</html>
+
