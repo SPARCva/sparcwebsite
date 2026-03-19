@@ -87,7 +87,7 @@ BEGIN APPS SCRIPT CODE (copy everything between the dashed lines)
 
 const CONFIG = {
   // Zoom meeting link for bingo
-  ZOOM_LINK: "https://zoom.us/j/YOUR_MEETING_ID?pwd=YOUR_PASSWORD",
+  ZOOM_LINK: "https://5j7w5jwab.cc.rs6.net/tn.jsp?f=001mWJ0ybejBeMchQOfUT0RSTMe__tB3kiE0Kvx-EziQ4QP6V7QBgoeze9gJVsMm5qpeaZTefhc0PMhCnaE26qeJij8RyWRc80qvr5zhDGjCm8wNpx0Jdek8d-EZPLe9GbVsVyvDhou9e_Yz8Z2vZNpESz_XVILrA9BZpeBlrMzERmCR3xWknN2-8huZw7Lv6cAnt6Obgrft5EC3sDjRawldOrisMMMrhnQ6qh9HNe3ZNJI0uKVO3Zj52vE4ncX7gbRksKPsUkNpvdzvY00PJILylZuWF-tl3yb&c=dktS9ZhXQB5zNBYB0B4uOHWHwdf625i-tQ2Ltx_HwpUvTxs5aTvJ3Q==&ch=yur9yKxPbTI_ix2vfELOYbxL2emNDyTyjkGj5qZqWnqvF88oOz4Thw==",
 
   // Base URL for bingo card images (cards should be named card1.png, card2.png, etc.)
   // Or use a Google Drive folder link
