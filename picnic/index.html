@@ -236,6 +236,47 @@
             justify-content: center;
         }
 
+        /* RSVP Button Standout */
+        .picnic-rsvp-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #FFD54F, #FFB300);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 179, 0, 0.4);
+        }
+        .picnic-rsvp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 179, 0, 0.5);
+        }
+
+        /* Directions link */
+        .directions-link {
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .directions-link:hover {
+            color: #fff;
+        }
+        .directions-link-card {
+            color: var(--sparc-kelly-green);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        .directions-link-card:hover {
+            text-decoration: underline;
+        }
+
         /* Footer link color */
         .footer a { color: white; }
 
@@ -333,11 +374,11 @@
                 </div>
                 <div class="picnic-hero-detail">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Burke Lake Park, Pavilion B
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Burke+Lake+Park+Pavilion+B,+7315+Ox+Rd,+Fairfax+Station,+VA+22039" target="_blank" rel="noopener noreferrer" class="directions-link">Burke Lake Park, Pavilion B</a>
                 </div>
             </div>
             <div class="picnic-hero-buttons">
-                <a href="#rsvp" class="btn-primary" style="padding: 14px 35px; font-size: 1rem;">RSVP Now</a>
+                <a href="#rsvp" class="picnic-rsvp-btn">RSVP Now</a>
             </div>
         </div>
     </section>
@@ -352,6 +393,10 @@
                     </div>
                     <h3>Location</h3>
                     <p>Burke Lake Park<br>Pavilion B</p>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Burke+Lake+Park+Pavilion+B,+7315+Ox+Rd,+Fairfax+Station,+VA+22039" target="_blank" rel="noopener noreferrer" class="directions-link-card">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Get Directions
+                    </a>
                 </div>
                 <div class="picnic-detail-card fade-in">
                     <div class="picnic-detail-icon">
