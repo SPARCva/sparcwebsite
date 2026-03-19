@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPARC Spring Picnic — RSVP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-green-50">
+
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-green-600 to-green-700 text-white">
+    <div class="max-w-3xl mx-auto px-6 py-8 text-center">
+      <div class="text-4xl mb-2">&#127793;</div>
+      <h1 class="text-3xl font-bold mb-1">SPARC Spring Picnic</h1>
+      <p class="text-green-100 text-lg font-medium">Wednesday, May 20, 2026</p>
+    </div>
+  </div>
+
+  <!-- Event Details Banner -->
+  <div class="max-w-3xl mx-auto px-6 -mt-4">
+    <div class="bg-white rounded-2xl shadow-lg p-6 border border-green-100">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+        <div>
+          <div class="text-2xl mb-1">&#128205;</div>
+          <p class="text-xs text-gray-500 uppercase font-semibold tracking-wide">Location</p>
+          <p class="text-sm font-semibold text-gray-800">Burke Lake Park, Pavilion B</p>
+        </div>
+        <div>
+          <div class="text-2xl mb-1">&#128336;</div>
+          <p class="text-xs text-gray-500 uppercase font-semibold tracking-wide">Time</p>
+          <p class="text-sm font-semibold text-gray-800">10:00 AM – 2:00 PM</p>
+        </div>
+        <div>
+          <div class="text-2xl mb-1">&#127828;</div>
+          <p class="text-xs text-gray-500 uppercase font-semibold tracking-wide">Menu</p>
+          <p class="text-sm font-semibold text-gray-800">Burgers, Hot Dogs, Sides &amp; Water Bottles</p>
+        </div>
+      </div>
+      <p class="text-center text-sm text-gray-500 mt-4 pt-3 border-t border-gray-100">
+        Please RSVP to Erica and let her know if you are bringing guests — include their name and email!
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-3xl mx-auto px-6 py-6">
+
+    <!-- Success Message -->
+    <div id="successMsg" class="hidden mb-4 bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl text-sm font-medium text-center"></div>
+
+    <!-- Tabs -->
+    <div class="flex gap-1 bg-gray-100 p-1 rounded-xl mb-6">
+      <button onclick="switchTab('rsvp')" id="tab-rsvp" class="flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors bg-white text-green-700 shadow-sm">New RSVP</button>
+      <button onclick="switchTab('lookup')" id="tab-lookup" class="flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors text-gray-500 hover:text-gray-700">Edit Existing RSVP</button>
+      <button onclick="switchTab('admin')" id="tab-admin" class="flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors text-gray-500 hover:text-gray-700">Admin (<span id="adminCount">0</span>)</button>
+    </div>
+
+    <!-- RSVP Form Tab -->
+    <div id="panel-rsvp" class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <h2 id="formTitle" class="text-xl font-bold text-gray-800 mb-5">RSVP for the Picnic</h2>
+      <form id="rsvpForm" class="space-y-5" onsubmit="handleFormSubmit(event)">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Your Full Name <span class="text-red-500">*</span></label>
+          <input type="text" id="f-name" placeholder="Jane Smith" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <p id="err-name" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
+          <input type="email" id="f-email" placeholder="jane@company.com" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <p id="err-email" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Phone Number <span class="text-red-500">*</span></label>
+          <input type="tel" id="f-phone" placeholder="(555) 123-4567" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <p id="err-phone" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Number of Additional Guests</label>
+          <input type="number" id="f-numGuests" min="0" max="20" value="0" onchange="handleGuestCountChange()" oninput="handleGuestCountChange()" class="w-24 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        </div>
+        <div id="guestSection" class="hidden bg-green-50 rounded-xl p-4 border border-green-200">
+          <p class="text-sm font-semibold text-green-800 mb-3">Guest Details (name &amp; email required)</p>
+          <div id="guestRows"></div>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" id="submitBtn" class="px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm">Submit RSVP</button>
+          <button type="button" id="cancelEditBtn" onclick="cancelEdit()" class="hidden px-6 py-2.5 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lookup Tab -->
+    <div id="panel-lookup" class="hidden bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Find &amp; Edit Your RSVP</h2>
+      <p class="text-sm text-gray-500 mb-4">Enter the email address you used when you submitted your RSVP, and we'll pull it up so you can make changes.</p>
+      <form onsubmit="handleLookup(event)" class="flex gap-2 items-end">
+        <div class="flex-1">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Look up your RSVP by email</label>
+          <input type="email" id="lookupEmail" placeholder="jane@company.com" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400" />
+          <p id="lookupError" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
+        <button type="submit" class="px-5 py-2.5 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors shadow-sm">Find RSVP</button>
+      </form>
+    </div>
+
+    <!-- Admin Tab -->
+    <div id="panel-admin" class="hidden bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-bold text-gray-800">All RSVPs</h2>
+        <button id="exportBtn" onclick="exportCSV()" class="hidden px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Export to CSV</button>
+      </div>
+      <div id="statsRow" class="hidden flex gap-4 mb-4">
+        <div class="bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex-1 text-center">
+          <p id="statRsvps" class="text-2xl font-bold text-green-700">0</p>
+          <p class="text-xs text-green-600 font-medium">RSVPs</p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex-1 text-center">
+          <p id="statTotal" class="text-2xl font-bold text-amber-700">0</p>
+          <p class="text-xs text-amber-600 font-medium">Total Attendees</p>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex-1 text-center">
+          <p id="statGuests" class="text-2xl font-bold text-blue-700">0</p>
+          <p class="text-xs text-blue-600 font-medium">Extra Guests</p>
+        </div>
+      </div>
+      <div id="rsvpTableWrap"></div>
+      <p id="emptyAdmin" class="text-gray-400 text-center py-10">No RSVPs yet. They'll show up here as people submit them.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="text-center py-6 text-xs text-gray-400">
+    Questions? Reach out to Erica &bull; See you at the picnic!
+  </div>
+
+<script>
+  let rsvps = [];
+  let editingIndex = null;
+  let successTimeout = null;
+
+  // --- Tab switching ---
+  function switchTab(tab) {
+    ["rsvp", "lookup", "admin"].forEach((t) => {
+      document.getElementById("panel-" + t).classList.toggle("hidden", t !== tab);
+      const btn = document.getElementById("tab-" + t);
+      if (t === tab) {
+        btn.className = "flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors bg-white shadow-sm " +
+          (t === "rsvp" ? "text-green-700" : t === "lookup" ? "text-amber-700" : "text-blue-700");
+      } else {
+        btn.className = "flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors text-gray-500 hover:text-gray-700";
+      }
+    });
+  }
+
+  // --- Success message ---
+  function showSuccess(msg) {
+    const el = document.getElementById("successMsg");
+    el.textContent = msg;
+    el.classList.remove("hidden");
+    clearTimeout(successTimeout);
+    successTimeout = setTimeout(() => el.classList.add("hidden"), 4000);
+  }
+
+  // --- Guest rows ---
+  function handleGuestCountChange() {
+    const n = Math.max(0, Math.min(20, parseInt(document.getElementById("f-numGuests").value) || 0));
+    renderGuestRows(n);
+  }
+
+  function renderGuestRows(count) {
+    const section = document.getElementById("guestSection");
+    const container = document.getElementById("guestRows");
+    if (count === 0) {
+      section.classList.add("hidden");
+      container.innerHTML = "";
+      return;
+    }
+    section.classList.remove("hidden");
+
+    // Preserve existing values
+    const existing = [];
+    container.querySelectorAll(".guest-row").forEach((row) => {
+      existing.push({
+        name: row.querySelector(".g-name").value,
+        email: row.querySelector(".g-email").value,
+      });
+    });
+
+    let html = "";
+    for (let i = 0; i < count; i++) {
+      const name = existing[i]?.name || "";
+      const email = existing[i]?.email || "";
+      html += `<div class="guest-row flex gap-2 items-start mb-2">
+        <div class="flex-1">
+          <input type="text" placeholder="Guest ${i + 1} full name" value="${escapeAttr(name)}" class="g-name w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+        </div>
+        <div class="flex-1">
+          <input type="email" placeholder="Guest ${i + 1} email" value="${escapeAttr(email)}" class="g-email w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+        </div>
+        <button type="button" onclick="removeGuest(${i})" class="mt-1 text-red-400 hover:text-red-600 text-lg font-bold leading-none" title="Remove guest">&times;</button>
+      </div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function removeGuest(idx) {
+    const container = document.getElementById("guestRows");
+    const rows = container.querySelectorAll(".guest-row");
+    const guests = [];
+    rows.forEach((row, i) => {
+      if (i !== idx) {
+        guests.push({
+          name: row.querySelector(".g-name").value,
+          email: row.querySelector(".g-email").value,
+        });
+      }
+    });
+    document.getElementById("f-numGuests").value = guests.length;
+    renderGuestRows(guests.length);
+    // Restore values
+    const newRows = container.querySelectorAll(".guest-row");
+    guests.forEach((g, i) => {
+      newRows[i].querySelector(".g-name").value = g.name;
+      newRows[i].querySelector(".g-email").value = g.email;
+    });
+  }
+
+  function escapeAttr(str) {
+    return str.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // --- Validation ---
+  function validate() {
+    let valid = true;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    ["name", "email", "phone"].forEach((field) => {
+      const input = document.getElementById("f-" + field);
+      const err = document.getElementById("err-" + field);
+      if (!input.value.trim()) {
+        err.textContent = field.charAt(0).toUpperCase() + field.slice(1) + " is required";
+        err.classList.remove("hidden");
+        input.classList.add("border-red-400");
+        input.classList.remove("border-gray-300");
+        valid = false;
+      } else if (field === "email" && !emailRegex.test(input.value)) {
+        err.textContent = "Enter a valid email";
+        err.classList.remove("hidden");
+        input.classList.add("border-red-400");
+        input.classList.remove("border-gray-300");
+        valid = false;
+      } else {
+        err.classList.add("hidden");
+        input.classList.remove("border-red-400");
+        input.classList.add("border-gray-300");
+      }
+    });
+
+    document.querySelectorAll(".guest-row").forEach((row) => {
+      const nameInput = row.querySelector(".g-name");
+      const emailInput = row.querySelector(".g-email");
+      if (!nameInput.value.trim()) { nameInput.classList.add("border-red-400"); nameInput.classList.remove("border-gray-300"); valid = false; }
+      else { nameInput.classList.remove("border-red-400"); nameInput.classList.add("border-gray-300"); }
+      if (!emailInput.value.trim()) { emailInput.classList.add("border-red-400"); emailInput.classList.remove("border-gray-300"); valid = false; }
+      else { emailInput.classList.remove("border-red-400"); emailInput.classList.add("border-gray-300"); }
+    });
+
+    return valid;
+  }
+
+  // --- Form submit ---
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const guests = [];
+    document.querySelectorAll(".guest-row").forEach((row) => {
+      guests.push({
+        name: row.querySelector(".g-name").value.trim(),
+        email: row.querySelector(".g-email").value.trim(),
+      });
+    });
+
+    const data = {
+      name: document.getElementById("f-name").value.trim(),
+      email: document.getElementById("f-email").value.trim(),
+      phone: document.getElementById("f-phone").value.trim(),
+      numGuests: guests.length,
+      guests: guests,
+      submittedAt: new Date().toLocaleString(),
+    };
+
+    if (editingIndex !== null) {
+      rsvps[editingIndex] = data;
+      editingIndex = null;
+      showSuccess("RSVP updated successfully!");
+    } else {
+      rsvps.push(data);
+      showSuccess("RSVP submitted! We look forward to seeing you!");
+    }
+
+    resetForm();
+    renderAdmin();
+    updateTabLabels();
+  }
+
+  function resetForm() {
+    document.getElementById("rsvpForm").reset();
+    document.getElementById("f-numGuests").value = "0";
+    document.getElementById("guestSection").classList.add("hidden");
+    document.getElementById("guestRows").innerHTML = "";
+    document.getElementById("cancelEditBtn").classList.add("hidden");
+    document.getElementById("submitBtn").textContent = "Submit RSVP";
+    document.getElementById("formTitle").textContent = "RSVP for the Picnic";
+    document.getElementById("tab-rsvp").textContent = "New RSVP";
+    editingIndex = null;
+  }
+
+  function cancelEdit() {
+    resetForm();
+    editingIndex = null;
+  }
+
+  // --- Edit / Delete ---
+  function startEdit(index) {
+    editingIndex = index;
+    const r = rsvps[index];
+    document.getElementById("f-name").value = r.name;
+    document.getElementById("f-email").value = r.email;
+    document.getElementById("f-phone").value = r.phone;
+    document.getElementById("f-numGuests").value = r.numGuests;
+    renderGuestRows(r.numGuests);
+    const rows = document.querySelectorAll(".guest-row");
+    r.guests.forEach((g, i) => {
+      if (rows[i]) {
+        rows[i].querySelector(".g-name").value = g.name;
+        rows[i].querySelector(".g-email").value = g.email;
+      }
+    });
+    document.getElementById("submitBtn").textContent = "Update RSVP";
+    document.getElementById("cancelEditBtn").classList.remove("hidden");
+    document.getElementById("formTitle").textContent = "Editing RSVP for " + escapeHtml(r.name);
+    document.getElementById("tab-rsvp").textContent = "Edit RSVP";
+    switchTab("rsvp");
+    document.getElementById("panel-rsvp").scrollIntoView({ behavior: "smooth" });
+  }
+
+  function deleteRsvp(index) {
+    rsvps.splice(index, 1);
+    if (editingIndex === index) resetForm();
+    else if (editingIndex !== null && editingIndex > index) editingIndex--;
+    renderAdmin();
+    updateTabLabels();
+    showSuccess("RSVP removed.");
+  }
+
+  // --- Lookup ---
+  function handleLookup(e) {
+    e.preventDefault();
+    const email = document.getElementById("lookupEmail").value.trim();
+    const errEl = document.getElementById("lookupError");
+    if (!email) {
+      errEl.textContent = "Enter your email to look up your RSVP";
+      errEl.classList.remove("hidden");
+      return;
+    }
+    const idx = rsvps.findIndex((r) => r.email.toLowerCase() === email.toLowerCase());
+    if (idx >= 0) {
+      errEl.classList.add("hidden");
+      startEdit(idx);
+    } else {
+      errEl.textContent = "No RSVP found for that email address.";
+      errEl.classList.remove("hidden");
+    }
+  }
+
+  // --- Admin rendering ---
+  function renderAdmin() {
+    const total = rsvps.reduce((sum, r) => sum + 1 + r.numGuests, 0);
+    document.getElementById("adminCount").textContent = rsvps.length;
+    document.getElementById("statRsvps").textContent = rsvps.length;
+    document.getElementById("statTotal").textContent = total;
+    document.getElementById("statGuests").textContent = total - rsvps.length;
+
+    const statsRow = document.getElementById("statsRow");
+    const exportBtn = document.getElementById("exportBtn");
+    const emptyMsg = document.getElementById("emptyAdmin");
+    const tableWrap = document.getElementById("rsvpTableWrap");
+
+    if (rsvps.length === 0) {
+      statsRow.classList.add("hidden");
+      exportBtn.classList.add("hidden");
+      emptyMsg.classList.remove("hidden");
+      tableWrap.innerHTML = "";
+      return;
+    }
+
+    statsRow.classList.remove("hidden");
+    exportBtn.classList.remove("hidden");
+    emptyMsg.classList.add("hidden");
+
+    let html = `<div class="overflow-x-auto rounded-xl border border-gray-200">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2.5 text-left font-semibold text-gray-600">Name</th>
+            <th class="px-4 py-2.5 text-left font-semibold text-gray-600">Email</th>
+            <th class="px-4 py-2.5 text-left font-semibold text-gray-600">Phone</th>
+            <th class="px-4 py-2.5 text-center font-semibold text-gray-600">Guests</th>
+            <th class="px-4 py-2.5 text-left font-semibold text-gray-600">Guest Names</th>
+            <th class="px-4 py-2.5 text-center font-semibold text-gray-600">Actions</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    rsvps.forEach((r, i) => {
+      const bg = i % 2 === 0 ? "bg-white" : "bg-gray-50";
+      const guestNames = r.guests.map((g) => escapeHtml(g.name)).join(", ") || "—";
+      html += `<tr class="${bg}">
+        <td class="px-4 py-2.5 font-medium text-gray-800">${escapeHtml(r.name)}</td>
+        <td class="px-4 py-2.5 text-gray-600">${escapeHtml(r.email)}</td>
+        <td class="px-4 py-2.5 text-gray-600">${escapeHtml(r.phone)}</td>
+        <td class="px-4 py-2.5 text-center text-gray-600">${r.numGuests}</td>
+        <td class="px-4 py-2.5 text-gray-600">${guestNames}</td>
+        <td class="px-4 py-2.5 text-center">
+          <button onclick="startEdit(${i})" class="text-blue-600 hover:text-blue-800 font-medium mr-3">Edit</button>
+          <button onclick="deleteRsvp(${i})" class="text-red-500 hover:text-red-700 font-medium">Remove</button>
+        </td>
+      </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    tableWrap.innerHTML = html;
+  }
+
+  function updateTabLabels() {
+    document.getElementById("adminCount").textContent = rsvps.length;
+  }
+
+  // --- CSV Export ---
+  function exportCSV() {
+    const headers = ["Name", "Email", "Phone", "Number of Guests", "Guest Names", "Guest Emails", "Submitted At"];
+    const rows = rsvps.map((r) => [
+      r.name, r.email, r.phone, r.numGuests,
+      r.guests.map((g) => g.name).join("; "),
+      r.guests.map((g) => g.email).join("; "),
+      r.submittedAt || "",
+    ]);
+    const csv = [headers, ...rows].map((row) => row.map((c) => '"' + String(c).replace(/"/g, '""') + '"').join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "picnic-rsvps.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>
