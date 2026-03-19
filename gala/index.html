@@ -1875,17 +1875,23 @@
             }
         });
 
-        // Open raffle modal and pre-select option via postMessage
+        // Open raffle modal and pre-select option
         function selectRaffle(radioId) {
             var modal = document.getElementById('raffleModal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
-            var iframe = document.getElementById('raffleIframe');
-            // Send message to iframe to select the radio button
+            // Wait for modal to show and Bloomerang form to load, then select the radio
             setTimeout(function() {
-                iframe.contentWindow.postMessage({ selectRadio: radioId }, '*');
-            }, 1000);
+                var radio = document.getElementById(radioId);
+                if (radio) {
+                    radio.checked = true;
+                    radio.click();
+                    // Trigger change event for Bloomerang
+                    var event = new Event('change', { bubbles: true });
+                    radio.dispatchEvent(event);
+                }
+            }, 400);
         }
 
         // Close raffle modal
