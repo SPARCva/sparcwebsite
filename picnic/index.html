@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PD1XQ0NDCD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Join SPARC's Annual Center Picnic at Burke Lake Park. A fun day of food, community, and celebration for SPARC participants, families, and friends.">
+    <title>SPARC Annual All Center Picnic | SPARC - Specially Adapted Resource Centers</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* Picnic Hero */
+        .picnic-hero {
+            position: relative;
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, var(--sparc-kelly-green) 100%);
+            padding: 140px 0 80px;
+            overflow: hidden;
+        }
+        .picnic-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .picnic-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .picnic-hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .picnic-hero h1 {
+            color: white;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 15px;
+        }
+        .picnic-hero-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+        .picnic-hero-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 35px;
+            justify-content: center;
+        }
+        .picnic-hero-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .picnic-hero-detail svg {
+            opacity: 0.8;
+            flex-shrink: 0;
+        }
+        .picnic-hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Details Cards */
+        .picnic-details-section {
+            padding: 80px 0;
+            background: var(--sparc-soft-gray);
+        }
+        .picnic-details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .picnic-detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
+        }
+        .picnic-detail-card:hover {
+            transform: translateY(-4px);
+        }
+        .picnic-detail-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .picnic-detail-icon svg {
+            color: #2e7d32;
+        }
+        .picnic-detail-card h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .picnic-detail-card p {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--sparc-charcoal);
+        }
+
+        /* Photo Gallery */
+        .picnic-gallery-section {
+            padding: 80px 0;
+            background: white;
+        }
+        .picnic-gallery-section .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .picnic-gallery-section .section-header h2 {
+            color: var(--sparc-dark-navy);
+            margin-bottom: 0.5rem;
+        }
+        .picnic-gallery-section .section-header p {
+            color: #666;
+            font-size: 1.05rem;
+        }
+        .picnic-photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .picnic-photo-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .picnic-photo-card:hover {
+            transform: translateY(-4px);
+        }
+        .picnic-photo-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* RSVP Section */
+        .picnic-rsvp-section {
+            padding: 80px 0;
+            background: var(--sparc-soft-gray);
+        }
+        .picnic-rsvp-section .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .picnic-rsvp-section .section-header h2 {
+            color: var(--sparc-dark-navy);
+            margin-bottom: 0.5rem;
+        }
+        .picnic-rsvp-section .section-header p {
+            color: #666;
+            font-size: 1.05rem;
+        }
+        .picnic-rsvp-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 700px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .picnic-rsvp-header {
+            background: linear-gradient(135deg, #2e7d32, #43a047);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .picnic-rsvp-header h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .picnic-rsvp-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        .picnic-rsvp-form {
+            padding: 35px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Footer link color */
+        .footer a { color: white; }
+
+        @media (max-width: 768px) {
+            .picnic-hero { padding: 120px 0 60px; }
+            .picnic-details-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .picnic-photo-grid { grid-template-columns: 1fr; max-width: 500px; }
+            .picnic-photo-card img { height: 250px; }
+            .picnic-rsvp-form { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="SPARC - Specially Adapted Resource Centers" style="height: 50px; width: auto;">
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/about/" class="nav-link">About</a>
+                    <div class="dropdown-menu">
+                        <a href="/team/">Our Team</a>
+                        <a href="/board/">Board of Directors</a>
+                        <a href="/financials/">Financials</a>
+                        <a href="/strategic-plan/">Strategic Plan</a>
+                        <a href="/news/">SPARC in the News</a>
+                        <a href="/compliance/">ADA Compliance</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/programs/" class="nav-link">Programs</a>
+                    <div class="dropdown-menu">
+                        <a href="/programs/sensory-lab/">Mobile Exploration Lab</a>
+                        <a href="/programs/enrollment/">Enrollment Information</a>
+                    </div>
+                </li>
+                <li><a href="/locations/" class="nav-link">Locations</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/stories/" class="nav-link">Stories</a>
+                    <div class="dropdown-menu">
+                        <a href="/podcast/">The Access Point Podcast</a>
+                        <a href="/blog/">Blog</a>
+                        <a href="/newsletter/">Newsletter</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/events/" class="nav-link active">Events</a>
+                    <div class="dropdown-menu">
+                        <a href="/gala/">An Evening to SPARCle</a>
+                        <a href="/summit/">A Call to Conscience</a>
+                        <a href="/bingo/">Bingo</a>
+                        <a href="/picnic/">Spring Picnic</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
+                    <div class="dropdown-menu">
+                        <a href="/advocate/">Advocate for SPARC</a>
+                        <a href="/get-involved/">Volunteer</a>
+                        <a href="/participants/">Participants & Families</a>
+                        <a href="javascript:void(0)" onclick="openMailingListModal()">Join Our Mailing List</a>
+                        <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
+                    </div>
+                </li>
+                <li><a href="/donate-checkout/" class="nav-link nav-donate">Donate</a></li>
+            </ul>
+
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="picnic-hero" id="main-content">
+        <div class="picnic-hero-content">
+            <h1>SPARC Annual All Center Picnic</h1>
+            <p class="picnic-hero-subtitle">Join us for a day of food, fun, and community at Burke Lake Park. Bring your family and friends for an afternoon of celebration!</p>
+            <div class="picnic-hero-details">
+                <div class="picnic-hero-detail">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Wednesday, May 20, 2026
+                </div>
+                <div class="picnic-hero-detail">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    10:00 AM &ndash; 2:00 PM
+                </div>
+                <div class="picnic-hero-detail">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Burke Lake Park, Pavilion B
+                </div>
+            </div>
+            <div class="picnic-hero-buttons">
+                <a href="#rsvp" class="btn-primary" style="padding: 14px 35px; font-size: 1rem;">RSVP Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Details Cards -->
+    <section class="picnic-details-section">
+        <div class="container">
+            <div class="picnic-details-grid">
+                <div class="picnic-detail-card fade-in">
+                    <div class="picnic-detail-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <h3>Location</h3>
+                    <p>Burke Lake Park<br>Pavilion B</p>
+                </div>
+                <div class="picnic-detail-card fade-in">
+                    <div class="picnic-detail-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Time</h3>
+                    <p>10:00 AM &ndash; 2:00 PM</p>
+                </div>
+                <div class="picnic-detail-card fade-in">
+                    <div class="picnic-detail-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    </div>
+                    <h3>Menu</h3>
+                    <p>Burgers, Hot Dogs,<br>Sides &amp; Water Bottles</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="picnic-gallery-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Picnic Memories</h2>
+                <p>A look back at past SPARC picnics at Burke Lake Park</p>
+            </div>
+            <div class="picnic-photo-grid">
+                <div class="picnic-photo-card fade-in">
+                    <img src="/Picnic/picnic1.jpg" alt="SPARC participants enjoying the annual picnic at Burke Lake Park">
+                </div>
+                <div class="picnic-photo-card fade-in">
+                    <img src="/Picnic/picnic2.jpg" alt="SPARC community members together at the annual center picnic">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section class="picnic-rsvp-section" id="rsvp">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Reserve Your Spot</h2>
+                <p>Fill out the form below to RSVP for the Spring Picnic</p>
+            </div>
+            <div class="picnic-rsvp-card fade-in">
+                <div class="picnic-rsvp-header">
+                    <h3>RSVP Now</h3>
+                    <p>We can't wait to see you there!</p>
+                </div>
+                <div class="picnic-rsvp-form">
+                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/9507840.js" type="text/javascript"></script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="color: white;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="/images/SPARC_logo_white.png" alt="SPARC" style="height: 60px; width: auto; margin-bottom: 15px;">
+                    <p>Specially Adapted Resource Centers provides community-integrated day programs for adults with severe and multiple disabilities in Northern Virginia. We believe every adult deserves a meaningful life filled with connection, purpose, and belonging.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=100064372517571" class="social-link" aria-label="Facebook" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/sparc.solutions/" class="social-link" aria-label="Instagram" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/specially-adapted-resource-centers" class="social-link" aria-label="LinkedIn" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@SPARC_VA" class="social-link" aria-label="YouTube" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="mailto:debi@sparcsolutions.org" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/about/">About Us</a></li>
+                        <li><a href="/programs/">Programs</a></li>
+                        <li><a href="/locations/">Locations & Pricing</a></li>
+                        <li><a href="/events/">Events</a></li>
+                        <li><a href="/stories/">Stories & Impact</a></li>
+                        <li><a href="/donate-checkout/">Donate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/financials/">Annual Reports</a></li>
+                        <li><a href="/board/">Board of Directors</a></li>
+                        <li><a href="/news/">News & Press</a></li>
+                        <li><a href="/get-involved/">Get Involved</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><strong>Mailing Address:</strong><br>
+                    1775 Tysons Blvd., Fifth Floor<br>
+                    Tysons, VA 22102</p>
+                    <p><strong>Phone:</strong> <a href="tel:571-407-1807" style="color: white;">(571) 407-1807</a></p>
+                    <p><a href="mailto:debi@sparcsolutions.org" style="color: white;">debi@sparcsolutions.org</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom-bar" style="background: white; padding: 30px 0; color: var(--sparc-dark-navy);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="margin: 0 0 5px 0; color: var(--sparc-dark-navy);">&copy; 2025 SPARC - Specially Adapted Resource Centers. All rights reserved.</p>
+                <p style="margin: 0 0 10px 0; color: var(--sparc-dark-navy);">501(c)(3) Nonprofit Organization | EIN: 20-5513060</p>
+                <nav aria-label="Legal links">
+                    <a href="/accessibility/" style="color: var(--sparc-dark-navy); text-decoration: none;">Accessibility</a> |
+                    <a href="/contact/" style="color: var(--sparc-dark-navy); text-decoration: none;">Contact</a>
+                </nav>
+            </div>
+            <img src="/images/Powered by Google.png" alt="Powered by Google" style="height: 160px; width: auto;">
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
