@@ -528,9 +528,9 @@
                         <div class="survey-group">
                             <div class="survey-group-title">About You <span class="optional-label">(Optional)</span></div>
 
-                            <!-- Q12 -->
+                            <!-- Q13 -->
                             <div class="survey-question">
-                                <label class="q-label"><span class="q-num">12.</span> Have you attended previous SPARC Galas?</label>
+                                <label class="q-label"><span class="q-num">13.</span> Have you attended previous SPARC Galas?</label>
                                 <ul class="options-list">
                                     <li><label><input type="radio" name="q12_attendance" value="Yes - once"> Yes – once</label></li>
                                     <li><label><input type="radio" name="q12_attendance" value="Yes - more than once"> Yes – more than once</label></li>
@@ -538,9 +538,9 @@
                                 </ul>
                             </div>
 
-                            <!-- Q13 -->
+                            <!-- Q14 -->
                             <div class="survey-question">
-                                <label class="q-label"><span class="q-num">13.</span> How did you first hear about the SPARC Gala?</label>
+                                <label class="q-label"><span class="q-num">14.</span> How did you first hear about the SPARC Gala?</label>
                                 <ul class="options-list">
                                     <li><label><input type="radio" name="q13_heard_about" value="SPARC communications (email/newsletter)"> SPARC communications (email/newsletter)</label></li>
                                     <li><label><input type="radio" name="q13_heard_about" value="Friend or word of mouth"> Friend or word of mouth</label></li>
@@ -669,10 +669,11 @@
             var params = [];
             formData.forEach(function(value, key) {
                 params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-            });fetch(window.location.pathname,
+            });
             var body = params.join('&');
 
-window.location.pathname                method: 'POST',
+            fetch(window.location.pathname, {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: body
             })
