@@ -5,7 +5,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(argumet s);}
+      function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-PD1XQ0NDCD');
     </script>
@@ -354,11 +354,11 @@
                     </div>
 
                     <!-- Netlify Form -->
-                    <form name="gala-feedback-survey" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="survey-form" novalidate>
-                        <input type="hidden" name="form-name" value="gala-feedback-survey">
-                        <!-- Honeypot -->
-                        <p style="display:none;">
-                            <label>Don't fill this out: <input name="bot-field"></label>
+                    <form action="https://formspree.io/f/mqegvkqy" method="POST" id="survey-form" novalidate>
+                        
+                        
+                        
+                            
                         </p>
 
                         <!-- SECTION 1: Overall Experience -->
@@ -672,7 +672,7 @@
             });
             var body = params.join('&');
 
-            fetch(window.location.pathname, {
+            fetch('https://formspree.io/f/mqegvkqy', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: body
