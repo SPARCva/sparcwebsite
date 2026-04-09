@@ -654,27 +654,38 @@
         document.getElementById('survey-form').addEventListener('submit', function(e) {
             e.preventDefault();
             var form = this;
-            var data = new FormData(form);
+            var formData = new FormData(form);
+
+            // Manually encode so multiple checkbox values (Q4) are preserved
+            var params = [];
+            formData.forEach(function(value, key) {
+                params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+            });
+            var body = params.join('&');
 
             fetch('/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(data).toString()
+                body: body
             })
-            .then(function() {
-                // Hide the submit button and all form fields
-                form.querySelectorAll('input, textarea, button[type="submit"]').forEach(function(el) {
-                    el.disabled = true;
-                });
-                form.querySelector('.btn-survey-submit').style.display = 'none';
-
-                // Show thank-you banner and scroll to it
-                var banner = document.getElementById('thank-you-banner');
-                banner.style.display = 'block';
-                banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            .then(function(response) {
+                if (response.ok) {
+                    // Success — hide form fields and show thank-you
+                    form.querySelectorAll('input, textarea, button[type="submit"]').forEach(function(el) {
+                        el.disabled = true;
+                    });
+                    form.querySelector('.btn-survey-submit').style.display = 'none';
+                    var banner = document.getElementById('thank-you-banner');
+                    banner.style.display = 'block';
+                    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    // Netlify returned an error — fall back to standard submit
+                    form.removeEventListener('submit', arguments.callee);
+                    form.submit();
+                }
             })
             .catch(function() {
-                // Fallback: standard form submit
+                // Network error — fall back to standard submit
                 form.submit();
             });
         });
