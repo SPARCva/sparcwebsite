@@ -660,11 +660,10 @@
             var params = [];
             formData.forEach(function(value, key) {
                 params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-            });
+            });fetch(window.location.pathname,
             var body = params.join('&');
 
-            fetch('/', {
-                method: 'POST',
+window.location.pathname                method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: body
             })
