@@ -52,62 +52,6 @@
         }
         .monthly-hero .container { position: relative; z-index: 1; }
 
-        /* Frequency tabs (Monthly default / One-Time secondary) */
-        .freq-tabs {
-            display: inline-flex;
-            background: rgba(255,255,255,0.12);
-            padding: 6px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.22);
-            margin-bottom: 2rem;
-            gap: 4px;
-            backdrop-filter: blur(4px);
-        }
-        .freq-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 26px;
-            border-radius: 10px;
-            color: rgba(255,255,255,0.85);
-            text-decoration: none;
-            font-family: 'Montserrat', sans-serif;
-            min-width: 140px;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-        }
-        .freq-tab:hover {
-            background: rgba(255,255,255,0.10);
-            color: white;
-        }
-        .freq-tab .freq-tab-label {
-            font-weight: 700;
-            font-size: 1rem;
-            letter-spacing: 0.02em;
-            line-height: 1.1;
-        }
-        .freq-tab .freq-tab-sub {
-            font-size: 0.72rem;
-            font-weight: 500;
-            opacity: 0.8;
-            margin-top: 3px;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-        }
-        .freq-tab.active {
-            background: white;
-            color: var(--primary-blue);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-        }
-        .freq-tab.active .freq-tab-sub {
-            color: var(--sparc-kelly-green);
-            opacity: 1;
-        }
-        @media (max-width: 500px) {
-            .freq-tabs { width: 100%; }
-            .freq-tab { flex: 1; min-width: 0; padding: 10px 8px; }
-        }
         .monthly-hero .eyebrow {
             display: inline-block;
             color: var(--sparc-kelly-green);
@@ -430,9 +374,43 @@
             box-shadow: 0 10px 24px rgba(0,0,0,0.18);
         }
 
+        /* Participant spotlight */
+        .participant-spotlight {
+            padding: 80px 0;
+            background: var(--off-white);
+        }
+        .participant-spotlight .spotlight-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .participant-spotlight img {
+            width: 100%;
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 14px 34px rgba(0, 43, 80, 0.18);
+            display: block;
+        }
+        .participant-spotlight h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        .participant-spotlight p {
+            color: var(--dark-gray);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
         @media (max-width: 768px) {
             .why-grid { grid-template-columns: 1fr; }
             .hero-stats { gap: 30px; }
+            .participant-spotlight .spotlight-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
         }
     </style>
 </head>
@@ -523,18 +501,6 @@
     <!-- Hero -->
     <section class="monthly-hero">
         <div class="container">
-            <!-- Frequency tabs: Monthly default, One-Time secondary -->
-            <div class="freq-tabs" role="tablist" aria-label="Donation frequency">
-                <a href="/monthly/" class="freq-tab active" role="tab" aria-selected="true" aria-current="page">
-                    <span class="freq-tab-label">Monthly</span>
-                    <span class="freq-tab-sub">Recurring gift</span>
-                </a>
-                <a href="/donate-checkout/" class="freq-tab" role="tab" aria-selected="false">
-                    <span class="freq-tab-label">One-Time</span>
-                    <span class="freq-tab-sub">Single gift</span>
-                </a>
-            </div>
-
             <span class="eyebrow">Monthly Giving Program</span>
             <h1>Light the Way <span class="accent">to Belonging</span></h1>
             <p class="lede">Become a SPARC monthly donor and create the steady, predictable support that powers community-integrated day programs for adults with severe and multiple disabilities — every day, all year long.</p>
@@ -584,6 +550,20 @@
                     </div>
                     <h3>Belonging, on Repeat</h3>
                     <p>Your monthly gift advances the ADA integration mandate — turning legal promise into lived reality for adults who would otherwise have nowhere to go.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Participant spotlight -->
+    <section class="participant-spotlight">
+        <div class="container">
+            <div class="spotlight-grid">
+                <img src="/images/SPARC monthly donor participant coloring.jpg" alt="A SPARC participant smiling while coloring a decorated page at a program activity table">
+                <div>
+                    <h2>This Is What Your Monthly Gift Makes Possible</h2>
+                    <p>Every day at SPARC, participants create, connect, and grow — in art classes, life skills sessions, community outings, and the quiet, joyful moments in between.</p>
+                    <p>Monthly donors are the reason these days happen, week after week, year after year. Your recurring gift is the steady light that keeps every SPARC center open and every participant welcomed.</p>
                 </div>
             </div>
         </div>
