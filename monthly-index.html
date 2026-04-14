@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PD1XQ0NDCD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Light the Way to Belonging — Become a SPARC monthly donor and provide sustained support for adults with severe and multiple disabilities in Northern Virginia.">
+    <title>Monthly Giving | Light the Way to Belonging | SPARC</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* ========== Monthly Giving Page ========== */
+        .monthly-hero {
+            background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 50%, var(--primary-blue-light) 100%);
+            padding: 150px 0 90px;
+            text-align: center;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .monthly-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(76, 187, 23, 0.18) 0%, transparent 45%),
+                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .monthly-hero .container { position: relative; z-index: 1; }
+        .monthly-hero .eyebrow {
+            display: inline-block;
+            color: var(--sparc-kelly-green);
+            background: rgba(76, 187, 23, 0.15);
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(76, 187, 23, 0.4);
+        }
+        .monthly-hero h1 {
+            color: white;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+        }
+        .monthly-hero h1 .accent {
+            color: var(--sparc-kelly-green);
+            display: block;
+        }
+        .monthly-hero .lede {
+            color: rgba(255,255,255,0.92);
+            font-size: 1.2rem;
+            max-width: 720px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+        .hero-stat {
+            text-align: center;
+            color: white;
+        }
+        .hero-stat .num {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--sparc-kelly-green);
+            display: block;
+            line-height: 1;
+        }
+        .hero-stat .lbl {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Why Monthly */
+        .why-monthly {
+            padding: 80px 0;
+            background: white;
+        }
+        .why-monthly .section-header {
+            text-align: center;
+            max-width: 740px;
+            margin: 0 auto 50px;
+        }
+        .why-monthly h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        .why-monthly .section-header p {
+            color: var(--medium-gray);
+            font-size: 1.1rem;
+        }
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .why-card {
+            background: var(--off-white);
+            padding: 35px 28px;
+            border-radius: 12px;
+            text-align: center;
+            border-top: 4px solid var(--sparc-kelly-green);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .why-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,43,80,0.10);
+        }
+        .why-card .icon {
+            width: 56px; height: 56px;
+            margin: 0 auto 18px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .why-card h3 {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+        .why-card p { color: var(--medium-gray); margin: 0; }
+
+        /* Tiers */
+        .tiers-section {
+            padding: 90px 0;
+            background: linear-gradient(180deg, var(--off-white) 0%, white 100%);
+        }
+        .tiers-section .section-header {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto 55px;
+        }
+        .tiers-section h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        .tiers-section .section-header p {
+            color: var(--medium-gray);
+            font-size: 1.1rem;
+        }
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+        }
+        .tier-card {
+            background: white;
+            border-radius: 14px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 18px rgba(0, 43, 80, 0.06);
+            border: 1px solid rgba(0, 83, 155, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            overflow: hidden;
+        }
+        .tier-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--sparc-kelly-green) 0%, var(--primary-blue) 100%);
+            opacity: 0.85;
+        }
+        .tier-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(0, 43, 80, 0.14);
+            border-color: rgba(76, 187, 23, 0.45);
+        }
+        .tier-card.featured {
+            background: linear-gradient(160deg, #ffffff 0%, #f3f9ff 100%);
+            border-color: var(--sparc-kelly-green);
+            box-shadow: 0 10px 30px rgba(0, 43, 80, 0.12);
+        }
+        .tier-badge {
+            position: absolute;
+            top: 18px; right: 18px;
+            background: var(--sparc-kelly-green);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 999px;
+        }
+        .tier-amount {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            line-height: 1;
+            margin-top: 8px;
+        }
+        .tier-amount .per {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--medium-gray);
+            margin-left: 4px;
+        }
+        .tier-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--sparc-dark-navy);
+            margin: 14px 0 12px;
+        }
+        .tier-desc {
+            color: var(--dark-gray);
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin: 0 0 24px;
+            flex-grow: 1;
+        }
+        .tier-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--sparc-kelly-green);
+            color: white;
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .tier-cta:hover {
+            background: var(--sparc-kelly-green-dark);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .tier-cta svg {
+            transition: transform 0.2s ease;
+        }
+        .tier-cta:hover svg { transform: translateX(3px); }
+
+        /* Custom amount card */
+        .tier-card.custom {
+            background: linear-gradient(160deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+        .tier-card.custom::before { display: none; }
+        .tier-card.custom .tier-amount,
+        .tier-card.custom .tier-name { color: white; }
+        .tier-card.custom .tier-desc { color: rgba(255,255,255,0.9); }
+        .tier-card.custom .tier-cta {
+            background: white;
+            color: var(--primary-blue);
+        }
+        .tier-card.custom .tier-cta:hover {
+            background: var(--sparc-kelly-green);
+            color: white;
+        }
+
+        /* Impact band */
+        .impact-band {
+            background: var(--sparc-dark-navy);
+            color: white;
+            padding: 70px 0;
+            text-align: center;
+        }
+        .impact-band h2 { color: white; margin-bottom: 1rem; }
+        .impact-band p {
+            max-width: 720px;
+            margin: 0 auto 0;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.7;
+        }
+
+        /* FAQ */
+        .faq-section { padding: 80px 0; background: white; }
+        .faq-section .section-header {
+            text-align: center; max-width: 700px; margin: 0 auto 40px;
+        }
+        .faq-section h2 { color: var(--primary-blue); }
+        .faq-list { max-width: 820px; margin: 0 auto; }
+        .faq-item {
+            background: var(--off-white);
+            border-radius: 10px;
+            padding: 22px 26px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--sparc-kelly-green);
+        }
+        .faq-item h3 {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            margin: 0 0 8px;
+        }
+        .faq-item p { color: var(--dark-gray); margin: 0; }
+
+        /* Final CTA */
+        .final-cta {
+            background: linear-gradient(135deg, var(--sparc-kelly-green) 0%, var(--sparc-kelly-green-dark) 100%);
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+        }
+        .final-cta h2 { color: white; margin-bottom: 1rem; }
+        .final-cta p {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.95);
+            max-width: 640px;
+            margin: 0 auto 2rem;
+        }
+        .final-cta .cta-btn {
+            display: inline-block;
+            background: white;
+            color: var(--sparc-kelly-green-dark);
+            padding: 16px 38px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.05rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .final-cta .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+        }
+
+        @media (max-width: 768px) {
+            .why-grid { grid-template-columns: 1fr; }
+            .hero-stats { gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="SPARC - Specially Adapted Resource Centers" style="height: 50px; width: auto;">
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/about/" class="nav-link">About</a>
+                    <div class="dropdown-menu">
+                        <a href="/team/">Our Team</a>
+                        <a href="/board/">Board of Directors</a>
+                        <a href="/financials/">Financials</a>
+                        <a href="/strategic-plan/">Strategic Plan</a>
+                        <a href="/news/">SPARC in the News</a>
+                        <a href="/compliance/">ADA Compliance</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/programs/" class="nav-link">Programs</a>
+                    <div class="dropdown-menu">
+                        <a href="/programs/sensory-lab/">Mobile Exploration Lab</a>
+                        <a href="/programs/enrollment/">Enrollment Information</a>
+                    </div>
+                </li>
+                <li><a href="/locations/" class="nav-link">Locations</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/stories/" class="nav-link">Stories</a>
+                    <div class="dropdown-menu">
+                        <a href="/podcast/">The Access Point Podcast</a>
+                        <a href="/blog/">Blog</a>
+                        <a href="/newsletter/">Newsletter</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/events/" class="nav-link">Events</a>
+                    <div class="dropdown-menu">
+                        <a href="/gala/">An Evening to SPARCle</a>
+                        <a href="/summit/">A Call to Conscience</a>
+                        <a href="/bingo/">Bingo</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
+                    <div class="dropdown-menu">
+                        <a href="/advocate/">Advocate for SPARC</a>
+                        <a href="/get-involved/">Volunteer</a>
+                        <a href="/participants/">Participants &amp; Families</a>
+                        <a href="javascript:void(0)" onclick="openMailingListModal()">Join Our Mailing List</a>
+                        <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
+                    </div>
+                </li>
+                <li><a href="/donate-checkout/" class="nav-link nav-donate active">Donate</a></li>
+            </ul>
+
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="monthly-hero">
+        <div class="container">
+            <span class="eyebrow">Monthly Giving Program</span>
+            <h1>Light the Way <span class="accent">to Belonging</span></h1>
+            <p class="lede">Become a SPARC monthly donor and create the steady, predictable support that powers community-integrated day programs for adults with severe and multiple disabilities — every day, all year long.</p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="num">5</span>
+                    <span class="lbl">Centers in NoVA</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="num">96.8%</span>
+                    <span class="lbl">Days in Green Zone</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="num">2/3</span>
+                    <span class="lbl">Auto-Scholarship for Every Family</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Monthly -->
+    <section class="why-monthly">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Monthly Matters</h2>
+                <p>SPARC is the only nonprofit in Virginia providing community-integrated day programs for adults with severe and multiple disabilities who require 1:1 support. Monthly gifts give us something rare and essential: predictability.</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="icon">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                    <h3>Steady &amp; Sustainable</h3>
+                    <p>Recurring gifts let us plan programming, staffing, and scholarships months in advance — instead of scrambling between grant cycles.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                    </div>
+                    <h3>Direct to Participants</h3>
+                    <p>Every dollar fuels art, music, life skills, sensory tools, community outings, and the 2/3 scholarship every SPARC family automatically receives.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <h3>Belonging, on Repeat</h3>
+                    <p>Your monthly gift advances the ADA integration mandate — turning legal promise into lived reality for adults who would otherwise have nowhere to go.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tiers -->
+    <main id="main-content">
+    <section class="tiers-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Circle</h2>
+                <p>Every tier is named for what it makes possible. Pick the one that fits — every gift, at every level, lights the way.</p>
+            </div>
+
+            <div class="tiers-grid">
+
+                <!-- $10 -->
+                <div class="tier-card">
+                    <div class="tier-amount">$10<span class="per">/month</span></div>
+                    <div class="tier-name">The Daily Spark</div>
+                    <p class="tier-desc">Stocks a day of materials that make learning, creating, and practicing skills possible. Art supplies, sensory tools, cooking ingredients, adaptive equipment — the everyday essentials that turn a center into a classroom, a studio, and a second home.</p>
+                    <a href="/donate-checkout/?amount=10&recurring=true" class="tier-cta">
+                        Give $10 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- $25 -->
+                <div class="tier-card">
+                    <div class="tier-amount">$25<span class="per">/month</span></div>
+                    <div class="tier-name">The Belonging Circle</div>
+                    <p class="tier-desc">Provides a week of daily feelings-inventory tools, sensory supports, and small-group materials that keep 96.8% of SPARC participants in the "Green Zone" for mood and satisfaction. This is the tier where belonging becomes routine.</p>
+                    <a href="/donate-checkout/?amount=25&recurring=true" class="tier-cta">
+                        Give $25 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- $50 -->
+                <div class="tier-card featured">
+                    <span class="tier-badge">Most Popular</span>
+                    <div class="tier-amount">$50<span class="per">/month</span></div>
+                    <div class="tier-name">The Skill Builders Circle</div>
+                    <p class="tier-desc">Powers a structured life skills class that builds real-world confidence — step by step, skill by skill. From money handling to meal prep to self-advocacy, these are the classes that translate directly into everyday confidence.</p>
+                    <a href="/donate-checkout/?amount=50&recurring=true" class="tier-cta">
+                        Give $50 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- $100 -->
+                <div class="tier-card">
+                    <div class="tier-amount">$100<span class="per">/month</span></div>
+                    <div class="tier-name">The Community Connectors</div>
+                    <p class="tier-desc">Makes an inclusive community outing possible for 10 people. Your gift funds the admissions and support that turn a trip to the museum, farmers market, or St. Anne's Food Pantry into a moment of genuine civic participation.</p>
+                    <a href="/donate-checkout/?amount=100&recurring=true" class="tier-cta">
+                        Give $100 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- $250 -->
+                <div class="tier-card">
+                    <div class="tier-amount">$250<span class="per">/month</span></div>
+                    <div class="tier-name">The Movement Circle</div>
+                    <p class="tier-desc">Sponsors a full month of Zumba and adaptive movement for 30 participants — supporting physical health, mood regulation, and joy.</p>
+                    <a href="/donate-checkout/?amount=250&recurring=true" class="tier-cta">
+                        Give $250 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- $500 -->
+                <div class="tier-card">
+                    <div class="tier-amount">$500<span class="per">/month</span></div>
+                    <div class="tier-name">The Progress Partners</div>
+                    <p class="tier-desc">Provides a full semester of skills classes — the kind of sustained, measurable growth that turns "I can't" into "I did."</p>
+                    <a href="/donate-checkout/?amount=500&recurring=true" class="tier-cta">
+                        Give $500 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- $750 -->
+                <div class="tier-card">
+                    <div class="tier-amount">$750<span class="per">/month</span></div>
+                    <div class="tier-name">The Attendance Circle</div>
+                    <p class="tier-desc">Covers one month of SPARC attendance for a participant, directly closing the full-scholarship gap for a family who needs it.</p>
+                    <a href="/donate-checkout/?amount=750&recurring=true" class="tier-cta">
+                        Give $750 / Month
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- Custom -->
+                <div class="tier-card custom">
+                    <div class="tier-amount">$ You</div>
+                    <div class="tier-name">Choose Your Own</div>
+                    <p class="tier-desc">Whatever you can give, monthly, makes a difference. Choose your own amount and we'll put it to work supporting belonging for adults with severe and multiple disabilities.</p>
+                    <a href="/donate-checkout/?recurring=true" class="tier-cta">
+                        Set My Amount
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Impact band -->
+    <section class="impact-band">
+        <div class="container">
+            <h2>Where Your Monthly Gift Goes</h2>
+            <p>SPARC's work directly advances the community integration mandate established by the ADA and enforced through the Supreme Court's Olmstead v. L.C. decision and the U.S. v. Virginia Olmstead settlement. Your sustained giving helps Northern Virginia fulfill its legal and moral commitments to equity — while ensuring that every SPARC family, regardless of income, has access to person-centered programming five days a week.</p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Monthly Giving Questions</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>Is my monthly gift tax-deductible?</h3>
+                    <p>Yes. SPARC is a 501(c)(3) nonprofit organization (EIN: 20-5513060). You'll receive an annual tax receipt summarizing your monthly giving for the year.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I change or cancel my monthly gift?</h3>
+                    <p>Absolutely. You can update your amount, payment method, or cancel at any time by contacting Erica Gaffney at erica@sparcsolutions.org or (703) 817-5839.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How is my gift used?</h3>
+                    <p>Monthly gifts directly fund daily programming at SPARC's five Northern Virginia centers — including art, music therapy, life skills classes, adaptive movement, sensory supports, community outings, and the 2/3 tuition scholarship every SPARC family automatically receives.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What if I'd prefer to give a one-time gift?</h3>
+                    <p>One-time gifts are equally appreciated and equally impactful. Visit our <a href="/donate-checkout/" style="color: var(--primary-blue); font-weight: 600;">main donation page</a> to give a single gift of any amount.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Light the Way?</h2>
+            <p>Join the SPARC monthly giving community and become part of the reason adults with severe and multiple disabilities have a place to belong, every single day.</p>
+            <a href="#main-content" class="cta-btn">Choose Your Circle</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="color: white;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="/images/SPARC_logo_white.png" alt="SPARC" style="height: 60px; width: auto; margin-bottom: 15px;">
+                    <p>Specially Adapted Resource Centers provides community-integrated day programs for adults with severe and multiple disabilities in Northern Virginia. We believe every adult deserves a meaningful life filled with connection, purpose, and belonging.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=100064372517571" class="social-link" aria-label="Facebook" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/sparc.solutions/" class="social-link" aria-label="Instagram" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/specially-adapted-resource-centers" class="social-link" aria-label="LinkedIn" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@SPARC_VA" class="social-link" aria-label="YouTube" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="mailto:debi@sparcsolutions.org" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/about/">About Us</a></li>
+                        <li><a href="/programs/">Programs</a></li>
+                        <li><a href="/locations/">Locations</a></li>
+                        <li><a href="/events/">Events</a></li>
+                        <li><a href="/stories/">Stories &amp; Impact</a></li>
+                        <li><a href="/donate-checkout/">Donate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/financials/">Annual Reports</a></li>
+                        <li><a href="/board/">Board of Directors</a></li>
+                        <li><a href="/news/">News &amp; Press</a></li>
+                        <li><a href="/get-involved/">Get Involved</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><strong>Mailing Address:</strong><br>
+                    1775 Tysons Blvd., Fifth Floor<br>
+                    Tysons, VA 22102</p>
+                    <p><strong>Phone:</strong> <a href="tel:571-407-1807" style="color: white;">(571) 407-1807</a></p>
+                    <p><a href="mailto:debi@sparcsolutions.org" style="color: white;">debi@sparcsolutions.org</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom-bar" style="background: white; padding: 30px 0; color: var(--sparc-dark-navy);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="margin: 0 0 5px 0; color: var(--sparc-dark-navy);">&copy; 2025 SPARC - Specially Adapted Resource Centers. All rights reserved.</p>
+                <p style="margin: 0 0 10px 0; color: var(--sparc-dark-navy);">501(c)(3) Nonprofit Organization | EIN: 20-5513060</p>
+                <nav aria-label="Legal links">
+                    <a href="/accessibility/" style="color: var(--sparc-dark-navy); text-decoration: none;">Accessibility</a> |
+                    <a href="/contact/" style="color: var(--sparc-dark-navy); text-decoration: none;">Contact</a>
+                </nav>
+            </div>
+            <img src="/images/Powered by Google.png" alt="Powered by Google" style="height: 160px; width: auto;">
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
