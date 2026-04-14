@@ -2118,6 +2118,109 @@ textarea:focus-visible {
     color: var(--primary-blue);
 }
 
+/* ========== Donate Dropdown (Give Once / Give Monthly) ========== */
+.nav-donate-dropdown {
+    position: relative;
+}
+
+.nav-donate-dropdown .nav-donate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-donate-dropdown .nav-donate .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    margin-left: 2px;
+    transition: transform var(--transition-fast);
+}
+
+.nav-donate-dropdown:hover .nav-donate .caret,
+.nav-donate-dropdown.open .nav-donate .caret {
+    transform: rotate(180deg);
+}
+
+.donate-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: auto;
+    background: var(--white);
+    min-width: 220px;
+    box-shadow: var(--shadow-md);
+    border-radius: 8px;
+    padding: 10px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all var(--transition-fast);
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.nav-donate-dropdown:hover .donate-dropdown-menu,
+.nav-donate-dropdown:focus-within .donate-dropdown-menu,
+.nav-donate-dropdown.open .donate-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.donate-dropdown-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+}
+
+.donate-dropdown-menu a::after {
+    display: none;
+}
+
+.donate-dropdown-menu a:hover {
+    background: var(--off-white);
+    color: var(--primary-blue);
+    border-left-color: var(--accent-orange);
+}
+
+.donate-dropdown-menu .dd-label {
+    display: block;
+}
+
+.donate-dropdown-menu .dd-sub {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--medium-gray);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 2px;
+}
+
+.donate-dropdown-menu .dd-monthly {
+    background: rgba(76, 187, 23, 0.06);
+}
+
+.donate-dropdown-menu .dd-monthly .dd-label {
+    color: var(--sparc-kelly-green, #4CBB17);
+}
+
+.donate-dropdown-menu .dd-monthly:hover {
+    background: rgba(76, 187, 23, 0.14);
+    border-left-color: var(--sparc-kelly-green, #4CBB17);
+}
+
 /* Skip to content link */
 .skip-link {
     position: absolute;
