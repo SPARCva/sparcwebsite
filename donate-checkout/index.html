@@ -36,6 +36,74 @@
             border-radius: 12px;
             box-shadow: var(--shadow-md);
         }
+
+        /* Monthly redirect banner */
+        .monthly-redirect-banner {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--sparc-kelly-green, #4CAF50) 0%, #2e7d32 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 22px 28px;
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.25);
+        }
+        .monthly-redirect-inner {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+        .monthly-redirect-icon {
+            width: 54px;
+            height: 54px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .monthly-redirect-text h3 {
+            color: white;
+            margin: 0 0 4px;
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+        }
+        .monthly-redirect-text p {
+            margin: 0;
+            font-size: 0.92rem;
+            color: rgba(255,255,255,0.95);
+            line-height: 1.5;
+        }
+        .monthly-redirect-btn {
+            background: white;
+            color: #2e7d32;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.92rem;
+            white-space: nowrap;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .monthly-redirect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+            color: #2e7d32;
+        }
+        @media (max-width: 700px) {
+            .monthly-redirect-inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 14px;
+            }
+            .monthly-redirect-icon {
+                margin: 0 auto;
+            }
+            .monthly-redirect-btn {
+                justify-self: center;
+            }
+        }
         .checkout-container > h2 {
             font-family: var(--font-heading);
             color: var(--sparc-dark-navy);
@@ -346,7 +414,23 @@
                         <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
                     </div>
                 </li>
-                <li><a href="/donate-checkout/" class="nav-link nav-donate active">Donate</a></li>
+                <li class="nav-item-dropdown nav-donate-dropdown">
+                    <a href="/donate-checkout/" class="nav-link nav-donate active" aria-haspopup="true" aria-expanded="false">Donate<span class="caret" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu donate-dropdown-menu" role="menu">
+                        <a href="/donate-checkout/" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Once</span>
+                                <span class="dd-sub">Make a one-time gift</span>
+                            </span>
+                        </a>
+                        <a href="/monthly/" class="dd-monthly" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Monthly</span>
+                                <span class="dd-sub">Light the Way monthly donor</span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
             </ul>
 
             <div class="mobile-toggle">
@@ -369,9 +453,23 @@
     <main id="main-content">
         <section class="checkout-section">
             <div class="container">
+                <!-- Monthly giving redirect banner -->
+                <div class="monthly-redirect-banner" role="complementary" aria-label="Monthly giving option">
+                    <div class="monthly-redirect-inner">
+                        <div class="monthly-redirect-icon" aria-hidden="true">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        </div>
+                        <div class="monthly-redirect-text">
+                            <h3>Prefer to give monthly?</h3>
+                            <p>Recurring gifts provide steady, predictable support &mdash; and are the single most impactful way to help. We've built a dedicated page for monthly donors.</p>
+                        </div>
+                        <a href="/monthly/" class="monthly-redirect-btn">Become a Monthly Donor &rarr;</a>
+                    </div>
+                </div>
+
                 <div class="checkout-container" id="donate-form">
-                    <h2>Make a Donation</h2>
-                    <p>Select an amount, fill out your information, and choose a payment method. Secure processing via Stripe, PayPal, or Venmo.</p>
+                    <h2>Make a One-Time Donation</h2>
+                    <p>Select an amount, fill out your information, and choose a payment method. Secure processing via Stripe, PayPal, or Venmo. Looking for recurring giving? <a href="/monthly/" style="color: var(--sparc-kelly-green); font-weight: 600;">Visit our monthly giving page &rarr;</a></p>
 
                     <script type="text/javascript" id="bloomerangForm4947968"></script>
                 </div>
@@ -413,6 +511,7 @@
                         <li><a href="/events/">Events</a></li>
                         <li><a href="/stories/">Stories &amp; Impact</a></li>
                         <li><a href="/donate-checkout/">Donate</a></li>
+                        <li><a href="/monthly/"><strong>Monthly Giving</strong></a></li>
                     </ul>
                 </div>
                 <div class="footer-links">

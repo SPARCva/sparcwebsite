@@ -88,6 +88,176 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 30px;
         }
+        /* Featured (monthly) way-card */
+        .way-card.way-card-featured {
+            background: linear-gradient(160deg, #ffffff 0%, #eef8ef 100%);
+            border: 2px solid var(--sparc-kelly-green);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
+            position: relative;
+        }
+        .way-card.way-card-featured::before {
+            transform: scaleX(1);
+        }
+        .way-card .way-badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: var(--sparc-kelly-green);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 999px;
+            z-index: 2;
+        }
+        .way-icon.way-icon-green {
+            background: linear-gradient(135deg, var(--sparc-kelly-green) 0%, #2e7d32 100%);
+        }
+
+        /* Light the Way panel */
+        .lightway-panel {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--sparc-dark-navy) 0%, var(--sparc-royal-blue) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .lightway-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(76, 187, 23, 0.20) 0%, transparent 45%),
+                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .lightway-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .lightway-photo {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+            transform: rotate(-1deg);
+        }
+        .lightway-photo img {
+            width: 100%;
+            height: 100%;
+            min-height: 440px;
+            object-fit: cover;
+            display: block;
+        }
+        .lightway-photo-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+            color: white;
+            padding: 30px 25px 18px;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+        .lightway-eyebrow {
+            display: inline-block;
+            color: var(--sparc-kelly-green);
+            background: rgba(76, 187, 23, 0.18);
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(76, 187, 23, 0.45);
+        }
+        .lightway-content h2 {
+            color: white;
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            line-height: 1.15;
+            margin-bottom: 1.25rem;
+        }
+        .lightway-content h2 em {
+            color: var(--sparc-kelly-green);
+            font-style: normal;
+        }
+        .lightway-program-name {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .lightway-content p {
+            color: rgba(255,255,255,0.88);
+            font-size: 1.02rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .lightway-stats {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 2rem;
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .lightway-stats li {
+            display: flex;
+            flex-direction: column;
+        }
+        .lightway-stats strong {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--sparc-kelly-green);
+            line-height: 1;
+        }
+        .lightway-stats span {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 6px;
+        }
+        .lightway-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        .lightway-cta-group .btn-primary {
+            background: var(--sparc-kelly-green);
+            border-color: var(--sparc-kelly-green);
+        }
+        .lightway-cta-group .btn-primary:hover {
+            background: #3d9c42;
+            border-color: #3d9c42;
+        }
+        .lightway-secondary-link {
+            color: white;
+            text-decoration: underline;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .lightway-secondary-link:hover {
+            color: var(--sparc-kelly-green);
+        }
+        @media (max-width: 900px) {
+            .lightway-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .lightway-photo {
+                transform: none;
+            }
+            .lightway-photo img {
+                min-height: 300px;
+            }
+        }
         .way-card {
             background: var(--sparc-soft-gray);
             border-radius: 20px;
@@ -443,7 +613,23 @@
                         <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
                     </div>
                 </li>
-                <li><a href="/donate-checkout/" class="nav-link nav-donate">Donate</a></li>
+                <li class="nav-item-dropdown nav-donate-dropdown">
+                    <a href="/donate-checkout/" class="nav-link nav-donate" aria-haspopup="true" aria-expanded="false">Donate<span class="caret" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu donate-dropdown-menu" role="menu">
+                        <a href="/donate-checkout/" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Once</span>
+                                <span class="dd-sub">Make a one-time gift</span>
+                            </span>
+                        </a>
+                        <a href="/monthly/" class="dd-monthly" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Monthly</span>
+                                <span class="dd-sub">Light the Way monthly donor</span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
             </ul>
 
             <div class="mobile-toggle">
@@ -467,11 +653,48 @@
         <section class="quick-ways">
             <div class="container">
                 <div class="section-intro">
-                    <h2>Make a Difference Today</h2>
-                    <p>Whether you have time, talent, or treasure to share, there are many ways to support SPARC's mission and change lives in our community.</p>
+                    <h2>Ways to Give &amp; Get Involved</h2>
+                    <p>Sustained monthly giving is the single most powerful way to support adults with severe and multiple disabilities in Northern Virginia &mdash; followed by the many other ways to share your time, talent, and treasure.</p>
                 </div>
 
                 <div class="ways-grid">
+                    <div class="way-card way-card-featured">
+                        <span class="way-badge">Most Impactful</span>
+                        <div class="way-icon way-icon-green">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 6v6l4 2"/></svg>
+                        </div>
+                        <h3>Give Monthly</h3>
+                        <p><strong>Lead with recurring giving.</strong> Become a Light the Way monthly donor and create the steady, predictable support that powers daily programming &mdash; every day, all year long.</p>
+                        <a href="/monthly/" class="btn btn-primary">Become a Monthly Donor</a>
+                    </div>
+
+                    <div class="way-card">
+                        <div class="way-icon">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </div>
+                        <h3>Give Once</h3>
+                        <p>Make a one-time gift of any amount. Every single donation funds programs, scholarships, and expansion to serve more adults across Northern Virginia.</p>
+                        <a href="/donate-checkout/" class="btn btn-primary">Make a One-Time Gift</a>
+                    </div>
+
+                    <div class="way-card">
+                        <div class="way-icon">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                        <h3>Give in Honor / Memory</h3>
+                        <p>Celebrate a loved one or honor a memory with a tribute gift. We'll send a personalized acknowledgment to the family.</p>
+                        <a href="/donate-checkout/?tribute=true" class="btn btn-primary">Give a Tribute Gift</a>
+                    </div>
+
+                    <div class="way-card">
+                        <div class="way-icon">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 22h16"/><path d="M5 22V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18"/><path d="M9 22V12h6v10"/></svg>
+                        </div>
+                        <h3>Planned Giving</h3>
+                        <p>Include SPARC in your estate plans to create a lasting legacy of belonging for adults with severe and multiple disabilities.</p>
+                        <a href="/contact/?subject=planned-giving" class="btn btn-primary">Learn About Legacy</a>
+                    </div>
+
                     <div class="way-card">
                         <div class="way-icon">
                             <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -483,18 +706,9 @@
 
                     <div class="way-card">
                         <div class="way-icon">
-                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                        </div>
-                        <h3>Donate</h3>
-                        <p>Your financial support funds programs, scholarships, and expansion to serve more adults with disabilities across Northern Virginia.</p>
-                        <a href="/donate-checkout/" class="btn btn-primary">Donate Now</a>
-                    </div>
-
-                    <div class="way-card">
-                        <div class="way-icon">
                             <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                         </div>
-                        <h3>Partner</h3>
+                        <h3>Corporate Partner</h3>
                         <p>Corporate partners help us expand our reach through sponsorship, employee engagement, and community investment.</p>
                         <a href="#corporate" class="btn btn-primary">Partner With Us</a>
                     </div>
@@ -506,6 +720,42 @@
                         <h3>Shop</h3>
                         <p>Purchase SPARC swag and apparel. Every purchase directly supports our programs and helps spread awareness in the community.</p>
                         <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Shop SPARC Swag</a>
+                    </div>
+
+                    <div class="way-card">
+                        <div class="way-icon">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+                        </div>
+                        <h3>Advocate</h3>
+                        <p>Speak up for community-integrated programming for adults with severe and multiple disabilities in Northern Virginia.</p>
+                        <a href="/advocate/" class="btn btn-primary">Become an Advocate</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Light the Way Monthly Donor Panel -->
+        <section class="lightway-panel">
+            <div class="container">
+                <div class="lightway-grid">
+                    <div class="lightway-photo">
+                        <img src="/images/happy%20david.jpg" alt="A SPARC participant smiling during daily programming" loading="lazy">
+                        <div class="lightway-photo-caption">A SPARC participant at a Northern Virginia center</div>
+                    </div>
+                    <div class="lightway-content">
+                        <span class="lightway-eyebrow">Light the Way to Belonging</span>
+                        <h2>Become a <em>Light the Way</em> monthly donor</h2>
+                        <p class="lightway-program-name"><strong>Light the Way to Belonging</strong> is SPARC's monthly giving program &mdash; named for the steady, everyday support that keeps the doors open, the programming running, and the community integrated.</p>
+                        <p>Your recurring gift gives SPARC something rare and essential: predictability. It funds art, music, life skills classes, sensory supports, adaptive movement, community outings, and the 2/3 tuition scholarship every SPARC family automatically receives &mdash; five days a week, fifty-two weeks a year.</p>
+                        <ul class="lightway-stats">
+                            <li><strong>5</strong><span>Centers in NoVA</span></li>
+                            <li><strong>96.8%</strong><span>Days in Green Zone</span></li>
+                            <li><strong>2/3</strong><span>Auto-Scholarship</span></li>
+                        </ul>
+                        <div class="lightway-cta-group">
+                            <a href="/monthly/" class="btn btn-primary btn-lg">Become a Monthly Donor</a>
+                            <a href="/monthly/#main-content" class="lightway-secondary-link">See giving tiers &rarr;</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -705,6 +955,7 @@
                         <li><a href="/events/">Events</a></li>
                         <li><a href="/stories/">Stories &amp; Impact</a></li>
                         <li><a href="/donate-checkout/">Donate</a></li>
+                        <li><a href="/monthly/"><strong>Monthly Giving</strong></a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
