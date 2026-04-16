@@ -953,7 +953,7 @@
                     <p>Select your raffle ticket option and complete the form below</p>
                 </div>
                 <div class="form-wrapper">
-                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4934656.js" type="text/javascript"></script>
+                    <iframe id="raffleIframe" src="/gala-raffle-form/" style="width: 100%; border: none; min-height: 600px;" title="Raffle ticket purchase form"></iframe>
                 </div>
             </div>
         </div>
@@ -1100,6 +1100,16 @@
             modal.style.display = 'none';
             document.body.style.overflow = '';
         }
+
+        // Auto-resize raffle iframe based on content height
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.raffleFormHeight) {
+                var iframe = document.getElementById('raffleIframe');
+                if (iframe) {
+                    iframe.style.height = event.data.raffleFormHeight + 'px';
+                }
+            }
+        });
 
         // Close modals when clicking overlay background
         document.addEventListener('DOMContentLoaded', function() {

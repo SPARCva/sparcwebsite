@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffle Tickets | SPARC</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sparc-royal-blue: #00539B;
+            --sparc-dark-navy: #002B50;
+            --sparc-kelly-green: #4CBB17;
+            --sparc-charcoal: #333333;
+            --sparc-soft-gray: #f5f6fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--sparc-charcoal);
+            background: white;
+        }
+
+        /* Override Bloomerang form styles to match parent page */
+        .registration-form label {
+            color: var(--sparc-charcoal);
+            font-family: 'Open Sans', sans-serif;
+        }
+        .registration-form h3 {
+            color: var(--sparc-dark-navy);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--sparc-soft-gray);
+        }
+        .registration-form .field input[type="text"],
+        .registration-form .field input[type="email"],
+        .registration-form .field input[type="tel"],
+        .registration-form .field input[type="number"],
+        .registration-form .field select,
+        .registration-form .field textarea {
+            max-width: 100%;
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Open Sans', sans-serif;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        .registration-form .field input:focus,
+        .registration-form .field select:focus,
+        .registration-form .field textarea:focus {
+            border-color: var(--sparc-royal-blue);
+            outline: none;
+        }
+        .registration-form .field label {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .registration-form .field {
+            padding: 8px 0;
+        }
+        .registration-form .field.radio label {
+            padding: 10px 14px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .registration-form .field.radio label:hover {
+            background: var(--sparc-soft-gray);
+            border-color: var(--sparc-royal-blue);
+        }
+        .registration-form .field.radio input {
+            margin-right: 10px;
+        }
+        .registration-form .section {
+            margin-bottom: 10px;
+        }
+        .registration-form .registration-summary {
+            width: 100%;
+            margin: 15px 0;
+        }
+        .registration-form .registration-summary td,
+        .registration-form .registration-summary th {
+            padding: 10px;
+        }
+        .registration-form .registration-summary .summary-total {
+            font-size: 1.1rem;
+            color: var(--sparc-dark-navy);
+        }
+        .registration-form #card-element {
+            max-width: 100%;
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .btn-submit-registration {
+            background: var(--sparc-royal-blue);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.3s ease;
+        }
+        .btn-submit-registration:hover {
+            background: var(--sparc-dark-navy);
+        }
+        .registration-form .registration-summary input.amount-field {
+            max-width: 100px;
+        }
+        .registration-form #numberOfRegistrations {
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bloomerang Raffle Form -->
+    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4934656.js" type="text/javascript"></script>
+
+    <script>
+        // Listen for messages from the parent page to pre-select a radio button
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.selectRadio) {
+                var radioId = event.data.selectRadio;
+                var radio = document.getElementById(radioId);
+                if (radio) {
+                    radio.checked = true;
+                    radio.click();
+                    var changeEvent = new Event('change', { bubbles: true });
+                    radio.dispatchEvent(changeEvent);
+                }
+            }
+        });
+
+        // Auto-resize: send height to parent so iframe can adjust
+        function sendHeight() {
+            var height = document.body.scrollHeight;
+            window.parent.postMessage({ raffleFormHeight: height }, '*');
+        }
+
+        // Send height on load and when DOM changes
+        window.addEventListener('load', function() {
+            sendHeight();
+            // Observe DOM changes (Bloomerang dynamically builds the form)
+            var observer = new MutationObserver(sendHeight);
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+        });
+    </script>
+</body>
+</html>
