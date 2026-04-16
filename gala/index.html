@@ -1490,7 +1490,7 @@
                     <p>Select your raffle ticket option and complete the form below</p>
                 </div>
                 <div class="form-wrapper">
-                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4934656.js" type="text/javascript"></script>
+                    <iframe id="raffleIframe" src="/gala-raffle-form/" style="width: 100%; border: none; min-height: 600px;" title="Raffle ticket purchase form"></iframe>
                 </div>
             </div>
         </div>
@@ -1847,6 +1847,16 @@
             document.body.style.overflow = '';
         }
 
+        // Auto-resize raffle iframe based on content height
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.raffleFormHeight) {
+                var iframe = document.getElementById('raffleIframe');
+                if (iframe) {
+                    iframe.style.height = event.data.raffleFormHeight + 'px';
+                }
+            }
+        });
+
         // Close modal when clicking overlay background
         document.addEventListener('DOMContentLoaded', function() {
             var modal = document.getElementById('register');
@@ -1868,23 +1878,17 @@
             }
         });
 
-        // Open raffle modal and pre-select option
+        // Open raffle modal and pre-select option via postMessage to iframe
         function selectRaffle(radioId) {
             var modal = document.getElementById('raffleModal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
-            // Wait for modal to show and Bloomerang form to load, then select the radio
+            var iframe = document.getElementById('raffleIframe');
+            // Send message to iframe to select the radio button
             setTimeout(function() {
-                var radio = document.getElementById(radioId);
-                if (radio) {
-                    radio.checked = true;
-                    radio.click();
-                    // Trigger change event for Bloomerang
-                    var event = new Event('change', { bubbles: true });
-                    radio.dispatchEvent(event);
-                }
-            }, 400);
+                iframe.contentWindow.postMessage({ selectRadio: radioId }, '*');
+            }, 1000);
         }
 
         // Close raffle modal
