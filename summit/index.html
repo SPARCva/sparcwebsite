@@ -779,6 +779,135 @@
             padding: 40px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
+
+        /* ===== Current Sponsors Section ===== */
+        .summit-current-sponsors {
+            padding: 80px 0;
+            background: white;
+        }
+        .summit-current-sponsors .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .summit-current-sponsors .section-header h2 {
+            color: var(--sparc-dark-navy);
+            margin-bottom: 0.5rem;
+        }
+        .summit-current-sponsors .section-header p {
+            color: var(--sparc-charcoal);
+        }
+        .sponsor-tier-label {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--sparc-dark-navy);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .sponsor-tier-label::before,
+        .sponsor-tier-label::after {
+            content: '';
+            display: inline-block;
+            width: 40px;
+            height: 2px;
+            background: var(--sparc-kelly-green);
+            vertical-align: middle;
+            margin: 0 15px;
+        }
+        .presenting-sponsor-display {
+            max-width: 500px;
+            margin: 0 auto 50px;
+            background: white;
+            border: 2px solid var(--sparc-dark-navy);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .presenting-sponsor-display:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        .presenting-sponsor-display a {
+            text-decoration: none;
+            color: var(--sparc-dark-navy);
+            display: block;
+        }
+        .presenting-sponsor-display .sponsor-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--sparc-dark-navy);
+            line-height: 1.2;
+        }
+        .sponsor-logos-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .summit-sponsor-slide {
+            flex: 0 0 auto;
+            width: 260px;
+            height: 180px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .summit-sponsor-slide:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            border-color: var(--sparc-kelly-green);
+        }
+        .summit-sponsor-slide a,
+        .summit-sponsor-slide .sponsor-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: var(--sparc-dark-navy);
+        }
+        .summit-sponsor-slide img {
+            max-width: 100%;
+            max-height: 130px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .summit-sponsor-slide:hover img {
+            transform: scale(1.05);
+        }
+        .summit-sponsor-slide .sponsor-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.3;
+            color: var(--sparc-dark-navy);
+        }
+        @media (max-width: 768px) {
+            .summit-sponsor-slide {
+                width: 220px;
+                height: 150px;
+                padding: 20px;
+            }
+            .summit-sponsor-slide img {
+                max-height: 100px;
+            }
+            .presenting-sponsor-display .sponsor-name {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 
     <!-- Favicon -->
@@ -1267,6 +1396,39 @@
                             <h4>Increased Awareness</h4>
                             <p>Amplifying the needs of adults with severe disabilities</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Sponsors Section -->
+        <section class="summit-current-sponsors">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>Thank You to Our Sponsors</h2>
+                    <p>We are deeply grateful to the organizations and individuals making the SPARC Summit possible.</p>
+                </div>
+
+                <!-- Presenting Sponsor -->
+                <div class="sponsor-tier-label fade-in">Presenting Sponsor</div>
+                <div class="presenting-sponsor-display fade-in">
+                    <a href="https://www.elevancehealth.com/" target="_blank" rel="noopener">
+                        <div class="sponsor-name">Elevance Health</div>
+                    </a>
+                </div>
+
+                <!-- $5,000 Sponsors -->
+                <div class="sponsor-tier-label fade-in">$5,000 Sponsors</div>
+                <div class="sponsor-logos-row fade-in">
+                    <div class="summit-sponsor-slide">
+                        <div class="sponsor-inner">
+                            <img src="/images/sponsors/Shrivastava family.jpg" alt="Sumeet Shrivastava">
+                        </div>
+                    </div>
+                    <div class="summit-sponsor-slide">
+                        <a href="https://www.thompsonhospitality.com/" target="_blank" rel="noopener">
+                            <img src="/images/sponsors/Thompson Hospitality.png" alt="Thompson Hospitality">
+                        </a>
                     </div>
                 </div>
             </div>
