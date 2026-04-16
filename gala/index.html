@@ -1495,20 +1495,6 @@
             </div>
         </div>
 
-        <!-- Donation Form Modal -->
-        <div class="form-modal-overlay" id="donationModal" style="display: none;">
-            <div class="form-modal">
-                <button class="form-modal-close" onclick="closeDonationModal()" aria-label="Close">&times;</button>
-                <div class="form-modal-header">
-                    <h2>Complete Your Sponsorship</h2>
-                    <p>Select your sponsorship level and complete the form below</p>
-                </div>
-                <div class="form-wrapper">
-                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4923392.js" type="text/javascript"></script>
-                </div>
-            </div>
-        </div>
-
         <!-- Registration Form Modal -->
         <div class="form-modal-overlay" id="register" style="display: none;">
             <div class="form-modal">
@@ -1835,20 +1821,6 @@
         });
     </script>
     <script>
-        // Open donation form modal
-        function openDonation() {
-            var modal = document.getElementById('donationModal');
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close donation modal
-        function closeDonationModal() {
-            var modal = document.getElementById('donationModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-
         // Open form modal and select tier
         function selectTier(radioId) {
             var modal = document.getElementById('register');
@@ -1877,15 +1849,6 @@
 
         // Close modal when clicking overlay background
         document.addEventListener('DOMContentLoaded', function() {
-            var donationModal = document.getElementById('donationModal');
-            if (donationModal) {
-                donationModal.addEventListener('click', function(e) {
-                    if (e.target === donationModal) {
-                        closeDonationModal();
-                    }
-                });
-            }
-
             var modal = document.getElementById('register');
             if (modal) {
                 modal.addEventListener('click', function(e) {
