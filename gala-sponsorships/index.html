@@ -944,20 +944,6 @@
             </div>
         </section>
 
-        <!-- Donation Form Modal -->
-        <div class="form-modal-overlay" id="donationModal" style="display: none;">
-            <div class="form-modal">
-                <button class="form-modal-close" onclick="closeDonationModal()" aria-label="Close">&times;</button>
-                <div class="form-modal-header">
-                    <h2>Complete Your Sponsorship</h2>
-                    <p>Select your sponsorship level and complete the form below</p>
-                </div>
-                <div class="form-wrapper">
-                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4923392.js" type="text/javascript"></script>
-                </div>
-            </div>
-        </div>
-
         <!-- Raffle Form Modal -->
         <div class="form-modal-overlay" id="raffleModal" style="display: none;">
             <div class="form-modal">
@@ -1077,19 +1063,6 @@
     <script src="/js/main.js"></script>
     <script>
         // Open donation form modal
-        function openDonation() {
-            var modal = document.getElementById('donationModal');
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close donation modal
-        function closeDonationModal() {
-            var modal = document.getElementById('donationModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-
         // Select tier and scroll to form
         function selectTier(radioId) {
             var formSection = document.getElementById('register');
@@ -1130,15 +1103,6 @@
 
         // Close modals when clicking overlay background
         document.addEventListener('DOMContentLoaded', function() {
-            var donationModal = document.getElementById('donationModal');
-            if (donationModal) {
-                donationModal.addEventListener('click', function(e) {
-                    if (e.target === donationModal) {
-                        closeDonationModal();
-                    }
-                });
-            }
-
             var raffleModal = document.getElementById('raffleModal');
             if (raffleModal) {
                 raffleModal.addEventListener('click', function(e) {
