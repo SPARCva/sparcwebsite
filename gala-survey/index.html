@@ -31,7 +31,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 16px;
-            padding: 48px;
+            padding: 32px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
         }
         .survey-intro {
@@ -39,7 +39,7 @@
             color: white;
             border-radius: 12px;
             padding: 28px 32px;
-            margin-bottom: 36px;
+            margin-bottom: 28px;
         }
         .survey-intro p {
             margin: 0;
@@ -47,226 +47,20 @@
             opacity: 0.95;
             font-size: 0.97rem;
         }
-        .survey-group {
-            margin-bottom: 40px;
+        .survey-iframe-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
         }
-        .survey-group-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--sparc-royal-blue);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--sparc-royal-blue);
-            margin-bottom: 28px;
-        }
-        .survey-question {
-            margin-bottom: 28px;
-        }
-        .survey-question label.q-label {
+        .survey-iframe-wrapper iframe {
+            width: 100%;
+            min-height: 1800px;
+            border: 0;
             display: block;
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 600;
-            color: var(--sparc-dark-navy);
-            margin-bottom: 12px;
-            font-size: 0.97rem;
-            line-height: 1.5;
-        }
-        .survey-question label.q-label span.q-num {
-            color: var(--sparc-royal-blue);
-            font-weight: 700;
-            margin-right: 4px;
-        }
-        /* Radio / checkbox options */
-        .options-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .options-list li label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.93rem;
-            color: var(--sparc-charcoal);
-            transition: border-color 0.2s, background 0.2s;
-        }
-        .options-list li label:hover {
-            border-color: var(--sparc-royal-blue);
-            background: #f0f5ff;
-        }
-        .options-list li input[type="radio"],
-        .options-list li input[type="checkbox"] {
-            accent-color: var(--sparc-royal-blue);
-            width: 17px;
-            height: 17px;
-            flex-shrink: 0;
-        }
-        /* Star rating row */
-        .rating-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .rating-row label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 9px 16px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.9rem;
-            color: var(--sparc-charcoal);
-            transition: border-color 0.2s, background 0.2s;
-            white-space: nowrap;
-        }
-        .rating-row label:hover {
-            border-color: var(--sparc-royal-blue);
-            background: #f0f5ff;
-        }
-        .rating-row input[type="radio"] {
-            accent-color: var(--sparc-royal-blue);
-            width: 15px;
-            height: 15px;
-        }
-        /* Textarea */
-        .survey-question textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.93rem;
-            color: var(--sparc-charcoal);
-            resize: vertical;
-            min-height: 90px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        .survey-question textarea:focus {
-            outline: none;
-            border-color: var(--sparc-royal-blue);
-            box-shadow: 0 0 0 3px rgba(0,83,155,0.1);
-        }
-        /* Grid table for Q8 */
-        .interest-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.9rem;
-        }
-        .interest-table th {
-            background: var(--sparc-dark-navy);
-            color: white;
-            padding: 10px 14px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .interest-table th:first-child {
-            text-align: left;
-            border-radius: 8px 0 0 0;
-        }
-        .interest-table th:last-child {
-            border-radius: 0 8px 0 0;
-        }
-        .interest-table td {
-            padding: 10px 14px;
-            border-bottom: 1px solid #f0f0f0;
-            color: var(--sparc-charcoal);
-            vertical-align: middle;
-        }
-        .interest-table td:not(:first-child) {
-            text-align: center;
-        }
-        .interest-table tr:last-child td {
-            border-bottom: none;
-        }
-        .interest-table tr:nth-child(even) {
-            background: #fafafa;
-        }
-        .interest-table input[type="radio"] {
-            accent-color: var(--sparc-royal-blue);
-            width: 17px;
-            height: 17px;
-            cursor: pointer;
-        }
-        /* Submit button */
-        .btn-survey-submit {
-            background: var(--sparc-kelly-green);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: background 0.3s ease, transform 0.1s;
-        }
-        .btn-survey-submit:hover {
-            background: var(--sparc-kelly-green-dark);
-        }
-        .btn-survey-submit:active {
-            transform: scale(0.99);
-        }
-        /* Thank you banner */
-        #thank-you-banner {
-            display: none;
-            margin-top: 32px;
-            background: linear-gradient(135deg, #4CBB17 0%, #3a9212 100%);
-            color: white;
-            border-radius: 12px;
-            padding: 32px;
-            text-align: center;
-            animation: slideUp 0.5s ease;
-        }
-        #thank-you-banner h3 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.5rem;
-            margin: 0 0 12px 0;
-        }
-        #thank-you-banner p {
-            margin: 0;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 1rem;
-            line-height: 1.7;
-            opacity: 0.95;
-        }
-        #thank-you-banner .thank-you-icon {
-            font-size: 2.5rem;
-            margin-bottom: 14px;
-            display: block;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        /* Optional section label */
-        .optional-label {
-            font-size: 0.8rem;
-            color: #888;
-            font-weight: 400;
-            margin-left: 6px;
         }
         @media (max-width: 600px) {
-            .survey-wrapper { padding: 28px 18px; }
-            .rating-row { flex-direction: column; }
-            .interest-table { font-size: 0.82rem; }
-            .interest-table th, .interest-table td { padding: 8px 8px; }
+            .survey-wrapper { padding: 20px 12px; }
         }
     </style>
     <!-- Meta Pixel Code -->
@@ -379,224 +173,20 @@
 
                     <div class="survey-intro">
                         <p>Thank you for taking a few minutes to share your feedback! Your input helps us make each SPARC Gala better than the last. As we plan our 4th Annual Gala, we'd love your thoughts on the format, activities, and special touches that make the evening meaningful and fun.</p>
-                        <p style="margin-top: 14px 0 0;">Your feedback will guide decisions about event features, entertainment, and fundraising opportunities — and ensure that SPARC's mission and spirit shine brightly throughout the night.</p>
+                        <p style="margin: 14px 0 0;">Your feedback will guide decisions about event features, entertainment, and fundraising opportunities — and ensure that SPARC's mission and spirit shine brightly throughout the night.</p>
                     </div>
 
-                    <!-- Netlify Form -->
-                    <form action="https://formspree.io/f/mqegvkqy" method="POST" id="survey-form" novalidate>
-                        
-                        
-                        
-                            
-                        </p>
-
-                        <!-- SECTION 1: Overall Experience -->
-                        <div class="survey-group">
-                            <div class="survey-group-title">Overall Experience</div>
-
-                            <!-- Q1 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">1.</span> How would you rate your overall experience at the last SPARC Gala?</label>
-                                <div class="rating-row">
-                                    <label><input type="radio" name="q1_overall_rating" value="1 - Poor"> 1&#xFE0F;&#x20E3; Poor</label>
-                                    <label><input type="radio" name="q1_overall_rating" value="2 - Fair"> 2&#xFE0F;&#x20E3; Fair</label>
-                                    <label><input type="radio" name="q1_overall_rating" value="3 - Good"> 3&#xFE0F;&#x20E3; Good</label>
-                                    <label><input type="radio" name="q1_overall_rating" value="4 - Very Good"> 4&#xFE0F;&#x20E3; Very Good</label>
-                                    <label><input type="radio" name="q1_overall_rating" value="5 - Excellent"> 5&#xFE0F;&#x20E3; Excellent</label>
-                                </div>
-                            </div>
-
-                            <!-- Q2 -->
-                            <div class="survey-question">
-                                <label class="q-label" for="q2_enjoyed"><span class="q-num">2.</span> What did you enjoy most about the evening?</label>
-                                <textarea id="q2_enjoyed" name="q2_enjoyed_most" rows="3" placeholder="Share what stood out to you..."></textarea>
-                            </div>
-
-                            <!-- Q3 -->
-                            <div class="survey-question">
-                                <label class="q-label" for="q3_improve"><span class="q-num">3.</span> What is one thing you would like to see improved or done differently?</label>
-                                <textarea id="q3_improve" name="q3_improvement" rows="3" placeholder="Your suggestion..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- SECTION 2: Event Format & Activities -->
-                        <div class="survey-group">
-                            <div class="survey-group-title">Event Format &amp; Activities</div>
-
-                            <!-- Q4 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">4.</span> Which of the following main features would most interest you for this year's gala?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="checkbox" name="q4_features" value="Live auction"> Live auction</label></li>
-                                    <li><label><input type="checkbox" name="q4_features" value="Silent auction"> Silent auction</label></li>
-                                    <li><label><input type="checkbox" name="q4_features" value="Pop-up experience highlighting SPARC programs"> Pop-up experience highlighting SPARC programs</label></li>
-                                    <li><label><input type="checkbox" name="q4_features" value="Opportunity to purchase SPARC art"> Opportunity to purchase SPARC art</label></li>
-                                    <li><label><input type="checkbox" name="q4_features" value="A mix of more than one activity"> A mix of more than one activity</label></li>
-                                </ul>
-                            </div>
-
-                            <!-- Q5 -->
-                          <div class="survey-question">
-                                <label class="q-label"><span class="q-num">5.</span>Should we offer a silent auction?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="radio" name="q5_silent_auction" value="Yes"> Yes</label></li>
-                                    <li><label><input type="radio" name="q5_silent_auction" value="No"> No</label></li>
-                                </ul>
-                            </div>
-
-                            <!-- Q6 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">6.</span> Should we offer a live auction?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="radio" name="q6_live_auction" value="Yes"> Yes</label></li>
-                                    <li><label><input type="radio" name="q6_live_auction" value="No"> No</label></li>
-                                </ul>
-                            </div>
-
-                            <!-- Q7 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">7.</span> How does this sound: a shorter formal program followed by about two hours of dancing?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="radio" name="q7_program_format" value="Love it - more time to celebrate"> Love it – more time to celebrate!</label></li>
-                                    <li><label><input type="radio" name="q7_program_format" value="Sounds about right"> Sounds about right</label></li>
-                                    <li><label><input type="radio" name="q7_program_format" value="Prefer longer program with more presentations"> Prefer a longer program with more presentations</label></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- SECTION 3: Fundraising Games & Engagement -->
-                        <div class="survey-group">
-                            <div class="survey-group-title">Fundraising Games &amp; Engagement</div>
-
-                            <!-- Q8 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">8.</span> How interested would you be in the following fundraising activities?</label>
-                                <div style="overflow-x: auto;">
-                                    <table class="interest-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Activity</th>
-                                                <th>Not Interested</th>
-                                                <th>Somewhat Interested</th>
-                                                <th>Very Interested</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>50/50 Raffle</td>
-                                                <td><input type="radio" name="q8_raffle" value="Not Interested" aria-label="50/50 Raffle - Not Interested"></td>
-                                                <td><input type="radio" name="q8_raffle" value="Somewhat Interested" aria-label="50/50 Raffle - Somewhat Interested"></td>
-                                                <td><input type="radio" name="q8_raffle" value="Very Interested" aria-label="50/50 Raffle - Very Interested"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Heads or Tails Game</td>
-                                                <td><input type="radio" name="q8_heads_tails" value="Not Interested" aria-label="Heads or Tails - Not Interested"></td>
-                                                <td><input type="radio" name="q8_heads_tails" value="Somewhat Interested" aria-label="Heads or Tails - Somewhat Interested"></td>
-                                                <td><input type="radio" name="q8_heads_tails" value="Very Interested" aria-label="Heads or Tails - Very Interested"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Raise the Paddle (live donation appeal)</td>
-                                                <td><input type="radio" name="q8_raise_paddle" value="Not Interested" aria-label="Raise the Paddle - Not Interested"></td>
-                                                <td><input type="radio" name="q8_raise_paddle" value="Somewhat Interested" aria-label="Raise the Paddle - Somewhat Interested"></td>
-                                                <td><input type="radio" name="q8_raise_paddle" value="Very Interested" aria-label="Raise the Paddle - Very Interested"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Themed photo booth or interactive display</td>
-                                                <td><input type="radio" name="q8_photo_booth" value="Not Interested" aria-label="Photo booth - Not Interested"></td>
-                                                <td><input type="radio" name="q8_photo_booth" value="Somewhat Interested" aria-label="Photo booth - Somewhat Interested"></td>
-                                                <td><input type="radio" name="q8_photo_booth" value="Very Interested" aria-label="Photo booth - Very Interested"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Opportunity to purchase SPARC art</td>
-                                                <td><input type="radio" name="q8_sparc_art" value="Not Interested" aria-label="SPARC art - Not Interested"></td>
-                                                <td><input type="radio" name="q8_sparc_art" value="Somewhat Interested" aria-label="SPARC art - Somewhat Interested"></td>
-                                                <td><input type="radio" name="q8_sparc_art" value="Very Interested" aria-label="SPARC art - Very Interested"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- SECTION 4: New Ideas & Feedback -->
-                        <div class="survey-group">
-                            <div class="survey-group-title">New Ideas &amp; Feedback</div>
-
-                            <!-- Q9 -->
-                            <div class="survey-question">
-                                <label class="q-label" for="q9_new_elements"><span class="q-num">9.</span> Are there any new elements or activities you'd love to see added this year?</label>
-                                <textarea id="q9_new_elements" name="q9_new_elements" rows="3" placeholder="Dream big..."></textarea>
-                            </div>
-
-                            <!-- Q10 -->
-                            <div class="survey-question">
-                                <label class="q-label" for="q10_keeps_coming"><span class="q-num">10.</span> What keeps you coming back to the SPARC Gala each year?</label>
-                                <textarea id="q10_keeps_coming" name="q10_keeps_coming_back" rows="3" placeholder="What makes the Gala special to you..."></textarea>
-                            </div>
-
-                            <!-- Q11 -->
-                            <div class="survey-question">
-                                <label class="q-label" for="q11_other_comments"><span class="q-num">11.</span> Any other comments, suggestions, or feedback?</label>
-                                <textarea id="q11_other_comments" name="q11_other_comments" rows="3" placeholder="Anything else on your mind..."></textarea>
-                            </div>
-                        </div>
-
-                            <!-- Q12 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">12.</span> Would you enjoy seeing costumed Star Wars characters at the event?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="radio" name="q12_star_wars" value="Yes - they add a fun element"> Yes, they add a fun element to the evening</label></li>
-                                    <li><label><input type="radio" name="q12_star_wars" value="No - prefer different entertainment"> No, I'd prefer a different form of entertainment</label></li>
-                                </ul>
-                            </div>
-
-
-
-                        
-                        <!-- SECTION 5: About You (Optional) -->
-                        <div class="survey-group">
-                            <div class="survey-group-title">About You <span class="optional-label">(Optional)</span></div>
-
-                            <!-- Q13 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">13.</span> Have you attended previous SPARC Galas?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="radio" name="q12_attendance" value="Yes - once"> Yes – once</label></li>
-                                    <li><label><input type="radio" name="q12_attendance" value="Yes - more than once"> Yes – more than once</label></li>
-                                    <li><label><input type="radio" name="q12_attendance" value="This was my first time"> This was my first time</label></li>
-                                </ul>
-                            </div>
-
-                            <!-- Q14 -->
-                            <div class="survey-question">
-                                <label class="q-label"><span class="q-num">14.</span> How did you first hear about the SPARC Gala?</label>
-                                <ul class="options-list">
-                                    <li><label><input type="radio" name="q13_heard_about" value="SPARC communications (email/newsletter)"> SPARC communications (email/newsletter)</label></li>
-                                    <li><label><input type="radio" name="q13_heard_about" value="Friend or word of mouth"> Friend or word of mouth</label></li>
-                                    <li><label><input type="radio" name="q13_heard_about" value="Social media"> Social media</label></li>
-                                    <li><label><input type="radio" name="q13_heard_about" value="Table guest of sponsor"> Table guest of sponsor</label></li>
-                                    <li>
-                                        <label style="flex-wrap: wrap; gap: 8px;">
-                                            <input type="radio" name="q13_heard_about" value="Other" id="q13_other_radio">
-                                            Other (please specify)
-                                        </label>
-                                        <input type="text" name="q13_heard_other_specify" id="q13_other_text"
-                                            placeholder="Please specify..."
-                                            style="display:none; width:100%; margin-top:8px; padding:9px 12px; border:1px solid #ddd; border-radius:8px; font-family:'Open Sans',sans-serif; font-size:0.93rem; box-sizing:border-box;">
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-survey-submit">Submit Feedback</button>
-
-                        <!-- Thank You Banner (shown on submit) -->
-                        <div id="thank-you-banner" role="alert" aria-live="polite">
-                            <span class="thank-you-icon">&#10003;</span>
-                            <h3>Thank You for Sharing Your Ideas!</h3>
-                            <p>Your feedback makes a real difference in shaping an event that celebrates SPARC's creativity, community, and partnership. We can't wait to make our 4th Annual Gala the best one yet!</p>
-                        </div>
-                    </form>
+                    <div class="survey-iframe-wrapper">
+                        <iframe
+                            src="https://docs.google.com/forms/d/e/1FAIpQLSfb3pikzfHqx74vwkggU9yucwNzX0BC3bI8XrcGwMVzZzvN4Q/viewform?embedded=true"
+                            title="SPARC Gala Feedback Survey"
+                            loading="lazy"
+                            width="100%"
+                            height="1800"
+                            frameborder="0"
+                            marginheight="0"
+                            marginwidth="0">Loading…</iframe>
+                    </div>
 
                 </div>
             </div>
@@ -678,57 +268,6 @@
     </div>
 
     <script src="/js/main.js"></script>
-
-    <script>
-        // Show "Other" text field for Q13
-        document.querySelectorAll('input[name="q13_heard_about"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                var otherText = document.getElementById('q13_other_text');
-                otherText.style.display = this.value === 'Other' ? 'block' : 'none';
-                if (this.value !== 'Other') otherText.value = '';
-            });
-        });
-
-        // AJAX form submission with thank-you banner
-        document.getElementById('survey-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var form = this;
-            var formData = new FormData(form);
-
-            // Manually encode so multiple checkbox values (Q4) are preserved
-            var params = [];
-            formData.forEach(function(value, key) {
-                params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-            });
-            var body = params.join('&');
-
-            fetch('https://formspree.io/f/mqegvkqy', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body
-            })
-            .then(function(response) {
-                if (response.ok) {
-                    // Success — hide form fields and show thank-you
-                    form.querySelectorAll('input, textarea, button[type="submit"]').forEach(function(el) {
-                        el.disabled = true;
-                    });
-                    form.querySelector('.btn-survey-submit').style.display = 'none';
-                    var banner = document.getElementById('thank-you-banner');
-                    banner.style.display = 'block';
-                    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                } else {
-                    // Netlify returned an error — fall back to standard submit
-                    form.removeEventListener('submit', arguments.callee);
-                    form.submit();
-                }
-            })
-            .catch(function() {
-                // Network error — fall back to standard submit
-                form.submit();
-            });
-        });
-    </script>
 
     <!-- Mailing List Modal -->
     <div class="mailing-list-modal-overlay" id="mailingListModal">
