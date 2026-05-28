@@ -12,8 +12,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Meet the dedicated team at SPARC - professionals committed to serving adults with severe and multiple disabilities in Northern Virginia.">
-    <title>Our Team | SPARC - Specially Adapted Resource Centers</title>
+    <meta name="description" content="Join SPARC at the Cars & Coffee Car Show on June 13 in Herndon, VA. Enjoy a car showcase, free coffee, our Mobile Exploration Lab, and buy raffle tickets to win two tickets to Josh Groban at Wolf Trap.">
+    <title>Cars &amp; Coffee Car Show | SPARC - Specially Adapted Resource Centers</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,88 +25,96 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-        .team-bio {
-            text-align: left;
+        /* Sponsor Carousel Styles */
+        .sponsor-carousel-section {
+            padding: 60px 0;
+            background: #ffffff;
         }
-        .team-bio-expanded {
-            text-align: left;
-        }
-        .team-section-title {
-            margin-bottom: 40px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid var(--accent-orange);
-            display: inline-block;
-        }
-        .team-subsection {
-            margin-bottom: 60px;
-        }
-        .team-bio-expanded {
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-        .team-credentials {
-            color: var(--accent-teal);
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .team-grid-leadership {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+        .sponsor-carousel-section .section-header {
+            text-align: center;
             margin-bottom: 40px;
         }
-        .team-card-large {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 25px;
-            background: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            padding: 25px;
+        .sponsor-carousel-section .section-header h2 {
+            color: var(--sparc-dark-navy);
+            margin-bottom: 0.5rem;
         }
-        .team-card-large .team-photo {
-            height: 200px;
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: #C9B896;
+        .sponsor-carousel-section .section-header p {
+            color: var(--sparc-charcoal);
         }
-        .team-card-large .team-photo img {
+        .sponsor-carousel-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .sponsor-carousel-wrapper::before,
+        .sponsor-carousel-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .sponsor-carousel-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, white, transparent);
+        }
+        .sponsor-carousel-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, white, transparent);
+        }
+        .sponsor-carousel {
+            overflow: hidden;
+        }
+        .sponsor-track {
+            display: flex;
+            width: max-content;
+        }
+        .sponsor-slide {
+            flex-shrink: 0;
+            width: 200px;
+            height: 140px;
+            margin: 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+                    }
+        .sponsor-slide a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             height: 100%;
-            object-fit: cover;
         }
-        .team-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .sponsor-slide img {
+            max-width: 100%;
+            max-height: 100px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
         }
-        .team-photo {
-            background-color: #C9B896;
-        }
-        .team-placeholder {
-            background-color: #C9B896;
-        }
-        .team-card-large .team-info {
-            padding: 0;
-            text-align: left;
+        .sponsor-slide:hover {
+                    }
+        .sponsor-slide:hover img {
+            transform: scale(1.05);
         }
         @media (max-width: 768px) {
-            .team-grid-leadership {
-                grid-template-columns: 1fr;
+            .sponsor-slide {
+                width: 150px;
+                height: 100px;
+                margin: 0 10px;
+                padding: 15px;
             }
-            .team-card-large {
-                grid-template-columns: 1fr;
+            .sponsor-slide img {
+                max-height: 70px;
             }
-            .team-card-large .team-photo {
-                height: 180px;
-                width: 180px;
-                margin: 0 auto;
-                border-radius: 50%;
-            }
-            .team-card-large .team-info {
-                text-align: center;
+            .sponsor-carousel-wrapper::before,
+            .sponsor-carousel-wrapper::after {
+                width: 50px;
             }
         }
     </style>
@@ -138,7 +146,7 @@
             <ul class="nav-menu">
                 <li><a href="/" class="nav-link">Home</a></li>
                 <li class="nav-item-dropdown">
-                    <a href="/about/" class="nav-link active">About</a>
+                    <a href="/about/" class="nav-link">About</a>
                     <div class="dropdown-menu">
                         <a href="/team/">Our Team</a>
                         <a href="/board/">Board of Directors</a>
@@ -165,7 +173,7 @@
                     </div>
                 </li>
                 <li class="nav-item-dropdown">
-                    <a href="/events/" class="nav-link">Events</a>
+                    <a href="/events/" class="nav-link active">Events</a>
                     <div class="dropdown-menu">
                         <a href="/cars-and-coffee/">Cars &amp; Coffee Car Show</a>
                         <a href="/gala/">An Evening to SPARCle</a>
@@ -213,214 +221,64 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <h1>Our Team</h1>
-            <p>Dedicated professionals committed to helping adults with disabilities thrive</p>
+            <h1>Cars &amp; Coffee Car Show</h1>
+            <p>Saturday, June 13 &middot; 8 AM &ndash; 11 AM &middot; Herndon, VA</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <main id="main-content">
-        <!-- Leadership Team -->
-        <section class="team-section section-padding">
+        <!-- Event Details -->
+        <section class="about-content">
             <div class="container">
-                <div class="team-subsection">
-                    <h2 class="team-section-title fade-in">Leadership</h2>
-                    <div class="team-grid-leadership">
-                        <!-- Debi Alexander - CEO -->
-                        <div class="team-card-large fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/debi-alexander.png" alt="Debi Alexander">
-                            </div>
-                            <div class="team-info">
-                                <h4>Debi Alexander, J.D.</h4>
-                                <p class="team-role">Chief Executive Officer</p>
-                                <p class="team-credentials">Northern Virginian of the Year (2013) | Non-Profit Leadership Award (2024)</p>
-                                <p class="team-bio-expanded">Senior nonprofit executive with more than 20 years of leadership experience advancing inclusive, community-based services for individuals with disabilities. Since 2020, Debi has led SPARC's expansion across Northern Virginia, establishing public-private partnerships with Fairfax, Arlington, and Loudoun Counties. Under her leadership, SPARC achieved state budget recognition in 2023 as a vital component of Virginia's social safety net, and launched partnerships with George Washington University and NOVA integrating arts, technology, and academic collaboration.</p>
-                                <p class="team-bio-expanded"><strong>Previous:</strong> Director of Development & Communications at PHILLIPS Programs; Executive Director at Rainbow Therapeutic Riding Center; Director, Presidential Letters and Messages at The White House</p>
-                                <p class="team-bio-expanded"><strong>Education:</strong> J.D. - Antonin Scalia Law School; B.A. Philosophy - George Mason University; Leadership Fairfax Institute</p>
-                            </div>
-                        </div>
-
-                        <!-- Kat Rader - Program Director -->
-                        <div class="team-card-large fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/kat-rader.png" alt="Kat Rader">
-                            </div>
-                            <div class="team-info">
-                                <h4>Kat Rader, MAT</h4>
-                                <p class="team-role">Program Director</p>
-                                <p class="team-credentials">Certified Autism Spectrum Disorder Clinical Specialist</p>
-                                <p class="team-bio-expanded">Dedicated educator and program leader with over 15 years of experience in special education, community-based instruction, and nonprofit program management. Kat oversees daily operations for four Northern Virginia centers, managing staff, budgeting, payroll, and program delivery. She leads grant programming and implementation with AIM AHEAD and GWU, and supervises 9 staff members, interns, and volunteers. Previously, Kat served as Special Education / Transition Lead Teacher and Education Program Supervisor at Phillips Programs.</p>
-                                <p class="team-bio-expanded"><strong>Education:</strong> M.A. in Teaching, Special Education - Liberty University; B.A. in Arts - Southern Methodist University</p>
-                            </div>
-                        </div>
-
-                        <!-- Erica Gaffney - Director of Development -->
-                        <div class="team-card-large fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/erica-gaffney.png" alt="Erica Gaffney">
-                            </div>
-                            <div class="team-info">
-                                <h4>Erica Gaffney</h4>
-                                <p class="team-role">Director of Development and Communications</p>
-                                <p class="team-bio-expanded">Results-driven operations and fundraising professional with extensive experience in cultivating data-driven organizational outcomes. Erica leads all aspects of grant and contract management, develops and manages multimillion-dollar funding portfolios, and oversees proposal development, compliance, and reporting. She has strengthened partnerships with funders, government agencies, and community stakeholders while implementing data-driven fundraising strategies. Previously served as Director of Development at OAR NOVA where she achieved a 127% increase in funding over two years.</p>
-                                <p class="team-bio-expanded"><strong>Education:</strong> M.A. Forensic Psychology - GWU; M.A. Criminal Justice - SUNY Albany; B.A. Criminal Justice & Psychology - SUNY Albany</p>
-                            </div>
-                        </div>
+                <div class="about-grid">
+                    <div class="about-image fade-in">
+                        <img src="/images/Mobile Exploration Lab.jpg" alt="SPARC Mobile Exploration Lab">
                     </div>
-                </div>
-
-                <!-- Program Staff -->
-                <div class="team-subsection">
-                    <h2 class="team-section-title fade-in">Program Staff</h2>
-                    <div class="team-grid">
-                        <!-- Nicole Sullivan - Art Therapist -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <div class="team-placeholder">NS</div>
-                            </div>
-                            <div class="team-info">
-                                <h4>Nicole Sullivan, M.A., ATR-P, Virginia Resident in Counseling</h4>
-                                <p class="team-role">Art Therapist</p>
-                                <p class="team-bio">Develops and adapts group art therapy directives to support participants in their social and emotional goals. Facilitates art therapy groups daily and writes the monthly Newsletter Publication. Nicole holds an M.A. in Art Therapy from George Washington University (summa cum laude) and a B.A. in Art Therapy from University of Tampa.</p>
-                            </div>
-                        </div>
-
-                        <!-- Alonzo Patterson -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/alonzo-patterson.png" alt="Alonzo Patterson">
-                            </div>
-                            <div class="team-info">
-                                <h4>Alonzo Patterson</h4>
-                                <p class="team-role">Program Staff - Loudoun County</p>
-                                <p class="team-bio">Dynamic Program Coordinator with over 15 years of experience in education, special programs, and community development. Coordinates and implements educational and life-skills programs, tracks participant progress, and facilitates group instruction using evidence-based strategies. M.Ed. in Adult Education (in progress) - University of Phoenix; B.S. Political Science - Lincoln University.</p>
-                            </div>
-                        </div>
-
-                        <!-- Leah Bansleben -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/leah-bansleben.png" alt="Leah Bansleben">
-                            </div>
-                            <div class="team-info">
-                                <h4>Leah Bansleben</h4>
-                                <p class="team-role">Program Staff - Loudoun County</p>
-                                <p class="team-bio">Therapeutic Recreation professional with 9+ years of experience strengthening physical, cognitive, and social wellness. Leads inclusive adaptive enrichment programs, plans themed activities and outings, and maintains program documentation. B.S. in Therapeutic Recreation from Radford University.</p>
-                            </div>
-                        </div>
-
-                        <!-- Andrew O'Dell -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <div class="team-placeholder">AO</div>
-                            </div>
-                            <div class="team-info">
-                                <h4>Andrew O'Dell</h4>
-                                <p class="team-role">Program Staff - Alexandria</p>
-                                <p class="team-bio">Plans recreational programs and activities based on leisure learning for adults with disabilities. Leads Thursday Night Virtual Bingo, Agents of Change, Social Group, and the Hydroponic Gardening Initiative. Contributes to the monthly newsletter. B.S. in Recreational Therapy from George Mason University (Magna Cum Laude, 2025).</p>
-                            </div>
-                        </div>
-
-                        <!-- Elijah Tracey -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/elijah-tracey.png" alt="Elijah Tracey">
-                            </div>
-                            <div class="team-info">
-                                <h4>Elijah Tracey</h4>
-                                <p class="team-role">Program Staff - Alexandria</p>
-                                <p class="team-bio">Plans recreational program activities for adults with disabilities with weekly documentation of participants' mood, activities, and personal growth. Develops goals and evaluates progression quarterly. Background includes teaching and case management. B.A. in Sociology from Georgia State University.</p>
-                            </div>
-                        </div>
-
-                        <!-- Jessica Escobar -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/jessica-escobar.png" alt="Jessica Escobar">
-                            </div>
-                            <div class="team-info">
-                                <h4>Jessica Escobar</h4>
-                                <p class="team-role">Program Staff - Fairfax</p>
-                                <p class="team-bio">Plans and facilitates daily programs promoting inclusion and social engagement. Leads weekly social groups and coordinates monthly community events. Former President of Council for Exceptional Children (CEC). Skills include Spanish, American Sign Language, and 12+ years childcare experience with 6+ years focused on special needs.</p>
-                            </div>
-                        </div>
-
-                        <!-- Dominique Williams - Part-Time -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/dominique-williams.png" alt="Dominique Williams">
-                            </div>
-                            <div class="team-info">
-                                <h4>Dominique Williams</h4>
-                                <p class="team-role">Program Staff - McLean </p>
-                                <p style="margin-top: 6px;"><span style="background: var(--accent-orange); color: white; font-size: 0.7rem; padding: 3px 10px; border-radius: 10px; display: inline-block;">Part-Time</span></p>
-                                <p class="team-bio">Assists in planning and facilitating social and recreational group activities for adults with developmental and physical disabilities. Applies person-centered approaches to enhance participant involvement and autonomy. Currently pursuing M.S.W. at Louisiana State University; B.S. in Psychology from LSU.</p>
-                            </div>
-                        </div>
-
-                        <!-- Linda Booth - Part-Time -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/linda-booth.png" alt="Linda Booth">
-                            </div>
-                            <div class="team-info">
-                                <h4>Linda Booth</h4>
-                                <p class="team-role">Program Assistant </p>
-                                <p style="margin-top: 6px;"><span style="background: var(--accent-orange); color: white; font-size: 0.7rem; padding: 3px 10px; border-radius: 10px; display: inline-block;">Part-Time</span></p>
-                                <p class="team-bio">Linda provides compassionate program support and peer mentoring, helping foster a respectful, person-centered environment for participants. She is a graduate of the Arc of Northern Virginia Peer Mentor Training Program.</p>
-                            </div>
-                        </div>
-
-                        <!-- Elissa Jamaldinian - Part-Time -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <img src="/images/staff/elissa-jamaldinian.png" alt="Elissa Jamaldinian">
-                            </div>
-                            <div class="team-info">
-                                <h4>Elissa Jamaldinian</h4>
-                                <p class="team-role">Occupational Therapist </p>
-                                <p style="margin-top: 6px;"><span style="background: var(--accent-orange); color: white; font-size: 0.7rem; padding: 3px 10px; border-radius: 10px; display: inline-block;">Part-Time</span></p>
-                                <p class="team-bio">Licensed Occupational Therapist with experience providing guidance and training to children, adults, and the elderly. Expert in planning, implementing, and assessing progress. Previously worked at Early Start Therapy, INOVA VNA Home Health, and Fairfax County Public Schools. M.S. in Occupational Therapy from Shenandoah University.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Administrative Staff -->
-                <div class="team-subsection">
-                    <h2 class="team-section-title fade-in">Administrative Staff</h2>
-                    <div class="team-grid" style="grid-template-columns: repeat(3, 1fr);">
-                        <!-- Audrey Rader -->
-                        <div class="team-card fade-in">
-                            <div class="team-photo">
-                                <div class="team-placeholder">AR</div>
-                            </div>
-                            <div class="team-info">
-                                <h4>Audrey Rader</h4>
-                                <p class="team-role">Executive Assistant / Data Entry</p>
-                                <p class="team-bio">Manages high-volume email correspondence, creates and maintains detailed RSVP lists for events including formal galas, and designs event invitations and mailing materials. Professional musician with diverse experience in guest services and event coordination.</p>
-                            </div>
+                    <div class="about-text fade-in">
+                        <span class="location-badge" style="margin-bottom: 15px; display: inline-block;">Upcoming Event</span>
+                        <h2>Join Us for Cars &amp; Coffee</h2>
+                        <p>Join us at the Cars &amp; Coffee Car Show hosted by Craftsman Auto Care on Saturday, June 13 from 8 AM &ndash; 11 AM at the Northwest Federal Credit Union lot, located at 200 Spring Street, Herndon, VA.</p>
+                        <p>This free community event will feature an incredible car showcase, free coffee and pastries while supplies last, giveaways throughout the show, and prizes for top cars in several judged categories.</p>
+                        <p>Specially Adapted Resource Centers (SPARC) will also be on-site with our Mobile Exploration Lab, bringing fun, interactive experiences for the community to enjoy!</p>
+                        <p>You&rsquo;re welcome to stop by, walk around, enjoy the cars, grab coffee, and spend the morning with the community!</p>
+                        <p>Interested in entering a vehicle? Vehicle registration is a $10 donation, with all proceeds benefiting the NWFCU Foundation. You can register online or at the door.</p>
+                        <div class="cta-buttons" style="margin-top: 20px;">
+                            <a href="https://www.shopcraftsmanauto.com/store/p45/CarsandCoffee.html#/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Pre-Register a Vehicle</a>
+                            <a href="#raffle" class="btn btn-secondary">Buy Raffle Tickets</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Support Us -->
-        <section class="cta-section">
+        <!-- Raffle Section -->
+        <section class="about-content bg-light" id="raffle">
             <div class="container">
-                <div class="cta-content fade-in">
-                    <h2>Support Our Mission</h2>
-                    <p>Your support helps SPARC provide life-changing programs to adults with severe and multiple disabilities.</p>
-                    <div class="cta-buttons">
-                        <a href="/donate-checkout/" class="btn btn-white btn-lg">Donate Now</a>
-                        <a href="/contact/" class="btn btn-secondary btn-lg">Contact Us</a>
-                    </div>
+                <div class="section-header fade-in" style="text-align: center; max-width: 720px; margin: 0 auto 30px;">
+                    <span class="location-badge" style="margin-bottom: 15px; display: inline-block;">Enter to Win</span>
+                    <h2>Win Two Tickets to See Josh Groban at Wolf Trap</h2>
+                    <p>Don&rsquo;t miss your chance to win TWO tickets to see Josh Groban at Wolf Trap on Saturday, August 22! Raffle tickets can be purchased online below, and you do not need to be present to win.</p>
+                </div>
+                <div class="form-wrapper" style="max-width: 720px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                    <iframe id="raffleIframe" src="/cars-and-coffee-raffle-form/" style="width: 100%; border: none; min-height: 600px;" title="Cars & Coffee raffle ticket purchase form"></iframe>
                 </div>
             </div>
         </section>
+
+        <script>
+            // Auto-resize raffle iframe based on content height reported by the form page
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.raffleFormHeight) {
+                    var iframe = document.getElementById('raffleIframe');
+                    if (iframe) {
+                        iframe.style.height = event.data.raffleFormHeight + 'px';
+                    }
+                }
+            });
+        </script>
     </main>
+
     <!-- Footer -->
     <footer class="footer" style="color: white;">
         <div class="container">
@@ -496,6 +354,38 @@
     </div>
 
     <script src="/js/main.js"></script>
+    <script>
+        // Sponsor Carousel Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.querySelector('.sponsor-track');
+            if (track) {
+                const slides = track.querySelectorAll('.sponsor-slide');
+                const totalSlides = slides.length / 2; // Half are duplicates
+                const slideWidth = 230; // 200px width + 30px margin
+                const totalWidth = totalSlides * slideWidth;
+
+                let position = 0;
+                const speed = 1; // pixels per frame
+                let isPaused = false;
+
+                track.addEventListener('mouseenter', () => isPaused = true);
+                track.addEventListener('mouseleave', () => isPaused = false);
+
+                function animate() {
+                    if (!isPaused) {
+                        position -= speed;
+                        if (Math.abs(position) >= totalWidth) {
+                            position = 0;
+                        }
+                        track.style.transform = `translateX(${position}px)`;
+                    }
+                    requestAnimationFrame(animate);
+                }
+
+                animate();
+            }
+        });
+    </script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">
