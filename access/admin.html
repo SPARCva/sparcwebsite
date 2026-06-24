@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Steps Toward Access — Team Console</title>
+<style>
+  :root{
+    --green:#1f7a3d; --green-d:#16622f; --blue:#1a3a8f; --blue-d:#132c6b;
+    --ink:#16201a; --muted:#5d6b62; --bg:#f3f6f3; --card:#fff;
+    --line:#e1e7e1; --soft:#eef3ee; --focus:#c8881f; --amber:#c8881f; --slate:#6b7785; --danger:#b23a3a;
+    --sh:0 1px 2px rgba(20,40,25,.06),0 2px 8px rgba(20,40,25,.07);
+    --r:13px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;}
+  .shell{max-width:760px; margin:0 auto; padding-bottom:60px;}
+
+  .top{background:var(--blue); color:#fff; padding:calc(env(safe-area-inset-top) + 18px) 20px 18px; position:sticky; top:0; z-index:10;}
+  .top .kicker{font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; opacity:.8; font-weight:700;}
+  .top h1{margin:.25rem 0 0; font-size:1.3rem; font-weight:800; letter-spacing:-.01em;}
+  .top .sub{font-size:.84rem; opacity:.9; margin-top:3px;}
+  .top .signout{position:absolute; top:calc(env(safe-area-inset-top) + 16px); right:18px; background:rgba(255,255,255,.16); color:#fff; border:0; font-family:inherit; font-weight:700; font-size:.78rem; padding:7px 12px; border-radius:9px; cursor:pointer;}
+  .top .signout:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  .bar{display:flex; gap:10px; align-items:center; padding:16px 20px 6px; flex-wrap:wrap;}
+  .bar h2{font-size:1.05rem; margin:0; flex:1;}
+  .btn{border:0; font-family:inherit; font-weight:700; font-size:.9rem; padding:11px 17px; border-radius:11px; cursor:pointer; transition:.15s; display:inline-flex; align-items:center; gap:7px;}
+  .btn:active{transform:scale(.97);}
+  .btn:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+  .btn-pri{background:var(--green); color:#fff;}
+  .btn-pri:active{background:var(--green-d);}
+  .btn-ghost{background:var(--soft); color:var(--ink);}
+  .btn-sm{padding:7px 12px; font-size:.82rem; border-radius:9px;}
+
+  .list{padding:8px 16px;}
+  .row{background:var(--card); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sh); margin-bottom:12px; overflow:hidden;}
+  .row-head{display:flex; gap:12px; align-items:center; padding:14px 16px;}
+  .row-head .idx{flex:0 0 auto; width:30px; height:30px; border-radius:9px; background:var(--soft); display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--blue);}
+  .row-head .meta{flex:1; min-width:0;}
+  .row-head h3{margin:0; font-size:1rem; font-weight:700;}
+  .row-head .party{margin:0; font-size:.8rem; color:var(--muted);}
+  .badges{display:flex; gap:6px; align-items:center;}
+
+  .pill{font-size:.7rem; font-weight:700; padding:3px 9px; border-radius:999px; white-space:nowrap;}
+  .s-doc{background:#eef2f7; color:var(--slate);} .s-con{background:#fdf3e2; color:#9a6a12;}
+  .s-wait{background:#eaf6ef; color:var(--green-d);} .s-res{background:var(--green); color:#fff;}
+  .draft{background:#f7e9e9; color:var(--danger);} .pub{background:#e7f3ec; color:var(--green-d);}
+
+  .row-detail{border-top:1px solid var(--line); padding:14px 16px; background:#fafcfa; display:none;}
+  .row-detail.open{display:block;}
+  .mini-h{font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--green-d); font-weight:800; margin:14px 0 8px;}
+  .mini-h:first-child{margin-top:0;}
+  .thumb-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .thumb{position:relative; border-radius:9px; overflow:hidden; border:1px solid var(--line); background:#e7ece7;}
+  .thumb img{width:100%; aspect-ratio:1; object-fit:cover; display:block;}
+  .thumb .alt{font-size:.68rem; color:var(--muted); padding:4px 6px;}
+  .ev{font-size:.86rem; padding:7px 0; border-bottom:1px dashed var(--line);}
+  .ev:last-child{border:0;}
+  .ev .w{font-weight:700; color:var(--blue); font-size:.8rem;}
+  .row-actions{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+
+  /* MODAL */
+  .scrim{position:fixed; inset:0; background:rgba(15,25,18,.45); opacity:0; pointer-events:none; transition:.25s; z-index:40;}
+  .scrim.show{opacity:1; pointer-events:auto;}
+  .modal{position:fixed; left:50%; top:50%; transform:translate(-50%,-46%) scale(.98); opacity:0; pointer-events:none;
+    width:calc(100% - 32px); max-width:560px; max-height:90dvh; background:var(--bg); border-radius:18px;
+    box-shadow:0 20px 60px rgba(20,40,25,.3); z-index:50; transition:.25s; display:flex; flex-direction:column;}
+  .modal.show{opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1);}
+  .modal-head{padding:18px 20px 12px; border-bottom:1px solid var(--line); display:flex; align-items:center;}
+  .modal-head h2{margin:0; font-size:1.15rem; flex:1;}
+  .modal-head .x{border:0; background:var(--soft); width:32px; height:32px; border-radius:9px; cursor:pointer; font-size:1.1rem; color:var(--muted);}
+  .modal-body{overflow-y:auto; padding:18px 20px;}
+  .modal-foot{padding:14px 20px calc(env(safe-area-inset-bottom) + 16px); border-top:1px solid var(--line); display:flex; gap:10px; justify-content:flex-end;}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-weight:700; font-size:.82rem; margin-bottom:5px;}
+  .field .hint{font-weight:400; color:var(--muted);}
+  .field input,.field textarea,.field select{width:100%; padding:11px 12px; border:1.5px solid var(--line); border-radius:11px; font-family:inherit; font-size:.98rem; background:#fff; transition:.15s;}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:0; border-color:var(--green); box-shadow:0 0 0 3px rgba(31,122,61,.13);}
+  .req{color:var(--danger);}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+
+  /* repeatable blocks */
+  .block{background:#fff; border:1px solid var(--line); border-radius:11px; padding:13px; margin-bottom:10px; position:relative;}
+  .block .rm{position:absolute; top:9px; right:9px; border:0; background:var(--soft); color:var(--danger); width:26px; height:26px; border-radius:7px; cursor:pointer; font-weight:700;}
+  .add-link{background:none; border:1.5px dashed var(--line); color:var(--green-d); font-weight:700; width:100%; padding:11px; border-radius:11px; cursor:pointer; font-family:inherit; font-size:.88rem;}
+  .add-link:hover{border-color:var(--green); background:var(--soft);}
+
+  .uploader{border:1.5px dashed var(--line); border-radius:11px; padding:18px; text-align:center; cursor:pointer; background:#fff; transition:.15s;}
+  .uploader:hover{border-color:var(--green); background:var(--soft);}
+  .uploader input{display:none;}
+  .uploader .big{font-weight:700; color:var(--green-d);}
+  .uploader .small{font-size:.78rem; color:var(--muted); margin-top:3px;}
+  .upreview{display:flex; align-items:center; gap:10px; margin-top:8px;}
+  .upreview img{width:46px; height:46px; object-fit:cover; border-radius:8px;}
+
+  .empty{text-align:center; color:var(--muted); padding:46px 20px;}
+  .empty svg{width:42px; height:42px; opacity:.4; margin-bottom:10px;}
+  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:#fff; padding:12px 20px; border-radius:11px; font-size:.9rem; opacity:0; pointer-events:none; transition:.25s; z-index:60;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .gate-note{background:#fdf3e2; border:1px solid #f0d9a8; color:#7a5510; font-size:.82rem; padding:10px 13px; border-radius:10px; margin:0 16px 4px;}
+
+  /* SIGN-IN GATE */
+  .authgate{min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:24px;}
+  .auth-card{background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--sh); padding:28px 24px; max-width:380px; width:100%;}
+  .auth-card .kicker{font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--blue); font-weight:700;}
+  .auth-card h1{margin:.25rem 0 .5rem; font-size:1.3rem; font-weight:800;}
+  .auth-sub{color:var(--muted); font-size:.9rem; margin:0 0 18px;}
+  .auth-msg{font-size:.84rem; margin-top:12px; min-height:1.2em; color:var(--green-d);}
+  .auth-msg.err{color:var(--danger);}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<!-- SIGN-IN GATE (shown when there is no session) -->
+<div class="authgate" id="authGate" hidden>
+  <div class="auth-card">
+    <div class="kicker">SPARC · Team Console</div>
+    <h1>Steps Toward Access</h1>
+    <p class="auth-sub">Sign in to manage barriers. We'll email you a one-time sign-in link — no password needed.</p>
+    <div class="field">
+      <label for="auth-email">Email</label>
+      <input id="auth-email" type="email" placeholder="you@sparcsolutions.org" autocomplete="email">
+    </div>
+    <button class="btn btn-pri" id="authSend" style="width:100%; justify-content:center;">Send me a sign-in link</button>
+    <p class="auth-msg" id="authMsg" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- CONSOLE (shown once signed in) -->
+<div class="shell" id="console" hidden>
+  <div class="top">
+    <div class="kicker">SPARC · Team Console</div>
+    <h1>Steps Toward Access</h1>
+    <div class="sub">Add and manage the barriers shown on the public map</div>
+    <button class="signout" id="signOutBtn">Sign out</button>
+  </div>
+
+  <div class="gate-note">New entries are saved as <strong>Drafts</strong> and stay hidden from the public page until someone marks them <strong>Published</strong>. Use this to keep a review step before anything about a named party goes live.</div>
+
+  <div class="bar">
+    <h2>Barriers</h2>
+    <button class="btn btn-ghost btn-sm" id="previewBtn">View public page ↗</button>
+    <button class="btn btn-pri" id="newBtn">+ New barrier</button>
+  </div>
+
+  <div class="list" id="list"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- EDITOR MODAL -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal-head"><h2 id="mTitle">New barrier</h2><button class="x" id="mClose" aria-label="Close">✕</button></div>
+  <div class="modal-body" id="mBody"></div>
+  <div class="modal-foot">
+    <button class="btn btn-ghost" id="mCancel">Cancel</button>
+    <button class="btn btn-pri" id="mSave">Save</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+/* ============================================================
+   Data logic lives in js/dataLayer.admin.js (full CRUD, requires
+   an authenticated session). Auth lives in js/auth.js. The console
+   never touches the backend except through these.
+============================================================ */
+import { DataLayer } from './js/dataLayer.admin.js';
+import { onAuth, sendMagicLink, signOut } from './js/auth.js';
+
+const STATUS={documented:{k:'s-doc',label:'Documented'},contacted:{k:'s-con',label:'Contacted'},awaiting:{k:'s-wait',label:'Awaiting response'},resolved:{k:'s-res',label:'Resolved'}};
+
+/* ---------------- AUTH GATE ---------------- */
+const authGate=document.getElementById('authGate');
+const consoleEl=document.getElementById('console');
+const authMsg=document.getElementById('authMsg');
+let booted=false;
+
+onAuth(session=>{
+  if(session){
+    authGate.hidden=true; consoleEl.hidden=false;
+    if(!booted){ booted=true; load(); }
+  }else{
+    consoleEl.hidden=true; authGate.hidden=false;
+  }
+});
+
+async function requestLink(){
+  const email=document.getElementById('auth-email').value.trim();
+  authMsg.classList.remove('err');
+  if(!email){ authMsg.textContent='Enter your email address.'; authMsg.classList.add('err'); return; }
+  const btn=document.getElementById('authSend'); btn.disabled=true;
+  try{
+    const {error}=await sendMagicLink(email);
+    if(error) throw error;
+    authMsg.textContent='Check your email for a sign-in link.';
+  }catch(err){
+    authMsg.textContent=err.message||'Could not send the link. Try again.';
+    authMsg.classList.add('err');
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('authSend').addEventListener('click',requestLink);
+document.getElementById('auth-email').addEventListener('keydown',e=>{ if(e.key==='Enter') requestLink(); });
+document.getElementById('signOutBtn').addEventListener('click',signOut);
+
+/* ---------------- RENDER LIST ---------------- */
+const listEl=document.getElementById('list');
+let LOCS=[];
+async function load(){
+  try{ LOCS=await DataLayer.getAll(); }
+  catch(err){ console.error(err); toast('Could not load barriers: '+(err.message||'try again')); LOCS=[]; }
+  renderList();
+}
+
+function renderList(){
+  if(!LOCS.length){
+    listEl.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 7v10l8 5 8-5V7z"/><path d="M12 22V12M4 7l8 5 8-5"/></svg><div>No barriers yet. Add the first one.</div></div>`;
+    return;
+  }
+  listEl.innerHTML='';
+  LOCS.forEach((loc,i)=>{
+    const row=document.createElement('div'); row.className='row';
+    row.innerHTML=`
+      <div class="row-head">
+        <span class="idx">${i+1}</span>
+        <div class="meta"><h3>${esc(loc.label)}</h3><p class="party">${esc(loc.party)}</p></div>
+        <div class="badges">
+          <span class="pill ${loc.published?'pub':'draft'}">${loc.published?'Published':'Draft'}</span>
+          <span class="pill ${STATUS[loc.status].k}">${STATUS[loc.status].label}</span>
+        </div>
+      </div>
+      <div class="row-detail" id="d-${loc.id}">
+        <div class="mini-h">Photos (${loc.photos.length})</div>
+        ${loc.photos.length?`<div class="thumb-grid">${loc.photos.map(p=>`<div class="thumb"><img src="${p.src||ph(p.alt)}" alt="${esc(p.alt)}"><div class="alt">${esc(p.caption||p.alt)}</div></div>`).join('')}</div>`:'<div class="party">No photos yet.</div>'}
+        <div class="mini-h">Correspondence & steps (${loc.events.length})</div>
+        ${loc.events.length?loc.events.map(e=>`<div class="ev"><span class="w">${esc(e.when)}</span> · ${esc(e.dir)}<br>${esc(e.txt)}</div>`).join(''):'<div class="party">No entries yet.</div>'}
+        <div class="row-actions">
+          <button class="btn btn-pri btn-sm" data-edit="${loc.id}">Edit</button>
+          <button class="btn btn-ghost btn-sm" data-pub="${loc.id}">${loc.published?'Unpublish':'Publish'}</button>
+          <button class="btn btn-ghost btn-sm" data-del="${loc.id}" style="color:var(--danger)">Delete</button>
+        </div>
+      </div>`;
+    row.querySelector('.row-head').addEventListener('click',()=>row.querySelector('.row-detail').classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+  listEl.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEditor(b.dataset.edit)));
+  listEl.querySelectorAll('[data-pub]').forEach(b=>b.addEventListener('click',()=>togglePub(b.dataset.pub)));
+  listEl.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>del(b.dataset.del)));
+}
+
+async function togglePub(id){
+  const l=LOCS.find(x=>x.id===id); l.published=!l.published;
+  try{ await DataLayer.save(l); }
+  catch(err){ console.error(err); l.published=!l.published; toast('Could not update: '+(err.message||'try again')); return; }
+  await load(); toast(l.published?'Published to public page':'Moved to draft');
+}
+async function del(id){
+  if(!confirm('Delete this barrier and all its content?'))return;
+  try{ await DataLayer.remove(id); }
+  catch(err){ console.error(err); toast('Could not delete: '+(err.message||'try again')); return; }
+  await load(); toast('Deleted');
+}
+
+/* ---------------- EDITOR ---------------- */
+const modal=document.getElementById('modal'), scrim=document.getElementById('scrim'), mBody=document.getElementById('mBody'), mTitle=document.getElementById('mTitle');
+let draft=null, lastFocus=null;
+
+function blank(){return {id:crypto.randomUUID(),label:'',party:'',email:'',status:'documented',published:false,x:50,y:50,photos:[],events:[]};}
+document.getElementById('newBtn').addEventListener('click',()=>openEditor(null));
+
+function openEditor(id){
+  draft = id ? JSON.parse(JSON.stringify(LOCS.find(l=>l.id===id))) : blank();
+  mTitle.textContent = id ? 'Edit barrier' : 'New barrier';
+  renderEditor();
+  lastFocus=document.activeElement;
+  scrim.classList.add('show'); modal.classList.add('show'); document.body.style.overflow='hidden';
+  modal.querySelector('input,select,textarea')?.focus();
+  modal.addEventListener('keydown',trap);
+}
+function closeEditor(){scrim.classList.remove('show'); modal.classList.remove('show'); document.body.style.overflow=''; modal.removeEventListener('keydown',trap); if(lastFocus)lastFocus.focus();}
+
+function renderEditor(){
+  mBody.innerHTML=`
+    <div class="field"><label>Location name <span class="req">*</span></label><input id="e-label" value="${esc(draft.label)}" placeholder="e.g., Main plaza entrance"></div>
+    <div class="two">
+      <div class="field"><label>Responsible party <span class="req">*</span></label><input id="e-party" value="${esc(draft.party)}" placeholder="Who's responsible"></div>
+      <div class="field"><label>Their email <span class="hint">(optional)</span></label><input id="e-email" value="${esc(draft.email)}" placeholder="contact@example.com"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Status</label><select id="e-status">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${draft.status===k?'selected':''}>${v.label}</option>`).join('')}</select></div>
+      <div class="field"><label>Map position <span class="hint">(% left / top)</span></label>
+        <div class="two"><input id="e-x" type="number" min="0" max="100" value="${draft.x}" aria-label="Left percent"><input id="e-y" type="number" min="0" max="100" value="${draft.y}" aria-label="Top percent"></div>
+      </div>
+    </div>
+
+    <div class="mini-h">Photos</div>
+    <div id="photoBlocks"></div>
+    <label class="uploader" id="dropzone">
+      <input type="file" id="fileInput" accept="image/*" multiple>
+      <div class="big">+ Add a photo</div>
+      <div class="small">Each photo needs a description for screen-reader users</div>
+    </label>
+
+    <div class="mini-h" style="margin-top:18px;">Correspondence & steps</div>
+    <div id="eventBlocks"></div>
+    <button class="add-link" id="addEvent" type="button">+ Add an entry</button>
+  `;
+  renderPhotoBlocks(); renderEventBlocks();
+  document.getElementById('fileInput').addEventListener('change',onFiles);
+  document.getElementById('addEvent').addEventListener('click',()=>{draft.events.push({when:'',dir:'',txt:''}); syncFromForm(); renderEditor();});
+}
+
+function renderPhotoBlocks(){
+  const wrap=document.getElementById('photoBlocks'); wrap.innerHTML='';
+  draft.photos.forEach((p,i)=>{
+    const b=document.createElement('div'); b.className='block';
+    b.innerHTML=`
+      <button class="rm" data-rmp="${i}" aria-label="Remove photo">✕</button>
+      ${p.src?`<div class="upreview"><img src="${p.src}" alt=""><span style="font-size:.8rem;color:var(--muted)">Photo attached</span></div>`:''}
+      <div class="field" style="margin:8px 0 0;"><label>Description (alt text) <span class="req">*</span></label><input data-palt="${i}" value="${esc(p.alt)}" placeholder="Describe what the photo shows"></div>
+      <div class="field" style="margin:8px 0 0;"><label>Caption <span class="hint">(shown under photo)</span></label><input data-pcap="${i}" value="${esc(p.caption||'')}" placeholder="Short caption"></div>`;
+    wrap.appendChild(b);
+  });
+  wrap.querySelectorAll('[data-rmp]').forEach(x=>x.addEventListener('click',()=>{syncFromForm(); draft.photos.splice(+x.dataset.rmp,1); renderEditor();}));
+}
+function renderEventBlocks(){
+  const wrap=document.getElementById('eventBlocks'); wrap.innerHTML='';
+  draft.events.forEach((e,i)=>{
+    const b=document.createElement('div'); b.className='block';
+    b.innerHTML=`
+      <button class="rm" data-rme="${i}" aria-label="Remove entry">✕</button>
+      <div class="two"><div class="field" style="margin:0;"><label>Date</label><input data-ewhen="${i}" value="${esc(e.when)}" placeholder="Mar 3, 2026"></div>
+      <div class="field" style="margin:0;"><label>Direction / step</label><input data-edir="${i}" value="${esc(e.dir)}" placeholder="Sent to manager"></div></div>
+      <div class="field" style="margin:8px 0 0;"><label>What happened</label><textarea data-etxt="${i}" rows="2" placeholder="Describe the letter or step">${esc(e.txt)}</textarea></div>`;
+    wrap.appendChild(b);
+  });
+  wrap.querySelectorAll('[data-rme]').forEach(x=>x.addEventListener('click',()=>{syncFromForm(); draft.events.splice(+x.dataset.rme,1); renderEditor();}));
+}
+
+async function onFiles(ev){
+  syncFromForm();
+  for(const file of ev.target.files){
+    try{
+      const url=await DataLayer.uploadPhoto(file,draft.id);
+      draft.photos.push({src:url,alt:'',caption:''});
+    }catch(err){
+      console.error(err); toast('Upload failed: '+(err.message||'try again'));
+    }
+  }
+  renderEditor();
+  document.getElementById('photoBlocks').lastElementChild?.querySelector('input')?.focus();
+}
+
+function syncFromForm(){
+  const g=id=>document.getElementById(id);
+  if(!g('e-label'))return;
+  draft.label=g('e-label').value.trim(); draft.party=g('e-party').value.trim();
+  draft.email=g('e-email').value.trim(); draft.status=g('e-status').value;
+  draft.x=+g('e-x').value; draft.y=+g('e-y').value;
+  document.querySelectorAll('[data-palt]').forEach(el=>draft.photos[+el.dataset.palt].alt=el.value.trim());
+  document.querySelectorAll('[data-pcap]').forEach(el=>draft.photos[+el.dataset.pcap].caption=el.value.trim());
+  document.querySelectorAll('[data-ewhen]').forEach(el=>draft.events[+el.dataset.ewhen].when=el.value.trim());
+  document.querySelectorAll('[data-edir]').forEach(el=>draft.events[+el.dataset.edir].dir=el.value.trim());
+  document.querySelectorAll('[data-etxt]').forEach(el=>draft.events[+el.dataset.etxt].txt=el.value.trim());
+}
+
+document.getElementById('mSave').addEventListener('click',async()=>{
+  syncFromForm();
+  if(!draft.label||!draft.party){toast('Add a location name and responsible party'); return;}
+  const missing=draft.photos.find(p=>!p.alt);
+  if(missing){toast('Every photo needs a description'); return;}
+  try{ await DataLayer.save(draft); }
+  catch(err){ console.error(err); toast('Could not save: '+(err.message||'try again')); return; }
+  closeEditor(); await load(); toast('Saved as '+(draft.published?'published':'draft'));
+});
+document.getElementById('mCancel').addEventListener('click',closeEditor);
+document.getElementById('mClose').addEventListener('click',closeEditor);
+scrim.addEventListener('click',closeEditor);
+document.getElementById('previewBtn').addEventListener('click',()=>{ window.location.href='./public.html'; });
+
+function trap(e){
+  if(e.key==='Escape'){closeEditor();return;}
+  if(e.key!=='Tab')return;
+  const f=[...modal.querySelectorAll('button,input,textarea,select,[tabindex]')].filter(x=>!x.disabled&&x.offsetParent!==null);
+  if(!f.length)return; const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+}
+
+let toastT;
+function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400);}
+function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function ph(alt){return "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='%23e2e8e3'/><text x='60' y='64' font-family='sans-serif' font-size='10' fill='%2390a092' text-anchor='middle'>photo</text></svg>`);}
+</script>
+</body>
+</html>
