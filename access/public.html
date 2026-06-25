@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Steps Toward Access — SPARC</title>
+<style>
+  :root{
+    --green:#1f7a3d; --green-d:#16622f; --blue:#1a3a8f; --blue-d:#132c6b;
+    --ink:#16201a; --muted:#5d6b62; --paper:#fbfcfb; --card:#ffffff;
+    --line:#e4e9e4; --soft:#f1f5f1; --focus:#c8881f;
+    --amber:#c8881f; --slate:#6b7785;
+    --sh-sm:0 1px 2px rgba(20,40,25,.06),0 1px 3px rgba(20,40,25,.10);
+    --sh-md:0 6px 16px rgba(20,40,25,.12);
+    --sh-lg:0 -8px 40px rgba(20,40,25,.18);
+    --r:14px; --r-lg:22px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:480px; margin:0 auto; min-height:100vh; min-height:100dvh; position:relative; background:var(--paper); overflow:hidden;}
+
+  /* ---- HERO ---- */
+  .hero{
+    position:relative; padding:calc(env(safe-area-inset-top) + 26px) 22px 22px;
+    background:linear-gradient(150deg,var(--blue) 0%,var(--blue-d) 55%,var(--green-d) 130%);
+    color:#fff; overflow:hidden;
+  }
+  .hero::after{ /* subtle topographic motion line */
+    content:""; position:absolute; inset:0; opacity:.10;
+    background:radial-gradient(circle at 80% 10%,#fff 0 1px,transparent 1px) 0 0/22px 22px;
+  }
+  .eyebrow{font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; font-weight:700; opacity:.85; position:relative;}
+  .hero h1{font-size:1.72rem; line-height:1.12; margin:.35rem 0 .5rem; font-weight:800; letter-spacing:-.02em; position:relative;}
+  .hero p{margin:0; font-size:.95rem; opacity:.92; max-width:34ch; position:relative;}
+  .hero-stats{display:flex; gap:20px; margin-top:18px; position:relative;}
+  .hstat .n{font-size:1.5rem; font-weight:800; line-height:1;}
+  .hstat .l{font-size:.72rem; opacity:.82; letter-spacing:.02em;}
+
+  /* ---- SEGMENT ---- */
+  .seg{display:flex; gap:6px; padding:14px 16px 4px; position:sticky; top:0; background:var(--paper); z-index:5;}
+  .seg button{
+    flex:1; border:0; background:var(--soft); color:var(--muted); font-weight:600;
+    font-size:.86rem; padding:9px; border-radius:11px; cursor:pointer; transition:.18s; font-family:inherit;
+  }
+  .seg button[aria-selected="true"]{background:var(--blue); color:#fff; box-shadow:var(--sh-sm);}
+  .seg button:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  /* ---- MAP ---- */
+  .map-card{margin:12px 16px 0; border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--sh-sm); border:1px solid var(--line); position:relative;}
+  .map-card img{display:block; width:100%; height:auto;}
+  .pin{
+    position:absolute; transform:translate(-50%,-100%); cursor:pointer; border:0; background:none; padding:0;
+    display:flex; flex-direction:column; align-items:center; filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));
+    transition:transform .15s;
+  }
+  .pin:active{transform:translate(-50%,-100%) scale(.9);}
+  .pin:focus-visible{outline:3px solid var(--focus); outline-offset:3px; border-radius:8px;}
+  .pin .dot{
+    width:30px; height:30px; border-radius:50% 50% 50% 2px; transform:rotate(45deg);
+    display:flex; align-items:center; justify-content:center; border:2.5px solid #fff;
+  }
+  .pin .dot span{transform:rotate(-45deg); color:#fff; font-weight:800; font-size:.85rem;}
+
+  /* ---- LIST ---- */
+  .list{padding:14px 16px 120px;}
+  .count{font-size:.8rem; color:var(--muted); margin:2px 4px 12px; font-weight:600;}
+  .case{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    padding:15px 16px; margin-bottom:12px; box-shadow:var(--sh-sm); cursor:pointer;
+    display:flex; gap:13px; align-items:flex-start; width:100%; text-align:left; font-family:inherit;
+    transition:transform .12s, box-shadow .12s;
+  }
+  .case:active{transform:scale(.985);}
+  .case:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+  .case .idx{
+    flex:0 0 auto; width:34px; height:34px; border-radius:10px; background:var(--soft);
+    display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--blue); font-size:1rem;
+  }
+  .case .body{flex:1; min-width:0;}
+  .case h3{margin:0 0 2px; font-size:1.02rem; font-weight:700; letter-spacing:-.01em;}
+  .case .party{margin:0; font-size:.82rem; color:var(--muted);}
+  .case .arrow{color:var(--line); align-self:center; font-size:1.3rem;}
+
+  /* status pill + progress */
+  .pill{display:inline-flex; align-items:center; gap:5px; font-size:.72rem; font-weight:700; padding:3px 9px; border-radius:999px; margin-top:8px;}
+  .pill .led{width:6px; height:6px; border-radius:50%;}
+  .s-doc{background:#eef2f7; color:var(--slate);} .s-doc .led{background:var(--slate);}
+  .s-con{background:#fdf3e2; color:#9a6a12;} .s-con .led{background:var(--amber);}
+  .s-wait{background:#eaf6ef; color:var(--green-d);} .s-wait .led{background:var(--green);}
+  .s-res{background:var(--green); color:#fff;} .s-res .led{background:#fff;}
+
+  /* ---- BOTTOM SHEET ---- */
+  .scrim{position:fixed; inset:0; background:rgba(15,25,18,.45); opacity:0; pointer-events:none; transition:opacity .28s; z-index:40;}
+  .scrim.show{opacity:1; pointer-events:auto;}
+  .sheet{
+    position:fixed; left:50%; bottom:0; transform:translateX(-50%) translateY(100%);
+    width:100%; max-width:480px; max-height:92dvh; background:var(--paper);
+    border-radius:24px 24px 0 0; box-shadow:var(--sh-lg); z-index:50;
+    transition:transform .34s cubic-bezier(.32,.72,0,1); display:flex; flex-direction:column;
+  }
+  .sheet.show{transform:translateX(-50%) translateY(0);}
+  .grab{flex:0 0 auto; padding:10px 0 4px; display:flex; justify-content:center;}
+  .grab span{width:38px; height:5px; border-radius:3px; background:var(--line);}
+  .sheet-scroll{overflow-y:auto; padding:6px 22px calc(env(safe-area-inset-bottom) + 28px); -webkit-overflow-scrolling:touch;}
+  .sheet h2{font-size:1.32rem; margin:6px 0 2px; letter-spacing:-.02em;}
+  .sheet .party{color:var(--muted); font-size:.9rem; margin:0 0 14px;}
+
+  /* progress tracker */
+  .track{display:flex; margin:6px 0 22px;}
+  .track .step{flex:1; text-align:center; position:relative;}
+  .track .step::before{content:""; position:absolute; top:9px; left:-50%; width:100%; height:2px; background:var(--line);}
+  .track .step:first-child::before{display:none;}
+  .track .step.done::before{background:var(--green);}
+  .track .node{width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid var(--line); margin:0 auto 6px; position:relative; z-index:1;}
+  .track .step.done .node{background:var(--green); border-color:var(--green);}
+  .track .step.current .node{border-color:var(--green); box-shadow:0 0 0 4px rgba(31,122,61,.16);}
+  .track .lbl{font-size:.64rem; color:var(--muted); font-weight:600; line-height:1.2;}
+  .track .step.done .lbl,.track .step.current .lbl{color:var(--ink);}
+
+  .sec-h{font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green-d); font-weight:800; margin:22px 0 10px;}
+  .photos{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .photos figure{margin:0;}
+  .photos img{width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:12px; background:#e7ece7; border:1px solid var(--line);}
+  .photos figcaption{font-size:.76rem; color:var(--muted); margin-top:5px; line-height:1.35;}
+
+  .log{position:relative; padding-left:20px; margin:0;}
+  .log::before{content:""; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--line);}
+  .log li{list-style:none; position:relative; margin-bottom:16px;}
+  .log li::before{content:""; position:absolute; left:-18px; top:5px; width:10px; height:10px; border-radius:50%; background:var(--blue); border:2px solid var(--paper);}
+  .log .when{font-weight:700; font-size:.82rem; color:var(--blue);}
+  .log .dir{font-size:.74rem; color:var(--muted); font-style:italic;}
+  .log .txt{font-size:.9rem; margin-top:2px;}
+
+  /* ---- SUBMIT (sheet variant) ---- */
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-weight:700; font-size:.84rem; margin-bottom:5px;}
+  .field input,.field textarea{
+    width:100%; padding:12px 13px; border:1.5px solid var(--line); border-radius:12px;
+    font-family:inherit; font-size:1rem; background:#fff; transition:.15s;
+  }
+  .field input:focus,.field textarea:focus{outline:0; border-color:var(--green); box-shadow:0 0 0 3px rgba(31,122,61,.14);}
+  .cta{
+    width:100%; border:0; background:var(--green); color:#fff; font-weight:700; font-size:1.04rem;
+    padding:15px; border-radius:14px; cursor:pointer; font-family:inherit; box-shadow:var(--sh-sm);
+    transition:.15s; margin-top:4px;
+  }
+  .cta:active{transform:scale(.98); background:var(--green-d);}
+  .cta:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+  .fineprint{font-size:.78rem; color:var(--muted); margin-top:12px; line-height:1.45;}
+  .intro-card{background:linear-gradient(150deg,#eaf6ef,#f1f5f1); border-radius:var(--r); padding:16px 17px; margin-bottom:18px;}
+  .intro-card p{margin:0; font-size:.92rem;}
+
+  /* FAB */
+  .fab{
+    position:fixed; bottom:calc(env(safe-area-inset-bottom) + 18px); left:50%; transform:translateX(-50%);
+    z-index:30; background:var(--green); color:#fff; border:0; font-family:inherit; font-weight:700;
+    font-size:.95rem; padding:14px 22px; border-radius:999px; box-shadow:var(--sh-md); cursor:pointer;
+    display:flex; align-items:center; gap:9px; transition:.16s;
+  }
+  .fab:active{transform:translateX(-50%) scale(.96);}
+  .fab:focus-visible{outline:3px solid var(--focus); outline-offset:3px;}
+  .fab svg{width:18px; height:18px;}
+
+  .visually-hidden{position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="hero">
+    <div class="eyebrow">SPARC · Accessibility Advocacy</div>
+    <h1>Steps Toward Access</h1>
+    <p>The actions we're taking to make Reston Town Center accessible for everyone — and a way to take action where you live.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="n" id="stat-cases">—</div><div class="l">Barriers documented</div></div>
+      <div class="hstat"><div class="n" id="stat-actions">—</div><div class="l">Actions taken</div></div>
+    </div>
+  </header>
+
+  <div class="seg" role="tablist" aria-label="View">
+    <button role="tab" id="tab-map" aria-selected="true" aria-controls="view-map">Map</button>
+    <button role="tab" id="tab-list" aria-selected="false" aria-controls="view-list">List</button>
+  </div>
+
+  <div id="view-map" role="tabpanel" aria-labelledby="tab-map">
+    <div class="map-card">
+      <img id="basemap" alt="Map of Reston Town Center. Numbered markers show each documented accessibility barrier; select a marker for details."
+        src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='620'><rect width='900' height='620' fill='%23dfe7e0'/><g stroke='%23c5d0c6' stroke-width='2'><path d='M0 200 H900 M0 410 H900 M300 0 V620 M620 0 V620'/></g><rect x='330' y='230' width='260' height='150' rx='8' fill='%23cdd8ce'/><text x='450' y='312' font-family='sans-serif' font-size='20' fill='%2390a092' text-anchor='middle'>Reston Town Center base map</text></svg>">
+      <div id="pinLayer"></div>
+    </div>
+  </div>
+
+  <div id="view-list" role="tabpanel" aria-labelledby="tab-list" hidden>
+    <div class="list">
+      <div class="count" id="listCount"></div>
+      <div id="caseList"></div>
+    </div>
+  </div>
+
+  <button class="fab" id="fab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    Report a barrier
+  </button>
+
+  <!-- map view also needs bottom padding so FAB doesn't cover; list has its own -->
+  <div style="height:90px" id="mapSpacer"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- DETAIL SHEET -->
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true">
+  <div class="grab"><span></span></div>
+  <div class="sheet-scroll" id="sheetScroll"></div>
+</section>
+
+<!-- SUBMIT SHEET -->
+<section class="sheet" id="submitSheet" role="dialog" aria-modal="true" aria-labelledby="submitTitle" aria-hidden="true">
+  <div class="grab"><span></span></div>
+  <div class="sheet-scroll">
+    <h2 id="submitTitle">Report a barrier near you</h2>
+    <div class="intro-card"><p>Tell us what you found and we'll prepare a ready-to-send message in your own email app, addressed to whoever's responsible. You review and send it yourself — nothing goes out automatically.</p></div>
+    <div class="field"><label for="f-party">Who's responsible?</label><input id="f-party" type="text" placeholder="Business, property, or agency name"></div>
+    <div class="field"><label for="f-email">Their email (if you have it)</label><input id="f-email" type="email" placeholder="contact@example.com"></div>
+    <div class="field"><label for="f-where">Where is it?</label><input id="f-where" type="text" placeholder="Address or location"></div>
+    <div class="field"><label for="f-issue">What's the barrier?</label><textarea id="f-issue" rows="4" placeholder="What makes this place hard or impossible to access?"></textarea></div>
+    <div class="field"><label for="f-name">Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input id="f-name" type="text" placeholder="For the message signature"></div>
+    <button class="cta" id="genBtn">Prepare my email →</button>
+    <p class="fineprint">This opens your email app with a drafted message you can edit before sending. SPARC doesn't send the message or store what you enter here.</p>
+  </div>
+</section>
+
+<script type="module">
+/* ============================================================
+   Data logic lives in js/dataLayer.public.js (read-only, anon key).
+   The public app only ever calls DataLayer.getLocations().
+============================================================ */
+import { DataLayer } from './js/dataLayer.public.js';
+
+const STATUS = {
+  documented:{k:'s-doc', label:'Documented', step:0},
+  contacted:{k:'s-con', label:'Contacted', step:1},
+  awaiting:{k:'s-wait', label:'Awaiting response', step:2},
+  resolved:{k:'s-res', label:'Resolved', step:3},
+};
+const STEPS = ['Documented','Contacted','Awaiting','Resolved'];
+
+/* ---------------- STATE + RENDER ---------------- */
+let LOCS=[];
+const pinLayer=document.getElementById('pinLayer');
+const caseList=document.getElementById('caseList');
+
+init();
+async function init(){
+  try{
+    LOCS = await DataLayer.getLocations();
+  }catch(err){
+    console.error('Could not load barriers:', err);
+    LOCS = [];
+  }
+  document.getElementById('stat-cases').textContent = LOCS.length;
+  document.getElementById('stat-actions').textContent = LOCS.reduce((a,l)=>a+l.events.length,0);
+  document.getElementById('listCount').textContent = `${LOCS.length} barriers being tracked`;
+  renderPins(); renderList();
+}
+
+function pill(status){const s=STATUS[status]; return `<span class="pill ${s.k}"><span class="led"></span>${s.label}</span>`;}
+function pinColor(status){return {documented:'#6b7785',contacted:'#c8881f',awaiting:'#1f7a3d',resolved:'#16622f'}[status];}
+
+function renderPins(){
+  pinLayer.innerHTML='';
+  LOCS.forEach((loc,i)=>{
+    const b=document.createElement('button');
+    b.className='pin'; b.style.left=loc.x+'%'; b.style.top=loc.y+'%';
+    b.setAttribute('aria-label',`Marker ${i+1}: ${loc.label}, ${STATUS[loc.status].label}. Open details.`);
+    b.innerHTML=`<span class="dot" style="background:${pinColor(loc.status)}"><span>${i+1}</span></span>`;
+    b.addEventListener('click',()=>openDetail(loc.id));
+    pinLayer.appendChild(b);
+  });
+}
+
+function renderList(){
+  caseList.innerHTML='';
+  LOCS.forEach((loc,i)=>{
+    const b=document.createElement('button');
+    b.className='case';
+    b.innerHTML=`
+      <span class="idx">${i+1}</span>
+      <span class="body">
+        <h3>${esc(loc.label)}</h3>
+        <p class="party">${esc(loc.party)}</p>
+        ${pill(loc.status)}
+      </span>
+      <span class="arrow" aria-hidden="true">›</span>`;
+    b.addEventListener('click',()=>openDetail(loc.id));
+    caseList.appendChild(b);
+  });
+}
+
+/* ---------------- DETAIL SHEET ---------------- */
+const sheet=document.getElementById('sheet');
+const sheetScroll=document.getElementById('sheetScroll');
+const submitSheet=document.getElementById('submitSheet');
+const scrim=document.getElementById('scrim');
+let lastFocus=null;
+
+function openDetail(id){
+  const loc=LOCS.find(l=>l.id===id); if(!loc) return;
+  const cur=STATUS[loc.status].step;
+  const track=STEPS.map((s,idx)=>{
+    const cls=idx<cur?'done':idx===cur?'current done':'';
+    return `<div class="step ${cls}"><div class="node"></div><div class="lbl">${s}</div></div>`;
+  }).join('');
+  sheetScroll.innerHTML=`
+    <h2 id="sheetTitle">${esc(loc.label)}</h2>
+    <p class="party">Responsible party: ${esc(loc.party)}</p>
+    <div class="track" aria-label="Progress: ${STATUS[loc.status].label}">${track}</div>
+    <div class="sec-h">Photos</div>
+    <div class="photos">${loc.photos.map(p=>`
+      <figure><img src="${p.src||ph(p.alt)}" alt="${esc(p.alt)}"><figcaption>${esc(p.caption)}</figcaption></figure>`).join('')}
+    </div>
+    <div class="sec-h">The steps we've taken</div>
+    <ul class="log">${loc.events.map(e=>`
+      <li><div class="when">${esc(e.when)}</div><div class="dir">${esc(e.dir)}</div><div class="txt">${esc(e.txt)}</div></li>`).join('')}
+    </ul>`;
+  show(sheet);
+}
+
+/* ---------------- SUBMIT ---------------- */
+document.getElementById('fab').addEventListener('click',()=>show(submitSheet));
+document.getElementById('genBtn').addEventListener('click',()=>{
+  const party=v('f-party')||'whom it may concern', email=v('f-email'),
+        where=v('f-where'), issue=v('f-issue'), name=v('f-name');
+  const subject=`Accessibility barrier at ${where||'your location'}`;
+  const body=`Dear ${party},\n\nI am writing to bring an accessibility barrier to your attention.\n\nLocation: ${where||'[location]'}\nBarrier: ${issue||'[description]'}\n\nThis makes the location difficult or impossible to use for people with disabilities. I respectfully ask that you review this and share what steps you can take to remove the barrier.\n\nThank you for your attention to this matter.\n\nSincerely,\n${name||'[Your name]'}`;
+  window.location.href=`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
+
+/* ---------------- SHEET MECHANICS ---------------- */
+function show(el){
+  lastFocus=document.activeElement;
+  scrim.classList.add('show');
+  el.classList.add('show'); el.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  const f=el.querySelector('button,input,textarea,[tabindex]'); if(f) f.focus();
+  el.addEventListener('keydown',trap);
+}
+function hideAll(){
+  [sheet,submitSheet].forEach(el=>{el.classList.remove('show'); el.setAttribute('aria-hidden','true'); el.removeEventListener('keydown',trap);});
+  scrim.classList.remove('show'); document.body.style.overflow='';
+  if(lastFocus) lastFocus.focus();
+}
+function trap(e){
+  if(e.key==='Escape'){hideAll(); return;}
+  if(e.key!=='Tab') return;
+  const f=[...e.currentTarget.querySelectorAll('button,input,textarea,a[href],[tabindex]')].filter(x=>!x.disabled&&x.offsetParent!==null);
+  if(!f.length) return;
+  const first=f[0], last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault(); last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault(); first.focus();}
+}
+scrim.addEventListener('click',hideAll);
+
+/* swipe-down to dismiss */
+[sheet,submitSheet].forEach(el=>{
+  let sy=0,dy=0,drag=false;
+  const grab=el.querySelector('.grab');
+  const start=e=>{drag=true; sy=(e.touches?e.touches[0].clientY:e.clientY); el.style.transition='none';};
+  const move=e=>{if(!drag)return; dy=Math.max(0,(e.touches?e.touches[0].clientY:e.clientY)-sy); el.style.transform=`translateX(-50%) translateY(${dy}px)`;};
+  const end=()=>{if(!drag)return; drag=false; el.style.transition=''; if(dy>110)hideAll(); else el.style.transform='translateX(-50%) translateY(0)'; dy=0;};
+  grab.addEventListener('touchstart',start); grab.addEventListener('touchmove',move); grab.addEventListener('touchend',end);
+  grab.addEventListener('mousedown',start); window.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
+});
+
+/* ---------------- TABS ---------------- */
+const tabMap=document.getElementById('tab-map'), tabList=document.getElementById('tab-list');
+const viewMap=document.getElementById('view-map'), viewList=document.getElementById('view-list'), mapSpacer=document.getElementById('mapSpacer');
+function selTab(which){
+  const m=which==='map';
+  tabMap.setAttribute('aria-selected',m); tabList.setAttribute('aria-selected',!m);
+  viewMap.hidden=!m; viewList.hidden=m; mapSpacer.style.display=m?'block':'none';
+}
+tabMap.addEventListener('click',()=>selTab('map'));
+tabList.addEventListener('click',()=>selTab('list'));
+
+/* ---------------- helpers ---------------- */
+function v(id){return document.getElementById(id).value.trim();}
+function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function ph(alt){return "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='150'><rect width='200' height='150' fill='%23e2e8e3'/><text x='100' y='78' font-family='sans-serif' font-size='12' fill='%2390a092' text-anchor='middle'>photo to be added</text></svg>`);}
+</script>
+</body>
+</html>
