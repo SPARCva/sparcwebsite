@@ -344,89 +344,6 @@
             .panel-card { padding: 30px; }
         }
 
-        /* ===== Call for Posters ===== */
-        .summit-posters {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #1a3a5c 100%);
-            color: white;
-        }
-        .posters-inner {
-            max-width: 850px;
-            margin: 0 auto;
-        }
-        .posters-glass {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 45px;
-            backdrop-filter: blur(10px);
-        }
-        .posters-glass p {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: rgba(255,255,255,0.9);
-        }
-        .posters-glass h3 {
-            color: var(--sparc-kelly-green);
-            margin-bottom: 12px;
-        }
-        .posters-topics {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-        }
-        .posters-topics li {
-            padding: 10px 16px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            transition: background 0.2s ease;
-        }
-        .posters-topics li:hover {
-            background: rgba(255,255,255,0.14);
-        }
-        .posters-topics li .check {
-            color: var(--sparc-kelly-green);
-            font-weight: 700;
-        }
-        .posters-deadline {
-            background: var(--sparc-kelly-green);
-            color: white;
-            padding: 18px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.05rem;
-        }
-        .posters-cta {
-            text-align: center;
-        }
-        .posters-cta .btn {
-            background: white;
-            color: var(--sparc-dark-navy);
-            padding: 16px 40px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            border-radius: 8px;
-            display: inline-block;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .posters-cta .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-        .posters-cta p {
-            margin-top: 12px;
-            font-size: 0.9rem;
-            opacity: 0.85;
-        }
-
         /* ===== Summit Planning Committee Thank You ===== */
         .summit-committee {
             padding: 80px 0;
@@ -846,6 +763,8 @@
             width: auto;
             height: auto;
             object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
         .sponsor-logos-row {
             display: flex;
@@ -1250,48 +1169,6 @@
                     </div>
                 </div>
 
-            </div>
-        </section>
-
-        <!-- Call for Posters Section -->
-        <section id="call-for-posters" class="summit-posters">
-            <div class="container">
-                <div class="section-header fade-in" style="text-align: center;">
-                    <h2 style="color: white;">Call for Posters</h2>
-                    <p style="color: rgba(255,255,255,0.85); font-size: 1.1rem; max-width: 800px; margin: 0 auto;">Share your research, insights, and innovations at the 2026 SPARC Summit</p>
-                </div>
-
-                <div class="posters-inner fade-in">
-                    <div class="posters-glass">
-                        <p style="margin-bottom: 30px;">
-                            Join SPARC and George Washington University for a landmark gathering of thought leaders, policymakers, healthcare professionals, families, and self-advocates committed to one simple truth: <strong>Dignity is not a privilege &ndash; it's a right.</strong>
-                        </p>
-
-                        <h3>Submission Guidelines</h3>
-                        <p style="margin-bottom: 20px;">Please submit a <strong>200&ndash;300 word abstract</strong>. Possible topics include:</p>
-
-                        <ul class="posters-topics">
-                            <li><span class="check">&#10003;</span> Examining limiting narratives</li>
-                            <li><span class="check">&#10003;</span> Recognizing systemic barriers</li>
-                            <li><span class="check">&#10003;</span> Universal design &amp; technology</li>
-                            <li><span class="check">&#10003;</span> Health equity</li>
-                            <li><span class="check">&#10003;</span> Any relevant topic</li>
-                        </ul>
-
-                        <p style="margin-bottom: 25px;">
-                            The authors of the top selected abstracts will have an opportunity to <strong>present their posters in person</strong>. There will also be a <strong>virtual poster session</strong> for other selected abstracts.
-                        </p>
-
-                        <div class="posters-deadline">
-                            <strong>Deadline:</strong> May 31st, 2026
-                        </div>
-
-                        <div class="posters-cta">
-                            <a href="mailto:BIC@gwu.edu?subject=SPARC%202026%20Summit%20-%20Poster%20Abstract%20Submission&body=Please%20attach%20your%20abstract%20(Word%20or%20PDF)%20to%20this%20email.%0A%0AName%3A%0AOrganization%3A%0AAbstract%20Title%3A%0A%0A" class="btn">Submit Your Abstract</a>
-                            <p>Submit abstracts (Word or PDF) to <strong>BIC@gwu.edu</strong></p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
