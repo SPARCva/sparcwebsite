@@ -1058,7 +1058,7 @@
         .page-gala .gala-hero-grid {
             display: grid;
             grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-            align-items: center;
+            align-items: end; /* bottom of arch lines up with bottom of the date card */
             gap: 56px;
             max-width: 1080px;
             margin: 0 auto;
@@ -1143,7 +1143,7 @@
 
         /* ---------- Primary CTAs (restyle only — handlers untouched) ---------- */
         .page-gala .gala-hero-buttons {
-            margin-top: 30px;
+            margin: 0 0 26px; /* buttons sit above the date card */
             gap: 14px;
         }
         /* Equal-width CTAs so the stacked pair reads as intentional */
@@ -1637,6 +1637,11 @@
               </div>
 
               <div class="gala-hero-info-col">
+                <div class="gala-hero-buttons">
+                    <a href="javascript:void(0)" onclick="selectTier('4925440')" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
+                    <a href="javascript:void(0)" onclick="document.querySelector('.tiers-section').scrollIntoView({behavior:'smooth'})" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
+                </div>
+
                 <!-- Date / venue block: live text styled after the date-venue graphic -->
                 <div class="gala-datecard">
                     <span class="gala-sun" aria-hidden="true">
@@ -1667,11 +1672,6 @@
                      Uncomment to add the theme statement line under the hero:
                 <p class="gala-theme-line">Adventure Begins with Inclusion.</p>
                 -->
-
-                <div class="gala-hero-buttons">
-                    <a href="javascript:void(0)" onclick="selectTier('4925440')" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
-                    <a href="javascript:void(0)" onclick="document.querySelector('.tiers-section').scrollIntoView({behavior:'smooth'})" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
-                </div>
               </div>
             </div>
         </div>
