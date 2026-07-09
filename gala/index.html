@@ -1054,17 +1054,33 @@
         .page-gala .gala-hero::after {
             display: none;
         }
+        /* Two-column hero: arch lockup beside the date/venue + CTAs */
+        .page-gala .gala-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+            align-items: center;
+            gap: 56px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        .page-gala .gala-hero-arch-col {
+            display: flex;
+            justify-content: center;
+        }
+        .page-gala .gala-hero-info-col {
+            text-align: center;
+        }
         .page-gala .gala-arch {
             display: block;
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             height: auto;
-            margin: 0 auto 34px;
+            margin: 0 auto;
         }
 
         /* Date / venue block — live text framed in a gold hairline */
         .page-gala .gala-datecard {
-            max-width: 540px;
+            max-width: 480px;
             margin: 0 auto;
             padding: 30px 34px;
             background: #ffffff;
@@ -1127,8 +1143,12 @@
 
         /* ---------- Primary CTAs (restyle only — handlers untouched) ---------- */
         .page-gala .gala-hero-buttons {
-            margin-top: 36px;
-            gap: 16px;
+            margin-top: 30px;
+            gap: 14px;
+        }
+        /* Equal-width CTAs so the stacked pair reads as intentional */
+        .page-gala .gala-hero-info-col .gala-btn {
+            min-width: 266px;
         }
         .page-gala .gala-btn {
             border-radius: 999px;
@@ -1456,6 +1476,20 @@
         }
 
         /* ---------- Responsive tweaks ---------- */
+        /* Collapse the two-column hero to a single centered column */
+        @media (max-width: 900px) {
+            .page-gala .gala-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                max-width: 560px;
+            }
+            .page-gala .gala-hero-arch-col {
+                order: -1;
+            }
+            .page-gala .gala-arch {
+                max-width: 400px;
+            }
+        }
         @media (max-width: 768px) {
             .page-gala .gala-hero {
                 padding: 92px 0 40px;
@@ -1591,15 +1625,18 @@
     <!-- Gala Hero Header -->
     <section class="gala-hero">
         <div class="container gala-hero-content">
-            <div class="gala-hero-text">
-                <!-- Real <h1> kept in the DOM for SEO / screen readers; the visible
-                     title lives inside the arch lockup image below. -->
-                <h1 class="gala-sr-only">An Evening to SPARCle &mdash; Adventure Begins with Inclusion</h1>
+            <!-- Real <h1> kept in the DOM for SEO / screen readers; the visible
+                 title lives inside the arch lockup image. -->
+            <h1 class="gala-sr-only">An Evening to SPARCle &mdash; Adventure Begins with Inclusion</h1>
 
+            <div class="gala-hero-grid">
+              <div class="gala-hero-arch-col">
                 <img src="/images/gala/sparcle-arch-lockup.png"
                      alt="An Evening to SPARCle — Adventure Begins with Inclusion"
                      class="gala-arch" width="480" height="500">
+              </div>
 
+              <div class="gala-hero-info-col">
                 <!-- Date / venue block: live text styled after the date-venue graphic -->
                 <div class="gala-datecard">
                     <span class="gala-sun" aria-hidden="true">
@@ -1635,6 +1672,7 @@
                     <a href="javascript:void(0)" onclick="selectTier('4925440')" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
                     <a href="javascript:void(0)" onclick="document.querySelector('.tiers-section').scrollIntoView({behavior:'smooth'})" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
                 </div>
+              </div>
             </div>
         </div>
     </section>
