@@ -18,7 +18,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
@@ -976,6 +976,518 @@
                 margin: 0 auto;
             }
         }
+
+        /* ============================================================
+           2026 SAFARI THEME — "Adventure Begins with Inclusion"
+           Elegant safari reskin, scoped to .page-gala so nothing
+           leaks onto other pages. Tokens pulled from the arch graphic.
+           ============================================================ */
+        .page-gala {
+            --gala-green-deep:  #184030; /* headings, dark buttons, body text on ivory */
+            --gala-green-dark:  #082820; /* acacia silhouettes / deepest shade */
+            --gala-green-sage:  #587860; /* "SPARCle" wordmark green, secondary accents */
+            --gala-gold:        #D8A040; /* primary gold — borders, dividers, sun */
+            --gala-gold-bright: #E8B850; /* lighter gold for button gradient top */
+            --gala-gold-deep:   #B88020; /* ochre — small-caps labels, gradient bottom */
+            --gala-ivory:       #F8F8F0; /* warm background (NOT pure white) */
+            --gala-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+            background: var(--gala-ivory);
+        }
+
+        /* Screen-reader-only heading helper (keeps a real <h1> in the DOM) */
+        .page-gala .gala-sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Visible focus ring for every interactive element on the page */
+        .page-gala a:focus-visible,
+        .page-gala button:focus-visible,
+        .page-gala .btn:focus-visible,
+        .page-gala [onclick]:focus-visible {
+            outline: 3px solid var(--gala-gold-deep);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* ---------- Reusable gold-diamond divider ---------- */
+        .page-gala .gala-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 320px;
+            margin: 18px auto;
+        }
+        .page-gala .gala-divider .gala-divider-rule {
+            flex: 1;
+            height: 1px;
+            background: var(--gala-gold);
+            opacity: 0.85;
+        }
+        .page-gala .gala-divider .gala-divider-diamond {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+            background: var(--gala-gold);
+        }
+        /* Section-to-section divider band on the ivory field */
+        .page-gala .gala-section-divider {
+            background: var(--gala-ivory);
+            padding: 26px 0;
+        }
+
+        /* ---------- Hero (arch centerpiece) ---------- */
+        .page-gala .gala-hero {
+            background: var(--gala-ivory);
+            padding: 116px 0 54px;
+            overflow: hidden;
+        }
+        /* Remove the old blue radial glows meant for the dark hero */
+        .page-gala .gala-hero::before,
+        .page-gala .gala-hero::after {
+            display: none;
+        }
+        .page-gala .gala-arch {
+            display: block;
+            width: 100%;
+            max-width: 480px;
+            height: auto;
+            margin: 0 auto 34px;
+        }
+
+        /* Date / venue block — live text framed in a gold hairline */
+        .page-gala .gala-datecard {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 30px 34px;
+            background: #ffffff;
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(24, 64, 48, 0.06);
+        }
+        .page-gala .gala-sun {
+            display: inline-block;
+            color: var(--gala-gold);
+            line-height: 0;
+            margin-bottom: 12px;
+        }
+        .page-gala .gala-date {
+            font-family: var(--gala-serif);
+            font-size: 2rem;
+            line-height: 1.15;
+            font-weight: 600;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .gala-time {
+            /* Sized as WCAG "large text" (>=18.66px bold) so ochre-on-white passes AA */
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gala-gold-deep);
+            margin-top: 10px;
+        }
+        .page-gala .gala-datecard .gala-divider {
+            margin: 16px auto;
+            max-width: 180px;
+        }
+        .page-gala .gala-venue {
+            font-family: var(--gala-serif);
+            font-style: italic;
+            font-size: 1.45rem;
+            line-height: 1.3;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .gala-city {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gala-green-sage);
+            margin-top: 8px;
+        }
+
+        /* Optional themed one-liner under the hero (see draft in markup) */
+        .page-gala .gala-theme-line {
+            max-width: 620px;
+            margin: 30px auto 0;
+            font-family: var(--gala-serif);
+            font-style: italic;
+            font-size: 1.35rem;
+            color: var(--gala-green-sage);
+            text-align: center;
+        }
+
+        /* ---------- Primary CTAs (restyle only — handlers untouched) ---------- */
+        .page-gala .gala-hero-buttons {
+            margin-top: 36px;
+            gap: 16px;
+        }
+        .page-gala .gala-btn {
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .page-gala .gala-btn-tickets {
+            background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%);
+            color: var(--gala-green-deep);
+            border: 1px solid var(--gala-gold-bright);
+            box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.5),
+                        0 4px 14px rgba(184, 128, 32, 0.28);
+        }
+        .page-gala .gala-btn-tickets:hover {
+            background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%);
+            color: var(--gala-green-deep);
+            transform: translateY(-2px);
+        }
+        .page-gala .gala-btn-sponsorships {
+            background: var(--gala-green-deep);
+            color: var(--gala-gold);
+            border: 1.5px solid var(--gala-gold);
+        }
+        .page-gala .gala-btn-sponsorships:hover {
+            background: var(--gala-green-dark);
+            color: var(--gala-gold-bright);
+            transform: translateY(-2px);
+        }
+
+        /* ---------- Shared section-header treatment ---------- */
+        .page-gala .section-header h2,
+        .page-gala .tiers-section .section-header h2,
+        .page-gala .tickets-section .section-header h2,
+        .page-gala .sponsor-carousel-section .section-header h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-green-deep);
+            font-size: 2.5rem;
+        }
+        .page-gala .section-header p,
+        .page-gala .tiers-section .section-header p,
+        .page-gala .tickets-section .section-header p {
+            color: var(--gala-green-deep);
+        }
+
+        /* ---------- About ---------- */
+        .page-gala .about-content {
+            background: var(--gala-ivory);
+        }
+        .page-gala .about-text h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .about-text,
+        .page-gala .about-text p,
+        .page-gala .about-text li {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .about-image img {
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 8px;
+        }
+
+        /* ---------- "Why We Ask for Your Support" ---------- */
+        .page-gala .gala-support-section {
+            background: var(--gala-ivory);
+            padding: 74px 0 8px;
+            text-align: center;
+        }
+        .page-gala .gala-support-section h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            font-size: 2.7rem;
+            line-height: 1.15;
+            color: var(--gala-green-deep);
+            margin-bottom: 6px;
+        }
+        .page-gala .gala-support-lead {
+            max-width: 740px;
+            margin: 22px auto 0;
+            font-size: 1.12rem;
+            line-height: 1.75;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .gala-support-lead + .gala-support-lead {
+            margin-top: 16px;
+        }
+
+        /* ---------- Honoree / award / MC sections (deep-green field) ---------- */
+        .page-gala .hero-award-section {
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+        }
+        .page-gala .hero-award-section h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            font-size: 2.4rem;
+            color: var(--gala-ivory);
+        }
+        .page-gala .hero-award-section .award-subtitle {
+            color: rgba(248, 248, 240, 0.85);
+        }
+        .page-gala .hero-award-card {
+            background: rgba(248, 248, 240, 0.06);
+            border: 1px solid var(--gala-gold);
+            border-radius: 10px;
+        }
+        .page-gala .hero-award-card .honoree-photo {
+            border-color: var(--gala-gold);
+        }
+        .page-gala .hero-award-card .honoree-name {
+            color: var(--gala-ivory);
+        }
+        .page-gala .hero-award-card .honoree-title {
+            color: rgba(248, 248, 240, 0.85);
+        }
+        .page-gala .hero-award-description {
+            color: rgba(248, 248, 240, 0.92);
+        }
+
+        /* ---------- Sponsor carousel ---------- */
+        .page-gala .sponsor-carousel-section {
+            background: var(--gala-ivory);
+        }
+        .page-gala .sponsor-carousel-section .section-header h2 {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .sponsor-carousel-section .section-header p {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .sponsor-carousel-wrapper::before {
+            background: linear-gradient(to right, var(--gala-ivory), transparent);
+        }
+        .page-gala .sponsor-carousel-wrapper::after {
+            background: linear-gradient(to left, var(--gala-ivory), transparent);
+        }
+        .page-gala .sponsor-slide {
+            background: #ffffff;
+            border: 1px solid var(--gala-gold);
+            border-radius: 8px;
+        }
+
+        /* ---------- Sponsorship tiers ---------- */
+        .page-gala .tiers-section {
+            background: var(--gala-ivory);
+        }
+        .page-gala .tier-card {
+            background: var(--gala-ivory);
+            border: 1px solid var(--gala-gold);
+        }
+        .page-gala .tier-card:hover {
+            border-color: var(--gala-gold-deep);
+        }
+        .page-gala .tier-header {
+            background: rgba(216, 160, 64, 0.09);
+        }
+        .page-gala .tier-name {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .tier-price {
+            font-family: var(--gala-serif);
+            font-weight: 700;
+            color: var(--gala-gold-deep);
+        }
+        .page-gala .tier-tickets {
+            background: var(--gala-green-deep);
+            color: var(--gala-ivory);
+        }
+        .page-gala .tier-benefits li {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .tier-benefits li::before {
+            color: var(--gala-gold-deep);
+        }
+        .page-gala .tier-card.featured {
+            border: 2px solid var(--gala-gold-deep);
+        }
+        .page-gala .tier-card.featured::before {
+            background: var(--gala-green-deep);
+            color: var(--gala-gold);
+        }
+
+        /* Event Sponsor headline card */
+        .page-gala .event-sponsor-card {
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            border: 1.5px solid var(--gala-gold);
+        }
+        .page-gala .event-sponsor-info h3 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-ivory);
+        }
+        .page-gala .event-sponsor-info .price {
+            color: var(--gala-gold);
+        }
+        .page-gala .event-sponsor-benefits li::before {
+            color: var(--gala-gold);
+        }
+
+        /* ---------- Tickets & raffle ---------- */
+        .page-gala .tickets-section {
+            background: var(--gala-ivory);
+        }
+        .page-gala .ticket-card {
+            background: var(--gala-ivory);
+            border: 1px solid var(--gala-gold);
+        }
+        .page-gala .ticket-card:hover {
+            border-color: var(--gala-gold-deep);
+        }
+        .page-gala .ticket-card-header {
+            background: linear-gradient(135deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            color: var(--gala-ivory);
+        }
+        .page-gala .ticket-card-header.raffle-header {
+            background: linear-gradient(135deg, var(--gala-green-sage) 0%, var(--gala-green-deep) 100%);
+        }
+        .page-gala .ticket-card-body .ticket-price {
+            font-family: var(--gala-serif);
+            font-weight: 700;
+            color: var(--gala-gold-deep);
+        }
+        .page-gala .ticket-card-body .ticket-desc,
+        .page-gala .ticket-card-body .ticket-per {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .ticket-card-body .ticket-savings {
+            background: rgba(216, 160, 64, 0.16);
+            color: var(--gala-green-deep);
+        }
+
+        /* ---------- Card action buttons (deep-green / gold hairline) ---------- */
+        .page-gala .tier-cta .btn-outline,
+        .page-gala .ticket-card-cta .btn-outline {
+            background: transparent;
+            color: var(--gala-green-deep);
+            border: 1.5px solid var(--gala-green-deep);
+        }
+        .page-gala .tier-cta .btn-outline:hover,
+        .page-gala .ticket-card-cta .btn-outline:hover {
+            background: var(--gala-green-deep);
+            color: var(--gala-ivory);
+        }
+        .page-gala .btn-primary {
+            background: var(--gala-green-deep);
+            color: var(--gala-ivory);
+        }
+        .page-gala .btn-primary:hover {
+            background: var(--gala-green-dark);
+            color: var(--gala-ivory);
+        }
+        .page-gala .event-sponsor-card .btn-white {
+            background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%);
+            color: var(--gala-green-deep);
+        }
+        .page-gala .event-sponsor-card .btn-white:hover {
+            background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%);
+            color: var(--gala-green-deep);
+        }
+
+        /* ---------- Photo gallery ---------- */
+        .page-gala .photo-carousel-section {
+            background: var(--gala-ivory);
+        }
+        .page-gala .photo-carousel-section .section-header h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .photo-carousel-section .section-header p {
+            color: var(--gala-green-deep);
+        }
+        .page-gala .photo-carousel-wrapper::before {
+            background: linear-gradient(to right, var(--gala-ivory), transparent);
+        }
+        .page-gala .photo-carousel-wrapper::after {
+            background: linear-gradient(to left, var(--gala-ivory), transparent);
+        }
+        .page-gala .photo-slide {
+            border: 1px solid var(--gala-gold);
+        }
+        .page-gala .photo-slide .download-btn svg {
+            color: var(--gala-green-deep);
+        }
+
+        /* ---------- Acacia silhouette band (footer transition) ---------- */
+        .page-gala .gala-acacia-band {
+            background: var(--gala-ivory);
+            line-height: 0;
+        }
+        .page-gala .gala-acacia-band svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* ---------- Closing CTA ---------- */
+        .page-gala .cta-section {
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+        }
+        .page-gala .cta-content h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-ivory);
+        }
+        .page-gala .cta-content p {
+            color: var(--gala-ivory);
+        }
+        .page-gala .cta-section .btn-white {
+            background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%);
+            color: var(--gala-green-deep);
+        }
+        .page-gala .cta-section .btn-white:hover {
+            background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%);
+            color: var(--gala-green-deep);
+        }
+        .page-gala .cta-section .btn-secondary {
+            border-color: var(--gala-gold);
+            color: var(--gala-ivory);
+        }
+        .page-gala .cta-section .btn-secondary:hover {
+            background: var(--gala-gold);
+            color: var(--gala-green-deep);
+        }
+
+        /* ---------- Responsive tweaks ---------- */
+        @media (max-width: 768px) {
+            .page-gala .gala-hero {
+                padding: 92px 0 40px;
+            }
+            .page-gala .gala-arch {
+                max-width: 340px;
+            }
+            .page-gala .gala-date {
+                font-size: 1.6rem;
+            }
+            .page-gala .gala-venue {
+                font-size: 1.2rem;
+            }
+            .page-gala .section-header h2,
+            .page-gala .tiers-section .section-header h2,
+            .page-gala .tickets-section .section-header h2,
+            .page-gala .sponsor-carousel-section .section-header h2,
+            .page-gala .gala-support-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* ---------- Reduced motion (disable the hover lifts we added) ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            .page-gala .gala-btn,
+            .page-gala .gala-btn-tickets:hover,
+            .page-gala .gala-btn-sponsorships:hover {
+                transition: none;
+                transform: none;
+            }
+        }
+
     </style>
     <!-- Meta Pixel Code -->
     <script>
@@ -991,7 +1503,7 @@
     src="https://www.facebook.com/tr?id=1437835858120669&ev=PageView&noscript=1"/></noscript>
     <!-- End Meta Pixel Code -->
 </head>
-<body>
+<body class="page-gala">
     <!-- Skip to Content Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -1078,28 +1590,50 @@
 
     <!-- Gala Hero Header -->
     <section class="gala-hero">
-        <div class="gala-hero-overlay"></div>
         <div class="container gala-hero-content">
             <div class="gala-hero-text">
-                <h1>An Evening to SPARCle</h1>
-                <p class="gala-hero-subtitle">Our signature annual celebration of community, gratitude, and impact</p>
-                <div class="gala-hero-details">
-                    <div class="gala-hero-detail">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                        <span>November 14, 2026</span>
+                <!-- Real <h1> kept in the DOM for SEO / screen readers; the visible
+                     title lives inside the arch lockup image below. -->
+                <h1 class="gala-sr-only">An Evening to SPARCle &mdash; Adventure Begins with Inclusion</h1>
+
+                <img src="/images/gala/sparcle-arch-lockup.png"
+                     alt="An Evening to SPARCle — Adventure Begins with Inclusion"
+                     class="gala-arch" width="480" height="500">
+
+                <!-- Date / venue block: live text styled after the date-venue graphic -->
+                <div class="gala-datecard">
+                    <span class="gala-sun" aria-hidden="true">
+                        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" focusable="false" aria-hidden="true">
+                            <path d="M6 34h36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M24 34a10 10 0 0 1 20 0" fill="currentColor" opacity="0.9"/>
+                            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <path d="M24 8v6"/>
+                                <path d="M10.5 13.5l4 4"/>
+                                <path d="M37.5 13.5l-4 4"/>
+                                <path d="M4 27h5"/>
+                                <path d="M44 27h-5"/>
+                            </g>
+                        </svg>
+                    </span>
+                    <p class="gala-date">Saturday, November 14, 2026</p>
+                    <p class="gala-time">4 PM &ndash; 7 PM</p>
+                    <div class="gala-divider" aria-hidden="true">
+                        <span class="gala-divider-rule"></span>
+                        <span class="gala-divider-diamond"></span>
+                        <span class="gala-divider-rule"></span>
                     </div>
-                    <div class="gala-hero-detail">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        <span>4:00 PM</span>
-                    </div>
-                    <div class="gala-hero-detail">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        <span>Washington Dulles Airport Marriott</span>
-                    </div>
+                    <p class="gala-venue">Washington Dulles Airport Marriott</p>
+                    <p class="gala-city">Dulles, Virginia</p>
                 </div>
+
+                <!-- OPTIONAL THEME CONTENT (draft — pending Erica's approval).
+                     Uncomment to add the theme statement line under the hero:
+                <p class="gala-theme-line">Adventure Begins with Inclusion.</p>
+                -->
+
                 <div class="gala-hero-buttons">
-                    <a href="javascript:void(0)" onclick="selectTier('4925440')" class="btn btn-white btn-lg">Get Tickets</a>
-                    <a href="javascript:void(0)" onclick="document.querySelector('.tiers-section').scrollIntoView({behavior:'smooth'})" class="btn btn-outline btn-lg" style="border-color: white; color: white;">View Sponsorships</a>
+                    <a href="javascript:void(0)" onclick="selectTier('4925440')" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
+                    <a href="javascript:void(0)" onclick="document.querySelector('.tiers-section').scrollIntoView({behavior:'smooth'})" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
                 </div>
             </div>
         </div>
@@ -1130,6 +1664,31 @@
                 </div>
             </div>
         </section>
+
+        <!-- Why We Ask for Your Support -->
+        <section class="gala-support-section">
+            <div class="container">
+                <h2>Why We Ask for Your Support</h2>
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+                <p class="gala-support-lead">Every dollar raised at An Evening to SPARCle goes directly to community-integrated day programs for adults with severe and multiple disabilities across Northern Virginia &mdash; programs that public funding alone cannot sustain.</p>
+                <p class="gala-support-lead">Your sponsorship, ticket, or raffle purchase helps our participants continue an adventure of connection, purpose, and belonging. Because the adventure begins with inclusion &mdash; and no one should be left behind.</p>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="gala-section-divider">
+            <div class="container">
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+            </div>
+        </div>
 
         <!-- Hero Award Honoree -->
         <section class="hero-award-section">
@@ -1180,6 +1739,17 @@
             </div>
         </section>
 
+        <!-- Divider -->
+        <div class="gala-section-divider">
+            <div class="container">
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+            </div>
+        </div>
+
         <!-- Sponsor Carousel -->
         <section class="sponsor-carousel-section">
             <div class="container">
@@ -1207,6 +1777,17 @@
                 </div>
             </div>
         </section>
+
+        <!-- Divider -->
+        <div class="gala-section-divider">
+            <div class="container">
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+            </div>
+        </div>
 
         <!-- Sponsorship Tiers -->
         <section class="tiers-section">
@@ -1374,6 +1955,17 @@
             </div>
         </section>
 
+        <!-- Divider -->
+        <div class="gala-section-divider">
+            <div class="container">
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+            </div>
+        </div>
+
         <!-- Tickets: Admission + Raffle -->
         <section class="tickets-section">
             <div class="container">
@@ -1468,6 +2060,17 @@
                 </div>
                 <div class="form-wrapper">
                     <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4923392.js" type="text/javascript"></script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="gala-section-divider">
+            <div class="container">
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
                 </div>
             </div>
         </div>
@@ -1616,6 +2219,33 @@
             </div>
         </section>
     </main>
+
+    <!-- Acacia silhouette band — decorative safari accent echoing the arch base -->
+    <div class="gala-acacia-band" aria-hidden="true">
+        <svg viewBox="0 0 1440 130" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <!-- Left umbrella acacia -->
+            <g fill="#082820">
+                <path d="M255 130 L251 74 L246 74 L250 130 Z"/>
+                <path d="M180 76 C 205 52 300 52 322 76 C 306 68 288 66 268 68 C 258 60 240 60 232 68 C 210 66 192 68 180 76 Z"/>
+            </g>
+            <!-- Right umbrella acacia -->
+            <g fill="#082820">
+                <path d="M1130 130 L1126 66 L1120 66 L1124 130 Z"/>
+                <path d="M1040 68 C 1070 40 1188 40 1214 68 C 1194 58 1172 56 1148 58 C 1136 49 1114 49 1104 58 C 1078 56 1055 58 1040 68 Z"/>
+            </g>
+            <!-- Horizon with low shrubs -->
+            <path fill="#082820" d="M0 130 L0 104
+                C 90 96 150 100 210 106
+                C 270 112 320 98 400 104
+                C 470 109 520 118 600 110
+                C 690 101 760 96 840 106
+                C 910 114 980 100 1060 106
+                C 1140 112 1210 100 1290 106
+                C 1360 111 1400 103 1440 108
+                L1440 130 Z"/>
+        </svg>
+    </div>
+
     <!-- Footer -->
     <footer class="footer" style="color: white;">
         <div class="container">
