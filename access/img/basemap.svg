@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" role="img" aria-label="Stylized illustrative map of Reston Town Center">
+  <!-- Original stylized illustration (not derived from any licensed map data). -->
+  <defs>
+    <style>
+      .base   { fill:#e8eee9; }
+      .park   { fill:#cdd8ce; }
+      .park2  { fill:#bcccbe; }
+      .block  { fill:#d9e0da; stroke:#c5d0c6; stroke-width:1.5; }
+      .block2 { fill:#dfe6e0; stroke:#c5d0c6; stroke-width:1.5; }
+      .street { fill:#f4f7f4; }
+      .streetEdge { fill:none; stroke:#c5d0c6; stroke-width:2; }
+      .water  { fill:#bcd3cf; }
+      .plaza  { fill:#d4ddd5; stroke:#c0ccc2; stroke-width:1.5; }
+      .lbl    { fill:#7d8f80; font-family:Georgia,'Times New Roman',serif; font-size:15px; letter-spacing:.5px; }
+      .lblSm  { fill:#8a9a8c; font-family:Georgia,'Times New Roman',serif; font-size:12px; }
+      .lblStreet { fill:#98a89a; font-family:Georgia,serif; font-size:12.5px; letter-spacing:1.5px; }
+      .tree   { fill:#b3c4b5; }
+    </style>
+  </defs>
+
+  <!-- ground -->
+  <rect class="base" width="900" height="620"/>
+
+  <!-- ================= STREETS (ribbons) ================= -->
+  <!-- Market Street: main horizontal spine -->
+  <rect class="street" x="0" y="286" width="900" height="48"/>
+  <rect class="streetEdge" x="0" y="286" width="900" height="48"/>
+  <!-- Democracy Drive: lower horizontal -->
+  <rect class="street" x="0" y="470" width="900" height="40"/>
+  <rect class="streetEdge" x="0" y="470" width="900" height="40"/>
+  <!-- Cross streets: Library / St. Francis / Explorer -->
+  <rect class="street" x="196" y="0" width="40" height="620"/>
+  <rect class="streetEdge" x="196" y="0" width="40" height="620"/>
+  <rect class="street" x="430" y="0" width="44" height="620"/>
+  <rect class="streetEdge" x="430" y="0" width="44" height="620"/>
+  <rect class="street" x="664" y="0" width="40" height="620"/>
+  <rect class="streetEdge" x="664" y="0" width="40" height="620"/>
+
+  <!-- ================= BLOCKS ================= -->
+  <!-- top row -->
+  <rect class="block"  x="36"  y="40"  width="150" height="230" rx="6"/>
+  <rect class="block2" x="246" y="40"  width="176" height="230" rx="6"/>
+  <rect class="block"  x="484" y="40"  width="170" height="230" rx="6"/>
+  <rect class="block2" x="714" y="40"  width="150" height="230" rx="6"/>
+  <!-- middle row (between Market St and Democracy Dr) -->
+  <rect class="block2" x="36"  y="344" width="150" height="118" rx="6"/>
+  <rect class="block"  x="714" y="344" width="150" height="118" rx="6"/>
+  <!-- bottom row -->
+  <rect class="block"  x="36"  y="520" width="150" height="70"  rx="6"/>
+  <rect class="block2" x="246" y="520" width="176" height="70"  rx="6"/>
+  <rect class="block"  x="484" y="520" width="170" height="70"  rx="6"/>
+  <rect class="block2" x="714" y="520" width="150" height="70"  rx="6"/>
+
+  <!-- ================= FOUNTAIN SQUARE (central plaza) ================= -->
+  <rect class="plaza" x="246" y="344" width="408" height="118" rx="8"/>
+  <!-- paving suggestion -->
+  <line x1="246" y1="403" x2="654" y2="403" stroke="#c6d0c7" stroke-width="1"/>
+  <line x1="380" y1="344" x2="380" y2="462" stroke="#c6d0c7" stroke-width="1"/>
+  <line x1="520" y1="344" x2="520" y2="462" stroke="#c6d0c7" stroke-width="1"/>
+  <!-- the fountain -->
+  <circle cx="450" cy="403" r="34" class="water"/>
+  <circle cx="450" cy="403" r="34" fill="none" stroke="#a8c0bb" stroke-width="2"/>
+  <circle cx="450" cy="403" r="15" fill="#a8c8c2"/>
+  <circle cx="450" cy="403" r="5"  fill="#e8eee9"/>
+  <text class="lbl" x="450" y="356" text-anchor="middle">Fountain Square</text>
+
+  <!-- ================= PAVILION ================= -->
+  <g>
+    <rect x="512" y="88" width="120" height="130" rx="6" fill="#d0dbd2" stroke="#bcccbe" stroke-width="1.5"/>
+    <!-- pavilion roof glyph -->
+    <path d="M572 108 L610 150 L534 150 Z" fill="#b3c4b5"/>
+    <rect x="546" y="150" width="52" height="48" fill="#c4d1c6"/>
+    <text class="lblSm" x="572" y="210" text-anchor="middle">Pavilion</text>
+  </g>
+
+  <!-- ================= GREEN / TREES ================= -->
+  <g class="tree">
+    <circle cx="70"  cy="360" r="10"/><circle cx="98" cy="372" r="8"/>
+    <circle cx="760" cy="362" r="10"/><circle cx="792" cy="372" r="8"/>
+    <circle cx="286" cy="70"  r="9"/><circle cx="312" cy="82" r="7"/>
+    <circle cx="806" cy="76"  r="9"/><circle cx="832" cy="88" r="7"/>
+  </g>
+  <!-- a small green corner park -->
+  <rect class="park" x="246" y="520" width="176" height="70" rx="6"/>
+  <ellipse class="park2" cx="334" cy="555" rx="70" ry="24"/>
+  <text class="lblSm" x="334" y="560" text-anchor="middle" fill="#728473">Town Green</text>
+
+  <!-- ================= STREET LABELS ================= -->
+  <text class="lblStreet" x="450" y="316" text-anchor="middle">MARKET  STREET</text>
+  <text class="lblStreet" x="450" y="495" text-anchor="middle">DEMOCRACY  DRIVE</text>
+  <text class="lblStreet" x="216" y="600" text-anchor="middle" transform="rotate(-90 216 600)">LIBRARY ST</text>
+  <text class="lblStreet" x="452" y="600" text-anchor="middle" transform="rotate(-90 452 600)">ST. FRANCIS ST</text>
+  <text class="lblStreet" x="684" y="600" text-anchor="middle" transform="rotate(-90 684 600)">EXPLORER ST</text>
+</svg>
