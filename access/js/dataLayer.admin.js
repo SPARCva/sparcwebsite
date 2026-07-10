@@ -26,7 +26,7 @@ export const DataLayer = {
   // Staff see everything, drafts included (no `published` filter).
   async getAll() {
     const { data, error } = await supabase
-      .from('locations')
+      .from('access_locations')
       .select(LOCATION_SELECT)
       .order('created_at');
     if (error) throw error;
@@ -49,7 +49,7 @@ export const DataLayer = {
     };
 
     const { data: saved, error } = await supabase
-      .from('locations')
+      .from('access_locations')
       .upsert(row)
       .select('id')
       .single();
@@ -57,13 +57,13 @@ export const DataLayer = {
     const id = saved.id;
 
     // Replace children.
-    const { error: dpe } = await supabase.from('photos').delete().eq('location_id', id);
+    const { error: dpe } = await supabase.from('access_photos').delete().eq('location_id', id);
     if (dpe) throw dpe;
-    const { error: dee } = await supabase.from('events').delete().eq('location_id', id);
+    const { error: dee } = await supabase.from('access_events').delete().eq('location_id', id);
     if (dee) throw dee;
 
     if (loc.photos.length) {
-      const { error: pe } = await supabase.from('photos').insert(
+      const { error: pe } = await supabase.from('access_photos').insert(
         loc.photos.map((p, i) => ({
           location_id: id,
           src: p.src,
@@ -76,7 +76,7 @@ export const DataLayer = {
     }
 
     if (loc.events.length) {
-      const { error: ee } = await supabase.from('events').insert(
+      const { error: ee } = await supabase.from('access_events').insert(
         loc.events.map((e, i) => ({
           location_id: id,
           when_label: e.when,
@@ -104,7 +104,7 @@ export const DataLayer = {
       console.warn('Storage cleanup failed (DB rows still cascade-deleted):', e);
     }
     // DB children cascade via the foreign keys.
-    const { error } = await supabase.from('locations').delete().eq('id', id);
+    const { error } = await supabase.from('access_locations').delete().eq('id', id);
     if (error) throw error;
   },
 

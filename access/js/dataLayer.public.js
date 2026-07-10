@@ -11,7 +11,7 @@ import { supabase } from './supabaseClient.js';
 export const DataLayer = {
   async getLocations() {
     const { data, error } = await supabase
-      .from('locations')
+      .from('access_locations')
       .select('id,label,party,status,x,y, photos(src,alt,caption,sort), events(when_label,dir,txt,sort)')
       .eq('published', true)
       .order('created_at');
