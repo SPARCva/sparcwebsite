@@ -3,6 +3,21 @@
 [build]
   publish = "."
 
+# Steps Toward Access app — proxied from its own Netlify site.
+# Must precede the catch-all pretty-URL rule; force=true so no local
+# file can shadow it. The app is built with basePath /accessibility.
+[[redirects]]
+  from = "/accessibility"
+  to = "https://stepstowardaccess.netlify.app/accessibility"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/accessibility/*"
+  to = "https://stepstowardaccess.netlify.app/accessibility/:splat"
+  status = 200
+  force = true
+
 # Redirect board-portal.html to board-portal directory
 [[redirects]]
   from = "/board-portal.html"
