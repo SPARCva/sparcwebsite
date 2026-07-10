@@ -9,9 +9,10 @@
 //
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// Fill these in for your Supabase project before deploying:
-const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
+// Configured for the SPARC "Steps Toward Access" project.
+// Publishable (anon) key — safe in the browser; RLS protects the data.
+const SUPABASE_URL = 'https://ldxpockcgcxvsrbyhcnt.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_3tn2UadRVekIf5Pw6F5z-A_40ZbdvTm';
 
 if (SUPABASE_URL.includes('YOUR-PROJECT')) {
   console.warn(
