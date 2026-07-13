@@ -34,7 +34,7 @@ function ratingMark(rating) {
 }
 function badge(rating) {
   const label = RATING_LABEL[rating];
-  return `<span class="at-badge at-badge--${rating}"><span class="at-badge-mark-wrap" aria-hidden="true">${ratingMark(rating)}</span>${esc(label)}</span>`;
+  return `<span class="at-badge at-badge--${rating}"><span class="at-badge-mark-wrap" aria-hidden="true">${ratingMark(rating)}</span><span class="at-sr">Accessibility rating: </span>${esc(label)}</span>`;
 }
 
 /* responsive <picture>: webp 400/800 + original fallback */
