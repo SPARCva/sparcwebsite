@@ -18,7 +18,7 @@
 (function (global) {
   'use strict';
 
-  var GALA_SPONSORS_API = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+  var GALA_SPONSORS_API = 'https://script.google.com/macros/s/AKfycbyGrTkUFa-EW77MeiMP_lBRioXyY6o5LTRVVCZ47RzZNXMlREn9KAZb2YcCaqSbwr4qeg/exec';
 
   function isConfigured() {
     return GALA_SPONSORS_API && GALA_SPONSORS_API.indexOf('http') === 0;
