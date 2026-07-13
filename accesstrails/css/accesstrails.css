@@ -1,0 +1,189 @@
+/* Access Trails NOVA — section styles for sparcsolutions.org/accesstrails
+   Builds on the shared SPARC brand tokens in /css/styles.css.
+   Component styles specific to the accessibility park guide live here. */
+
+:root {
+  /* Rating palette — chosen for >=4.5:1 text contrast on its own tint.
+     Never used as the ONLY signal: badges always carry a text label + shape. */
+  --rate-acc-bg: #e3f1da;   --rate-acc-fg: #1e5e0a;
+  --rate-part-bg: #fdf3d3;  --rate-part-fg: #6b4e00;
+  --rate-inacc-bg: #fce4e2; --rate-inacc-fg: #8a1c12;
+  --at-line: #d9dee3;
+}
+
+/* ---------- Skip link ---------- */
+.at-skip {
+  position: absolute; left: -9999px; top: 0; z-index: 1000;
+  background: var(--primary-blue); color: #fff; padding: 12px 18px; border-radius: 0 0 6px 0;
+}
+.at-skip:focus { left: 0; color: #fff; }
+
+/* Footer headings: the base h1–h6 rule colours these royal-blue, which fails
+   contrast on the dark-navy footer. Force white (the footer text colour). */
+.accesstrails .footer h3 { color: #fff; font-size: 1.15rem; margin-bottom: 15px; }
+
+/* Visible focus everywhere in the section */
+.accesstrails a:focus-visible,
+.accesstrails button:focus-visible,
+.accesstrails input:focus-visible,
+.accesstrails select:focus-visible,
+.accesstrails textarea:focus-visible,
+.accesstrails [tabindex]:focus-visible {
+  outline: 3px solid var(--primary-blue-light);
+  outline-offset: 2px;
+}
+
+.at-main { padding-top: 90px; }           /* clear the fixed SPARC header */
+.at-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.at-section { padding: 48px 0; }
+
+/* ---------- Local sub-nav (breadcrumb) ---------- */
+.at-subnav { background: var(--sparc-soft-gray); border-bottom: 1px solid var(--at-line); }
+.at-subnav ol { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0;
+  padding: 12px 20px; max-width: 1100px; margin: 0 auto; font-size: .95rem; }
+.at-subnav li { display: flex; align-items: center; gap: 8px; }
+.at-subnav li + li::before { content: "/"; color: var(--medium-gray); }
+.at-subnav a { color: var(--primary-blue); }
+.at-subnav [aria-current="page"] { color: var(--dark-gray); font-weight: 600; }
+
+/* ---------- Hero ---------- */
+.at-hero { background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+  color: #fff; padding: 56px 0; }
+.at-hero h1 { color: #fff; margin-bottom: .5rem; }
+.at-hero .at-tagline { font-size: 1.25rem; max-width: 40ch; color: #eaf2fb; }
+.at-hero-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
+  color: var(--sparc-kelly-green); margin-bottom: .5rem; }
+
+/* ---------- Center cards ("Choose Your Center") ---------- */
+.at-card-grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.at-card { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--at-line);
+  border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s, transform .2s; }
+.at-card:hover, .at-card:focus-within { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.at-card img { aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+.at-card-body { padding: 16px 18px; flex: 1; }
+.at-card-body h3 { margin-bottom: .25rem; font-size: 1.25rem; }
+.at-card-body p { color: var(--medium-gray); margin: 0; font-size: .95rem; }
+.at-card a.at-card-link::after { content: ""; position: absolute; inset: 0; }
+.at-card { position: relative; }
+
+/* ---------- Park grid (on center pages) ---------- */
+.at-park-grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.at-park-card { position: relative; background: #fff; border: 1px solid var(--at-line);
+  border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s, transform .2s; }
+.at-park-card:hover, .at-park-card:focus-within { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.at-park-card img { aspect-ratio: 16/10; object-fit: cover; width: 100%; }
+.at-park-card-body { padding: 16px 18px; }
+.at-park-card-body h3 { font-size: 1.2rem; margin-bottom: .5rem; }
+.at-park-card a::after { content: ""; position: absolute; inset: 0; }
+
+/* ---------- Rating badge (legible without color: label + shape) ---------- */
+.at-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px;
+  border-radius: 999px; font-weight: 600; font-size: .9rem; line-height: 1.3;
+  border: 1.5px solid currentColor; }
+.at-badge .at-badge-mark { width: 1em; height: 1em; flex: none; }
+.at-badge--mostly-accessible { background: var(--rate-acc-bg); color: var(--rate-acc-fg); }
+.at-badge--partially-accessible { background: var(--rate-part-bg); color: var(--rate-part-fg); }
+.at-badge--mostly-inaccessible { background: var(--rate-inacc-bg); color: var(--rate-inacc-fg); }
+
+/* ---------- Park detail ---------- */
+.at-park-hero img { width: 100%; max-height: 460px; object-fit: cover; border-radius: 12px; }
+.at-park-head { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 20px 0 8px; }
+.at-park-head h1 { margin: 0; }
+
+.at-unique { background: var(--rate-acc-bg); border-left: 5px solid var(--sparc-kelly-green-dark);
+  border-radius: 10px; padding: 18px 22px; margin: 24px 0; }
+.at-unique h2 { color: var(--rate-acc-fg); font-size: 1.3rem; margin-bottom: .35rem; }
+.at-unique .at-unique-imgs { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.at-unique .at-unique-imgs img { width: 220px; border-radius: 8px; }
+
+.at-cat { border: 1px solid var(--at-line); border-radius: 12px; padding: 22px; margin: 20px 0;
+  background: #fff; }
+.at-cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap; margin-bottom: 12px; }
+.at-cat-head h2 { margin: 0; font-size: 1.4rem; }
+.at-score { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem;
+  padding: 4px 12px; border-radius: 8px; background: var(--sparc-soft-gray); color: var(--primary-blue);
+  white-space: nowrap; }
+.at-score--na { color: var(--medium-gray); }
+.at-score .at-score-bar { display: block; height: 6px; border-radius: 3px; margin-top: 6px;
+  background: linear-gradient(to right, var(--sparc-kelly-green) var(--pct, 0%), #e3e7eb var(--pct, 0%)); }
+.at-cat ul { margin: 0 0 12px 1.2em; }
+.at-cat li { margin-bottom: .4rem; }
+.at-cat-imgs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.at-cat-imgs img { border-radius: 8px; width: 100%; }
+
+/* ---------- Map + fallback ---------- */
+.at-map { height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--at-line); }
+.at-map:focus-visible { outline: 3px solid var(--primary-blue-light); outline-offset: 2px; }
+.at-map-figure { margin: 20px 0; }
+.at-map-fallback { margin-top: 10px; }
+.at-map-fallback summary { cursor: pointer; font-weight: 600; color: var(--primary-blue); }
+.at-maptable { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.at-maptable th, .at-maptable td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--at-line); }
+.at-maptable th { background: var(--sparc-soft-gray); }
+.no-js .at-map { display: none; }         /* if JS off, hide empty map box; fallback shows */
+
+/* ---------- Address / notes ---------- */
+.at-address { font-style: normal; font-size: 1.05rem; }
+.at-note { background: var(--sparc-soft-gray); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+.at-note h3 { font-size: 1.1rem; margin-bottom: .25rem; }
+.at-extlink { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ---------- About ---------- */
+.at-prose { max-width: 68ch; }
+.at-prose p { margin-bottom: 1.1rem; }
+.at-figrow { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin: 18px 0; }
+.at-figrow img { border-radius: 10px; width: 100%; }
+.at-byline { border: 1px solid var(--at-line); border-left: 5px solid var(--primary-blue);
+  border-radius: 10px; padding: 18px 22px; margin: 26px 0; background: #fff; }
+.at-byline .at-credit-name { font-weight: 700; color: var(--primary-blue); }
+.at-quote { border-left: 5px solid var(--sparc-kelly-green-dark); padding: 8px 0 8px 22px;
+  font-size: 1.3rem; font-style: italic; color: var(--dark-gray); margin: 8px 0; }
+.at-quote-cite { display: flex; align-items: center; gap: 14px; margin-top: 14px; font-style: normal; }
+.at-quote-cite img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+.at-credit-line { font-size: .95rem; color: var(--medium-gray); border-top: 1px solid var(--at-line);
+  margin-top: 28px; padding-top: 16px; }
+
+/* ---------- Contribute form ---------- */
+.at-form { max-width: 640px; }
+.at-field { margin-bottom: 22px; }
+.at-field > label, .at-fieldset > legend { display: block; font-weight: 600; margin-bottom: 6px; }
+.at-req { color: var(--rate-inacc-fg); }
+.at-hint { display: block; color: var(--medium-gray); font-size: .9rem; margin-bottom: 6px; }
+.at-input, .at-textarea, .at-select { width: 100%; padding: 11px 13px; border: 1.5px solid #b9c0c7;
+  border-radius: 8px; font: inherit; background: #fff; }
+.at-textarea { min-height: 130px; resize: vertical; }
+.at-fieldset { border: 1px solid var(--at-line); border-radius: 10px; padding: 14px 18px; margin: 0 0 22px; }
+.at-choice { display: flex; align-items: flex-start; gap: 10px; margin: 8px 0; font-weight: 400; }
+.at-choice input { margin-top: 4px; }
+.at-input[aria-invalid="true"], .at-textarea[aria-invalid="true"], .at-select[aria-invalid="true"] {
+  border-color: var(--rate-inacc-fg); }
+.at-error { color: var(--rate-inacc-fg); font-size: .9rem; margin-top: 5px; font-weight: 600; }
+.at-honey { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.at-submit { background: #256d0a; color: #fff; border: none; padding: 13px 28px;
+  border-radius: 8px; font: 600 1.05rem var(--font-heading); cursor: pointer; }
+.at-submit:hover { background: #1e5e0a; }
+.at-submit:disabled { opacity: .6; cursor: not-allowed; }
+.at-formmsg { padding: 14px 18px; border-radius: 8px; margin-bottom: 20px; }
+.at-formmsg--ok { background: var(--rate-acc-bg); color: var(--rate-acc-fg); }
+.at-formmsg--err { background: var(--rate-inacc-bg); color: var(--rate-inacc-fg); }
+
+/* ---------- misc ---------- */
+.at-btnlink { display: inline-block; background: var(--primary-blue); color: #fff; padding: 11px 22px;
+  border-radius: 8px; font-weight: 600; }
+.at-btnlink:hover { background: var(--primary-blue-light); color: #fff; }
+.at-lead { font-size: 1.2rem; color: var(--medium-gray); max-width: 60ch; }
+.at-muted { color: var(--medium-gray); }
+/* Links inside running text must be distinguishable without colour alone. */
+.at-prose a, .at-muted a, .at-cat a, .at-note a, .at-maptable a, .at-formmsg a,
+.at-hero a, .at-section p a { text-decoration: underline; }
+h1, h2, h3 { scroll-margin-top: 100px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .at-card, .at-park-card { transition: none; }
+  * { scroll-behavior: auto !important; }
+}
+@media (max-width: 600px) {
+  .at-hero { padding: 40px 0; }
+  .at-cat-head { flex-direction: column; }
+}

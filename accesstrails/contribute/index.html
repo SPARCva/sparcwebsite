@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PD1XQ0NDCD');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tell SPARC about an accessible park, an accessible park feature, or a park that needs an ADA feature in Northern Virginia.">
+    <title>Contribute a Park Review | Access Trails NOVA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/accesstrails/css/accesstrails.css">
+</head>
+<body class="accesstrails">
+<a class="at-skip" href="#at-main">Skip to main content</a>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="SPARC - Specially Adapted Resource Centers" style="height: 50px; width: auto;">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/about/" class="nav-link">About</a></li>
+                <li><a href="/programs/" class="nav-link">Programs</a></li>
+                <li><a href="/locations/" class="nav-link">Locations</a></li>
+                <li><a href="/accesstrails/" class="nav-link active">Access Trails</a></li>
+                <li><a href="/get-involved/" class="nav-link">Get Involved</a></li>
+                <li><a href="/donate-checkout/" class="nav-link">Donate</a></li>
+            </ul>
+            <div class="mobile-toggle"><span></span><span></span><span></span></div>
+        </nav>
+    </header><nav class="at-subnav" aria-label="Breadcrumb"><ol><li><a href="/">SPARC</a></li><li><a href="/accesstrails/">Access Trails</a></li><li><span aria-current="page">Contribute a Park Review</span></li></ol></nav><main id="at-main" class="at-main">
+      <section class="at-section"><div class="at-container">
+        <h1>Contribute a Park Review</h1>
+        <p class="at-lead">Know an accessible park, a helpful accessible feature, or a park that still needs one? Share it with SPARC and help grow this guide.</p>
+        <h2>Share a park or feature</h2>
+        <div id="at-form-status" role="status" aria-live="polite"></div>
+        <form class="at-form" id="at-contribute" novalidate>
+          <fieldset class="at-fieldset">
+            <legend>I found a(n): <span class="at-req" aria-hidden="true">*</span></legend>
+            
+            <label class="at-choice"><input type="radio" name="find_type" value="ADA Accessible Park" required aria-describedby="find_type-err"> ADA Accessible Park</label>
+            <label class="at-choice"><input type="radio" name="find_type" value="ADA Accessible Park Feature" required> ADA Accessible Park Feature</label>
+            <label class="at-choice"><input type="radio" name="find_type" value="Park that needs an ADA Feature" required> Park that needs an ADA Feature</label>
+            <p class="at-error" id="find_type-err" hidden>Please choose one option.</p>
+          </fieldset>
+
+          <div class="at-field">
+            <label for="park_name">Park name and city <span class="at-req" aria-hidden="true">*</span></label>
+            <span class="at-hint" id="park_name-hint">For example: "Potomac Crossing Park, Leesburg".</span>
+            <input class="at-input" type="text" id="park_name" name="park_name" required
+                   aria-describedby="park_name-hint park_name-err" autocomplete="off">
+            <p class="at-error" id="park_name-err" hidden>Please enter the park name and city.</p>
+          </div>
+
+          <div class="at-field">
+            <label for="description">Description of feature or suggestion <span class="at-req" aria-hidden="true">*</span></label>
+            <textarea class="at-textarea" id="description" name="description" required
+                      aria-describedby="description-err"></textarea>
+            <p class="at-error" id="description-err" hidden>Please add a short description.</p>
+          </div>
+
+          <fieldset class="at-fieldset">
+            <legend>May we contact you for follow-up? <span class="at-req" aria-hidden="true">*</span></legend>
+            <label class="at-choice"><input type="radio" name="may_contact" value="Yes" required aria-describedby="may_contact-err"> Yes</label>
+            <label class="at-choice"><input type="radio" name="may_contact" value="No"> No</label>
+            <p class="at-error" id="may_contact-err" hidden>Please choose Yes or No.</p>
+          </fieldset>
+
+          <div class="at-field">
+            <label for="first_name">Name <span class="at-muted">(optional)</span></label>
+            <div style="display:flex; gap:12px; flex-wrap:wrap">
+              <input class="at-input" style="flex:1; min-width:140px" type="text" id="first_name" name="first_name" placeholder="First" autocomplete="given-name">
+              <input class="at-input" style="flex:1; min-width:140px" type="text" id="last_name" name="last_name" placeholder="Last" autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="at-field">
+            <label for="contact_method">Preferred method of contact <span class="at-req" aria-hidden="true">*</span></label>
+            <span class="at-hint" id="contact_method-hint">How should we reach you, and at what email or phone number?</span>
+            <select class="at-select" id="contact_method" name="contact_method" required aria-describedby="contact_method-hint contact_method-err" style="margin-bottom:10px">
+              <option value="">Choose one…</option>
+              <option value="Email">Email</option>
+              <option value="Phone call">Phone call</option>
+              <option value="Text message">Text message</option>
+            </select>
+            <input class="at-input" type="text" id="contact_detail" name="contact_detail" placeholder="Email address or phone number" autocomplete="email" aria-label="Email address or phone number">
+            <p class="at-error" id="contact_method-err" hidden>Please choose a preferred method of contact.</p>
+          </div>
+
+          <div class="at-field">
+            <label for="photo">Photo <span class="at-muted">(optional, max 20 MB)</span></label>
+            <span class="at-hint" id="photo-hint">A photo of the feature helps us understand it. JPG or PNG.</span>
+            <input class="at-input" type="file" id="photo" name="photo" accept="image/*" aria-describedby="photo-hint photo-err">
+            <p class="at-error" id="photo-err" hidden>Please choose an image under 20 MB.</p>
+          </div>
+
+          <!-- honeypot: hidden from humans; bots that fill it are rejected -->
+          <div class="at-honey" aria-hidden="true">
+            <label>Leave this field empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <button class="at-submit" type="submit">Submit review</button>
+        </form>
+      </div></section>
+    </main>
+    <footer class="footer" style="color: white;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="/images/SPARC_logo_white.png" alt="SPARC" style="height: 60px; width: auto; margin-bottom: 15px;">
+                    <p>Specially Adapted Resource Centers provides community-integrated day programs for adults with severe and multiple disabilities in Northern Virginia. We believe every adult deserves a meaningful life filled with connection, purpose, and belonging.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Access Trails</h3>
+                    <ul>
+                        <li><a href="/accesstrails/">Guide Home</a></li>
+                        <li><a href="/accesstrails/about/">About the Project</a></li>
+                        <li><a href="/accesstrails/contribute/">Contribute a Review</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>SPARC</h3>
+                    <ul>
+                        <li><a href="/about/">About Us</a></li>
+                        <li><a href="/locations/">Locations</a></li>
+                        <li><a href="/donate-checkout/">Donate</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact</h3>
+                    <p><strong>Mailing Address:</strong><br>1775 Tysons Blvd., Fifth Floor<br>Tysons, VA 22102</p>
+                    <p><strong>Phone:</strong> <a href="tel:571-407-1807" style="color: white;">(571) 407-1807</a></p>
+                    <p><a href="mailto:debi@sparcsolutions.org" style="color: white;">debi@sparcsolutions.org</a></p>
+                </div>
+            </div>
+            <p style="text-align:center; margin-top:24px; opacity:.85; font-size:.9rem;">Access Trails NOVA research and photography by Andrew O'Dell, SPARC Program Staff (Summer 2025).</p>
+        </div>
+    </footer>
+    <script src="/js/main.js"></script>
+    <script type="module" src="/accesstrails/js/contribute.js"></script>
+</body>
+</html>
