@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PD1XQ0NDCD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pledge your support for An Evening to SPARCle. Choose a sponsorship level, share your pledge, and upload your logo to be featured on our gala sponsor wall.">
+    <title>Sponsor Pledge | An Evening to SPARCle | SPARC</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* ============================================================
+           2026 SAFARI THEME tokens — mirrored from /gala/ so this page
+           matches "An Evening to SPARCle". Scoped to .page-gala.
+           ============================================================ */
+        .page-gala {
+            --gala-green-deep:  #184030;
+            --gala-green-dark:  #082820;
+            --gala-green-sage:  #587860;
+            --gala-gold:        #D8A040;
+            --gala-gold-bright: #E8B850;
+            --gala-gold-deep:   #B88020;
+            --gala-ivory:       #F8F8F0;
+            --gala-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+            background: var(--gala-ivory);
+        }
+
+        .page-gala .gala-sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .page-gala a:focus-visible,
+        .page-gala button:focus-visible,
+        .page-gala .btn:focus-visible,
+        .page-gala input:focus-visible,
+        .page-gala select:focus-visible,
+        .page-gala textarea:focus-visible,
+        .page-gala [onclick]:focus-visible {
+            outline: 3px solid var(--gala-gold-deep);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* ---------- Gold-diamond divider ---------- */
+        .page-gala .gala-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 320px;
+            margin: 18px auto;
+        }
+        .page-gala .gala-divider .gala-divider-rule {
+            flex: 1;
+            height: 1px;
+            background: var(--gala-gold);
+            opacity: 0.85;
+        }
+        .page-gala .gala-divider .gala-divider-diamond {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+            background: var(--gala-gold);
+        }
+        .page-gala .gala-section-divider {
+            background: var(--gala-ivory);
+            padding: 26px 0;
+        }
+
+        /* ---------- Hero ---------- */
+        .page-gala .pledge-hero {
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            padding: 132px 0 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-gala .pledge-hero .container { position: relative; z-index: 2; }
+        .page-gala .pledge-eyebrow {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gala-gold);
+            margin-bottom: 14px;
+        }
+        .page-gala .pledge-hero h1 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            font-size: 3.2rem;
+            line-height: 1.1;
+            color: var(--gala-ivory);
+            margin-bottom: 8px;
+        }
+        .page-gala .pledge-hero .gala-divider .gala-divider-rule {
+            background: var(--gala-gold);
+        }
+        .page-gala .pledge-hero-sub {
+            max-width: 620px;
+            margin: 14px auto 0;
+            color: rgba(248, 248, 240, 0.9);
+            font-size: 1.12rem;
+            line-height: 1.7;
+        }
+        .page-gala .pledge-hero-meta {
+            margin-top: 22px;
+            font-family: var(--gala-serif);
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--gala-gold);
+        }
+
+        /* ---------- Section headers ---------- */
+        .page-gala .section-header { text-align: center; margin-bottom: 40px; }
+        .page-gala .section-header h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-green-deep);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .page-gala .section-header p {
+            color: var(--gala-green-deep);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ---------- Pledge levels ---------- */
+        .page-gala .levels-section { background: var(--gala-ivory); padding: 72px 0 40px; }
+        .page-gala .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .page-gala .level-card {
+            background: #fff;
+            border: 1px solid var(--gala-gold);
+            border-radius: 12px;
+            padding: 22px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .page-gala .level-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(24, 64, 48, 0.14);
+            border-color: var(--gala-gold-deep);
+        }
+        .page-gala .level-card.selected {
+            border: 2px solid var(--gala-gold-deep);
+            box-shadow: 0 8px 24px rgba(184, 128, 32, 0.22);
+            background: #fffdf6;
+        }
+        .page-gala .level-card .level-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gala-green-deep);
+            margin-bottom: 8px;
+        }
+        .page-gala .level-card .level-amount {
+            font-family: var(--gala-serif);
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: var(--gala-gold-deep);
+            line-height: 1.1;
+        }
+        .page-gala .level-card .level-tickets {
+            margin-top: 10px;
+            display: inline-block;
+            background: var(--gala-green-deep);
+            color: var(--gala-ivory);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .page-gala .level-card .level-check {
+            margin-top: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--gala-gold-deep);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .page-gala .level-card.selected .level-check { opacity: 1; }
+        .page-gala .level-card.level-custom { justify-content: center; }
+        .page-gala .level-card.level-custom .level-amount { font-size: 1.3rem; }
+
+        /* ---------- Pledge form ---------- */
+        .page-gala .pledge-form-section { background: var(--gala-ivory); padding: 40px 0 80px; }
+        .page-gala .pledge-form-card {
+            max-width: 760px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 14px;
+            padding: 44px 44px 40px;
+            box-shadow: 0 10px 40px rgba(24, 64, 48, 0.08);
+        }
+        .page-gala .pledge-form-card h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-green-deep);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .page-gala .pledge-form-intro {
+            text-align: center;
+            color: var(--gala-green-sage);
+            margin-bottom: 28px;
+        }
+        .page-gala .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 20px;
+        }
+        .page-gala .form-field { display: flex; flex-direction: column; }
+        .page-gala .form-field.full { grid-column: 1 / -1; }
+        .page-gala .form-field label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--gala-green-deep);
+            margin-bottom: 6px;
+        }
+        .page-gala .form-field label .req { color: #b23b2e; margin-left: 3px; }
+        .page-gala .form-field input,
+        .page-gala .form-field select,
+        .page-gala .form-field textarea {
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--gala-green-deep);
+            padding: 11px 13px;
+            border: 1.5px solid #d8d3c2;
+            border-radius: 8px;
+            background: #fffdf9;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .page-gala .form-field input:focus,
+        .page-gala .form-field select:focus,
+        .page-gala .form-field textarea:focus {
+            border-color: var(--gala-gold-deep);
+            box-shadow: 0 0 0 3px rgba(216, 160, 64, 0.15);
+            outline: none;
+        }
+        .page-gala .form-field textarea { min-height: 96px; resize: vertical; }
+        .page-gala .amount-wrap { position: relative; }
+        .page-gala .amount-wrap .dollar {
+            position: absolute;
+            left: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--gala-gold-deep);
+            font-weight: 700;
+        }
+        .page-gala .amount-wrap input { padding-left: 26px; }
+        .page-gala .field-hint {
+            font-size: 0.78rem;
+            color: var(--gala-green-sage);
+            margin-top: 5px;
+        }
+
+        /* ---------- Logo uploader ---------- */
+        .page-gala .logo-uploader {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 150px;
+            gap: 18px;
+            align-items: stretch;
+        }
+        .page-gala .logo-dropzone {
+            border: 2px dashed var(--gala-gold);
+            border-radius: 10px;
+            background: #fffdf6;
+            padding: 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .page-gala .logo-dropzone:hover,
+        .page-gala .logo-dropzone.dragover {
+            background: #fff8e8;
+            border-color: var(--gala-gold-deep);
+        }
+        .page-gala .logo-dropzone .lz-icon { color: var(--gala-gold-deep); margin-bottom: 8px; }
+        .page-gala .logo-dropzone .lz-title { font-weight: 700; color: var(--gala-green-deep); }
+        .page-gala .logo-dropzone .lz-sub { font-size: 0.8rem; color: var(--gala-green-sage); margin-top: 4px; }
+        .page-gala .logo-dropzone .lz-file { font-size: 0.82rem; color: var(--gala-gold-deep); font-weight: 600; margin-top: 8px; word-break: break-all; }
+        .page-gala .logo-preview {
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            min-height: 120px;
+        }
+        .page-gala .logo-preview img { max-width: 100%; max-height: 108px; object-fit: contain; }
+        .page-gala .logo-preview .lp-empty { font-size: 0.78rem; color: #b7b09a; text-align: center; }
+
+        /* ---------- Consent + submit ---------- */
+        .page-gala .consent-row {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 0.88rem;
+            color: var(--gala-green-deep);
+            line-height: 1.5;
+        }
+        .page-gala .consent-row input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--gala-green-deep); }
+        .page-gala .form-actions { grid-column: 1 / -1; text-align: center; margin-top: 8px; }
+        .page-gala .btn-pledge {
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 15px 46px;
+            font-size: 1rem;
+            background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%);
+            color: var(--gala-green-deep);
+            border: 1px solid var(--gala-gold-bright);
+            box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.5), 0 4px 14px rgba(184,128,32,0.28);
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .page-gala .btn-pledge:hover:not(:disabled) {
+            background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%);
+            transform: translateY(-2px);
+        }
+        .page-gala .btn-pledge:disabled { opacity: 0.65; cursor: default; }
+        .page-gala .form-error {
+            grid-column: 1 / -1;
+            display: none;
+            background: #fdecea;
+            border: 1px solid #e0a49c;
+            color: #9c2c1e;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .page-gala .pledge-spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(24,64,48,0.35);
+            border-top-color: var(--gala-green-deep);
+            border-radius: 50%;
+            animation: pledgeSpin 0.7s linear infinite;
+            vertical-align: -3px;
+            margin-right: 8px;
+        }
+        @keyframes pledgeSpin { to { transform: rotate(360deg); } }
+
+        /* ---------- Success state ---------- */
+        .page-gala .pledge-success {
+            display: none;
+            max-width: 760px;
+            margin: 0 auto;
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 14px;
+            padding: 50px 44px;
+            text-align: center;
+            color: var(--gala-ivory);
+        }
+        .page-gala .pledge-success .ps-badge {
+            width: 74px; height: 74px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: rgba(216,160,64,0.18);
+            border: 1.5px solid var(--gala-gold);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gala-gold);
+        }
+        .page-gala .pledge-success h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            color: var(--gala-ivory);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .page-gala .pledge-success p { color: rgba(248,248,240,0.9); line-height: 1.7; max-width: 520px; margin: 0 auto 8px; }
+        .page-gala .pledge-success .ps-logo {
+            margin: 24px auto 0;
+            width: 180px; height: 120px;
+            background: #fff;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px;
+        }
+        .page-gala .pledge-success .ps-logo img { max-width: 100%; max-height: 96px; object-fit: contain; }
+        .page-gala .pledge-success .ps-actions { margin-top: 28px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        /* ---------- Newest sponsors carousel ---------- */
+        .page-gala .sponsor-carousel-section { background: var(--gala-ivory); padding: 30px 0 70px; }
+        .page-gala .sponsor-carousel-wrapper { overflow: hidden; position: relative; }
+        .page-gala .sponsor-carousel-wrapper::before,
+        .page-gala .sponsor-carousel-wrapper::after {
+            content: ''; position: absolute; top: 0; bottom: 0; width: 90px; z-index: 2; pointer-events: none;
+        }
+        .page-gala .sponsor-carousel-wrapper::before { left: 0; background: linear-gradient(to right, var(--gala-ivory), transparent); }
+        .page-gala .sponsor-carousel-wrapper::after { right: 0; background: linear-gradient(to left, var(--gala-ivory), transparent); }
+        .page-gala .sponsor-carousel { overflow: hidden; }
+        .page-gala .sponsor-track { display: flex; width: max-content; }
+        .page-gala .sponsor-slide {
+            flex-shrink: 0;
+            width: 200px; height: 140px;
+            margin: 0 15px;
+            display: flex; align-items: center; justify-content: center;
+            background: #fff;
+            border: 1px solid var(--gala-gold);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .page-gala .sponsor-slide a { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+        .page-gala .sponsor-slide img { max-width: 100%; max-height: 100px; width: auto; height: auto; object-fit: contain; }
+        .page-gala .sponsor-empty { text-align: center; color: var(--gala-green-sage); font-style: italic; }
+
+        /* ---------- Acacia band + CTA ---------- */
+        .page-gala .gala-acacia-band { background: var(--gala-ivory); line-height: 0; }
+        .page-gala .gala-acacia-band svg { display: block; width: 100%; height: auto; }
+        .page-gala .cta-section { background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%); }
+        .page-gala .cta-content h2 { font-family: var(--gala-serif); font-weight: 600; color: var(--gala-ivory); }
+        .page-gala .cta-content p { color: var(--gala-ivory); }
+        .page-gala .cta-section .btn-white { background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%); color: var(--gala-green-deep); }
+        .page-gala .cta-section .btn-white:hover { background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%); color: var(--gala-green-deep); }
+        .page-gala .cta-section .btn-secondary { border-color: var(--gala-gold); color: var(--gala-ivory); }
+        .page-gala .cta-section .btn-secondary:hover { background: var(--gala-gold); color: var(--gala-green-deep); }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            .page-gala .levels-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .page-gala .pledge-hero { padding: 100px 0 48px; }
+            .page-gala .pledge-hero h1 { font-size: 2.2rem; }
+            .page-gala .pledge-form-card { padding: 30px 22px; }
+            .page-gala .form-grid { grid-template-columns: 1fr; }
+            .page-gala .logo-uploader { grid-template-columns: 1fr; }
+            .page-gala .section-header h2 { font-size: 2rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .page-gala .level-card:hover,
+            .page-gala .btn-pledge:hover:not(:disabled) { transform: none; }
+        }
+    </style>
+</head>
+<body class="page-gala">
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="SPARC - Specially Adapted Resource Centers" style="height: 50px; width: auto;">
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/about/" class="nav-link">About</a>
+                    <div class="dropdown-menu">
+                        <a href="/team/">Our Team</a>
+                        <a href="/board/">Board of Directors</a>
+                        <a href="/financials/">Financials</a>
+                        <a href="/strategic-plan/">Strategic Plan</a>
+                        <a href="/news/">SPARC in the News</a>
+                        <a href="/compliance/">ADA Compliance</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/programs/" class="nav-link">Programs</a>
+                    <div class="dropdown-menu">
+                        <a href="/programs/sensory-lab/">Mobile Exploration Lab</a>
+                        <a href="/programs/enrollment/">Enrollment Information</a>
+                    </div>
+                </li>
+                <li><a href="/locations/" class="nav-link">Locations</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/stories/" class="nav-link">Stories</a>
+                    <div class="dropdown-menu">
+                        <a href="/podcast/">The Access Point Podcast</a>
+                        <a href="/blog/">Blog</a>
+                        <a href="/newsletter/">Newsletter</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/events/" class="nav-link active">Events</a>
+                    <div class="dropdown-menu">
+                        <a href="/gala/">An Evening to SPARCle</a>
+                        <a href="/summit/">A Call to Conscience</a>
+                        <a href="/bingo/">Bingo</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
+                    <div class="dropdown-menu">
+                        <a href="/advocate/">Advocate for SPARC</a>
+                        <a href="/get-involved/">Volunteer</a>
+                        <a href="/participants/">Participants &amp; Families</a>
+                        <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown nav-donate-dropdown">
+                    <a href="/donate-checkout/" class="nav-link nav-donate" aria-haspopup="true" aria-expanded="false">Donate<span class="caret" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu donate-dropdown-menu" role="menu">
+                        <a href="/donate-checkout/" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Once</span>
+                                <span class="dd-sub">Make a one-time gift</span>
+                            </span>
+                        </a>
+                        <a href="/monthly/" class="dd-monthly" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Monthly</span>
+                                <span class="dd-sub">Light the Way monthly donor</span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="pledge-hero">
+        <div class="container">
+            <span class="pledge-eyebrow">An Evening to SPARCle &bull; Sponsor Pledge</span>
+            <h1>Pledge Your Support</h1>
+            <div class="gala-divider" aria-hidden="true">
+                <span class="gala-divider-rule"></span>
+                <span class="gala-divider-diamond"></span>
+                <span class="gala-divider-rule"></span>
+            </div>
+            <p class="pledge-hero-sub">Choose a sponsorship level, tell us the amount you'd like to pledge, and upload your logo. Your logo joins our sponsor wall &mdash; and your partnership helps adults with disabilities in Northern Virginia live an adventure of connection, purpose, and belonging.</p>
+            <p class="pledge-hero-meta">Saturday, November 14, 2026 &bull; Washington Dulles Airport Marriott</p>
+        </div>
+    </section>
+
+    <main id="main-content">
+        <!-- Pledge levels -->
+        <section class="levels-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Sponsorship Levels</h2>
+                    <p>Select a level to get started &mdash; it fills in your pledge amount below. Prefer a custom amount? Choose "Custom Pledge."</p>
+                </div>
+                <div class="levels-grid" id="levelsGrid">
+                    <!-- Levels populated from JS so the amount/tickets stay in one place -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Pledge form -->
+        <section class="pledge-form-section">
+            <div class="container">
+                <!-- FORM -->
+                <div class="pledge-form-card" id="pledgeCard">
+                    <h2>Your Pledge</h2>
+                    <p class="pledge-form-intro">All fields marked with <span style="color:#b23b2e">*</span> are required.</p>
+                    <form id="pledgeForm" novalidate>
+                        <div class="form-grid">
+                            <div class="form-error" id="formError" role="alert"></div>
+
+                            <div class="form-field full">
+                                <label for="organization">Organization / Sponsor Name <span class="req">*</span></label>
+                                <input type="text" id="organization" name="organization" autocomplete="organization" required>
+                                <span class="field-hint">Exactly as it should appear in listings and on your logo.</span>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contact">Contact Name</label>
+                                <input type="text" id="contact" name="contact" autocomplete="name">
+                            </div>
+                            <div class="form-field">
+                                <label for="email">Email <span class="req">*</span></label>
+                                <input type="email" id="email" name="email" autocomplete="email" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone" autocomplete="tel">
+                            </div>
+                            <div class="form-field">
+                                <label for="website">Website (for your logo link)</label>
+                                <input type="url" id="website" name="website" placeholder="https://">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="level">Sponsorship Level</label>
+                                <select id="level" name="level">
+                                    <!-- options populated from JS -->
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="amount">Pledge Amount <span class="req">*</span></label>
+                                <div class="amount-wrap">
+                                    <span class="dollar">$</span>
+                                    <input type="number" id="amount" name="amount" min="1" step="1" inputmode="numeric" required>
+                                </div>
+                            </div>
+
+                            <!-- Logo uploader -->
+                            <div class="logo-uploader">
+                                <div class="logo-dropzone" id="logoDropzone" role="button" tabindex="0" aria-label="Upload your logo">
+                                    <div class="lz-icon" aria-hidden="true">
+                                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    </div>
+                                    <div class="lz-title">Upload your logo</div>
+                                    <div class="lz-sub">PNG, JPG, SVG or WEBP &bull; up to 5&nbsp;MB<br>Click or drag &amp; drop</div>
+                                    <div class="lz-file" id="logoFileName"></div>
+                                    <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" hidden>
+                                </div>
+                                <div class="logo-preview" id="logoPreview">
+                                    <span class="lp-empty">Logo<br>preview</span>
+                                </div>
+                            </div>
+                            <div class="form-field full" style="margin-top:-4px">
+                                <span class="field-hint">A high-resolution logo looks best on signage and in the program. We'll follow up if we need a vector version.</span>
+                            </div>
+
+                            <div class="form-field full">
+                                <label for="message">Message / Notes</label>
+                                <textarea id="message" name="message" placeholder="Anything you'd like us to know about your pledge?"></textarea>
+                            </div>
+
+                            <label class="consent-row">
+                                <input type="checkbox" id="consent" checked>
+                                <span>I authorize SPARC to display our organization's logo on the gala sponsor wall, website, and event materials in recognition of this pledge.</span>
+                            </label>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-lg btn-pledge" id="submitBtn">Submit My Pledge</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- SUCCESS -->
+                <div class="pledge-success" id="pledgeSuccess">
+                    <div class="ps-badge" aria-hidden="true">
+                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h2>Thank You for Your Pledge!</h2>
+                    <p id="successMessage">We've received your pledge and our team has been notified. We'll be in touch shortly to confirm the details.</p>
+                    <div class="ps-logo" id="successLogo" style="display:none"><img id="successLogoImg" src="" alt="Your uploaded logo"></div>
+                    <div class="ps-actions">
+                        <a href="/gala/" class="btn btn-white btn-lg">Back to the Gala</a>
+                        <a href="javascript:void(0)" onclick="resetPledgeForm()" class="btn btn-secondary btn-lg" style="border-color:var(--gala-gold);color:var(--gala-ivory)">Submit Another Pledge</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="gala-section-divider">
+            <div class="container">
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Newest sponsors carousel -->
+        <section class="sponsor-carousel-section" id="sponsorSection">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Sponsor Wall</h2>
+                    <p>Every logo below represents a partner helping make An Evening to SPARCle possible. Yours could be next.</p>
+                </div>
+                <div class="sponsor-carousel-wrapper">
+                    <div class="sponsor-carousel">
+                        <div class="sponsor-track" id="sponsorTrack">
+                            <!-- Curated sponsors; newly pledged logos are appended by JS -->
+                            <div class="sponsor-slide"><a href="https://www.marriott.com/en-us/hotels/iadap-washington-dulles-airport-marriott/overview/" target="_blank" rel="noopener"><img src="/images/sponsors/Marriott logo.png" alt="Washington Dulles Airport Marriott"></a></div>
+                            <div class="sponsor-slide"><a href="https://claudemoorefoundation.org/" target="_blank" rel="noopener"><img src="/images/sponsors/Claude Moore Charitable Foundation.jpg" alt="The Claude Moore Foundation"></a></div>
+                            <div class="sponsor-slide"><a href="https://www.micron.com/" target="_blank" rel="noopener"><img src="/images/sponsors/micron-logo-black.png" alt="Micron"></a></div>
+                            <div class="sponsor-slide"><a href="https://www.altria.com/" target="_blank" rel="noopener"><img src="/images/sponsors/Altria.png" alt="Altria"></a></div>
+                            <div class="sponsor-slide"><a href="https://www.nwfcu.org/" target="_blank" rel="noopener"><img src="/images/sponsors/nwfc.jpg" alt="Northwest Federal Credit Union"></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Acacia silhouette band -->
+    <div class="gala-acacia-band" aria-hidden="true">
+        <svg viewBox="0 0 1440 130" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <g fill="#082820">
+                <path d="M255 130 L251 74 L246 74 L250 130 Z"/>
+                <path d="M180 76 C 205 52 300 52 322 76 C 306 68 288 66 268 68 C 258 60 240 60 232 68 C 210 66 192 68 180 76 Z"/>
+            </g>
+            <g fill="#082820">
+                <path d="M1130 130 L1126 66 L1120 66 L1124 130 Z"/>
+                <path d="M1040 68 C 1070 40 1188 40 1214 68 C 1194 58 1172 56 1148 58 C 1136 49 1114 49 1104 58 C 1078 56 1055 58 1040 68 Z"/>
+            </g>
+            <path fill="#082820" d="M0 130 L0 104
+                C 90 96 150 100 210 106
+                C 270 112 320 98 400 104
+                C 470 109 520 118 600 110
+                C 690 101 760 96 840 106
+                C 910 114 980 100 1060 106
+                C 1140 112 1210 100 1290 106
+                C 1360 111 1400 103 1440 108
+                L1440 130 Z"/>
+        </svg>
+    </div>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Explore Every Way to Give</h2>
+                <p>Sponsorship tiers, tickets, and the raffle are all on the main gala page.</p>
+                <div class="cta-buttons">
+                    <a href="/gala/" class="btn btn-white btn-lg">View the Gala</a>
+                    <a href="/donate-checkout/" class="btn btn-secondary btn-lg">Donate Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="color: white;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="/images/SPARC_logo_white.png" alt="SPARC" style="height: 60px; width: auto; margin-bottom: 15px;">
+                    <p>Specially Adapted Resource Centers provides community-integrated day programs for adults with severe and multiple disabilities in Northern Virginia. We believe every adult deserves a meaningful life filled with connection, purpose, and belonging.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=100064372517571" class="social-link" aria-label="Facebook" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/sparc.solutions/" class="social-link" aria-label="Instagram" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/specially-adapted-resource-centers" class="social-link" aria-label="LinkedIn" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@SPARC_VA" class="social-link" aria-label="YouTube" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="mailto:debi@sparcsolutions.org" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/about/">About Us</a></li>
+                        <li><a href="/programs/">Programs</a></li>
+                        <li><a href="/locations/">Locations</a></li>
+                        <li><a href="/events/">Events</a></li>
+                        <li><a href="/stories/">Stories &amp; Impact</a></li>
+                        <li><a href="/donate-checkout/">Donate</a></li>
+                        <li><a href="/monthly/"><strong>Monthly Giving</strong></a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/financials/">Annual Reports</a></li>
+                        <li><a href="/board/">Board of Directors</a></li>
+                        <li><a href="/news/">News &amp; Press</a></li>
+                        <li><a href="/get-involved/">Get Involved</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><strong>Mailing Address:</strong><br>
+                    1775 Tysons Blvd., Fifth Floor<br>
+                    Tysons, VA 22102</p>
+                    <p><strong>Phone:</strong> <a href="tel:571-407-1807" style="color: white;">(571) 407-1807</a></p>
+                    <p><a href="mailto:debi@sparcsolutions.org" style="color: white;">debi@sparcsolutions.org</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom-bar" style="background: white; padding: 30px 0; color: var(--sparc-dark-navy);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="margin: 0 0 5px 0; color: var(--sparc-dark-navy);">&copy; 2025 SPARC - Specially Adapted Resource Centers. All rights reserved.</p>
+                <p style="margin: 0 0 10px 0; color: var(--sparc-dark-navy);">501(c)(3) Nonprofit Organization | EIN: 20-5513060</p>
+                <nav aria-label="Legal links">
+                    <a href="/accessibility/" style="color: var(--sparc-dark-navy); text-decoration: none;">Accessibility</a> |
+                    <a href="/contact/" style="color: var(--sparc-dark-navy); text-decoration: none;">Contact</a>
+                </nav>
+            </div>
+            <img src="/images/Powered by Google.png" alt="Powered by Google" style="height: 160px; width: auto;">
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/gala-sponsors.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        // Pledge levels — matches sparcsolutions.org/gala. amount = number used
+        // to prefill the pledge field; value 0 means "custom".
+        var LEVELS = [
+            { name: 'Event Sponsor', amount: 25000, tickets: '10 Tickets' },
+            { name: 'Champion',      amount: 10000, tickets: '8 Tickets' },
+            { name: 'Hero',          amount: 7500,  tickets: '8 Tickets' },
+            { name: 'Leader',        amount: 5000,  tickets: '8 Tickets' },
+            { name: 'Partner',       amount: 2500,  tickets: '4 Tickets' },
+            { name: 'Advocate',      amount: 1000,  tickets: '2 Tickets' },
+            { name: 'Friend',        amount: 500,   tickets: '2 Tickets' },
+            { name: 'Custom Pledge', amount: 0,     tickets: '' }
+        ];
+
+        var MAX_LOGO_BYTES = 5 * 1024 * 1024; // 5 MB
+        var logoDataUrl = '';
+        var logoFileNameStr = '';
+
+        var levelsGrid = document.getElementById('levelsGrid');
+        var levelSelect = document.getElementById('level');
+        var amountInput = document.getElementById('amount');
+
+        function fmt(n) { return n.toLocaleString('en-US'); }
+
+        // Build the level cards + the <select> options.
+        LEVELS.forEach(function (lvl, i) {
+            var card = document.createElement('div');
+            card.className = 'level-card' + (lvl.amount === 0 ? ' level-custom' : '');
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.dataset.index = i;
+            card.innerHTML =
+                '<div class="level-name">' + lvl.name + '</div>' +
+                '<div class="level-amount">' + (lvl.amount === 0 ? 'Your Amount' : '$' + fmt(lvl.amount)) + '</div>' +
+                (lvl.tickets ? '<span class="level-tickets">' + lvl.tickets + '</span>' : '') +
+                '<div class="level-check">&#10003; Selected</div>';
+            card.addEventListener('click', function () { selectLevel(i); });
+            card.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectLevel(i); }
+            });
+            levelsGrid.appendChild(card);
+
+            var opt = document.createElement('option');
+            opt.value = lvl.name;
+            opt.textContent = lvl.name + (lvl.amount ? ' — $' + fmt(lvl.amount) : '');
+            levelSelect.appendChild(opt);
+        });
+
+        function selectLevel(i) {
+            var lvl = LEVELS[i];
+            Array.prototype.forEach.call(levelsGrid.children, function (c, idx) {
+                c.classList.toggle('selected', idx === i);
+            });
+            levelSelect.value = lvl.name;
+            if (lvl.amount > 0) { amountInput.value = lvl.amount; }
+            amountInput.focus();
+        }
+
+        // Keep the cards in sync if the <select> is changed directly.
+        levelSelect.addEventListener('change', function () {
+            var idx = LEVELS.map(function (l) { return l.name; }).indexOf(levelSelect.value);
+            if (idx >= 0) { selectLevel(idx); }
+        });
+
+        // ---- Logo upload handling ----
+        var dropzone = document.getElementById('logoDropzone');
+        var fileInput = document.getElementById('logoInput');
+        var previewBox = document.getElementById('logoPreview');
+        var fileNameEl = document.getElementById('logoFileName');
+
+        dropzone.addEventListener('click', function () { fileInput.click(); });
+        dropzone.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+        });
+        ['dragenter', 'dragover'].forEach(function (ev) {
+            dropzone.addEventListener(ev, function (e) { e.preventDefault(); dropzone.classList.add('dragover'); });
+        });
+        ['dragleave', 'drop'].forEach(function (ev) {
+            dropzone.addEventListener(ev, function (e) { e.preventDefault(); dropzone.classList.remove('dragover'); });
+        });
+        dropzone.addEventListener('drop', function (e) {
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files && fileInput.files[0]) { handleFile(fileInput.files[0]); }
+        });
+
+        function handleFile(file) {
+            var okTypes = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'];
+            if (okTypes.indexOf(file.type) === -1) {
+                showError('Please upload a PNG, JPG, SVG, or WEBP image.');
+                return;
+            }
+            if (file.size > MAX_LOGO_BYTES) {
+                showError('That logo is larger than 5 MB. Please upload a smaller file.');
+                return;
+            }
+            hideError();
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                logoDataUrl = ev.target.result;
+                logoFileNameStr = file.name;
+                fileNameEl.textContent = file.name;
+                previewBox.innerHTML = '<img src="' + logoDataUrl + '" alt="Logo preview">';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ---- Validation + submit ----
+        var form = document.getElementById('pledgeForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var errorBox = document.getElementById('formError');
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function hideError() { errorBox.style.display = 'none'; }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            hideError();
+
+            var org = document.getElementById('organization').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var amount = document.getElementById('amount').value.trim();
+
+            if (!org) { return showError('Please enter your organization or sponsor name.'); }
+            if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { return showError('Please enter a valid email address.'); }
+            if (!amount || Number(amount) <= 0) { return showError('Please enter your pledge amount.'); }
+            if (!logoDataUrl) { return showError('Please upload your logo so we can feature it on the sponsor wall.'); }
+            if (!document.getElementById('consent').checked) {
+                return showError('Please confirm we may display your logo in recognition of your pledge.');
+            }
+
+            var payload = {
+                organization: org,
+                contact: document.getElementById('contact').value.trim(),
+                email: email,
+                phone: document.getElementById('phone').value.trim(),
+                level: levelSelect.value,
+                amount: amount,
+                website: document.getElementById('website').value.trim(),
+                message: document.getElementById('message').value.trim(),
+                logoData: logoDataUrl,
+                logoName: logoFileNameStr
+            };
+
+            var api = window.GalaSponsors && window.GalaSponsors.apiUrl;
+            var configured = window.GalaSponsors && window.GalaSponsors.isConfigured();
+
+            if (!configured) {
+                // Backend not deployed yet — don't silently pretend it worked.
+                showError('Online pledge submission isn\'t connected yet. Please email your pledge and logo to debi@sparcsolutions.org, or check back soon.');
+                console.warn('[pledge] GALA_SPONSORS_API is not configured in /js/gala-sponsors.js');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="pledge-spinner"></span>Submitting…';
+
+            fetch(api, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data && data.status === 'success') {
+                    showSuccess(org, data.sponsor);
+                } else {
+                    throw new Error((data && data.message) || 'Unexpected response');
+                }
+            })
+            .catch(function (err) {
+                console.error('[pledge] submit failed', err);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit My Pledge';
+                showError('Sorry — something went wrong sending your pledge. Please try again, or email debi@sparcsolutions.org.');
+            });
+        });
+
+        function showSuccess(org, sponsor) {
+            document.getElementById('pledgeCard').style.display = 'none';
+            document.querySelector('.levels-section').style.display = 'none';
+            var successEl = document.getElementById('pledgeSuccess');
+            document.getElementById('successMessage').textContent =
+                'We\'ve received ' + org + '\'s pledge and emailed our team. We\'ll be in touch shortly to confirm the details — thank you for helping our participants SPARCle!';
+            if (logoDataUrl) {
+                document.getElementById('successLogo').style.display = 'flex';
+                document.getElementById('successLogoImg').src = logoDataUrl;
+            }
+            successEl.style.display = 'block';
+            successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Optimistically add the just-submitted logo to the on-page wall
+            // so it shows up right away, ahead of the backend list refreshing.
+            if (window.GalaSponsors && sponsor && sponsor.logo) {
+                window.GalaSponsors.addSponsor('#sponsorTrack', sponsor);
+            } else if (window.GalaSponsors && logoDataUrl) {
+                window.GalaSponsors.addSponsor('#sponsorTrack', {
+                    name: org,
+                    logo: logoDataUrl,
+                    website: document.getElementById('website').value.trim()
+                });
+            }
+        }
+
+        // ---- Reset for "Submit Another" ----
+        window.resetPledgeForm = function () {
+            form.reset();
+            logoDataUrl = '';
+            logoFileNameStr = '';
+            fileNameEl.textContent = '';
+            previewBox.innerHTML = '<span class="lp-empty">Logo<br>preview</span>';
+            Array.prototype.forEach.call(levelsGrid.children, function (c) { c.classList.remove('selected'); });
+            document.getElementById('consent').checked = true;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Submit My Pledge';
+            hideError();
+            document.getElementById('pledgeSuccess').style.display = 'none';
+            document.getElementById('pledgeCard').style.display = 'block';
+            document.querySelector('.levels-section').style.display = 'block';
+            document.querySelector('.levels-section').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // ---- Sponsor wall carousel ----
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.GalaSponsors) {
+                window.GalaSponsors.initCarousel({
+                    track: '#sponsorTrack',
+                    section: '#sponsorSection'
+                });
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

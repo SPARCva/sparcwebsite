@@ -1806,16 +1806,13 @@
                             <div class="sponsor-slide"><a href="https://www.nwfcu.org/" target="_blank" rel="noopener"><img src="/images/sponsors/nwfc.jpg" alt="Northwest Federal Credit Union"></a></div>
                             <div class="sponsor-slide"><img src="/images/sponsors/congressman-mrs-bill-alexander.svg" alt="Congressman & Mrs. Bill Alexander"></div>
                             <div class="sponsor-slide"><img src="/images/sponsors/john-andelin-virginia-geoffrey.svg" alt="John Andelin & Virginia Geoffrey"></div>
-                            <!-- Duplicates for seamless loop -->
-                            <div class="sponsor-slide"><a href="https://www.marriott.com/en-us/hotels/iadap-washington-dulles-airport-marriott/overview/" target="_blank" rel="noopener"><img src="/images/sponsors/Marriott logo.png" alt="Washington Dulles Airport Marriott"></a></div>
-                            <div class="sponsor-slide"><a href="https://claudemoorefoundation.org/" target="_blank" rel="noopener"><img src="/images/sponsors/Claude Moore Charitable Foundation.jpg" alt="The Claude Moore Foundation"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.micron.com/" target="_blank" rel="noopener"><img src="/images/sponsors/micron-logo-black.png" alt="Micron"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.altria.com/" target="_blank" rel="noopener"><img src="/images/sponsors/Altria.png" alt="Altria"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.nwfcu.org/" target="_blank" rel="noopener"><img src="/images/sponsors/nwfc.jpg" alt="Northwest Federal Credit Union"></a></div>
-                            <div class="sponsor-slide"><img src="/images/sponsors/congressman-mrs-bill-alexander.svg" alt="Congressman & Mrs. Bill Alexander"></div>
-                            <div class="sponsor-slide"><img src="/images/sponsors/john-andelin-virginia-geoffrey.svg" alt="John Andelin & Virginia Geoffrey"></div>
+                            <!-- Sponsors pledged through /gala-sponsor-pledge/ are appended here
+                                 automatically, and the loop is duplicated, by /js/gala-sponsors.js -->
                         </div>
                     </div>
+                </div>
+                <div style="text-align:center; margin-top:36px;">
+                    <a href="/gala-sponsor-pledge/" class="btn btn-lg gala-btn gala-btn-sponsorships">Become a Sponsor &mdash; Pledge &amp; Upload Your Logo</a>
                 </div>
             </div>
         </section>
@@ -2363,6 +2360,7 @@
     </div>
 
     <script src="/js/main.js"></script>
+    <script src="/js/gala-sponsors.js"></script>
     <script>
         function toggleTranscript(button) {
             const content = document.getElementById('transcript');
@@ -2371,34 +2369,11 @@
             content.classList.toggle('active');
         }
 
-        // Sponsor Carousel Animation
+        // Sponsor Carousel — fetches logos pledged through the sponsor pledge
+        // page and appends them, then runs the continuous marquee scroll.
         document.addEventListener('DOMContentLoaded', function() {
-            const sponsorTrack = document.querySelector('.sponsor-track');
-            if (sponsorTrack) {
-                const slides = sponsorTrack.querySelectorAll('.sponsor-slide');
-                const totalSlides = slides.length / 2;
-                const slideWidth = 230; // 200px width + 30px margin
-                const totalWidth = totalSlides * slideWidth;
-
-                let position = 0;
-                const speed = 1;
-                let isPaused = false;
-
-                sponsorTrack.addEventListener('mouseenter', () => isPaused = true);
-                sponsorTrack.addEventListener('mouseleave', () => isPaused = false);
-
-                function animateSponsor() {
-                    if (!isPaused) {
-                        position -= speed;
-                        if (Math.abs(position) >= totalWidth) {
-                            position = 0;
-                        }
-                        sponsorTrack.style.transform = `translateX(${position}px)`;
-                    }
-                    requestAnimationFrame(animateSponsor);
-                }
-
-                animateSponsor();
+            if (window.GalaSponsors) {
+                window.GalaSponsors.initCarousel({ track: '.sponsor-track' });
             }
 
             // Add download buttons to all photo slides
