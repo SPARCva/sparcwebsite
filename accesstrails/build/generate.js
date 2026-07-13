@@ -108,6 +108,8 @@ const FOOTER = `
                         <li><a href="/accesstrails/">Guide Home</a></li>
                         <li><a href="/accesstrails/about/">About the Project</a></li>
                         <li><a href="/accesstrails/contribute/">Contribute a Review</a></li>
+                        <li><a href="/accesstrails/submissions/">Community Submissions</a></li>
+                        <li><a href="/accesstrails/console/">Team Console</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
@@ -425,9 +427,103 @@ function buildContribute() {
   write('contribute/index.html', html);
 }
 
+/* ---------------- COMMUNITY SUBMISSIONS (public) ---------------- */
+function buildSubmissions() {
+  const html = head('Community Submissions | Access Trails NOVA',
+    'Accessible parks and features submitted by the Northern Virginia community and published by SPARC.') +
+    HEADER +
+    subnav([{ label: 'SPARC', href: '/' }, { label: 'Access Trails', href: '/accesstrails/' }, { label: 'Community Submissions' }]) +
+    `<main id="at-main" class="at-main">
+      <section class="at-section"><div class="at-container">
+        <h1>Community Submissions</h1>
+        <p class="at-lead">Accessible parks and features shared by the community and reviewed by SPARC. Spotted something we should add? <a href="/accesstrails/contribute/">Contribute a park review</a>.</p>
+        <p id="at-sub-status" role="status" aria-live="polite" class="at-muted">Loading community submissions…</p>
+        <div id="at-sub-list" class="at-park-grid"></div>
+      </div></section>
+    </main>` +
+    FOOTER +
+    `\n    <script src="/js/main.js"></script>\n    <script type="module" src="/accesstrails/js/submissions.js"></script>\n</body>\n</html>`;
+  write('submissions/index.html', html);
+}
+
+/* ---------------- TEAM CONSOLE (staff, auth-gated) ---------------- */
+function buildConsole() {
+  const html = head('Team Console | Access Trails NOVA',
+    'SPARC staff console for reviewing Access Trails community submissions.') +
+    HEADER +
+    subnav([{ label: 'SPARC', href: '/' }, { label: 'Access Trails', href: '/accesstrails/' }, { label: 'Team Console' }]) +
+    `<main id="at-main" class="at-main">
+      <section class="at-section"><div class="at-container">
+        <h1>Team Console</h1>
+        <div id="at-console-status" role="status" aria-live="polite"></div>
+
+        <div id="at-console-auth" hidden>
+          <p class="at-lead">Sign in with your email and password to review submissions. First time here? Enter your email, choose a password, and select <strong>Create a password</strong>. Your email must already be on the team roster — ask Erica or Andrew to add you.</p>
+          <p id="at-signin-note" class="at-muted"></p>
+          <form id="at-signin-form" class="at-form">
+            <div class="at-field">
+              <label for="at-signin-email">Email address</label>
+              <input class="at-input" type="email" id="at-signin-email" name="email" autocomplete="email" required>
+            </div>
+            <div class="at-field">
+              <label for="at-signin-password">Password</label>
+              <span class="at-hint" id="at-signin-pw-hint">At least 8 characters.</span>
+              <input class="at-input" type="password" id="at-signin-password" name="password" autocomplete="current-password" aria-describedby="at-signin-pw-hint" minlength="8" required>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="at-submit" type="submit">Log in</button>
+              <button class="at-btnlink" type="button" id="at-create-password">Create a password</button>
+            </div>
+            <p id="at-signin-msg" class="at-muted" role="status" aria-live="polite" style="margin-top:10px"></p>
+          </form>
+        </div>
+
+        <div id="at-console-app" hidden>
+          <p style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <span id="at-console-who"></span>
+            <button type="button" id="at-signout" class="at-btnlink" style="background:var(--medium-gray)">Sign out</button>
+          </p>
+
+          <h2>Submissions</h2>
+          <div id="at-console-subs" aria-live="polite"></div>
+
+          <div id="at-console-roster" hidden>
+            <h2>Team roster</h2>
+            <p class="at-muted">Admins can authorize anyone — SPARC staff or community volunteers — to review submissions. Added emails can sign in with a magic link. This is the shared SPARC Access roster.</p>
+            <form id="at-roster-form" class="at-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+              <div class="at-field" style="flex:2;min-width:200px;margin:0">
+                <label for="at-roster-email">Email to authorize</label>
+                <input class="at-input" type="email" id="at-roster-email" required autocomplete="off">
+              </div>
+              <div class="at-field" style="flex:1;min-width:130px;margin:0">
+                <label for="at-roster-role">Role</label>
+                <select class="at-select" id="at-roster-role">
+                  <option value="contributor">contributor</option>
+                  <option value="editor">editor</option>
+                  <option value="admin">admin</option>
+                </select>
+              </div>
+              <div class="at-field" style="flex:1;min-width:130px;margin:0">
+                <label for="at-roster-name">Name (optional)</label>
+                <input class="at-input" type="text" id="at-roster-name" autocomplete="off">
+              </div>
+              <button class="at-submit" type="submit">Add person</button>
+            </form>
+            <ul id="at-roster-list" style="list-style:none;padding:0;margin-top:16px"></ul>
+          </div>
+        </div>
+      </div></section>
+    </main>` +
+    FOOTER +
+    `\n    <script type="module" src="/accesstrails/js/console.js"></script>\n</body>\n</html>`;
+  write('console/index.html', html);
+}
+
 buildHome();
 buildAbout();
 buildContribute();
+buildSubmissions();
+buildConsole();
 centersData.forEach(buildCenter);
 parksData.forEach(buildPark);
-console.log('generated: home, about, contribute, 4 centers, 9 parks');
+console.log('generated: home, about, contribute, submissions, console, 4 centers, 9 parks');

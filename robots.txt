@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /accesstrails/console/
+
+Sitemap: https://sparcsolutions.org/sitemap.xml
