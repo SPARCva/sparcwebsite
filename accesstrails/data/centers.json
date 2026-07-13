@@ -1,0 +1,68 @@
+{
+  "_meta": {
+    "note": "Four SPARC center areas. Verbatim content from the Weebly site. lat/lng extracted from the Weebly generateMap.php iframe URLs. external_links carried over verbatim; the Leesburg PDF URL was unwrapped from a urldefense.com (Proofpoint) redirect to the clean leesburgva.gov URL as instructed.",
+    "card_image_source": "Home 'Choose Your Center' card images, in nav order Alexandria/Arlington/Leesburg/McLean: img-0431, img-0622, img-0662, img-2763"
+  },
+  "centers": [
+    {
+      "slug": "alexandria",
+      "name": "SPARC Alexandria",
+      "location_name": "Hybla Valley Community Center",
+      "address": "7950 Audubon Avenue",
+      "lat": 38.7420845,
+      "lng": -77.0917902,
+      "card_image": "img-0431.jpg",
+      "external_links": [],
+      "notes": [],
+      "parks": ["belle-haven", "huntley-meadows", "martin-luther-king-jr"]
+    },
+    {
+      "slug": "arlington",
+      "name": "SPARC Arlington",
+      "location_name": "Arlington Mills Community Center",
+      "address": "909 South Dinwiddle Street",
+      "lat": 38.8564043,
+      "lng": -77.1121009,
+      "card_image": "img-0622.jpg",
+      "external_links": [],
+      "notes": [],
+      "parks": ["bluemont", "glencarlyn"]
+    },
+    {
+      "slug": "leesburg",
+      "name": "SPARC Leesburg",
+      "location_name": "Congregation Sa'are Shalom",
+      "address": "19357 Evergreen Mills Road",
+      "lat": 39.0831009,
+      "lng": -77.5734496,
+      "card_image": "img-0662.jpg",
+      "external_links": [
+        {
+          "label": "Click here for more information about accessible parks in Leesburg",
+          "url": "https://www.leesburgva.gov/home/showpublisheddocument/42448/638676949121870000",
+          "note": "Leesburg accessible parks PDF. Original Weebly link was wrapped in a urldefense.com Proofpoint redirect; unwrapped here."
+        }
+      ],
+      "notes": [
+        {
+          "heading": "Recommendation from the Accessibility Manager in Leesburg:",
+          "title": "Hal and Berni Hanson Regional Park",
+          "body": "Includes an accessible shared-use trail and roughly 0.2 miles of sensory trail."
+        }
+      ],
+      "parks": ["potomac-crossing", "tuscarora"]
+    },
+    {
+      "slug": "mclean",
+      "name": "SPARC McLean",
+      "location_name": "The Old Firehouse",
+      "address": "1440 Chain Bridge Road",
+      "lat": 38.9332828,
+      "lng": -77.1790481,
+      "card_image": "img-2763.jpeg",
+      "external_links": [],
+      "notes": [],
+      "parks": ["great-falls", "wolf-trap"]
+    }
+  ]
+}

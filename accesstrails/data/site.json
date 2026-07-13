@@ -1,0 +1,80 @@
+{
+  "_meta": "Verbatim Home + About content. FLAGS: (1) Home quote attributes 'SPARC Programmer' — About says 'Program Staff'; plan is to render 'Program Staff' and flag in PR. (2) About narrative para 2 says 'Bluefield Park in Arlington' — actual park is Bluemont; preserved verbatim, flag in PR. (3) About para 3 opens 'Conducting improved my understanding' which reads like a dropped word ('Conducting [this project] improved…'); preserved verbatim, flag in PR. (4) 'sparcsolutions.org' in About is linked to the main site.",
+  "home": {
+    "hero_title_lines": ["NOVA PARKS", "FOR", "SPARC PARTICIPANTS"],
+    "tagline": "This website is a guide to ADA accessible parks in Northern Virginia near SPARC centers",
+    "choose_center_heading": "Choose Your Center",
+    "fairfax_link": {
+      "label": "Click here for the Fairfax Park Authority list of accessible trails",
+      "url": "https://www.fairfaxcounty.gov/parks/accessible/trails"
+    },
+    "pull_quote": {
+      "text": "Too often, adults with disabilities face barriers that keep them from fully experiencing nature. My hope is that this guide opens doors to parks and outdoor spaces where SPARC participants can feel included, active, and connected to the world around them.",
+      "attribution_verbatim": "— Andrew O'Dell, SPARC Programmer",
+      "attribution_corrected": "— Andrew O'Dell, SPARC Program Staff",
+      "photo": "img-0432.jpg"
+    }
+  },
+  "about": {
+    "intro": [
+      "Hi, I'm Andrew, a Program Staff member at SPARC and graduate of George Mason University's Therapeutic Recreation program.",
+      "During the Summer of 2025 I conducted site surveys to discover parks that SPARC could use for outdoor recreation with our participants, many of whom use wheelchairs."
+    ],
+    "intro_images": ["img-0597.jpg", "img-0474.jpg", "img-0480.jpg"],
+    "narrative": [
+      "This project was designed to provide SPARC participants with a guide to recreational parks and trails accessible for their needs. Outdoor activity is an essential part of recreational fulfillment, but many outdoor experiences are inaccessible, especially for wheelchairs. During my internship, I sought to identify parks near SPARC facilities where we could plan programs for our participants. Using an Outdoor Park Accessibility Checklist, which I developed using a mix of ADA standards and input from SPARC participants, I visited parks and evaluated the available amenities. Additionally, I conducted research to identify more accessible outdoor areas and spoke to park staff and county park officials.",
+      "Fieldwork was conducted at nine parks over the course of several weeks. Each park was carefully surveyed, and a checklist was filled out documenting amenities and challenges. Photos were also taken to document unique features, terrain, picnic areas, and restrooms. I identified five mostly accessible parks, two partially accessible parks, and two mostly inaccessible parks. It was clear that certain parks had made a thoughtful effort to cater to accessibility like Potomac Crossing in Leesburg, VA. It was the only park with signage containing slope degrees, an accessible playground, consciously placed accessible tables, and an accessible grill space. I also encountered some disappointments, like Bluefield Park in Arlington, VA which had some great features, but had no accessible restrooms despite having multiple restroom areas. I also found that in many cases, information about accessibility was not available on park websites.",
+      "Conducting improved my understanding of the challenges faced by individuals with disabilities in accessing fulfilling outdoor recreation. Many recreational opportunities that are often taken for granted can be significant barriers for others. A small step or a narrow walkway can mean the difference between access and exclusion. As I continue to build this guide, and maintain the website, I hope to create a comprehensive gateway for SPARC participants to enjoy the outdoors."
+    ],
+    "learn_more": {
+      "text": "To learn more about SPARC visit sparcsolutions.org",
+      "url": "https://sparcsolutions.org"
+    },
+    "byline": {
+      "name": "Andrew O'Dell",
+      "role": "SPARC Program Staff",
+      "credentials": "George Mason University Therapeutic Recreation graduate",
+      "fieldwork": "Fieldwork conducted Summer 2025"
+    },
+    "methodology": {
+      "heading": "Project Methodology",
+      "sections": [
+        {
+          "title": "Data Collection",
+          "body": [
+            "Data was collected through direct visits to each site listed on the website. I created the Outdoor Park Accessibility Checklist using requirements from the Americans with Disabilities Act, and with input from SPARC participants on common barriers they face at parks and trails. The checklist was utilized at each park visited, filled out completely, and documented in a spreadsheet. The checklist contains six categories with specific amenities listed under each category. The categories are:"
+          ],
+          "list": [
+            "Accessible Parking",
+            "Accessible Trails",
+            "Accessible Bathrooms",
+            "Accessible Visitors Centers/Clubhouses",
+            "Accessible Picnic Shelters and Seating Areas",
+            "Accessible Signage"
+          ],
+          "body_after": [
+            "Examples of the criteria include adequate number of accessible parking spaces, space for a wheelchair next to the parking space, a sloped transition from the parking lot to the park or trail, a restroom with an accessible stall containing handrails, signs with slope percentages, signs with Braille, and wheelchair accessible tables."
+          ]
+        },
+        {
+          "title": "Tools",
+          "body": [
+            "Tools for collecting data at the parks included measuring tapes, a surveyor's wheel, photographs taken using an iPhone, and paper copies of the checklist."
+          ]
+        },
+        {
+          "title": "Scoring System",
+          "body": [
+            "To quantify and compare the parks and available amenities, each amenity was given a score of 1 or 0. A park received a 1 if the amenity was present and met the minimum requirements for accessibility. A park received a 0 if the amenity was absent or did not meet the minimum requirements for accessibility. For example, if a picnic area has an accessible table, but that table is blocked by a pillar, that park would receive a 0 because the accessible amenity is unusable. Accessible visitors centers were noted but not required if the park otherwise had an accessible restroom, and therefore parks were not penalized in the scoring system if they did not have a visitors center."
+          ]
+        },
+        {
+          "title": "Data Recording and Validation",
+          "body": [
+            "Data was recorded into an Excel spreadsheet following each site visit. Parks could receive a total score of 31 for each amenity listed on the checklist. After calculating each park's score, the parks were given an accessibility percentage. Parks with an accessibility percentage less than 60 were categorized as mostly inaccessible, parks with a score between 61 and 75 were categorized as partially accessible, and parks with a score of 76-100 were categorized as mostly accessible. No park in this project received a 100% accessibility score. Certain amenities were given additional weight toward their accessibility score, like the presence of an accessible bathroom, which is vital for park use."
+          ]
+        }
+      ]
+    }
+  }
+}
