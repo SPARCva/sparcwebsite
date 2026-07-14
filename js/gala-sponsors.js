@@ -20,8 +20,20 @@
 
   var GALA_SPONSORS_API = 'https://script.google.com/macros/s/AKfycbyGrTkUFa-EW77MeiMP_lBRioXyY6o5LTRVVCZ47RzZNXMlREn9KAZb2YcCaqSbwr4qeg/exec';
 
+  /* Pledges to hide from the public carousel even if they're still marked
+     Approved in the backend sheet (e.g. test submissions). Match is by
+     sponsor name, case-insensitive. Remove an entry here once the matching
+     row has been deleted / un-approved in the "Gala Sponsor Pledges" sheet. */
+  var HIDDEN_SPONSOR_NAMES = [
+    'specially adapted resource clubs' // "THIS IS A TEST" pledge submitted 2026-07-13
+  ];
+
   function isConfigured() {
     return GALA_SPONSORS_API && GALA_SPONSORS_API.indexOf('http') === 0;
+  }
+
+  function isHidden(name) {
+    return HIDDEN_SPONSOR_NAMES.indexOf(String(name || '').trim().toLowerCase()) !== -1;
   }
 
   /* Fetch the approved, publicly-listable sponsors from the backend.
@@ -34,7 +46,7 @@
       .then(function (res) { return res.json(); })
       .then(function (data) {
         var list = Array.isArray(data) ? data : (data && data.sponsors) || [];
-        return list.filter(function (s) { return s && s.logo; });
+        return list.filter(function (s) { return s && s.logo && !isHidden(s.name); });
       })
       .catch(function (err) {
         console.warn('[gala-sponsors] Could not load sponsor list:', err);
