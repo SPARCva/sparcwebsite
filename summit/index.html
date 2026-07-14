@@ -137,6 +137,21 @@
             border-color: white;
             transform: translateY(-2px);
         }
+        .summit-hero-buttons .btn-virtual {
+            background: white;
+            color: var(--sparc-dark-navy);
+            border: 2px solid white;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .summit-hero-buttons .btn-virtual svg { flex-shrink: 0; }
+        .summit-hero-buttons .btn-virtual:hover {
+            background: var(--sparc-soft-gray, #F5F6FA);
+            border-color: var(--sparc-soft-gray, #F5F6FA);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
         @media (max-width: 768px) {
             .summit-hero { padding: 100px 0 50px; }
             .summit-hero-logos { gap: 20px; }
@@ -969,6 +984,10 @@
                 </div>
                 <div class="summit-hero-buttons">
                     <a href="javascript:void(0)" onclick="openRegistration('7162881')" class="btn btn-register">Register to Attend</a>
+                    <a href="javascript:void(0)" onclick="openVirtualModal()" class="btn btn-virtual">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        Join Virtually for Free
+                    </a>
                     <a href="javascript:void(0)" onclick="openRegistration()" class="btn btn-sponsor">Sponsor this Event</a>
                 </div>
             </div>
@@ -2011,6 +2030,94 @@
     </div>
 </div>
 
+<!-- Join Virtually for Free Modal -->
+<style>
+    .vs-modal .form-modal { max-width: 520px; }
+    .vs-modal-body { padding: 6px 40px 40px; }
+    .vs-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .vs-field { margin-bottom: 16px; }
+    .vs-field label { display: block; font-weight: 600; font-size: 0.9rem; color: var(--sparc-dark-navy); margin-bottom: 6px; }
+    .vs-field input { width: 100%; padding: 13px 14px; border: 1.5px solid #d7dbe0; border-radius: 9px; font-size: 1rem; font-family: inherit; }
+    .vs-field input:focus { outline: none; border-color: var(--sparc-royal-blue); box-shadow: 0 0 0 3px rgba(0,83,155,0.12); }
+    .vs-btn { width: 100%; background: var(--sparc-kelly-green); color: #fff; border: none; padding: 15px 20px; font-size: 1.05rem; font-weight: 700; font-family: inherit; border-radius: 9px; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+    .vs-btn:hover:not(:disabled) { background: var(--sparc-kelly-green-dark); transform: translateY(-1px); }
+    .vs-btn:disabled { opacity: 0.7; cursor: default; }
+    .vs-status { display: none; margin-bottom: 14px; padding: 11px 14px; border-radius: 8px; font-size: 0.9rem; background: #fdecea; color: #9b1c1c; border: 1px solid #f5c6c2; }
+    .vs-privacy { color: #8a9099; font-size: 0.8rem; margin-top: 14px; text-align: center; }
+    .vs-privacy a { color: var(--sparc-royal-blue); }
+    .vs-success { text-align: center; }
+    .vs-success .vs-check { width: 60px; height: 60px; border-radius: 50%; background: rgba(76,187,23,0.14); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .vs-success h3 { color: var(--sparc-dark-navy); font-family: 'Montserrat', sans-serif; margin-bottom: 8px; font-size: 1.3rem; }
+    .vs-success p { color: #555; margin-bottom: 8px; font-size: 0.95rem; }
+    .vs-join-box { background: var(--sparc-soft-gray, #F5F6FA); border-radius: 12px; padding: 22px; margin: 20px 0 8px; }
+    .vs-join-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--sparc-royal-blue); font-weight: 700; margin-bottom: 12px; }
+    .vs-join-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--sparc-kelly-green); color: #fff; text-decoration: none; font-weight: 700; font-size: 1.05rem; padding: 14px 30px; border-radius: 9px; transition: background 0.2s, transform 0.15s; }
+    .vs-join-btn:hover { background: var(--sparc-kelly-green-dark); transform: translateY(-1px); }
+    .vs-passcode { margin-top: 14px; font-size: 0.95rem; color: #555; }
+    .vs-passcode strong { color: var(--sparc-dark-navy); letter-spacing: 1px; }
+    .vs-zoom-url { margin-top: 10px; font-size: 0.78rem; color: #9098a1; word-break: break-all; }
+    .vs-emailnote { margin-top: 16px; font-size: 0.84rem; color: #777; }
+    .vs-qr { border-top: 1px solid #eef0f3; margin-top: 24px; padding-top: 20px; display: flex; align-items: center; gap: 16px; text-align: left; }
+    .vs-qr img { width: 84px; height: 84px; flex-shrink: 0; }
+    .vs-qr .vs-qr-text { font-size: 0.84rem; color: #666; }
+    .vs-qr .vs-qr-text strong { color: var(--sparc-dark-navy); display: block; margin-bottom: 3px; }
+</style>
+<div class="form-modal-overlay vs-modal" id="virtualModal" style="display: none;">
+    <div class="form-modal">
+        <button class="form-modal-close" onclick="closeVirtualModal()" aria-label="Close">&times;</button>
+        <div class="form-modal-header">
+            <h2>Join Virtually for Free</h2>
+            <p>Can't make it in person? Register to watch <strong>A Call to Conscience</strong> live online.</p>
+        </div>
+        <div class="vs-modal-body">
+            <div data-vs-root>
+                <form class="vs-form" data-source="summit-modal" novalidate>
+                    <div class="vs-status" data-vs-status role="alert" aria-live="polite"></div>
+                    <div class="vs-honeypot" aria-hidden="true">
+                        <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+                    </div>
+                    <div class="vs-field">
+                        <label for="vsm-name">Full name</label>
+                        <input type="text" id="vsm-name" name="name" autocomplete="name" required>
+                    </div>
+                    <div class="vs-field">
+                        <label for="vsm-email">Email address</label>
+                        <input type="email" id="vsm-email" name="email" autocomplete="email" placeholder="you@example.com" required>
+                    </div>
+                    <button type="submit" class="vs-btn" data-vs-submit>Join Virtually for Free</button>
+                    <p class="vs-privacy">We'll only use your email to send summit details.</p>
+                </form>
+
+                <div class="vs-success" data-vs-success hidden>
+                    <div class="vs-check">
+                        <svg width="30" height="30" fill="none" stroke="#4CBB17" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <h3>You're in, <span data-vs-name>friend</span>!</h3>
+                    <p>You're registered to join live. We've emailed your join details too.</p>
+                    <div class="vs-join-box">
+                        <div class="vs-join-label">Watch the Summit Live</div>
+                        <a class="vs-join-btn" href="https://gwu-edu.zoom.us/s/97988820283?pwd=tyf6ZoWlQ5Wp5VA9LSCGvo7l8xNB5F.1" target="_blank" rel="noopener">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            Join the Livestream
+                        </a>
+                        <div class="vs-passcode">Passcode: <strong>706309</strong></div>
+                        <div class="vs-zoom-url">https://gwu-edu.zoom.us/s/97988820283?pwd=tyf6ZoWlQ5Wp5VA9LSCGvo7l8xNB5F.1</div>
+                    </div>
+                    <p class="vs-emailnote">📧 A confirmation with these details is on its way to your inbox.</p>
+                </div>
+            </div>
+
+            <div class="vs-qr">
+                <img src="/images/summit/virtualsummit-qr.svg" alt="QR code linking to www.sparcsolutions.org/virtualsummit">
+                <div class="vs-qr-text">
+                    <strong>Share this registration page</strong>
+                    Scan the code or share the link:<br>www.sparcsolutions.org/virtualsummit
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     // Open registration modal and pre-select sponsor level
@@ -2060,8 +2167,29 @@
         document.body.style.overflow = '';
     }
 
+    // Open / close the "Join Virtually for Free" modal
+    function openVirtualModal() {
+        var modal = document.getElementById('virtualModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeVirtualModal() {
+        var modal = document.getElementById('virtualModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
     // Close modals when clicking overlay background
     document.addEventListener('DOMContentLoaded', function() {
+        var virtModal = document.getElementById('virtualModal');
+        if (virtModal) {
+            virtModal.addEventListener('click', function(e) {
+                if (e.target === virtModal) {
+                    closeVirtualModal();
+                }
+            });
+        }
+
         var regModal = document.getElementById('registrationModal');
         if (regModal) {
             regModal.addEventListener('click', function(e) {
@@ -2081,6 +2209,8 @@
         }
     });
 </script>
+
+<script src="/js/summit-virtual.js"></script>
 
 </body>
 </html>
