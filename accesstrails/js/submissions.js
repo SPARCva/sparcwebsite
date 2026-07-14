@@ -1,40 +1,55 @@
-// Public "Community Submissions" page: shows submissions SPARC staff have
-// published (shown_publicly = true), via the PII-safe view. No personal data.
-import { PublicData } from './dataLayer.public.js';
+// Public "Community Submissions" board — the Access Trails counterpart of the
+// /ART community board. Instant display: every note posted anywhere on the
+// guide (by the public or the SPARC team) appears here the moment it's sent,
+// via the PII-safe access_trails_community view. Staff remove spam/off-topic
+// notes from the Team Console (archive/spam), which hides them here.
+import { CommunityData } from './dataLayer.public.js';
+import { noteCard } from './noteCard.js';
+import { LOCATIONS } from './catalog.js';
 
 const listEl = document.getElementById('at-sub-list');
 const statusEl = document.getElementById('at-sub-status');
-if (listEl) load();
+const filterEl = document.getElementById('at-sub-filters');
+let allRows = [];
+let activeLoc = '';
 
-function esc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-}
+if (listEl) init();
 
-async function load() {
+async function init() {
+  if (filterEl) {
+    const chips = [['', 'All areas'], ...Object.entries(LOCATIONS).map(([slug, l]) => [slug, l.name])];
+    filterEl.innerHTML = chips.map(([v, label]) =>
+      `<button type="button" class="at-chip${v === '' ? ' at-chip--on' : ''}" data-loc="${v}" aria-pressed="${v === ''}">${label}</button>`).join('');
+    filterEl.addEventListener('click', e => {
+      const btn = e.target.closest('[data-loc]');
+      if (!btn) return;
+      activeLoc = btn.dataset.loc;
+      filterEl.querySelectorAll('.at-chip').forEach(c => {
+        const on = c === btn;
+        c.classList.toggle('at-chip--on', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      render();
+    });
+  }
   try {
-    const rows = await PublicData.getPublished();
-    if (!rows.length) {
-      statusEl.textContent = 'No community submissions have been published yet. Be the first to contribute one!';
-      return;
-    }
-    statusEl.textContent = `${rows.length} community submission${rows.length === 1 ? '' : 's'}.`;
-    listEl.innerHTML = rows.map(card).join('');
+    allRows = await CommunityData.getAll();
+    render();
   } catch (e) {
     console.error('[submissions] load failed:', e);
     statusEl.textContent = 'Sorry — we could not load community submissions right now.';
   }
 }
 
-function card(r) {
-  const img = r.photos && r.photos[0]
-    ? `<img src="${esc(r.photos[0])}" alt="Photo submitted for ${esc(r.park_name)}" loading="lazy" decoding="async">` : '';
-  const type = r.find_type ? `<p class="at-badge at-badge--partially-accessible" style="border-radius:6px">${esc(r.find_type)}</p>` : '';
-  return `<article class="at-park-card">
-      ${img}
-      <div class="at-park-card-body">
-        <h3>${esc(r.park_name)}</h3>
-        ${type}
-        <p>${esc(r.description)}</p>
-      </div>
-    </article>`;
+function render() {
+  const rows = activeLoc ? allRows.filter(r => r.location_slug === activeLoc) : allRows;
+  if (!rows.length) {
+    statusEl.textContent = activeLoc
+      ? `No notes for ${LOCATIONS[activeLoc].name} yet — be the first to contribute one!`
+      : 'No community notes have been posted yet. Be the first to contribute one!';
+    listEl.innerHTML = '';
+    return;
+  }
+  statusEl.textContent = `${rows.length} note${rows.length === 1 ? '' : 's'}.`;
+  listEl.innerHTML = rows.map(r => noteCard(r, { showPark: true })).join('');
 }

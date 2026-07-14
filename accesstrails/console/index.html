@@ -64,12 +64,18 @@
             <button type="button" id="at-signout" class="at-btnlink" style="background:var(--medium-gray)">Sign out</button>
           </p>
 
-          <h2>Submissions</h2>
+          <h2 id="at-h-triage">Community notes</h2>
+          <p class="at-muted">Notes are <strong>live on the public pages the moment they're posted</strong> (like /ART's community board). Mark good ones reviewed; archive or mark as spam to hide anything off-topic. Deleting is permanent.</p>
+          <div id="at-console-tabs" class="at-chiprow" role="tablist" aria-label="Filter by status"></div>
+          <div id="at-console-locs" class="at-chiprow" role="group" aria-label="Filter by SPARC center area"></div>
           <div id="at-console-subs" aria-live="polite"></div>
+
+          <h2 id="at-h-submit">Add a field note</h2>
+          <div id="at-panel-submit"></div>
 
           <div id="at-console-roster" hidden>
             <h2>Team roster</h2>
-            <p class="at-muted">Admins can authorize anyone — SPARC staff or community volunteers — to review submissions. Added emails can sign in with a magic link. This is the shared SPARC Access roster.</p>
+            <p class="at-muted">Admins can authorize anyone — SPARC staff or community volunteers — to use this console. An added person signs in by entering their email, choosing a password, and selecting "Create a password" (no email is sent). This is the shared SPARC Access roster.</p>
             <form id="at-roster-form" class="at-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
               <div class="at-field" style="flex:2;min-width:200px;margin:0">
                 <label for="at-roster-email">Email to authorize</label>

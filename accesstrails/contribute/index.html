@@ -57,6 +57,23 @@
           </div>
 
           <div class="at-field">
+            <label for="location_slug">Which SPARC center is it near? <span class="at-muted">(optional)</span></label>
+            <span class="at-hint" id="location_slug-hint">If you choose one, your note also appears on that area's page.</span>
+            <select class="at-select" id="location_slug" name="location_slug" aria-describedby="location_slug-hint">
+              <option value="">Not sure / elsewhere in NOVA</option>
+              <option value="alexandria">Alexandria — near SPARC Alexandria</option><option value="arlington">Arlington — near SPARC Arlington</option><option value="leesburg">Leesburg — near SPARC Leesburg</option><option value="mclean">McLean — near SPARC McLean</option>
+            </select>
+          </div>
+
+          <div class="at-field">
+            <label for="feature_type">Which part of the park is it about? <span class="at-muted">(optional)</span></label>
+            <select class="at-select" id="feature_type" name="feature_type">
+              <option value="">Choose one…</option>
+              <optgroup label="Getting there"><option value="parking">Parking</option><option value="dropoff">Drop-off or loading</option><option value="paths">Paths and entrances</option></optgroup><optgroup label="On the trails"><option value="trails">Trails</option></optgroup><optgroup label="Facilities"><option value="bathrooms">Bathrooms</option><option value="picnic_seating">Picnic shelters and seating</option><option value="visitors_center">Visitors center or clubhouse</option><option value="playground">Playground</option><option value="water_features">Water access</option></optgroup><optgroup label="Information and environment"><option value="signage">Signs and wayfinding</option><option value="sensory">Sensory environment</option></optgroup><option value="other">Something else</option>
+            </select>
+          </div>
+
+          <div class="at-field">
             <label for="description">Description of feature or suggestion <span class="at-req" aria-hidden="true">*</span></label>
             <textarea class="at-textarea" id="description" name="description" required
                       aria-describedby="description-err"></textarea>

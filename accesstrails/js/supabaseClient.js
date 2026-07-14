@@ -14,6 +14,9 @@ export const SUPABASE_ANON_KEY = 'sb_publishable_3tn2UadRVekIf5Pw6F5z-A_40ZbdvTm
 // Contribute form intake table, PII-safe public view, and photo bucket.
 export const SUBMISSIONS_TABLE = 'access_trails_submissions';
 export const PUBLIC_VIEW = 'access_trails_public';
+// Instant-display feed (mirrors the /ART community board): every non-archived,
+// non-spam note, PII-safe columns only, filterable by location/park.
+export const COMMUNITY_VIEW = 'access_trails_community';
 export const SUBMISSIONS_BUCKET = 'access-trails-photos';
 export const ROSTER_TABLE = 'access_staff';
 

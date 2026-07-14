@@ -142,13 +142,29 @@ function subnav(crumbs) {
   return `<nav class="at-subnav" aria-label="Breadcrumb"><ol>${items}</ol></nav>`;
 }
 
-function foot({ map = false } = {}) {
+function foot({ map = false, notes = false } = {}) {
   return `${FOOTER}
     <script src="/js/main.js"></script>${map ? `
     <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-    <script src="/accesstrails/js/maps.js"></script>` : ''}
+    <script src="/accesstrails/js/maps.js"></script>` : ''}${notes ? `
+    <script type="module" src="/accesstrails/js/parkNotes.js"></script>` : ''}
 </body>
 </html>`;
+}
+
+/* Accessibility-notes feed + submission form (Supabase-backed, /ART parity).
+ * parkNotes.js hydrates this placeholder into the notes list and the
+ * ART-style "Add an accessibility note" form for this location/park. */
+function notesSection({ location, park = null, parkName = null }) {
+  const attrs = [`data-location="${esc(location)}"`];
+  if (park) attrs.push(`data-park="${esc(park)}"`, `data-park-name="${esc(parkName)}"`);
+  return `
+      <section class="at-section at-notes-section" aria-labelledby="at-notes-heading"><div class="at-container">
+        <div id="at-park-notes" ${attrs.join(' ')}>
+          <h2 id="at-notes-heading">Accessibility Notes from the SPARC Team &amp; Community</h2>
+          <p class="at-muted">Community and team notes load here. If they don't appear, JavaScript may be disabled — you can still <a href="/accesstrails/contribute/">contribute a review</a> or view <a href="/accesstrails/submissions/">all community submissions</a>.</p>
+        </div>
+      </div></section>`;
 }
 
 function mapData(obj) {
@@ -286,9 +302,9 @@ function buildCenter(c) {
         ${resources}
         <h2>Parks</h2>
         <div class="at-park-grid">${grid}</div>
-      </div></section>
+      </div></section>${notesSection({ location: c.slug })}
     </main>` +
-    foot({ map: true });
+    foot({ map: true, notes: true });
   write(`${c.slug}/index.html`, html);
 }
 
@@ -335,15 +351,30 @@ function buildPark(p) {
         <h2>Accessibility Ratings</h2>
         <p class="at-muted">Each amenity was scored against an ADA-based checklist. <strong>N/A</strong> means the amenity is absent; parks are not penalized for it. See <a href="/accesstrails/about/#project-methodology">the methodology</a> for how scores were assigned.</p>
         ${cats}
-      </div></section>
+      </div></section>${notesSection({ location: p.center, park: p.slug, parkName: p.name })}
     </main>` +
-    foot({ map: true });
+    foot({ map: true, notes: true });
   write(`parks/${p.slug}/index.html`, html);
 }
 
 /* ---------------- CONTRIBUTE ---------------- */
+// Mirrors js/catalog.js (keep in sync): grouped park-amenity taxonomy used by
+// the note forms; here it scopes general contributions onto the area pages.
+const FEATURE_OPTGROUPS = [
+  ['Getting there', [['parking', 'Parking'], ['dropoff', 'Drop-off or loading'], ['paths', 'Paths and entrances']]],
+  ['On the trails', [['trails', 'Trails']]],
+  ['Facilities', [['bathrooms', 'Bathrooms'], ['picnic_seating', 'Picnic shelters and seating'], ['visitors_center', 'Visitors center or clubhouse'], ['playground', 'Playground'], ['water_features', 'Water access']]],
+  ['Information and environment', [['signage', 'Signs and wayfinding'], ['sensory', 'Sensory environment']]],
+  ['', [['other', 'Something else']]],
+];
+
 function buildContribute() {
   const finds = ['ADA Accessible Park', 'ADA Accessible Park Feature', 'Park that needs an ADA Feature'];
+  const areaOpts = centersData.map(c => `<option value="${c.slug}">${esc(c.name.replace('SPARC ', ''))} — near ${esc(c.name)}</option>`).join('');
+  const featureOpts = FEATURE_OPTGROUPS.map(([g, items]) => {
+    const opts = items.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join('');
+    return g ? `<optgroup label="${esc(g)}">${opts}</optgroup>` : opts;
+  }).join('');
   const findRadios = finds.map((v, i) => `
             <label class="at-choice"><input type="radio" name="find_type" value="${esc(v)}" required${i === 0 ? ' aria-describedby="find_type-err"' : ''}> ${esc(v)}</label>`).join('');
   const html = head('Contribute a Park Review | Access Trails NOVA',
@@ -369,6 +400,23 @@ function buildContribute() {
             <input class="at-input" type="text" id="park_name" name="park_name" required
                    aria-describedby="park_name-hint park_name-err" autocomplete="off">
             <p class="at-error" id="park_name-err" hidden>Please enter the park name and city.</p>
+          </div>
+
+          <div class="at-field">
+            <label for="location_slug">Which SPARC center is it near? <span class="at-muted">(optional)</span></label>
+            <span class="at-hint" id="location_slug-hint">If you choose one, your note also appears on that area's page.</span>
+            <select class="at-select" id="location_slug" name="location_slug" aria-describedby="location_slug-hint">
+              <option value="">Not sure / elsewhere in NOVA</option>
+              ${areaOpts}
+            </select>
+          </div>
+
+          <div class="at-field">
+            <label for="feature_type">Which part of the park is it about? <span class="at-muted">(optional)</span></label>
+            <select class="at-select" id="feature_type" name="feature_type">
+              <option value="">Choose one…</option>
+              ${featureOpts}
+            </select>
           </div>
 
           <div class="at-field">
@@ -436,9 +484,10 @@ function buildSubmissions() {
     `<main id="at-main" class="at-main">
       <section class="at-section"><div class="at-container">
         <h1>Community Submissions</h1>
-        <p class="at-lead">Accessible parks and features shared by the community and reviewed by SPARC. Spotted something we should add? <a href="/accesstrails/contribute/">Contribute a park review</a>.</p>
+        <p class="at-lead">Accessibility notes about NOVA parks from the SPARC team and the community. Notes appear here the moment they're posted — from this page's <a href="/accesstrails/contribute/">contribute form</a> or right on each <a href="/accesstrails/">center and park page</a>. SPARC reviews everything and removes anything off-topic; names and contact details are never shown.</p>
+        <div id="at-sub-filters" class="at-chiprow" role="group" aria-label="Filter notes by SPARC center area"></div>
         <p id="at-sub-status" role="status" aria-live="polite" class="at-muted">Loading community submissions…</p>
-        <div id="at-sub-list" class="at-park-grid"></div>
+        <div id="at-sub-list" class="at-note-list"></div>
       </div></section>
     </main>` +
     FOOTER +
@@ -484,12 +533,18 @@ function buildConsole() {
             <button type="button" id="at-signout" class="at-btnlink" style="background:var(--medium-gray)">Sign out</button>
           </p>
 
-          <h2>Submissions</h2>
+          <h2 id="at-h-triage">Community notes</h2>
+          <p class="at-muted">Notes are <strong>live on the public pages the moment they're posted</strong> (like /ART's community board). Mark good ones reviewed; archive or mark as spam to hide anything off-topic. Deleting is permanent.</p>
+          <div id="at-console-tabs" class="at-chiprow" role="tablist" aria-label="Filter by status"></div>
+          <div id="at-console-locs" class="at-chiprow" role="group" aria-label="Filter by SPARC center area"></div>
           <div id="at-console-subs" aria-live="polite"></div>
+
+          <h2 id="at-h-submit">Add a field note</h2>
+          <div id="at-panel-submit"></div>
 
           <div id="at-console-roster" hidden>
             <h2>Team roster</h2>
-            <p class="at-muted">Admins can authorize anyone — SPARC staff or community volunteers — to review submissions. Added emails can sign in with a magic link. This is the shared SPARC Access roster.</p>
+            <p class="at-muted">Admins can authorize anyone — SPARC staff or community volunteers — to use this console. An added person signs in by entering their email, choosing a password, and selecting "Create a password" (no email is sent). This is the shared SPARC Access roster.</p>
             <form id="at-roster-form" class="at-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
               <div class="at-field" style="flex:2;min-width:200px;margin:0">
                 <label for="at-roster-email">Email to authorize</label>

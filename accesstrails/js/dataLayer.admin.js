@@ -9,13 +9,25 @@ function photoUrls(paths) {
 
 export const AdminData = {
   // Submissions --------------------------------------------------------------
-  async list() {
-    const { data, error } = await supabase
+  async list({ status, location } = {}) {
+    let q = supabase
       .from(SUBMISSIONS_TABLE)
       .select('*')
       .order('created_at', { ascending: false });
+    if (status) q = q.eq('status', status);
+    if (location) q = q.eq('location_slug', location);
+    const { data, error } = await q;
     if (error) throw error;
     return (data || []).map(r => ({ ...r, photos: photoUrls(r.photo_paths) }));
+  },
+
+  // How many submissions are waiting in each status (for the tab badges).
+  async counts() {
+    const { data, error } = await supabase.from(SUBMISSIONS_TABLE).select('status');
+    if (error) throw error;
+    const out = { new: 0, reviewed: 0, archived: 0, spam: 0 };
+    (data || []).forEach(r => { out[r.status] = (out[r.status] || 0) + 1; });
+    return out;
   },
 
   async update(id, fields) {

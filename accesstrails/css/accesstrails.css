@@ -191,3 +191,47 @@ h1, h2, h3 { scroll-margin-top: 100px; }
   .at-hero { padding: 40px 0; }
   .at-cat-head { flex-direction: column; }
 }
+
+/* ---------- Accessibility notes (feed + form, /ART parity) ---------- */
+.at-notes-section { background: var(--sparc-soft-gray, #f4f6f8); }
+.at-note-list { display: grid; gap: 16px; margin-top: 18px; }
+.at-note-card { background: #fff; border: 1px solid var(--at-line); border-radius: 12px;
+  padding: 18px 20px; max-width: 760px; }
+.at-note-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.at-note-date { color: var(--medium-gray); font-size: .85rem; }
+.at-note-body { margin: 10px 0 0; white-space: pre-wrap; max-width: 68ch; }
+.at-note-photos { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.at-note-photos img { width: 132px; height: 132px; object-fit: cover; border-radius: 8px;
+  border: 1px solid var(--at-line); }
+/* Source badges: label + distinct shape (border) so colour isn't the only signal */
+.at-notesrc { font-size: .8rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.at-notesrc--team { background: var(--rate-acc-bg); color: var(--rate-acc-fg);
+  border: 1.5px solid var(--rate-acc-fg); }
+.at-notesrc--community { background: #e7eef9; color: #1d4e89; border: 1.5px dashed #1d4e89; }
+.at-notechip { font-size: .8rem; font-weight: 600; padding: 3px 10px; border-radius: 6px;
+  background: #eef1f4; color: var(--dark-gray); border: 1px solid var(--at-line); }
+
+/* Type picker — radio cards with hints, like the /ART report form */
+.at-typegroup { font-size: .85rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--medium-gray); margin: 14px 0 6px; }
+.at-typegrid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.at-typecard { display: block; border: 2px solid var(--at-line); border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; background: #fff; }
+.at-typecard:hover { border-color: var(--primary-blue-light); }
+.at-typecard:has(input:checked) { border-color: #256d0a; background: var(--rate-acc-bg); }
+.at-typecard:has(input:focus-visible) { outline: 3px solid var(--primary-blue-light); outline-offset: 2px; }
+.at-typecard-label { font-weight: 700; }
+.at-typecard-hint { display: block; font-size: .85rem; color: var(--medium-gray); margin-top: 2px; }
+
+/* Filter chips (status tabs / area filters) */
+.at-chiprow { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+.at-chip { border: 1.5px solid var(--at-line); background: #fff; color: var(--dark-gray);
+  border-radius: 999px; padding: 7px 16px; font: 600 .92rem var(--font-body, inherit); cursor: pointer; }
+.at-chip:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+.at-chip--on { background: var(--primary-blue); border-color: var(--primary-blue); color: #fff; }
+.at-chip-count { font-weight: 700; }
+
+/* Danger buttons (console) */
+.at-btn-danger { background: none; border: 1.5px solid var(--rate-inacc-fg); color: var(--rate-inacc-fg);
+  border-radius: 8px; padding: 8px 14px; cursor: pointer; font: 600 .95rem var(--font-body, inherit); }
+.at-btn-danger:hover { background: var(--rate-inacc-bg); }
