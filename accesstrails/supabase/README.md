@@ -1,39 +1,53 @@
-# Access Trails — Contribute form backend (PROPOSED)
+# Access Trails — Contribute / Submissions / Console backend (LIVE)
 
-> **Status: proposed, NOT applied.** These migrations describe the backend the
-> Contribute form needs. Per the migration plan, the schema is written here for
-> review and is **not** applied to Supabase until SPARC signs off. The form is
-> gated by `SUBMISSIONS_ENABLED = false` in `js/supabaseClient.js` until then.
+Backed by SPARC's existing Supabase project (`ldxpockcgcxvsrbyhcnt`, "SPARC
+Website And Accessibility Project") — the same one the `/access` tooling uses.
+**Applied 2026-07.** The migrations in `migrations/` document exactly what is
+live.
 
-## What it creates
-1. `0001_schema.sql` — table `public.access_trails_submissions` (one row per
-   public submission; staff-triaged via a `status` column; nothing public).
-2. `0002_rls.sql` — Row Level Security: the **anon** role may `INSERT` only
-   (no read/update/delete); authenticated staff may read and triage.
-3. `0003_storage.sql` — **private** Storage bucket `access-trails-submissions`;
-   anon may upload only; staff read via signed URLs.
+## Surfaces
+1. **`/accesstrails/contribute/`** — public form. Anonymous `INSERT` into
+   `access_trails_submissions` (+ optional photo upload). Anyone can submit.
+2. **`/accesstrails/submissions/`** — public. Reads the PII-safe
+   `access_trails_public` view (only rows staff marked `shown_publicly`, only
+   non-personal columns). No login.
+3. **`/accesstrails/console/`** — staff Team Console. Email + password
+   (`signInWithPassword` / `signUp`), **mirroring the /ART app — no magic links,
+   so no Resend/SMTP is needed**. Staff triage submissions and (admins) manage
+   the roster.
 
-This mirrors the pattern of the existing `/access` tool (`access/supabase/`),
-but inverts the direction: there the public *reads* published rows; here the
-public *submits* rows that stay private until staff review them.
+## Authorization — reuses the shared roster
+Authorization is the shared `access_staff` table via `access_role()` (returns
+`admin` | `editor` | `contributor` | `''`). Only emails on the roster can read
+or triage anything — enforced by RLS, not just the UI.
 
-## To apply (after approval)
-```bash
-supabase link --project-ref ldxpockcgcxvsrbyhcnt
-supabase db push          # applies 0001 -> 0002 -> 0003 in order
-```
-Or paste each file into the dashboard SQL editor in order. Then flip
-`SUBMISSIONS_ENABLED = true` in `js/supabaseClient.js`.
+- **Admins** (e.g. `andrew@sparcsolutions.org`, already an admin) can add or
+  remove **any** email — SPARC staff or outside volunteers — right from the
+  console's "Team roster" panel (the existing `"admin manages roster"` policy).
+- A newly added person goes to the console, enters their email, and picks
+  **Create a password** (`signUp`). Because this project has email confirmation
+  disabled (that is how /ART works without an email service), they get an active
+  session immediately — no email is ever sent.
+- Password reset: ask an admin (same as /ART: "Forgot password? Ask Erica or
+  Andrew.").
+
+## RLS summary
+- `access_trails_submissions`: anon `INSERT` only, constrained to
+  `status='new'`, no `team_note`, `shown_publicly=false` (verified: a
+  self-publish attempt returns 401). Staff (`access_role() <> ''`) full access.
+  Anon cannot `SELECT` the raw table (personal data never exposed).
+- `access_trails_public` view: anon `SELECT` (published, non-personal only).
+- Storage `access-trails-photos` (public bucket, mirrors barrier/report-photos):
+  anon upload; anon read; staff manage.
 
 ## Spam mitigation
-- **Honeypot** hidden `website` field (bots that fill it are silently dropped).
-- **Client rate limit** — one submit per 30s per browser (localStorage).
-- **Optional DB rate guard** — a commented trigger in `0002_rls.sql` caps
-  anonymous inserts per minute (defense in depth); enable if abuse appears.
-- CHECK constraints bound `park_name`/`description` length and force
-  `status = 'new'` on anonymous insert.
+Honeypot field + client 30s rate-limit + length CHECK constraints + the
+anon-insert-only shape. A DB-side per-minute rate guard can be added later if
+abuse appears.
 
-## Open items for SPARC
-- Confirm the staff triage surface (dashboard vs. a small authenticated console
-  like `/access/admin.html`).
-- Decide retention / moderation policy for submitted photos.
+## Notes for SPARC
+- The photo bucket is public-read (consistent with the existing SPARC access
+  buckets). Any uploaded image is reachable by URL; staff should archive/delete
+  spam or sensitive photos during triage.
+- Roster changes here affect the shared SPARC Access roster (same `access_staff`
+  used by `/access`).

@@ -77,8 +77,8 @@ async function onSubmit(e) {
     park_name: form.park_name.value.trim(),
     description: form.description.value.trim(),
     may_contact: form.querySelector('[name="may_contact"]:checked').value === 'Yes',
-    first_name: form.first_name.value.trim() || null,
-    last_name: form.last_name.value.trim() || null,
+    reporter_first: form.first_name.value.trim() || null,
+    reporter_last: form.last_name.value.trim() || null,
     contact_method: form.contact_method.value,
     contact_detail: form.contact_detail.value.trim() || null,
   };
@@ -94,14 +94,15 @@ async function onSubmit(e) {
   btn.disabled = true; btn.textContent = 'Submitting…';
   try {
     const photo = form.photo.files[0];
-    let photo_path = null;
+    let photo_paths = null;
     if (photo) {
       const safe = photo.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      photo_path = `${Date.now()}-${Math.round(performance.now())}-${safe}`;
-      const up = await supabase.storage.from(SUBMISSIONS_BUCKET).upload(photo_path, photo, { upsert: false });
+      const path = `${Date.now()}-${Math.round(performance.now())}-${safe}`;
+      const up = await supabase.storage.from(SUBMISSIONS_BUCKET).upload(path, photo, { upsert: false });
       if (up.error) throw up.error;
+      photo_paths = [path];
     }
-    const { error } = await supabase.from(SUBMISSIONS_TABLE).insert({ ...payload, photo_path });
+    const { error } = await supabase.from(SUBMISSIONS_TABLE).insert({ ...payload, photo_paths });
     if (error) throw error;
     form.reset();
     showStatus('ok', 'Thank you! Your review has been submitted and will help improve this guide.');

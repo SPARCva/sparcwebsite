@@ -5,15 +5,14 @@
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PD1XQ0NDCD');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Accessible parks near SPARC McLean (The Old Firehouse), rated for wheelchair accessibility by SPARC Program Staff.">
-    <title>McLean | Access Trails NOVA</title>
+    <meta name="description" content="SPARC staff console for reviewing Access Trails community submissions.">
+    <title>Team Console | Access Trails NOVA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/accesstrails/css/accesstrails.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 </head>
 <body class="accesstrails">
 <a class="at-skip" href="#at-main">Skip to main content</a>
@@ -33,42 +32,66 @@
             </ul>
             <div class="mobile-toggle"><span></span><span></span><span></span></div>
         </nav>
-    </header><nav class="at-subnav" aria-label="Breadcrumb"><ol><li><a href="/">SPARC</a></li><li><a href="/accesstrails/">Access Trails</a></li><li><span aria-current="page">McLean</span></li></ol></nav><main id="at-main" class="at-main">
+    </header><nav class="at-subnav" aria-label="Breadcrumb"><ol><li><a href="/">SPARC</a></li><li><a href="/accesstrails/">Access Trails</a></li><li><span aria-current="page">Team Console</span></li></ol></nav><main id="at-main" class="at-main">
       <section class="at-section"><div class="at-container">
-        <h1>SPARC McLean</h1>
-        <p class="at-lead">The Old Firehouse</p>
-        <address class="at-address">1440 Chain Bridge Road</address>
-        <figure class="at-map-figure">
-          <div class="at-map" id="at-map" role="img" aria-label="Map showing SPARC McLean and its nearby accessible parks" tabindex="0"></div>
-          <script type="application/json" id="at-map-data">{"center":{"lat":38.9332828,"lng":-77.1790481,"zoom":11},"points":[{"lat":38.9332828,"lng":-77.1790481,"label":"SPARC McLean","kind":"SPARC center","address":"1440 Chain Bridge Road"},{"lat":38.9951903,"lng":-77.2554058,"label":"Great Falls National Park","rating":"mostly-accessible","href":"/accesstrails/parks/great-falls/"},{"lat":38.9383676,"lng":-77.264695,"label":"Wolf Trap National Park","rating":"mostly-accessible","href":"/accesstrails/parks/wolf-trap/"}]}</script>
-          <details class="at-map-fallback"><summary>View this map as a text list</summary>
-    <table class="at-maptable"><caption class="at-muted">Locations shown on the map above</caption>
-      <thead><tr><th scope="col">Location</th><th scope="col">Rating</th><th scope="col">Address / coordinates</th></tr></thead>
-      <tbody><tr><th scope="row">SPARC McLean</th><td>SPARC center</td><td>1440 Chain Bridge Road</td></tr><tr><th scope="row"><a href="/accesstrails/parks/great-falls/">Great Falls National Park</a></th><td>Mostly Accessible</td><td>38.9951903, -77.2554058</td></tr><tr><th scope="row"><a href="/accesstrails/parks/wolf-trap/">Wolf Trap National Park</a></th><td>Mostly Accessible</td><td>38.9383676, -77.264695</td></tr></tbody></table></details>
-        </figure>
-        
-        <h2>Parks</h2>
-        <div class="at-park-grid">
-        <article class="at-park-card">
-          <picture>
-      <source type="image/webp" srcset="/accesstrails/img/parks/great-falls/img-2777-400.webp 400w, /accesstrails/img/parks/great-falls/img-2777-800.webp 800w" sizes="(max-width:700px) 100vw, 340px">
-      <img src="/accesstrails/img/parks/great-falls/img-2777.jpeg" alt="Clear directional signage along the trail at Great Falls National Park" loading="lazy" decoding="async" class="">
-    </picture>
-          <div class="at-park-card-body">
-            <h3><a href="/accesstrails/parks/great-falls/">Great Falls National Park</a></h3>
-            <span class="at-badge at-badge--mostly-accessible"><span class="at-badge-mark-wrap" aria-hidden="true"><svg class="at-badge-mark" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/></svg></span><span class="at-sr">Accessibility rating: </span>Mostly Accessible</span>
+        <h1>Team Console</h1>
+        <div id="at-console-status" role="status" aria-live="polite"></div>
+
+        <div id="at-console-auth" hidden>
+          <p class="at-lead">Sign in with your email and password to review submissions. First time here? Enter your email, choose a password, and select <strong>Create a password</strong>. Your email must already be on the team roster — ask Erica or Andrew to add you.</p>
+          <p id="at-signin-note" class="at-muted"></p>
+          <form id="at-signin-form" class="at-form">
+            <div class="at-field">
+              <label for="at-signin-email">Email address</label>
+              <input class="at-input" type="email" id="at-signin-email" name="email" autocomplete="email" required>
+            </div>
+            <div class="at-field">
+              <label for="at-signin-password">Password</label>
+              <span class="at-hint" id="at-signin-pw-hint">At least 8 characters.</span>
+              <input class="at-input" type="password" id="at-signin-password" name="password" autocomplete="current-password" aria-describedby="at-signin-pw-hint" minlength="8" required>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="at-submit" type="submit">Log in</button>
+              <button class="at-btnlink" type="button" id="at-create-password">Create a password</button>
+            </div>
+            <p id="at-signin-msg" class="at-muted" role="status" aria-live="polite" style="margin-top:10px"></p>
+          </form>
+        </div>
+
+        <div id="at-console-app" hidden>
+          <p style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <span id="at-console-who"></span>
+            <button type="button" id="at-signout" class="at-btnlink" style="background:var(--medium-gray)">Sign out</button>
+          </p>
+
+          <h2>Submissions</h2>
+          <div id="at-console-subs" aria-live="polite"></div>
+
+          <div id="at-console-roster" hidden>
+            <h2>Team roster</h2>
+            <p class="at-muted">Admins can authorize anyone — SPARC staff or community volunteers — to review submissions. Added emails can sign in with a magic link. This is the shared SPARC Access roster.</p>
+            <form id="at-roster-form" class="at-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+              <div class="at-field" style="flex:2;min-width:200px;margin:0">
+                <label for="at-roster-email">Email to authorize</label>
+                <input class="at-input" type="email" id="at-roster-email" required autocomplete="off">
+              </div>
+              <div class="at-field" style="flex:1;min-width:130px;margin:0">
+                <label for="at-roster-role">Role</label>
+                <select class="at-select" id="at-roster-role">
+                  <option value="contributor">contributor</option>
+                  <option value="editor">editor</option>
+                  <option value="admin">admin</option>
+                </select>
+              </div>
+              <div class="at-field" style="flex:1;min-width:130px;margin:0">
+                <label for="at-roster-name">Name (optional)</label>
+                <input class="at-input" type="text" id="at-roster-name" autocomplete="off">
+              </div>
+              <button class="at-submit" type="submit">Add person</button>
+            </form>
+            <ul id="at-roster-list" style="list-style:none;padding:0;margin-top:16px"></ul>
           </div>
-        </article>
-        <article class="at-park-card">
-          <picture>
-      <source type="image/webp" srcset="/accesstrails/img/parks/wolf-trap/img-0631-400.webp 400w, /accesstrails/img/parks/wolf-trap/img-0631-800.webp 800w" sizes="(max-width:700px) 100vw, 340px">
-      <img src="/accesstrails/img/parks/wolf-trap/img-0631.jpg" alt="Signage near the main amphitheater at Wolf Trap National Park" loading="lazy" decoding="async" class="">
-    </picture>
-          <div class="at-park-card-body">
-            <h3><a href="/accesstrails/parks/wolf-trap/">Wolf Trap National Park</a></h3>
-            <span class="at-badge at-badge--mostly-accessible"><span class="at-badge-mark-wrap" aria-hidden="true"><svg class="at-badge-mark" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/></svg></span><span class="at-sr">Accessibility rating: </span>Mostly Accessible</span>
-          </div>
-        </article></div>
+        </div>
       </div></section>
     </main>
     <footer class="footer" style="color: white;">
@@ -107,8 +130,6 @@
             <p style="text-align:center; margin-top:24px; opacity:.85; font-size:.9rem;">Access Trails NOVA research and photography by Andrew O'Dell, SPARC Program Staff (Summer 2025).</p>
         </div>
     </footer>
-    <script src="/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-    <script src="/accesstrails/js/maps.js"></script>
+    <script type="module" src="/accesstrails/js/console.js"></script>
 </body>
 </html>
