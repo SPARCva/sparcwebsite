@@ -1,38 +1,42 @@
 /**
- * SPARC Summit — email relay (Google Apps Script web app)
- * --------------------------------------------------------
- * Sends the "Join Virtually for Free" emails FROM the SPARC work account,
- * with no 2-Step Verification and no App Password (the SPARC Google org
- * disallows 2SV, so Gmail SMTP App Passwords are impossible). A web app
- * deployed "Execute as: Me" sends mail as the deploying account after a
- * single normal sign-in + consent.
+ * SPARC Summit — email relay + RSVP master sheet (Google Apps Script web app)
+ * ---------------------------------------------------------------------------
+ * v2. Does two things for each "Join Virtually for Free" registration relayed
+ * from the Supabase edge function `virtual-summit-register`:
+ *   1. Sends the emails FROM the SPARC work account (no 2SV / App Password —
+ *      the SPARC Google org disallows 2SV, so a web app deployed
+ *      "Execute as: Me" is the approved sending pattern; see CLAUDE.md).
+ *   2. Appends the registrant to the "Summit RSVPs — Master List" Google
+ *      Sheet, labeled Attendance = "Virtual", so online and in-person RSVPs
+ *      live in one consolidated, always-current list.
  *
- * DEPLOY (one time, ~5 minutes, signed in as erica@sparcsolutions.org):
- *   1. Go to https://script.google.com -> New project.
- *   2. Replace the default code with this file. Name the project
- *      "SPARC Summit Email Relay".
- *   3. Set SHARED_SECRET below to the real value (stored in the
- *      summit_email_relay_config table in Supabase — never commit it).
- *   4. Deploy -> New deployment -> type "Web app":
- *        - Execute as:            Me (erica@sparcsolutions.org)
- *        - Who has access:        Anyone
- *      Click Deploy, click through the authorization prompt ("Advanced ->
- *      Go to ... (unsafe)" is expected for personal scripts), and Allow.
- *   5. Copy the Web app URL (ends in /exec) and store it in
- *      summit_email_relay_config.webhook_url.
+ * The sheet is created automatically in the deploying account's My Drive on
+ * first use; its ID is remembered in Script Properties (RSVP_SHEET_ID).
  *
- * The Supabase edge function `virtual-summit-register` POSTs
- *   { secret, name, email, source, notify? }
- * for each registration; this script sends:
- *   (a) a confirmation email with the live Zoom details to the registrant
- *   (b) a notification email to the staff inbox (default: the account that
- *       deployed this script).
+ * DEPLOY / UPDATE (signed in as the SPARC work account):
+ *   1. Open the existing "SPARC Summit Email Relay" project at
+ *      https://script.google.com (or create a new project).
+ *   2. Replace the code with this file. Set SHARED_SECRET to the real value
+ *      (stored in the summit_email_relay_config table — never commit it).
+ *      The private copy may also carry IMPORT_ROWS (attendee data is PII and
+ *      is never committed to this public repo).
+ *   3. Run setupMasterSheet() once from the editor (Run ▶). Approve the
+ *      permissions prompt. The execution log prints the sheet URL.
+ *   4. Deploy → Manage deployments → Edit (pencil) → Version: New version →
+ *      Deploy. (Editing an existing deployment keeps the same /exec URL, so
+ *      nothing needs to change in Supabase. Only a brand-new deployment
+ *      would mint a new URL — then update summit_email_relay_config.)
  *
  * Quotas: consumer Gmail 100 recipients/day, Google Workspace 1,500/day —
  * each registration uses 2. Plenty for the summit.
  */
 
 var SHARED_SECRET = "PASTE_SHARED_SECRET_HERE"; // from summit_email_relay_config
+
+// One-time import for setupMasterSheet(): rows of
+// [Name, Email, Category / Group, Attendance, Registered, Notes].
+// Left EMPTY in the repo copy — attendee lists are PII and stay out of git.
+var IMPORT_ROWS = [];
 
 // ---- Summit / Zoom constants --------------------------------------------------
 var SUMMIT_NAME = "A Call to Conscience: The SPARC Summit";
@@ -43,6 +47,9 @@ var ZOOM_URL = "https://gwu-edu.zoom.us/s/97988820283?pwd=tyf6ZoWlQ5Wp5VA9LSCGvo
 var ZOOM_PASSCODE = "706309";
 var SPARC_SITE = "https://www.sparcsolutions.org";
 var FROM_NAME = "SPARC Summit";
+
+var SHEET_TITLE = "Summit RSVPs — Master List";
+var SHEET_HEADERS = ["Name", "Primary Email Address", "Category / Group", "Attendance", "Registered", "Notes"];
 
 function doPost(e) {
   var out = { ok: false };
@@ -62,6 +69,7 @@ function doPost(e) {
     out.ok = true;
     out.confirmation = false;
     out.notification = false;
+    out.sheet = false;
 
     // (a) Confirmation with Zoom details -> registrant
     try {
@@ -89,16 +97,69 @@ function doPost(e) {
           "Name:   " + name + "\n" +
           "Email:  " + email + "\n" +
           "Source: " + source + "\n\n" +
-          "This registration was also saved to the summit_virtual_registrations table in Supabase.",
+          "Also added to the \"" + SHEET_TITLE + "\" Google Sheet and saved to " +
+          "the summit_virtual_registrations table in Supabase.",
       });
       out.notification = true;
     } catch (err) {
       out.error = (out.error ? out.error + "; " : "") + "notification: " + err;
     }
+
+    // (c) Append to the consolidated RSVP sheet
+    try {
+      getSheet_().appendRow([name, email, "Virtual Attendee", "Virtual", new Date(), "via " + source]);
+      out.sheet = true;
+    } catch (err) {
+      out.error = (out.error ? out.error + "; " : "") + "sheet: " + err;
+    }
   } catch (err) {
     out = { ok: false, error: String(err) };
   }
   return respond_(out);
+}
+
+/**
+ * Returns the "RSVPs" sheet of the master spreadsheet, creating the
+ * spreadsheet (and remembering its ID in Script Properties) if needed.
+ */
+function getSheet_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty("RSVP_SHEET_ID");
+  var ss = null;
+  if (id) {
+    try { ss = SpreadsheetApp.openById(id); } catch (err) { ss = null; }
+  }
+  if (!ss) {
+    ss = SpreadsheetApp.create(SHEET_TITLE);
+    props.setProperty("RSVP_SHEET_ID", ss.getId());
+    var sh = ss.getSheets()[0];
+    sh.setName("RSVPs");
+    sh.appendRow(SHEET_HEADERS);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, SHEET_HEADERS.length)
+      .setFontWeight("bold").setBackground("#002B50").setFontColor("#FFFFFF");
+    var widths = [200, 260, 320, 100, 150, 280];
+    for (var i = 0; i < widths.length; i++) sh.setColumnWidth(i + 1, widths[i]);
+  }
+  return ss.getSheets()[0];
+}
+
+/**
+ * Run ONCE from the editor after pasting this code: creates the master sheet
+ * and bulk-imports IMPORT_ROWS (the existing in-person + virtual RSVPs).
+ * Safe to re-run — it only imports when the sheet is still empty.
+ * The execution log prints the spreadsheet URL.
+ */
+function setupMasterSheet() {
+  var sh = getSheet_();
+  if (sh.getLastRow() <= 1 && IMPORT_ROWS.length) {
+    sh.getRange(2, 1, IMPORT_ROWS.length, SHEET_HEADERS.length).setValues(IMPORT_ROWS);
+  }
+  var url = SpreadsheetApp.openById(
+    PropertiesService.getScriptProperties().getProperty("RSVP_SHEET_ID")
+  ).getUrl();
+  Logger.log("Master RSVP sheet (" + (sh.getLastRow() - 1) + " rows): " + url);
+  return url;
 }
 
 function respond_(obj) {
@@ -165,8 +226,8 @@ function confirmationHtml_(name) {
 }
 
 /**
- * Optional: run this once from the editor (Run -> sendTestEmail) to verify
- * authorization and see both emails land in your own inbox.
+ * Optional: run from the editor to verify authorization and see the
+ * confirmation email land in your own inbox.
  */
 function sendTestEmail() {
   var me = Session.getEffectiveUser().getEmail();
