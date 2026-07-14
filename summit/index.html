@@ -128,29 +128,29 @@
             box-shadow: 0 8px 25px rgba(76,187,23,0.3);
         }
         .summit-hero-buttons .btn-sponsor {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255,255,255,0.6);
-        }
-        .summit-hero-buttons .btn-sponsor:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: white;
-            transform: translateY(-2px);
-        }
-        .summit-hero-buttons .btn-virtual {
             background: white;
             color: var(--sparc-dark-navy);
             border: 2px solid white;
+        }
+        .summit-hero-buttons .btn-sponsor:hover {
+            background: var(--sparc-soft-gray, #F5F6FA);
+            border-color: var(--sparc-soft-gray, #F5F6FA);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .summit-hero-buttons .btn-virtual {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.6);
             display: inline-flex;
             align-items: center;
             gap: 9px;
         }
         .summit-hero-buttons .btn-virtual svg { flex-shrink: 0; }
         .summit-hero-buttons .btn-virtual:hover {
-            background: var(--sparc-soft-gray, #F5F6FA);
-            border-color: var(--sparc-soft-gray, #F5F6FA);
+            background: rgba(255,255,255,0.1);
+            border-color: white;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         @media (max-width: 768px) {
             .summit-hero { padding: 100px 0 50px; }
@@ -984,11 +984,11 @@
                 </div>
                 <div class="summit-hero-buttons">
                     <a href="javascript:void(0)" onclick="openRegistration('7162881')" class="btn btn-register">Register to Attend</a>
+                    <a href="javascript:void(0)" onclick="openRegistration()" class="btn btn-sponsor">Sponsor this Event</a>
                     <a href="javascript:void(0)" onclick="openVirtualModal()" class="btn btn-virtual">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         Join Virtually for Free
                     </a>
-                    <a href="javascript:void(0)" onclick="openRegistration()" class="btn btn-sponsor">Sponsor this Event</a>
                 </div>
             </div>
         </div>
