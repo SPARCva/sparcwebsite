@@ -28,6 +28,16 @@ with sources mirrored under `supabase/` in this repo.
 - Match existing page structure: inline header/footer per page, shared
   `/css/styles.css` variables (`--sparc-kelly-green`, `--sparc-royal-blue`,
   `--sparc-dark-navy`, ...), Montserrat/Open Sans fonts, gtag snippet.
+- **Page layout (learned the hard way):** all page content must sit in ONE
+  centered column. Never cap individual paragraphs/blocks with a `max-width`
+  narrower than their container — that leaves dead space on the right and the
+  page reads as shifted left on wide screens. Instead cap the page's
+  `.container` itself (e.g. `max-width: 66rem`) and let every element fill it.
+  Before shipping any new page, screenshot it at **1720px wide** (plus 375px)
+  in headless Chromium and confirm content is visually centered.
+- **Audience language:** many SPARC constituents use wheelchairs or other
+  mobility devices. Never describe distances as "X-minute walk" — give
+  distances in miles and describe routes as step-free/curb-cut where true.
 - Public form endpoints: Supabase edge functions with honeypot field
   (`company`) + validation; tables locked with RLS enabled and no policies
   (service-role access only from the function).

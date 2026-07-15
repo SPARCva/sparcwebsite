@@ -49,6 +49,11 @@
         .guide-hero .hero-event { color: #b8e6a0; font-weight: 700; }
 
         /* ===== Layout ===== */
+        /* Single centered content column — everything (headings, text, map,
+           tables, figures) shares one width so nothing reads as left-shifted
+           on wide screens. */
+        .guide-hero .container,
+        .guide-section .container { max-width: 66rem; }
         .guide-section { padding: 48px 0; }
         .guide-section + .guide-section { border-top: 1px solid var(--light-gray); }
         .guide-section h2 {
@@ -64,7 +69,7 @@
             margin: 26px 0 8px;
         }
         .guide-section p, .guide-section li { color: var(--dark-gray); }
-        .guide-intro p { margin-bottom: 12px; max-width: 62rem; }
+        .guide-intro p { margin-bottom: 12px; }
 
         .map-frame-wrap { margin: 20px 0 8px; }
         .map-frame-wrap iframe {
@@ -107,7 +112,6 @@
             border-radius: 8px;
             padding: 16px 18px;
             margin: 18px 0;
-            max-width: 62rem;
         }
         .note-card strong { color: var(--sparc-dark-navy); }
 
@@ -172,11 +176,10 @@
             cursor: pointer;
         }
         details.text-floorplans h3 { margin-top: 16px; }
-        details.text-floorplans p { margin: 6px 0 10px; max-width: 62rem; }
+        details.text-floorplans p { margin: 6px 0 10px; }
         .fp-editorial {
             font-size: 0.85rem;
             color: var(--medium-gray);
-            max-width: 62rem;
         }
 
         /* ===== Quick reference ===== */
@@ -185,7 +188,6 @@
             color: #fff;
             border-radius: 14px;
             padding: 30px 28px;
-            max-width: 62rem;
         }
         .quickref h2 { color: #fff; margin-bottom: 18px; }
         .quickref dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; margin: 0; }
@@ -434,20 +436,47 @@
                                 <td>Mon&ndash;Fri 7 AM&ndash;11 PM &middot; $24/day max &middot; card or mobile pay only</td>
                                 <td><a href="https://transportation.gwu.edu/visitor-parking">GW visitor parking info</a></td>
                             </tr>
+                            <tr>
+                                <th scope="row">GW Hospital Valet Parking (no self-park needed)</th>
+                                <td>900 23rd St NW &mdash; hospital main entrance</td>
+                                <td>0.3 mi</td>
+                                <td>Mon&ndash;Fri 6 AM&ndash;7:30 PM &middot; flat $25/day</td>
+                                <td><a href="https://gwhospital.com/patients-visitors/maps-directions/">GW Hospital parking info</a> &mdash; hand the car off at the door; a good option for drivers with limited mobility</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">1701 Pennsylvania Ave NW Garage</th>
+                                <td>1701 Pennsylvania Ave NW</td>
+                                <td>0.4 mi</td>
+                                <td>Weekdays 6:30 AM&ndash;6 PM only &middot; about $22/day &middot; <strong>cars must be out by 6 PM</strong></td>
+                                <td class="reserve-links"><a href="https://parkmobile.io/parking/locations/dc/washington-dc-parking/parking-lot/1701-pennsylvania-ave-nw-garage">Reserve on ParkMobile</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Watergate 600 Garage</th>
+                                <td>600 New Hampshire Ave NW</td>
+                                <td>0.6 mi</td>
+                                <td>Daily max about $23&ndash;25</td>
+                                <td class="reserve-links"><a href="https://parkchirp.com/facilities/watergate-600-garage/">Prepay on ParkChirp</a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size:0.85rem; color: var(--medium-gray); max-width:62rem;">Rates checked July 2026 and subject to change. More reservable spaces near campus: <a href="https://www.parkwhiz.com/george-washington-university-parking/">ParkWhiz &mdash; parking near George Washington University</a>.</p>
+                <p style="font-size:0.85rem; color: var(--medium-gray);">Rates checked July 2026 and subject to change. These are the closest and most practical of the many garages within a mile of the venue &mdash; dozens more can be compared and reserved at <a href="https://www.parkwhiz.com/george-washington-university-parking/">ParkWhiz &mdash; parking near George Washington University</a>.</p>
 
                 <h3>Metro</h3>
-                <p style="max-width:62rem;"><strong>Foggy Bottom&ndash;GWU station</strong> (Blue, Orange, Silver) &mdash; entrance at 23rd &amp; I (Eye) St NW, about 0.2 miles from the venue: exit the station, head east on I St, then turn right onto 21st St; the MPA building is at the corner of 21st &amp; H. The station has an elevator to street level &mdash; check <a href="https://www.wmata.com/rider-guide/stations/foggy-bottom.cfm">WMATA&rsquo;s Foggy Bottom station page</a> for real-time elevator status.</p>
+                <p><strong>Foggy Bottom&ndash;GWU station</strong> (Blue, Orange, Silver) &mdash; entrance at 23rd &amp; I (Eye) St NW, about 0.2 miles from the venue: exit the station, head east on I St, then turn right onto 21st St; the MPA building is at the corner of 21st &amp; H. The station has an elevator to street level &mdash; check <a href="https://www.wmata.com/rider-guide/stations/foggy-bottom.cfm">WMATA&rsquo;s Foggy Bottom station page</a> for real-time elevator status.</p>
 
                 <h3>Food nearby</h3>
-                <ul style="max-width:62rem; padding-left: 22px;">
+                <ul style="padding-left: 22px;">
                     <li><strong>Western Market</strong> (food hall) &mdash; 2000 Pennsylvania Ave NW, 0.1 miles away. 11 quick-service vendors; step-free entry and accessible seating.</li>
                     <li><strong>Founding Farmers DC</strong> &mdash; 1924 Pennsylvania Ave NW, 0.2 miles away. Popular sit-down American; reservations strongly recommended.</li>
                     <li><strong>Tonic at Quigley&rsquo;s</strong> &mdash; 2036 G St NW, 0.2 miles away. Casual American comfort food.</li>
                     <li><strong>Circa at Foggy Bottom</strong> &mdash; 2221 I (Eye) St NW, 0.2 miles away. American bistro with a large patio, on the way to/from the Metro.</li>
+                    <li><strong>Duke&rsquo;s Grocery</strong> &mdash; 2000 Pennsylvania Ave NW, 0.1 miles away. East-London-style pub famous for its Proper Burger; sit-down, takes reservations.</li>
+                    <li><strong>Bindaas Bowls &amp; Rolls</strong> &mdash; 2000 Pennsylvania Ave NW, 0.1 miles away. Counter-service Indian street food — bowls, kati rolls, chaat.</li>
+                    <li><strong>District Commons</strong> &mdash; 2200 Pennsylvania Ave NW, 0.1 miles away. Modern American tavern, roomier sit-down option for groups.</li>
+                    <li><strong>Sweetgreen</strong> &mdash; 2221 I (Eye) St NW, 0.1 miles away. Salads and warm bowls, counter service.</li>
+                    <li><strong>GW Delicatessen</strong> &mdash; 2133 G St NW, 0.2 miles away. Neighborhood deli; breakfast all day, sandwiches, smoothies.</li>
+                    <li><strong>Carvings</strong> &mdash; 2021 F St NW, 0.3 miles away. Deli and coffee bar; hearty sandwiches, counter service.</li>
                 </ul>
                 <div class="note-card">
                     <strong>Good to know:</strong> complimentary refreshments and coffee will be served on the <strong>second floor of the venue</strong> during breaks, so you only need to leave the building if you&rsquo;d like a full lunch.
@@ -459,7 +488,7 @@
         <section class="guide-section" aria-labelledby="floorplans-heading">
             <div class="container">
                 <h2 id="floorplans-heading">Venue Floor Plans</h2>
-                <p style="max-width:62rem;">The Jack Morton Auditorium is on the <strong>first floor</strong> of the MPA Building. Posters and refreshments are on the <strong>second floor</strong>, and additional restrooms are on the <strong>lower level</strong>. An elevator connects all floors. The diagrams below are simplified for wayfinding.</p>
+                <p>The Jack Morton Auditorium is on the <strong>first floor</strong> of the MPA Building. Posters and refreshments are on the <strong>second floor</strong>, and additional restrooms are on the <strong>lower level</strong>. An elevator connects all floors. The diagrams below are simplified for wayfinding.</p>
 
                 <!-- First Floor -->
                 <figure class="floorplan-figure">

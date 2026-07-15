@@ -74,6 +74,21 @@
     /* Marker pins: shape + letter carry meaning, color is reinforcement */
     .pin { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); }
 
+    /* Big always-visible street names */
+    .street-label {
+        display: inline-block;
+        white-space: nowrap;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #3d3d3d;
+        text-transform: uppercase;
+        text-shadow: -2px -2px 3px #fff, 2px -2px 3px #fff, -2px 2px 3px #fff, 2px 2px 3px #fff, 0 0 6px #fff;
+        transform-origin: center center;
+        pointer-events: none;
+    }
+
     /* Permanent labels for venue, Metro, and restaurants */
     .leaflet-tooltip.place-label {
         background: #ffffff;
@@ -317,6 +332,37 @@ window.__initSummitMap = function () {
                 { label: 'Reserve on ParkWhiz', href: 'https://www.parkwhiz.com/columbia-plaza-parking/' }
             ]
         },
+        {
+            cat: 'parking',
+            name: 'GW Hospital Valet Parking',
+            address: '900 23rd St NW (hospital main entrance)',
+            lat: 38.90120, lng: -77.05070,
+            desc: 'Valet parking, flat $25/day, Mon–Fri 6 AM–7:30 PM. No garage stairs or ramps to manage — hand off the car at the door. A good option for drivers with limited mobility.',
+            ada: 'Valet drop-off at an accessible entrance; staff park and retrieve the vehicle.',
+            url: 'https://gwhospital.com/patients-visitors/maps-directions/'
+        },
+        {
+            cat: 'parking',
+            name: 'Watergate 600 Garage',
+            address: '600 New Hampshire Ave NW',
+            lat: 38.89770, lng: -77.05540,
+            desc: 'Commercial garage at the Watergate complex, daily max about $23–25. Prepay online for a guaranteed space.',
+            ada: 'Commercial garage with accessible spaces and elevator.',
+            reserve: [
+                { label: 'Prepay on ParkChirp', href: 'https://parkchirp.com/facilities/watergate-600-garage/' }
+            ]
+        },
+        {
+            cat: 'parking',
+            name: '1701 Pennsylvania Ave NW Garage',
+            address: '1701 Pennsylvania Ave NW',
+            lat: 38.89900, lng: -77.03980,
+            desc: 'Underground garage east of campus, about $22/day. IMPORTANT: open weekdays 6:30 AM–6 PM only — cars must be out by 6 PM.',
+            ada: 'Commercial garage with elevator.',
+            reserve: [
+                { label: 'Reserve on ParkMobile', href: 'https://parkmobile.io/parking/locations/dc/washington-dc-parking/parking-lot/1701-pennsylvania-ave-nw-garage' }
+            ]
+        },
 
         /* ---------- Food ---------- */
         {
@@ -358,6 +404,66 @@ window.__initSummitMap = function () {
             ada: 'Step-free patio and dining room access.',
             url: 'https://circabistros.com/foggy-bottom/',
             label: 'Circa', labelClass: 'label-food', labelDir: 'left'
+        },
+        {
+            cat: 'food',
+            name: 'Duke’s Grocery Foggy Bottom',
+            address: '2000 Pennsylvania Ave NW',
+            lat: 38.90185, lng: -77.04510,
+            desc: 'East-London-style pub famous for the Proper Burger. Sit-down with a big menu; takes reservations.',
+            ada: 'Step-free entry through the 2000 Penn arcade.',
+            url: 'https://www.dukesgrocery.com/foggybottom',
+            label: 'Duke’s Grocery', labelClass: 'label-food', labelDir: 'top'
+        },
+        {
+            cat: 'food',
+            name: 'Bindaas Bowls & Rolls',
+            address: '2000 Pennsylvania Ave NW',
+            lat: 38.90125, lng: -77.04535,
+            desc: 'Counter-service Indian street food — bowls, kati rolls, and chaat. Fast and flavorful.',
+            ada: 'Step-free entry; counter ordering.',
+            url: 'https://www.bindaasdc.com/foggybottom',
+            label: 'Bindaas', labelClass: 'label-food', labelDir: 'right'
+        },
+        {
+            cat: 'food',
+            name: 'District Commons',
+            address: '2200 Pennsylvania Ave NW',
+            lat: 38.90135, lng: -77.04825,
+            desc: 'Modern American tavern — a roomier sit-down option good for groups.',
+            ada: 'Step-free street entrance and accessible restrooms.',
+            url: 'https://www.districtcommonsdc.com/',
+            label: 'District Commons', labelClass: 'label-food', labelDir: 'top'
+        },
+        {
+            cat: 'food',
+            name: 'Sweetgreen',
+            address: '2221 I (Eye) St NW',
+            lat: 38.90082, lng: -77.04862,
+            desc: 'Salads and warm bowls, counter service — quick and light.',
+            ada: 'Step-free entry; counter ordering.',
+            url: 'https://www.sweetgreen.com/locations/',
+            label: 'Sweetgreen', labelClass: 'label-food', labelDir: 'bottom'
+        },
+        {
+            cat: 'food',
+            name: 'GW Delicatessen',
+            address: '2133 G St NW',
+            lat: 38.89810, lng: -77.04745,
+            desc: 'Neighborhood deli — breakfast all day, sandwiches, and smoothies. Cash-friendly campus classic.',
+            ada: 'Small storefront; one shallow step at the door — staff will assist.',
+            url: 'https://www.yelp.com/biz/gw-delicatessen-washington',
+            label: 'GW Deli', labelClass: 'label-food', labelDir: 'left'
+        },
+        {
+            cat: 'food',
+            name: 'Carvings',
+            address: '2021 F St NW',
+            lat: 38.89720, lng: -77.04575,
+            desc: 'Deli and coffee bar — hefty breakfast sandwiches and subs, counter service.',
+            ada: 'Compact interior; carryout is easiest.',
+            url: 'https://www.carvingsdc.com/',
+            label: 'Carvings', labelClass: 'label-food', labelDir: 'right'
         }
     ];
 
@@ -438,22 +544,52 @@ window.__initSummitMap = function () {
     map.getContainer().addEventListener('focus', function () { map.scrollWheelZoom.enable(); }, true);
     map.getContainer().addEventListener('blur', function () { map.scrollWheelZoom.disable(); }, true);
 
-    var primary = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // CARTO Voyager (retina) renders larger, higher-contrast street names
+    // than the default OSM tiles; OSM stays as the fallback.
+    var primary = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
     });
     var fellBack = false;
     primary.on('tileerror', function () {
         if (fellBack) { return; }
         fellBack = true;
         map.removeLayer(primary);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
         document.getElementById('tileNote').style.display = 'block';
     });
     primary.addTo(map);
+
+    // Extra-large street name labels so key streets are always readable,
+    // regardless of tile provider or zoom.
+    var STREETS = [
+        { name: '21st St NW',          lat: 38.89880, lng: -77.04664, rot: -90 },
+        { name: '22nd St NW',          lat: 38.89880, lng: -77.04840, rot: -90 },
+        { name: '23rd St NW',          lat: 38.89950, lng: -77.05050, rot: -90 },
+        { name: '20th St NW',          lat: 38.89880, lng: -77.04480, rot: -90 },
+        { name: 'H St NW',             lat: 38.89952, lng: -77.04390, rot: 0 },
+        { name: 'I (Eye) St NW',       lat: 38.90085, lng: -77.04370, rot: 0 },
+        { name: 'G St NW',             lat: 38.89808, lng: -77.04390, rot: 0 },
+        { name: 'F St NW',             lat: 38.89725, lng: -77.04380, rot: 0 },
+        { name: 'E St NW',             lat: 38.89640, lng: -77.04560, rot: 0 },
+        { name: 'Pennsylvania Ave NW', lat: 38.90235, lng: -77.04760, rot: -9 },
+        { name: 'Virginia Ave NW',     lat: 38.89680, lng: -77.05230, rot: -35 },
+        { name: 'New Hampshire Ave NW', lat: 38.89900, lng: -77.05560, rot: 68 }
+    ];
+    STREETS.forEach(function (st) {
+        L.marker([st.lat, st.lng], {
+            interactive: false,
+            keyboard: false,
+            icon: L.divIcon({
+                className: '',
+                html: '<span class="street-label" aria-hidden="true" style="transform: rotate(' + st.rot + 'deg);">' + st.name + '</span>',
+                iconSize: [0, 0]
+            })
+        }).addTo(map);
+    });
 
     // ---------- markers ----------
     var markers = [];
