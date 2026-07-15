@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Interactive Map — Jack Morton Auditorium, Parking, Metro &amp; Food | SPARC Summit</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+    :root {
+        --sparc-kelly-green: #4CBB17;
+        --sparc-kelly-green-dark: #3a9212;
+        --sparc-royal-blue: #00539B;
+        --sparc-dark-navy: #002B50;
+        --venue-green: #2e7d0f;
+        --parking-blue: #00539B;
+        --metro-gray: #37474F;
+        --food-rust: #A63A00;
+        --focus-ring: 3px solid #002B50;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+        font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 16px;
+        color: #212529;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+    }
+    .map-toolbar {
+        padding: 10px 12px 8px;
+        background: #fff;
+        border-bottom: 1px solid #e0e3e7;
+    }
+    .map-toolbar h1 {
+        font-size: 1rem;
+        font-family: 'Montserrat', 'Open Sans', sans-serif;
+        color: var(--sparc-dark-navy);
+        margin-bottom: 8px;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 2px solid var(--sparc-dark-navy);
+        background: #fff;
+        color: var(--sparc-dark-navy);
+        border-radius: 999px;
+        padding: 6px 16px;
+        cursor: pointer;
+        line-height: 1.2;
+    }
+    .chip[aria-pressed="true"] {
+        background: var(--sparc-dark-navy);
+        color: #fff;
+    }
+    .chip:hover { background: #e8eef4; }
+    .chip[aria-pressed="true"]:hover { background: var(--sparc-royal-blue); }
+    .chip:focus-visible, a:focus-visible, button:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 2px;
+    }
+    .map-hint {
+        margin-top: 6px;
+        font-size: 0.8rem;
+        color: #555d66;
+    }
+    #map { flex: 1; min-height: 420px; width: 100%; }
+
+    /* Marker pins: shape + letter carry meaning, color is reinforcement */
+    .pin { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); }
+
+    /* Permanent labels for venue, Metro, and restaurants */
+    .leaflet-tooltip.place-label {
+        background: #ffffff;
+        color: #1a1a1a;
+        border: 2px solid #37474F;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.35);
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 3px 8px;
+        opacity: 1 !important;
+        white-space: nowrap;
+    }
+    .leaflet-tooltip.place-label.label-venue { border-color: var(--venue-green); color: #1d5209; font-size: 0.9rem; }
+    .leaflet-tooltip.place-label.label-metro { border-color: var(--metro-gray); }
+    .leaflet-tooltip.place-label.label-food  { border-color: var(--food-rust); color: #7a2b00; }
+
+    /* Popups */
+    .leaflet-popup-content { font-size: 0.95rem; line-height: 1.45; margin: 14px 16px; }
+    .leaflet-popup-content h2 {
+        font-size: 1.02rem;
+        font-family: 'Montserrat', 'Open Sans', sans-serif;
+        color: var(--sparc-dark-navy);
+        margin-bottom: 2px;
+    }
+    .popup-addr { color: #444; }
+    .popup-walk { font-weight: 700; color: #1d5209; }
+    .popup-meta { margin-top: 6px; font-size: 0.88rem; color: #333; }
+    .popup-ada { margin-top: 6px; font-size: 0.88rem; color: #00539B; font-weight: 600; }
+    .popup-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .popup-btns a {
+        display: inline-block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-decoration: none;
+        border-radius: 6px;
+        padding: 7px 12px;
+        border: 2px solid var(--sparc-royal-blue);
+        color: var(--sparc-royal-blue);
+        background: #fff;
+    }
+    a.popup-btn-primary {
+        background: var(--sparc-royal-blue);
+        color: #fff;
+    }
+    .popup-btns a:hover { background: var(--sparc-dark-navy); border-color: var(--sparc-dark-navy); color: #fff; }
+
+    .tile-fallback-note {
+        position: absolute;
+        z-index: 1000;
+        bottom: 4px;
+        left: 4px;
+        background: rgba(255,255,255,0.9);
+        font-size: 0.72rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .leaflet-fade-anim .leaflet-popup { transition: none; }
+        .leaflet-zoom-anim .leaflet-zoom-animated { transition: none; }
+    }
+</style>
+</head>
+<body>
+<div class="map-toolbar">
+    <h1>Map: Jack Morton Auditorium, parking, Metro &amp; food</h1>
+    <div class="chip-row" role="group" aria-label="Filter map locations by category">
+        <button type="button" class="chip" data-cat="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-cat="venue" aria-pressed="false">Venue</button>
+        <button type="button" class="chip" data-cat="parking" aria-pressed="false">Parking</button>
+        <button type="button" class="chip" data-cat="metro" aria-pressed="false">Metro</button>
+        <button type="button" class="chip" data-cat="food" aria-pressed="false">Food</button>
+    </div>
+    <p class="map-hint">Use Tab to move between markers and Enter to open details. A full text list of every location on this map appears below the map on the venue guide page.</p>
+</div>
+<div id="map" role="region" aria-label="Interactive map of the area around Jack Morton Auditorium showing parking garages, the Foggy Bottom-GWU Metro station, and nearby restaurants. All locations are also listed in text form on the venue guide page."></div>
+<span class="tile-fallback-note" id="tileNote">Backup map tiles in use</span>
+
+<script>
+// Load Leaflet with CDN fallbacks, then start the map. If every CDN is
+// blocked, show a plain-text fallback with a Google Maps link instead.
+(function loadLeaflet() {
+    'use strict';
+    var JS = [
+        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+        'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'
+    ];
+    var CSS = [
+        null, // unpkg CSS already linked in <head>
+        'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'
+    ];
+    function attempt(i) {
+        if (i >= JS.length) {
+            var el = document.getElementById('map');
+            el.innerHTML = '<div style="padding:24px; max-width:40rem; font-size:1rem; line-height:1.5;">' +
+                '<p><strong>The interactive map could not load on your connection.</strong></p>' +
+                '<p style="margin-top:8px;">Venue: Jack Morton Auditorium, 805 21st St NW, Washington, DC 20052. ' +
+                '<a href="https://www.google.com/maps/search/?api=1&query=Jack+Morton+Auditorium+805+21st+St+NW+Washington+DC">Open in Google Maps</a>.</p>' +
+                '<p style="margin-top:8px;">A full text list of parking, Metro, and food options is on the venue guide page below the map.</p></div>';
+            return;
+        }
+        if (CSS[i]) {
+            var l = document.createElement('link');
+            l.rel = 'stylesheet'; l.href = CSS[i];
+            document.head.appendChild(l);
+        }
+        var s = document.createElement('script');
+        s.src = JS[i];
+        s.onload = function () {
+            if (window.L) { window.__initSummitMap(); }
+            else { attempt(i + 1); }
+        };
+        s.onerror = function () { attempt(i + 1); };
+        document.head.appendChild(s);
+    }
+    attempt(0);
+}());
+
+window.__initSummitMap = function () {
+    'use strict';
+
+    var VENUE = { lat: 38.90055, lng: -77.04664 };
+
+    // ------------------------------------------------------------------
+    // LOCATIONS
+    // Facts verified July 2026 against transportation.gwu.edu/visitor-parking,
+    // ParkMobile reservation pages, ParkWhiz listings, wmata.com and venue
+    // correspondence with GW Venues staff.
+    // GW garage rates: $11/hr, $17 up to 2 hrs, $24 daily max, $12 weekend
+    // max, $12 evening max (after 5 PM). Card / Apple Pay / Google Wallet
+    // only — no cash. All GW garages are ADA-compliant.
+    // ------------------------------------------------------------------
+    var LOCATIONS = [
+        {
+            cat: 'venue',
+            name: 'Jack Morton Auditorium (MPA Building)',
+            address: '805 21st St NW, Washington, DC 20052',
+            lat: VENUE.lat, lng: VENUE.lng,
+            desc: 'Summit venue — first floor of GW’s Media & Public Affairs Building. Main entrance on 21st St NW. Doors open 9:30 AM; program 10 AM–4 PM.',
+            ada: 'Wheelchair-accessible entrance on 21st St NW. SPARC’s MEL sensory van will be parked by the main entrance.',
+            url: 'https://events-venues.gwu.edu/specialty-venues',
+            label: 'Jack Morton Auditorium', labelClass: 'label-venue', labelDir: 'right'
+        },
+        {
+            cat: 'metro',
+            name: 'Foggy Bottom–GWU Metro Station',
+            address: '2301 I (Eye) St NW — station entrance at 23rd & I St NW',
+            lat: 38.90095, lng: -77.05052,
+            desc: 'Blue, Orange, and Silver lines. About a 4-minute walk to the venue: exit the station, head east on I St, turn right on 21st St.',
+            ada: 'Elevator-equipped station. Check wmata.com for elevator status before you travel.',
+            url: 'https://www.wmata.com/rider-guide/stations/foggy-bottom.cfm',
+            label: 'Foggy Bottom–GWU Metro', labelClass: 'label-metro', labelDir: 'left'
+        },
+
+        /* ---------- Parking: GW visitor garages (drive-up, no reservation needed) ---------- */
+        {
+            cat: 'parking',
+            name: 'GW University Student Center Garage',
+            address: '800 21st St NW — entrance on H St NW between 21st & 22nd',
+            lat: 38.89985, lng: -77.04760,
+            desc: 'Closest garage — directly across H St from the venue. Open 6 AM–midnight. $24 daily max. Credit card, Apple Pay, or Google Wallet only (no cash). Drive-up; no reservation needed.',
+            ada: 'ADA-compliant garage with accessible spaces near the elevators.',
+            url: 'https://transportation.gwu.edu/visitor-parking'
+        },
+        {
+            cat: 'parking',
+            name: 'GW Science & Engineering Hall Garage',
+            address: '800 22nd St NW — entrance on H St NW between 22nd & 23rd',
+            lat: 38.89985, lng: -77.04920,
+            desc: 'Open 24/7. $24 daily max. Credit card, Apple Pay, or Google Wallet only (no cash). Drive-up; no reservation needed.',
+            ada: 'ADA-compliant garage with accessible spaces and elevator access to street level.',
+            url: 'https://transportation.gwu.edu/visitor-parking'
+        },
+        {
+            cat: 'parking',
+            name: 'GW G Street Garage',
+            address: '2028 G St NW — entrances on 20th & 21st St between F & G',
+            lat: 38.89822, lng: -77.04570,
+            desc: 'Open 24/7. $24 daily max. Credit card, Apple Pay, or Google Wallet only (no cash). About a 3-block walk to the venue.',
+            ada: 'ADA-compliant garage.',
+            url: 'https://transportation.gwu.edu/visitor-parking'
+        },
+        {
+            cat: 'parking',
+            name: 'GW Elliott School Garage',
+            address: '1957 E St NW — entrance on 19th St between E & F',
+            lat: 38.89610, lng: -77.04430,
+            desc: 'Open Mon–Fri 7 AM–11 PM. $24 daily max. Credit card, Apple Pay, or Google Wallet only (no cash). Farther walk (~6 blocks) — a backup option.',
+            ada: 'ADA-compliant garage.',
+            url: 'https://transportation.gwu.edu/visitor-parking'
+        },
+
+        /* ---------- Parking: commercial garages you can RESERVE in advance ---------- */
+        {
+            cat: 'parking',
+            name: '2200 Pennsylvania Ave NW Garage (The Avenue)',
+            address: 'Entrance at 950 22nd St NW',
+            lat: 38.90140, lng: -77.04870,
+            desc: 'Open 24/7, about $29/day. Reserve a guaranteed space in advance with ParkMobile or ParkWhiz — recommended for a weekday event.',
+            ada: 'Commercial ADA-compliant garage with elevator.',
+            reserve: [
+                { label: 'Reserve on ParkMobile', href: 'https://app.parkmobile.io/reservation/63820' },
+                { label: 'Reserve on ParkWhiz', href: 'https://www.parkwhiz.com/p/washington-parking/950-22nd-st-nw' }
+            ]
+        },
+        {
+            cat: 'parking',
+            name: '2100 Pennsylvania Ave NW Garage',
+            address: 'Entrance at 2120 I (Eye) St NW',
+            lat: 38.90118, lng: -77.04750,
+            desc: 'Open 24/7, about $29/day. One block north of the venue. Reserve a guaranteed space in advance with ParkMobile or ParkWhiz.',
+            ada: 'Commercial ADA-compliant garage with elevator.',
+            reserve: [
+                { label: 'Reserve on ParkMobile', href: 'https://app.parkmobile.io/reservation/63821' },
+                { label: 'Reserve on ParkWhiz', href: 'https://www.parkwhiz.com/p/washington-parking/2120-i-st-nw' }
+            ]
+        },
+        {
+            cat: 'parking',
+            name: '533 21st St NW Garage',
+            address: '533 21st St NW (between E & F St)',
+            lat: 38.89710, lng: -77.04660,
+            desc: 'Budget-friendly commercial garage about 4 blocks south of the venue. Reservable on ParkWhiz.',
+            ada: 'Commercial garage; call ahead to confirm accessible spaces.',
+            reserve: [
+                { label: 'Reserve on ParkWhiz', href: 'https://www.parkwhiz.com/p/washington-parking/533-21st-st-nw' }
+            ]
+        },
+        {
+            cat: 'parking',
+            name: 'Columbia Plaza Garage',
+            address: '2400 Virginia Ave NW',
+            lat: 38.89760, lng: -77.05150,
+            desc: 'Large commercial garage, usually one of the cheaper reservable options in Foggy Bottom. Reservable on ParkWhiz.',
+            ada: 'Commercial garage with accessible spaces.',
+            reserve: [
+                { label: 'Reserve on ParkWhiz', href: 'https://www.parkwhiz.com/columbia-plaza-parking/' }
+            ]
+        },
+
+        /* ---------- Food ---------- */
+        {
+            cat: 'food',
+            name: 'Western Market (food hall)',
+            address: '2000 Pennsylvania Ave NW',
+            lat: 38.90153, lng: -77.04570,
+            desc: '11 vendors under one roof — pizza, arepas, bowls, bagels, fried chicken, smoothies and more. Fast, varied, and one block from the venue.',
+            ada: 'Step-free entry, wide aisles, and communal accessible seating.',
+            url: 'https://www.westernmarketdc.com/',
+            label: 'Western Market', labelClass: 'label-food', labelDir: 'bottom'
+        },
+        {
+            cat: 'food',
+            name: 'Founding Farmers DC',
+            address: '1924 Pennsylvania Ave NW',
+            lat: 38.90170, lng: -77.04440,
+            desc: 'Popular farm-to-table American restaurant. Sit-down; reservations strongly recommended.',
+            ada: 'Wheelchair-accessible entrance and restrooms.',
+            url: 'https://www.wearefoundingfarmers.com/location/dc/',
+            label: 'Founding Farmers', labelClass: 'label-food', labelDir: 'right'
+        },
+        {
+            cat: 'food',
+            name: 'Tonic at Quigley’s',
+            address: '2036 G St NW',
+            lat: 38.89800, lng: -77.04630,
+            desc: 'Casual American comfort food (famous tater tots) in a historic corner building. Sit-down or carryout.',
+            ada: 'Accessible entrance on G St; some interior areas are tight — staff will help with seating.',
+            url: 'https://www.tonicrestaurant.com/',
+            label: 'Tonic at Quigley’s', labelClass: 'label-food', labelDir: 'right'
+        },
+        {
+            cat: 'food',
+            name: 'Circa at Foggy Bottom',
+            address: '2221 I (Eye) St NW',
+            lat: 38.90105, lng: -77.04905,
+            desc: 'American bistro with a large patio, between the Metro station and the venue.',
+            ada: 'Step-free patio and dining room access.',
+            url: 'https://circabistros.com/foggy-bottom/',
+            label: 'Circa', labelClass: 'label-food', labelDir: 'left'
+        }
+    ];
+
+    // ---------- helpers ----------
+    function walkMinutes(lat, lng) {
+        var R = 6371000, toRad = Math.PI / 180;
+        var dLat = (lat - VENUE.lat) * toRad, dLng = (lng - VENUE.lng) * toRad;
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(VENUE.lat * toRad) * Math.cos(lat * toRad) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        var meters = 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        // 1.35 street-grid factor, ~80 m/min walking pace
+        return Math.max(1, Math.round(meters * 1.35 / 80));
+    }
+
+    function directionsUrl(loc) {
+        return 'https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=' +
+            encodeURIComponent(loc.lat + ',' + loc.lng);
+    }
+
+    // High-contrast SVG pin: shape + glyph carry the category, color reinforces it.
+    var CAT_STYLE = {
+        venue:   { color: '#2e7d0f', glyph: '★', shape: 'pin',    size: 46 }, // star
+        parking: { color: '#00539B', glyph: 'P',      shape: 'square', size: 38 },
+        metro:   { color: '#37474F', glyph: 'M',      shape: 'circle', size: 38 },
+        food:    { color: '#A63A00', glyph: '♠', shape: 'round',  size: 36 }  // glyph replaced below
+    };
+
+    function pinSvg(cat) {
+        var s = CAT_STYLE[cat], c = s.color, sz = s.size;
+        var glyph = s.glyph;
+        var inner;
+        if (s.shape === 'square') {
+            inner = '<rect x="4" y="2" width="28" height="28" rx="6" fill="' + c + '" stroke="#ffffff" stroke-width="3"/>' +
+                    '<path d="M18 30 L13 40 L23 40 Z" fill="' + c + '"/>' +
+                    '<text x="18" y="23" font-size="19" font-weight="bold" font-family="Arial, sans-serif" fill="#ffffff" text-anchor="middle">P</text>';
+        } else if (s.shape === 'circle') {
+            inner = '<circle cx="18" cy="16" r="14" fill="' + c + '" stroke="#ffffff" stroke-width="3"/>' +
+                    '<path d="M18 30 L13 40 L23 40 Z" fill="' + c + '"/>' +
+                    '<text x="18" y="23" font-size="18" font-weight="bold" font-family="Arial, sans-serif" fill="#ffffff" text-anchor="middle">M</text>';
+        } else if (s.shape === 'pin') {
+            inner = '<path d="M18 44 C18 44 4 26 4 15 A14 14 0 0 1 32 15 C32 26 18 44 18 44 Z" fill="' + c + '" stroke="#ffffff" stroke-width="3"/>' +
+                    '<text x="18" y="21" font-size="16" font-family="Arial, sans-serif" fill="#ffffff" text-anchor="middle">' + glyph + '</text>';
+        } else {
+            // food: rounded pin with fork & knife glyph
+            inner = '<path d="M18 42 C18 42 5 25 5 14.5 A13 13 0 0 1 31 14.5 C31 25 18 42 18 42 Z" fill="' + c + '" stroke="#ffffff" stroke-width="3"/>' +
+                    '<g stroke="#ffffff" stroke-width="2.4" stroke-linecap="round">' +
+                    '<line x1="14" y1="8" x2="14" y2="21"/><line x1="11.5" y1="8" x2="11.5" y2="13"/><line x1="16.5" y1="8" x2="16.5" y2="13"/>' +
+                    '<line x1="22.5" y1="8" x2="22.5" y2="21"/><path d="M22.5 8 C25 9.5 25 13 22.5 14.5" fill="none"/>' +
+                    '</g>';
+        }
+        return '<svg class="pin" xmlns="http://www.w3.org/2000/svg" width="36" height="' + sz + '" viewBox="0 0 36 ' + sz + '" aria-hidden="true">' + inner + '</svg>';
+    }
+
+    function makeIcon(cat) {
+        var sz = CAT_STYLE[cat].size;
+        return L.divIcon({
+            className: '',
+            html: pinSvg(cat),
+            iconSize: [36, sz],
+            iconAnchor: [18, sz - 2],
+            popupAnchor: [0, -(sz - 10)],
+            tooltipAnchor: [14, -(sz / 2)]
+        });
+    }
+
+    // ---------- map ----------
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var map = L.map('map', {
+        center: [38.8998, -77.0472],
+        zoom: 16,
+        zoomAnimation: !reduceMotion,
+        fadeAnimation: !reduceMotion,
+        markerZoomAnimation: !reduceMotion,
+        scrollWheelZoom: false // don't trap page scrolling inside the iframe
+    });
+    map.getContainer().addEventListener('focus', function () { map.scrollWheelZoom.enable(); }, true);
+    map.getContainer().addEventListener('blur', function () { map.scrollWheelZoom.disable(); }, true);
+
+    var primary = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    var fellBack = false;
+    primary.on('tileerror', function () {
+        if (fellBack) { return; }
+        fellBack = true;
+        map.removeLayer(primary);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        }).addTo(map);
+        document.getElementById('tileNote').style.display = 'block';
+    });
+    primary.addTo(map);
+
+    // ---------- markers ----------
+    var markers = [];
+    LOCATIONS.forEach(function (loc) {
+        var mins = walkMinutes(loc.lat, loc.lng);
+        var walkTxt = loc.cat === 'venue' ? '' : '<p class="popup-walk">About a ' + mins + '-minute walk to the venue</p>';
+
+        var btns = '<a class="popup-btn-primary" href="' + directionsUrl(loc) + '" target="_blank" rel="noopener">Directions</a>';
+        (loc.reserve || []).forEach(function (r) {
+            btns += '<a href="' + r.href + '" target="_blank" rel="noopener">' + r.label + '</a>';
+        });
+        if (loc.url) {
+            btns += '<a href="' + loc.url + '" target="_blank" rel="noopener">Website</a>';
+        }
+
+        var html =
+            '<h2>' + loc.name + '</h2>' +
+            '<p class="popup-addr">' + loc.address + '</p>' +
+            walkTxt +
+            '<p class="popup-meta">' + loc.desc + '</p>' +
+            (loc.ada ? '<p class="popup-ada">♿ ' + loc.ada + '</p>' : '') +
+            '<div class="popup-btns">' + btns + '</div>';
+
+        var m = L.marker([loc.lat, loc.lng], {
+            icon: makeIcon(loc.cat),
+            alt: loc.name + (loc.cat === 'venue' ? ' — summit venue' : ''),
+            keyboard: true,
+            zIndexOffset: loc.cat === 'venue' ? 1000 : 0
+        }).bindPopup(html, { maxWidth: 290 });
+
+        if (loc.label) {
+            m.bindTooltip(loc.label, {
+                permanent: true,
+                direction: loc.labelDir || 'right',
+                className: 'place-label ' + (loc.labelClass || '')
+            });
+        }
+        m.addTo(map);
+        markers.push({ cat: loc.cat, marker: m });
+    });
+
+    // ---------- category filter chips ----------
+    var chips = document.querySelectorAll('.chip');
+    chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            var cat = chip.getAttribute('data-cat');
+            chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === chip)); });
+            markers.forEach(function (entry) {
+                var show = cat === 'all' || entry.cat === cat || entry.cat === 'venue';
+                if (show) { entry.marker.addTo(map); }
+                else { map.removeLayer(entry.marker); }
+            });
+        });
+    });
+};
+</script>
+</body>
+</html>
