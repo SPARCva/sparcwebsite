@@ -621,8 +621,11 @@ window.__initSummitMap = function () {
         }).bindPopup(html, { maxWidth: 290 });
 
         if (loc.label) {
+            // Labels stay hidden until the marker is hovered or keyboard-focused,
+            // keeping the map uncluttered. Leaflet shows a non-permanent tooltip
+            // on mouseover and on focus, and hides it again on mouseout/blur.
             m.bindTooltip(loc.label, {
-                permanent: true,
+                permanent: false,
                 direction: loc.labelDir || 'right',
                 className: 'place-label ' + (loc.labelClass || '')
             });
