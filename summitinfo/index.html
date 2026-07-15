@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PD1XQ0NDCD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Getting to A Call to Conscience Policy Summit on July 27, 2026 at the Jack Morton Auditorium, 805 21st St NW, Washington, DC: interactive map, accessible parking and Metro options, floor plans, restrooms, and venue accessibility information.">
+    <title>Getting Here &amp; Venue Guide — A Call to Conscience Policy Summit</title>
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Getting Here &amp; Venue Guide — A Call to Conscience Policy Summit">
+    <meta property="og:description" content="Directions, accessible parking, Metro, floor plans, and venue accessibility for the SPARC Policy Summit on July 27, 2026 at GW's Jack Morton Auditorium.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sparcsolutions.org/summitinfo">
+    <meta property="og:image" content="https://sparcsolutions.org/images/summit-call-to-conscience.jpg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* ===== Page hero ===== */
+        .guide-hero {
+            background: linear-gradient(135deg, var(--sparc-dark-navy) 0%, #1a3a5c 55%, var(--sparc-royal-blue) 100%);
+            color: #fff;
+            padding: 130px 0 50px;
+            margin-top: 80px;
+        }
+        .guide-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.7rem, 4vw, 2.6rem);
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .guide-hero p { font-size: 1.05rem; max-width: 760px; color: #fff; }
+        .guide-hero .hero-event { color: #b8e6a0; font-weight: 700; }
+
+        /* ===== Layout ===== */
+        .guide-section { padding: 48px 0; }
+        .guide-section + .guide-section { border-top: 1px solid var(--light-gray); }
+        .guide-section h2 {
+            font-family: var(--font-heading);
+            color: var(--sparc-dark-navy);
+            font-size: clamp(1.35rem, 3vw, 1.9rem);
+            margin-bottom: 14px;
+        }
+        .guide-section h3 {
+            font-family: var(--font-heading);
+            color: var(--sparc-royal-blue);
+            font-size: 1.15rem;
+            margin: 26px 0 8px;
+        }
+        .guide-section p, .guide-section li { color: var(--dark-gray); }
+        .guide-intro p { margin-bottom: 12px; max-width: 62rem; }
+
+        .map-frame-wrap { margin: 20px 0 8px; }
+        .map-frame-wrap iframe {
+            width: 100%;
+            height: 820px;
+            border: 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== Location directory (text alternative to the map) ===== */
+        .dir-table-wrap { overflow-x: auto; margin: 12px 0 4px; }
+        table.dir-table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 640px;
+            font-size: 0.95rem;
+        }
+        .dir-table caption {
+            text-align: left;
+            font-weight: 700;
+            color: var(--sparc-dark-navy);
+            padding-bottom: 8px;
+            font-size: 1.02rem;
+        }
+        .dir-table th, .dir-table td {
+            border: 1px solid #c6cdd4;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .dir-table th { background: var(--sparc-dark-navy); color: #fff; }
+        .dir-table tbody tr:nth-child(even) { background: #f2f5f8; }
+        .dir-table a { font-weight: 600; text-decoration: underline; }
+        .reserve-links a { display: inline-block; margin: 2px 8px 2px 0; }
+
+        .note-card {
+            background: #eef6e8;
+            border-left: 6px solid var(--sparc-kelly-green-dark);
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin: 18px 0;
+            max-width: 62rem;
+        }
+        .note-card strong { color: var(--sparc-dark-navy); }
+
+        /* ===== Floor plans ===== */
+        .floorplan-figure {
+            margin: 28px 0;
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 18px;
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+        }
+        .floorplan-figure svg { width: 100%; height: auto; display: block; }
+        .floorplan-figure figcaption {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: var(--medium-gray);
+        }
+        .floorplan-figure figcaption strong { color: var(--sparc-dark-navy); }
+        .fp-schematic-tag {
+            display: inline-block;
+            background: var(--sparc-dark-navy);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            padding: 3px 8px;
+            margin-bottom: 10px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 26px;
+            padding: 16px 18px;
+            background: var(--sparc-soft-gray);
+            border-radius: 10px;
+            margin: 8px 0 22px;
+            font-size: 0.95rem;
+        }
+        .legend .legend-item { display: flex; align-items: center; gap: 8px; color: var(--dark-gray); }
+        .legend .swatch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; height: 30px;
+            border-radius: 6px;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        details.text-floorplans {
+            border: 2px solid var(--sparc-royal-blue);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 10px 0 16px;
+        }
+        details.text-floorplans summary {
+            font-weight: 700;
+            color: var(--sparc-royal-blue);
+            font-size: 1.05rem;
+            cursor: pointer;
+        }
+        details.text-floorplans h3 { margin-top: 16px; }
+        details.text-floorplans p { margin: 6px 0 10px; max-width: 62rem; }
+        .fp-editorial {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            max-width: 62rem;
+        }
+
+        /* ===== Quick reference ===== */
+        .quickref {
+            background: var(--sparc-dark-navy);
+            color: #fff;
+            border-radius: 14px;
+            padding: 30px 28px;
+            max-width: 62rem;
+        }
+        .quickref h2 { color: #fff; margin-bottom: 18px; }
+        .quickref dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; margin: 0; }
+        .quickref dt { font-weight: 700; color: #b8e6a0; }
+        .quickref dd { margin: 0; }
+        .quickref a { color: #fff; text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+        @media (max-width: 560px) {
+            .quickref dl { grid-template-columns: 1fr; gap: 2px; }
+            .quickref dt { margin-top: 12px; }
+        }
+
+        .back-to-summit { margin-top: 26px; }
+        .back-to-summit a {
+            display: inline-block;
+            font-weight: 700;
+            color: var(--sparc-royal-blue);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        a:focus-visible, button:focus-visible, summary:focus-visible {
+            outline: 3px solid var(--sparc-dark-navy);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .fade-in { opacity: 1 !important; transform: none !important; }
+        }
+
+        /* ===== Print ===== */
+        .print-only { display: none; }
+        @media print {
+            .header, .guide-hero, .footer, .footer-bottom-bar, .skip-link,
+            .map-frame-wrap, .back-to-summit, .no-print { display: none !important; }
+            .print-only { display: block; font-weight: 700; margin: 10px 0; }
+            body { color: #000; }
+            main { margin-top: 0 !important; }
+            .guide-section { padding: 14px 0; }
+            .floorplan-figure { break-inside: avoid; box-shadow: none; }
+            .quickref { background: #fff !important; color: #000 !important; border: 2px solid #000; }
+            .quickref h2, .quickref dt, .quickref dd, .quickref a { color: #000 !important; }
+            details.text-floorplans { border-color: #000; }
+            details.text-floorplans[open] summary ~ * { display: block; }
+            a[href^="http"]::after { content: ""; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="SPARC - Specially Adapted Resource Centers" style="height: 50px; width: auto;">
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/about/" class="nav-link">About</a>
+                    <div class="dropdown-menu">
+                        <a href="/team/">Our Team</a>
+                        <a href="/board/">Board of Directors</a>
+                        <a href="/financials/">Financials</a>
+                        <a href="/strategic-plan/">Strategic Plan</a>
+                        <a href="/news/">SPARC in the News</a>
+                        <a href="/compliance/">ADA Compliance</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/programs/" class="nav-link">Programs</a>
+                    <div class="dropdown-menu">
+                        <a href="/programs/sensory-lab/">Mobile Exploration Lab</a>
+                        <a href="/programs/enrollment/">Enrollment Information</a>
+                    </div>
+                </li>
+                <li><a href="/locations/" class="nav-link">Locations</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/stories/" class="nav-link">Stories</a>
+                    <div class="dropdown-menu">
+                        <a href="/podcast/">The Access Point Podcast</a>
+                        <a href="/blog/">Blog</a>
+                        <a href="/newsletter/">Newsletter</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/events/" class="nav-link active">Events</a>
+                    <div class="dropdown-menu">
+                        <a href="/gala/">An Evening to SPARCle</a>
+                        <a href="/summit/">A Call to Conscience</a>
+                        <a href="/bingo/">Bingo</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
+                    <div class="dropdown-menu">
+                        <a href="/advocate/">Advocate for SPARC</a>
+                        <a href="/get-involved/">Volunteer</a>
+                        <a href="/participants/">Participants & Families</a>
+                        <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown nav-donate-dropdown">
+                    <a href="/donate-checkout/" class="nav-link nav-donate" aria-haspopup="true" aria-expanded="false">Donate<span class="caret" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu donate-dropdown-menu" role="menu">
+                        <a href="/donate-checkout/" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Once</span>
+                                <span class="dd-sub">Make a one-time gift</span>
+                            </span>
+                        </a>
+                        <a href="/monthly/" class="dd-monthly" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Monthly</span>
+                                <span class="dd-sub">Light the Way monthly donor</span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="guide-hero">
+        <div class="container">
+            <h1>Getting Here &amp; Venue Guide</h1>
+            <p><span class="hero-event">A Call to Conscience: Advancing Dignity for Adults with Severe and Multiple Disabilities</span><br>
+            Monday, July 27, 2026 &middot; Doors open 9:30 AM &middot; Program 10:00 AM &ndash; 4:00 PM<br>
+            Jack Morton Auditorium, Media &amp; Public Affairs (MPA) Building, 805 21st St NW, Washington, DC 20052</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main id="main-content">
+
+        <!-- ===== Section 1: Interactive map ===== -->
+        <section class="guide-section" aria-labelledby="map-heading">
+            <div class="container">
+                <h2 id="map-heading">Area Map: Parking, Metro &amp; Food</h2>
+                <div class="guide-intro">
+                    <p>The nearest Metro station is <strong>Foggy Bottom&ndash;GWU</strong> (Blue, Orange, and Silver lines). The station is elevator-equipped and about a <strong>4-minute walk</strong> from the venue. If you are driving, <strong>GW&rsquo;s visitor garages are ADA-compliant</strong> and cost <strong>$24 for the day</strong> &mdash; they accept credit cards, Apple&nbsp;Pay, and Google&nbsp;Wallet only (<strong>no cash</strong>). Street parking around the venue is metered with a <strong>2-hour limit on weekdays</strong>, so a garage is a better choice for the full-day program. DC&rsquo;s red-top meters are reserved for vehicles displaying a disability placard or tags.</p>
+                    <p>If you would like a <strong>guaranteed space</strong>, two commercial garages a block from the venue can be reserved in advance through ParkMobile or ParkWhiz &mdash; use the reserve links on the map or in the parking list below.</p>
+                </div>
+
+                <div class="map-frame-wrap">
+                    <iframe
+                        src="/sparc-summit-map.html"
+                        title="Interactive map: Jack Morton Auditorium, parking, Metro, and nearby food"
+                        style="width:100%; height:820px; border:0; border-radius:12px;"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+                <p class="print-only">The interactive map is available online at sparcsolutions.org/summitinfo. Venue address: Jack Morton Auditorium, 805 21st St NW, Washington, DC 20052.</p>
+
+                <h3 id="parking-list">All parking options (text list)</h3>
+                <p>Every location on the map, in text form. Walking times are approximate from the venue&rsquo;s main entrance at 805 21st St NW.</p>
+
+                <div class="dir-table-wrap">
+                    <table class="dir-table">
+                        <caption>Parking garages near the Jack Morton Auditorium</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Garage</th>
+                                <th scope="col">Entrance</th>
+                                <th scope="col">Walk</th>
+                                <th scope="col">Hours &amp; price</th>
+                                <th scope="col">Reserve / info</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">GW University Student Center Garage (closest; ADA-compliant)</th>
+                                <td>800 21st St NW &mdash; entrance on H St NW between 21st &amp; 22nd, directly across H St from the venue</td>
+                                <td>2 min</td>
+                                <td>6 AM&ndash;midnight &middot; $24/day max &middot; card, Apple Pay, or Google Wallet only (no cash)</td>
+                                <td><a href="https://transportation.gwu.edu/visitor-parking">GW visitor parking info</a> (drive-up, no reservation needed)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">GW Science &amp; Engineering Hall Garage (ADA-compliant)</th>
+                                <td>800 22nd St NW &mdash; entrance on H St NW between 22nd &amp; 23rd</td>
+                                <td>4 min</td>
+                                <td>Open 24/7 &middot; $24/day max &middot; card or mobile pay only</td>
+                                <td><a href="https://transportation.gwu.edu/visitor-parking">GW visitor parking info</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2200 Pennsylvania Ave NW Garage &ldquo;The Avenue&rdquo; (ADA-compliant)</th>
+                                <td>950 22nd St NW</td>
+                                <td>4 min</td>
+                                <td>Open 24/7 &middot; about $29/day</td>
+                                <td class="reserve-links">
+                                    <a href="https://app.parkmobile.io/reservation/63820">Reserve on ParkMobile</a>
+                                    <a href="https://www.parkwhiz.com/p/washington-parking/950-22nd-st-nw">Reserve on ParkWhiz</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2100 Pennsylvania Ave NW Garage (ADA-compliant)</th>
+                                <td>2120 I (Eye) St NW</td>
+                                <td>3 min</td>
+                                <td>Open 24/7 &middot; about $29/day</td>
+                                <td class="reserve-links">
+                                    <a href="https://app.parkmobile.io/reservation/63821">Reserve on ParkMobile</a>
+                                    <a href="https://www.parkwhiz.com/p/washington-parking/2120-i-st-nw">Reserve on ParkWhiz</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">GW G Street Garage (ADA-compliant)</th>
+                                <td>2028 G St NW &mdash; entrances on 20th &amp; 21st St between F &amp; G</td>
+                                <td>6 min</td>
+                                <td>Open 24/7 &middot; $24/day max &middot; card or mobile pay only</td>
+                                <td><a href="https://transportation.gwu.edu/visitor-parking">GW visitor parking info</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">533 21st St NW Garage</th>
+                                <td>533 21st St NW (between E &amp; F St)</td>
+                                <td>8 min</td>
+                                <td>Commercial garage &middot; budget-friendly</td>
+                                <td class="reserve-links"><a href="https://www.parkwhiz.com/p/washington-parking/533-21st-st-nw">Reserve on ParkWhiz</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Columbia Plaza Garage</th>
+                                <td>2400 Virginia Ave NW</td>
+                                <td>9 min</td>
+                                <td>Large commercial garage &middot; often the cheapest reservable option</td>
+                                <td class="reserve-links"><a href="https://www.parkwhiz.com/columbia-plaza-parking/">Reserve on ParkWhiz</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">GW Elliott School Garage (ADA-compliant)</th>
+                                <td>1957 E St NW &mdash; entrance on 19th St between E &amp; F</td>
+                                <td>10 min</td>
+                                <td>Mon&ndash;Fri 7 AM&ndash;11 PM &middot; $24/day max &middot; card or mobile pay only</td>
+                                <td><a href="https://transportation.gwu.edu/visitor-parking">GW visitor parking info</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:0.85rem; color: var(--medium-gray); max-width:62rem;">Rates checked July 2026 and subject to change. More reservable spaces near campus: <a href="https://www.parkwhiz.com/george-washington-university-parking/">ParkWhiz &mdash; parking near George Washington University</a>.</p>
+
+                <h3>Metro</h3>
+                <p style="max-width:62rem;"><strong>Foggy Bottom&ndash;GWU station</strong> (Blue, Orange, Silver) &mdash; entrance at 23rd &amp; I (Eye) St NW, about a 4-minute walk: exit the station, head east on I St, then turn right onto 21st St; the MPA building is at the corner of 21st &amp; H. The station has an elevator to street level &mdash; check <a href="https://www.wmata.com/rider-guide/stations/foggy-bottom.cfm">WMATA&rsquo;s Foggy Bottom station page</a> for real-time elevator status.</p>
+
+                <h3>Food nearby</h3>
+                <ul style="max-width:62rem; padding-left: 22px;">
+                    <li><strong>Western Market</strong> (food hall) &mdash; 2000 Pennsylvania Ave NW, 2-minute walk. 11 quick-service vendors; step-free entry and accessible seating.</li>
+                    <li><strong>Founding Farmers DC</strong> &mdash; 1924 Pennsylvania Ave NW, 4-minute walk. Popular sit-down American; reservations strongly recommended.</li>
+                    <li><strong>Tonic at Quigley&rsquo;s</strong> &mdash; 2036 G St NW, 4-minute walk. Casual American comfort food.</li>
+                    <li><strong>Circa at Foggy Bottom</strong> &mdash; 2221 I (Eye) St NW, 5-minute walk. American bistro with a large patio, on the way to/from the Metro.</li>
+                </ul>
+                <div class="note-card">
+                    <strong>Good to know:</strong> complimentary refreshments and coffee will be served on the <strong>second floor of the venue</strong> during breaks, so you only need to leave the building if you&rsquo;d like a full lunch.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Section 2: Floor plans ===== -->
+        <section class="guide-section" aria-labelledby="floorplans-heading">
+            <div class="container">
+                <h2 id="floorplans-heading">Venue Floor Plans</h2>
+                <p style="max-width:62rem;">The Jack Morton Auditorium is on the <strong>first floor</strong> of the MPA Building. Posters and refreshments are on the <strong>second floor</strong>, and additional restrooms are on the <strong>lower level</strong>. An elevator connects all floors. The diagrams below are simplified for wayfinding.</p>
+
+                <!-- First Floor -->
+                <figure class="floorplan-figure">
+                    <span class="fp-schematic-tag">Schematic — not to scale</span>
+                    <svg viewBox="0 0 860 470" role="img"
+                         aria-label="First floor schematic. The main entrance, marked wheelchair accessible, is on the 21st Street NW side at the upper left, with SPARC's MEL sensory van parked outside it. Inside the entrance is the registration and check-in table, then the lobby. Doors from the lobby lead into the Jack Morton Auditorium seating and stage, which fill the right side of the floor. Restrooms are on the main level near the lobby. An elevator and stairs to the second floor and lower level are also off the lobby. A second accessible route enters near the H Street NW corner at the lower left.">
+                        <!-- building outline -->
+                        <rect x="14" y="14" width="832" height="400" rx="14" fill="#ffffff" stroke="#002B50" stroke-width="3"/>
+                        <text x="430" y="46" text-anchor="middle" font-family="Montserrat, Open Sans, sans-serif" font-weight="700" font-size="21" fill="#002B50">First Floor — Street Level</text>
+
+                        <!-- main entrance arrow, 21st st side -->
+                        <g>
+                            <text x="24" y="82" font-family="Open Sans, sans-serif" font-weight="700" font-size="15" fill="#1d5209">Main Entrance —</text>
+                            <text x="24" y="102" font-family="Open Sans, sans-serif" font-weight="700" font-size="15" fill="#1d5209">21st St NW</text>
+                            <path d="M24 116 h54 v-8 l28 14 -28 14 v-8 h-54 z" fill="#2e7d0f"/>
+                            <text x="24" y="156" font-size="17" aria-hidden="true">&#9855;</text>
+                            <text x="46" y="155" font-family="Open Sans, sans-serif" font-size="12" fill="#1d5209" font-weight="600">Wheelchair accessible</text>
+                        </g>
+
+                        <!-- MEL van outside entrance -->
+                        <g>
+                            <rect x="24" y="168" width="140" height="44" rx="8" fill="#eef6e8" stroke="#3a9212" stroke-width="2"/>
+                            <text x="94" y="187" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="13" fill="#1d5209">MEL sensory van</text>
+                            <text x="94" y="203" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="11.5" fill="#1d5209">parked by entrance</text>
+                        </g>
+
+                        <!-- registration -->
+                        <rect x="196" y="90" width="150" height="72" rx="8" fill="#E3EDF6" stroke="#00539B" stroke-width="2"/>
+                        <text x="271" y="120" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="15" fill="#002B50">Registration</text>
+                        <text x="271" y="140" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="13" fill="#002B50">Check-in table</text>
+
+                        <!-- lobby -->
+                        <rect x="196" y="188" width="240" height="150" rx="8" fill="#F5F5F5" stroke="#00539B" stroke-width="2"/>
+                        <text x="316" y="255" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="16" fill="#002B50">Lobby</text>
+                        <text x="316" y="277" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="12.5" fill="#002B50">Volunteers here to help</text>
+
+                        <!-- auditorium -->
+                        <rect x="472" y="90" width="350" height="248" rx="10" fill="#E3EDF6" stroke="#00539B" stroke-width="2.5"/>
+                        <text x="647" y="130" text-anchor="middle" font-family="Montserrat, Open Sans, sans-serif" font-weight="700" font-size="17" fill="#002B50">Jack Morton Auditorium</text>
+                        <rect x="532" y="150" width="230" height="46" rx="6" fill="#002B50"/>
+                        <text x="647" y="179" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#ffffff">Stage</text>
+                        <text x="647" y="235" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="13.5" fill="#002B50">Fixed auditorium seating</text>
+                        <text x="647" y="255" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="13.5" fill="#002B50">(open seating — wheelchair spaces available)</text>
+                        <!-- doors into auditorium -->
+                        <rect x="447" y="200" width="25" height="60" fill="#4CBB17"/>
+                        <text x="459" y="290" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="12" fill="#1d5209" font-weight="700">Doors</text>
+
+                        <!-- restrooms -->
+                        <rect x="196" y="360" width="130" height="46" rx="8" fill="#FFF4E0" stroke="#8a5a00" stroke-width="2"/>
+                        <text x="210" y="390" font-size="18" aria-hidden="true">&#128699;</text>
+                        <text x="236" y="389" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#5c3d00">Restrooms</text>
+
+                        <!-- elevator -->
+                        <rect x="346" y="360" width="112" height="46" rx="8" fill="#E9E2F4" stroke="#4B2E83" stroke-width="2"/>
+                        <text x="358" y="388" font-size="12" aria-hidden="true">&#9650;&#9660;</text>
+                        <text x="386" y="389" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#37225e">Elevator</text>
+
+                        <!-- stairs -->
+                        <rect x="478" y="360" width="100" height="46" rx="8" fill="#F5F5F5" stroke="#37474F" stroke-width="2"/>
+                        <path d="M492 396 h10 v-8 h10 v-8 h10 v-8 h10" fill="none" stroke="#37474F" stroke-width="2.5"/>
+                        <text x="546" y="389" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#263238">Stairs</text>
+
+                        <!-- secondary accessible route -->
+                        <g>
+                            <text x="24" y="452" font-family="Open Sans, sans-serif" font-size="13" font-weight="600" fill="#00539B">Accessible route from H St NW corner</text>
+                            <path d="M290 448 q28 -10 46 -26" stroke="#00539B" stroke-width="4" fill="none" stroke-dasharray="9 7" marker-end="url(#arrowblue)"/>
+                        </g>
+                        <defs>
+                            <marker id="arrowblue" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+                                <path d="M0 0 L14 7 L0 14 Z" fill="#00539B"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    <figcaption><strong>First floor (street level):</strong> main entrance on 21st St NW (wheelchair accessible, MEL sensory van parked outside), registration, lobby, restrooms, elevator, stairs, and the Jack Morton Auditorium itself. Schematic &mdash; not to scale.</figcaption>
+                </figure>
+
+                <!-- Second Floor -->
+                <figure class="floorplan-figure">
+                    <span class="fp-schematic-tag">Schematic — not to scale</span>
+                    <svg viewBox="0 0 860 400" role="img"
+                         aria-label="Second floor schematic, the Art Gallery Lobby. The summit posters and exhibits area runs along the gallery. The refreshments and coffee tables are along the right side, near the stairs. Cocktail tables and seated rounds with chairs are scattered through the middle for breaks. Elevators are at the left side and stairs at the right side connect back down to the first floor.">
+                        <rect x="14" y="14" width="832" height="360" rx="14" fill="#ffffff" stroke="#002B50" stroke-width="3"/>
+                        <text x="430" y="46" text-anchor="middle" font-family="Montserrat, Open Sans, sans-serif" font-weight="700" font-size="21" fill="#002B50">Second Floor — Art Gallery Lobby</text>
+
+                        <!-- posters area -->
+                        <rect x="60" y="76" width="420" height="110" rx="10" fill="#E3EDF6" stroke="#00539B" stroke-width="2.5"/>
+                        <rect x="84" y="96" width="54" height="38" rx="3" fill="#ffffff" stroke="#00539B" stroke-width="2"/>
+                        <rect x="150" y="96" width="54" height="38" rx="3" fill="#ffffff" stroke="#00539B" stroke-width="2"/>
+                        <rect x="216" y="96" width="54" height="38" rx="3" fill="#ffffff" stroke="#00539B" stroke-width="2"/>
+                        <text x="270" y="166" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="16" fill="#002B50">Summit Posters &amp; Exhibits</text>
+
+                        <!-- refreshments -->
+                        <rect x="560" y="76" width="240" height="110" rx="10" fill="#eef6e8" stroke="#3a9212" stroke-width="2.5"/>
+                        <text x="680" y="115" text-anchor="middle" font-size="22" aria-hidden="true">&#9749;</text>
+                        <text x="680" y="145" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="16" fill="#1d5209">Refreshments &amp; Coffee</text>
+                        <text x="680" y="166" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="12.5" fill="#1d5209">Catering tables — served at breaks</text>
+
+                        <!-- cocktail seating -->
+                        <g fill="#F5F5F5" stroke="#37474F" stroke-width="2">
+                            <circle cx="250" cy="250" r="22"/>
+                            <circle cx="360" cy="270" r="22"/>
+                            <circle cx="470" cy="245" r="22"/>
+                        </g>
+                        <text x="360" y="320" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="13.5" fill="#263238">Caf&eacute; tables &amp; standing tables for breaks (seating available)</text>
+
+                        <!-- elevator -->
+                        <rect x="60" y="228" width="112" height="46" rx="8" fill="#E9E2F4" stroke="#4B2E83" stroke-width="2"/>
+                        <text x="70" y="256" font-size="12" aria-hidden="true">&#9650;&#9660;</text>
+                        <text x="98" y="257" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#37225e">Elevators</text>
+
+                        <!-- stairs -->
+                        <rect x="688" y="228" width="112" height="46" rx="8" fill="#F5F5F5" stroke="#37474F" stroke-width="2"/>
+                        <path d="M702 264 h10 v-8 h10 v-8 h10 v-8 h10" fill="none" stroke="#37474F" stroke-width="2.5"/>
+                        <text x="762" y="257" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#263238">Stairs</text>
+                    </svg>
+                    <figcaption><strong>Second floor (Art Gallery Lobby):</strong> summit posters &amp; exhibits, refreshments &amp; coffee, caf&eacute; seating for breaks, elevators, and stairs. Schematic &mdash; not to scale.</figcaption>
+                </figure>
+
+                <!-- Lower Level -->
+                <figure class="floorplan-figure">
+                    <span class="fp-schematic-tag">Schematic — not to scale</span>
+                    <svg viewBox="0 0 860 280" role="img"
+                         aria-label="Lower level schematic. Additional restrooms are on this floor, reached by the elevator or the stairs down from the first-floor lobby.">
+                        <rect x="14" y="14" width="832" height="240" rx="14" fill="#ffffff" stroke="#002B50" stroke-width="3"/>
+                        <text x="430" y="46" text-anchor="middle" font-family="Montserrat, Open Sans, sans-serif" font-weight="700" font-size="21" fill="#002B50">Lower Level</text>
+
+                        <!-- restrooms -->
+                        <rect x="330" y="86" width="200" height="70" rx="10" fill="#FFF4E0" stroke="#8a5a00" stroke-width="2.5"/>
+                        <text x="362" y="130" font-size="22" aria-hidden="true">&#128699;</text>
+                        <text x="394" y="128" font-family="Open Sans, sans-serif" font-weight="700" font-size="16" fill="#5c3d00">Restrooms</text>
+
+                        <!-- elevator -->
+                        <rect x="90" y="180" width="112" height="46" rx="8" fill="#E9E2F4" stroke="#4B2E83" stroke-width="2"/>
+                        <text x="100" y="208" font-size="12" aria-hidden="true">&#9650;&#9660;</text>
+                        <text x="128" y="209" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#37225e">Elevator</text>
+
+                        <!-- stairs -->
+                        <rect x="658" y="180" width="112" height="46" rx="8" fill="#F5F5F5" stroke="#37474F" stroke-width="2"/>
+                        <path d="M672 216 h10 v-8 h10 v-8 h10 v-8 h10" fill="none" stroke="#37474F" stroke-width="2.5"/>
+                        <text x="732" y="209" text-anchor="middle" font-family="Open Sans, sans-serif" font-weight="700" font-size="14" fill="#263238">Stairs</text>
+
+                        <text x="430" y="212" text-anchor="middle" font-family="Open Sans, sans-serif" font-size="13.5" fill="#263238">Take the elevator or stairs down from the first-floor lobby</text>
+                    </svg>
+                    <figcaption><strong>Lower level:</strong> additional restrooms, elevator, and stairs. Schematic &mdash; not to scale.</figcaption>
+                </figure>
+
+                <!-- Legend -->
+                <h3 id="legend-heading">Legend</h3>
+                <ul class="legend" aria-labelledby="legend-heading" style="list-style:none;">
+                    <li class="legend-item"><span class="swatch" style="background:#2e7d0f;" aria-hidden="true"><span style="color:#fff; font-weight:700;">&rarr;</span></span> Entrance / accessible route</li>
+                    <li class="legend-item"><span class="swatch" style="background:#eef6e8; border:2px solid #3a9212;" aria-hidden="true">&#9855;</span> Wheelchair accessible</li>
+                    <li class="legend-item"><span class="swatch" style="background:#FFF4E0; border:2px solid #8a5a00;" aria-hidden="true">&#128699;</span> Restrooms</li>
+                    <li class="legend-item"><span class="swatch" style="background:#E9E2F4; border:2px solid #4B2E83;" aria-hidden="true">&#9650;&#9660;</span> Elevator</li>
+                    <li class="legend-item"><span class="swatch" style="background:#F5F5F5; border:2px solid #37474F;" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 17 h5 v-4 h4 v-4 h4 v-4 h3" fill="none" stroke="#37474F" stroke-width="2.4"/></svg></span> Stairs</li>
+                    <li class="legend-item"><span class="swatch" style="background:#eef6e8; border:2px solid #3a9212;" aria-hidden="true">&#9749;</span> Refreshments</li>
+                    <li class="legend-item"><span class="swatch" style="background:#E3EDF6; border:2px solid #00539B;" aria-hidden="true"><svg width="16" height="14" viewBox="0 0 18 16" aria-hidden="true"><rect x="1" y="1" width="16" height="12" rx="1.5" fill="#fff" stroke="#00539B" stroke-width="2"/></svg></span> Posters &amp; exhibits</li>
+                </ul>
+
+                <!-- Text version -->
+                <details class="text-floorplans" open>
+                    <summary>Text version of floor plans</summary>
+                    <h3>First floor (street level)</h3>
+                    <p>Enter from 21st Street NW through the main entrance, which is wheelchair accessible; SPARC&rsquo;s MEL sensory van is parked just outside it. The registration and check-in table is immediately inside, followed by the lobby, where SPARC volunteers will be stationed to help. Doors from the lobby lead into the Jack Morton Auditorium (fixed seating, open seating with wheelchair spaces; the stage is at the front). Restrooms, the elevator, and stairs are all located off the lobby on this level. A second accessible route into the building is available near the H Street NW corner.</p>
+                    <h3>Second floor (Art Gallery Lobby)</h3>
+                    <p>The second floor holds the Summit Posters &amp; Exhibits displays and the Refreshments &amp; Coffee catering tables, with caf&eacute; tables and standing tables (plus chairs) for breaks. Reach it by the elevators or the stairs from the first-floor lobby.</p>
+                    <h3>Lower level</h3>
+                    <p>The lower level has additional restrooms. Reach it by the elevator or the stairs down from the first-floor lobby.</p>
+                </details>
+
+                <p class="fp-editorial">Floor plans are schematic and provided for event wayfinding. Layout confirmed with GW event staff; report corrections to <a href="mailto:erica@sparcsolutions.org">erica@sparcsolutions.org</a>.</p>
+            </div>
+        </section>
+
+        <!-- ===== Section 3: Quick reference ===== -->
+        <section class="guide-section" aria-labelledby="quickref-heading">
+            <div class="container">
+                <div class="quickref">
+                    <h2 id="quickref-heading">Quick Reference</h2>
+                    <dl>
+                        <dt>Venue</dt>
+                        <dd>Jack Morton Auditorium, Media &amp; Public Affairs Building, 805 21st St NW, Washington, DC 20052</dd>
+                        <dt>Main entrance</dt>
+                        <dd>21st Street NW side — wheelchair accessible; volunteers at both entrances</dd>
+                        <dt>Doors open</dt>
+                        <dd>9:30 AM &middot; program 10:00 AM &ndash; 4:00 PM</dd>
+                        <dt>Restrooms</dt>
+                        <dd>First floor and Lower Level</dd>
+                        <dt>Posters &amp; refreshments</dt>
+                        <dd>Second floor (Art Gallery Lobby)</dd>
+                        <dt>Metro</dt>
+                        <dd>Foggy Bottom&ndash;GWU (Blue / Orange / Silver), elevator-equipped, about a 4-minute walk</dd>
+                        <dt>Accessible parking</dt>
+                        <dd>The GW University Student Center Garage (800 21st St NW, entrance on H St) is directly across H Street from the venue and is ADA-compliant.</dd>
+                        <dt>Sensory space</dt>
+                        <dd>SPARC&rsquo;s MEL sensory van is parked by the main entrance all day — ask any volunteer</dd>
+                        <dt>ASL</dt>
+                        <dd>An ASL interpreter will be present throughout the program</dd>
+                        <dt>Questions</dt>
+                        <dd><a href="tel:+15714071807">(571) 407-1807</a> &middot; <a href="mailto:erica@sparcsolutions.org">erica@sparcsolutions.org</a></dd>
+                    </dl>
+                </div>
+
+                <p class="back-to-summit"><a href="/summit/">&larr; Back to the Summit page</a></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="color: white;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="/images/SPARC_logo_white.png" alt="SPARC" style="height: 60px; width: auto; margin-bottom: 15px;">
+                    <p>Specially Adapted Resource Centers provides community-integrated day programs for adults with severe and multiple disabilities in Northern Virginia. We believe every adult deserves a meaningful life filled with connection, purpose, and belonging.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=100064372517571" class="social-link" aria-label="Facebook" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/sparc.solutions/" class="social-link" aria-label="Instagram" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/specially-adapted-resource-centers" class="social-link" aria-label="LinkedIn" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@SPARC_VA" class="social-link" aria-label="YouTube" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="mailto:debi@sparcsolutions.org" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/about/">About Us</a></li>
+                        <li><a href="/programs/">Programs</a></li>
+                        <li><a href="/locations/">Locations</a></li>
+                        <li><a href="/events/">Events</a></li>
+                        <li><a href="/stories/">Stories &amp; Impact</a></li>
+                        <li><a href="/donate-checkout/">Donate</a></li>
+                        <li><a href="/monthly/"><strong>Monthly Giving</strong></a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/financials/">Annual Reports</a></li>
+                        <li><a href="/board/">Board of Directors</a></li>
+                        <li><a href="/news/">News &amp; Press</a></li>
+                        <li><a href="/get-involved/">Get Involved</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><strong>Mailing Address:</strong><br>
+                    1775 Tysons Blvd., Fifth Floor<br>
+                    Tysons, VA 22102</p>
+                    <p><strong>Phone:</strong> <a href="tel:571-407-1807" style="color: white;">(571) 407-1807</a></p>
+                    <p><a href="mailto:debi@sparcsolutions.org" style="color: white;">debi@sparcsolutions.org</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom-bar" style="background: white; padding: 30px 0; color: var(--sparc-dark-navy);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="margin: 0 0 5px 0; color: var(--sparc-dark-navy);">&copy; 2025 SPARC - Specially Adapted Resource Centers. All rights reserved.</p>
+                <p style="margin: 0 0 10px 0; color: var(--sparc-dark-navy);">501(c)(3) Nonprofit Organization | EIN: 20-5513060</p>
+                <nav aria-label="Legal links">
+                    <a href="/accessibility/" style="color: var(--sparc-dark-navy); text-decoration: none;">Accessibility</a> |
+                    <a href="/contact/" style="color: var(--sparc-dark-navy); text-decoration: none;">Contact</a>
+                </nav>
+            </div>
+            <img src="/images/Powered by Google.png" alt="Powered by Google" style="height: 160px; width: auto;">
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
