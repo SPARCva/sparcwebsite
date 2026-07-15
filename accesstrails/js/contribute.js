@@ -76,6 +76,9 @@ async function onSubmit(e) {
     find_type: form.find_type.value,
     park_name: form.park_name.value.trim(),
     description: form.description.value.trim(),
+    // optional scoping — routes the note onto the matching area page
+    location_slug: (form.location_slug && form.location_slug.value) || null,
+    feature_type: (form.feature_type && form.feature_type.value) || null,
     may_contact: form.querySelector('[name="may_contact"]:checked').value === 'Yes',
     reporter_first: form.first_name.value.trim() || null,
     reporter_last: form.last_name.value.trim() || null,
