@@ -82,8 +82,15 @@
             font-size: 1.15rem;
             margin: 26px 0 8px;
         }
-        .guide-section p, .guide-section li { color: var(--dark-gray); }
+        .guide-section p, .guide-section li {
+            color: var(--dark-gray);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+        .guide-section li { margin-bottom: 6px; }
         .guide-intro p { margin-bottom: 12px; }
+        /* keep the schematic footnote visibly smaller than body copy */
+        .guide-section p.fp-editorial { font-size: 0.9rem; line-height: 1.6; }
 
         .map-frame-wrap { margin: 20px 0 8px; }
         .map-frame-wrap iframe {
@@ -238,11 +245,148 @@
             .fade-in { opacity: 1 !important; transform: none !important; }
         }
 
+        /* Keep jump-link targets clear of the fixed site header when scrolled to */
+        h1[id], h2[id], h3[id] { scroll-margin-top: 96px; }
+
+        /* ===== "On this page" jump nav ===== */
+        .page-nav {
+            margin: 30px 0 4px;
+            padding: 16px 20px;
+            background: var(--sparc-soft-gray);
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+        }
+        .page-nav-title {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--sparc-dark-navy);
+            margin: 0 0 12px;
+        }
+        .page-nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .page-nav a {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--sparc-royal-blue);
+            text-decoration: none;
+            border: 2px solid var(--sparc-royal-blue);
+            border-radius: 999px;
+            padding: 9px 18px;
+            line-height: 1.2;
+        }
+        .page-nav a:hover,
+        .page-nav a:focus-visible {
+            background: var(--sparc-royal-blue);
+            color: #fff;
+        }
+
+        /* ===== "Plan your accessible visit" summary card ===== */
+        .access-card {
+            background: #eef6e8;
+            border: 2px solid var(--sparc-kelly-green-dark);
+            border-radius: 14px;
+            padding: 24px 26px;
+            margin: 22px 0 6px;
+        }
+        .access-card h2 {
+            font-family: var(--font-heading);
+            color: var(--sparc-dark-navy);
+            font-size: clamp(1.3rem, 2.6vw, 1.65rem);
+            margin: 0 0 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .access-card > p {
+            margin: 0 0 16px;
+            color: var(--dark-gray);
+            font-size: 1.05rem;
+        }
+        .access-card dl {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: 14px 22px;
+            margin: 0;
+        }
+        .access-card dt {
+            font-weight: 700;
+            color: var(--sparc-kelly-green-dark);
+            display: flex;
+            align-items: baseline;
+            gap: 9px;
+        }
+        .access-card dd {
+            margin: 0;
+            color: var(--dark-gray);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        .access-card a {
+            color: var(--sparc-royal-blue);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .ac-ico { font-size: 1.15em; flex-shrink: 0; }
+        @media (max-width: 620px) {
+            .access-card dl { grid-template-columns: 1fr; gap: 4px 0; }
+            .access-card dt { margin-top: 14px; }
+        }
+
+        /* ===== Skip-the-map link (keyboard users bypass the map's markers) ===== */
+        .skip-map-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            background: var(--sparc-dark-navy);
+            color: #fff;
+            font-weight: 700;
+            padding: 10px 16px;
+            border-radius: 8px;
+            z-index: 5;
+        }
+        .skip-map-link:focus {
+            position: static;
+            display: inline-block;
+            left: auto;
+            margin: 4px 0 12px;
+        }
+
+        /* ===== Windows High Contrast / forced-colors: keep structure visible ===== */
+        @media (forced-colors: active) {
+            .page-nav,
+            .access-card,
+            .note-card,
+            .quickref,
+            .floorplan-figure,
+            details.text-floorplans {
+                border: 1px solid CanvasText;
+            }
+            .page-nav a,
+            .access-card a,
+            .quickref a,
+            .dir-table a { text-decoration: underline; }
+            .quickref,
+            .quickref dt,
+            .quickref dd { color: CanvasText; }
+        }
+
         /* ===== Print ===== */
         .print-only { display: none; }
         @media print {
             .header, .guide-hero, .footer, .footer-bottom-bar, .skip-link,
-            .map-frame-wrap, .back-to-summit, .no-print { display: none !important; }
+            .map-frame-wrap, .back-to-summit, .no-print,
+            .page-nav, .skip-map-link { display: none !important; }
             .print-only { display: block; font-weight: 700; margin: 10px 0; }
             body { color: #000; }
             main { margin-top: 0 !important; }
@@ -353,6 +497,47 @@
     <!-- Main Content -->
     <main id="main-content">
 
+        <!-- ===== On-this-page nav + accessible-visit summary ===== -->
+        <section class="guide-section" aria-labelledby="access-heading">
+            <div class="container">
+                <nav class="page-nav" aria-label="On this page">
+                    <p class="page-nav-title" aria-hidden="true">On this page</p>
+                    <ul>
+                        <li><a href="#map-heading">Area map</a></li>
+                        <li><a href="#parking-list">Parking</a></li>
+                        <li><a href="#metro-heading">Metro</a></li>
+                        <li><a href="#food-heading">Food nearby</a></li>
+                        <li><a href="#floorplans-heading">Floor plans</a></li>
+                        <li><a href="#quickref-heading">Quick reference</a></li>
+                    </ul>
+                </nav>
+
+                <div class="access-card">
+                    <h2 id="access-heading"><span class="ac-ico" aria-hidden="true">&#9855;</span> Plan your accessible visit</h2>
+                    <p>The essentials for getting in the door, in one place. Fuller details are in the sections below.</p>
+                    <dl>
+                        <dt><span class="ac-ico" aria-hidden="true">&#128682;</span> Accessible entrance</dt>
+                        <dd>The main entrance on <strong>21st Street NW</strong> is wheelchair accessible, with a second accessible route near the H Street NW corner. Volunteers are stationed at both.</dd>
+
+                        <dt><span class="ac-ico" aria-hidden="true">&#9855;</span> Accessible parking &amp; drop-off</dt>
+                        <dd>GW&rsquo;s <strong>ADA-compliant garages</strong> ($24/day) are the closest option &mdash; the Student Center Garage is directly across H Street from the venue. Prefer not to self-park? <strong>GW Hospital valet</strong> (flat $25/day) lets you hand the car off at the door.</dd>
+
+                        <dt><span class="ac-ico" aria-hidden="true">&#128647;</span> Step-free Metro route</dt>
+                        <dd><strong>Foggy Bottom&ndash;GWU</strong> (Blue / Orange / Silver) is elevator-equipped and about <strong>0.2 miles</strong> from the venue over step-free sidewalks with curb cuts. <a href="https://www.wmata.com/rider-guide/stations/foggy-bottom.cfm">Check elevator status</a> before you travel.</dd>
+
+                        <dt><span class="ac-ico" aria-hidden="true">&#128699;</span> Restrooms</dt>
+                        <dd>On the <strong>first floor</strong> (off the lobby) and the <strong>lower level</strong>, both reachable by elevator.</dd>
+
+                        <dt><span class="ac-ico" aria-hidden="true">&#129505;</span> Sensory space</dt>
+                        <dd>SPARC&rsquo;s <strong>MEL sensory van</strong> is parked by the main entrance all day &mdash; ask any volunteer.</dd>
+
+                        <dt><span class="ac-ico" aria-hidden="true">&#129305;</span> ASL</dt>
+                        <dd>An ASL interpreter will be present throughout the program.</dd>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
         <!-- ===== Section 1: Interactive map ===== -->
         <section class="guide-section" aria-labelledby="map-heading">
             <div class="container">
@@ -362,6 +547,7 @@
                     <p>If you would like a <strong>guaranteed space</strong>, two commercial garages a block from the venue can be reserved in advance through ParkMobile or ParkWhiz &mdash; use the reserve links on the map or in the parking list below.</p>
                 </div>
 
+                <a class="skip-map-link" href="#parking-list">Skip the interactive map &mdash; go to the text list of all locations</a>
                 <div class="map-frame-wrap">
                     <iframe
                         src="/sparc-summit-map.html"
@@ -476,10 +662,10 @@
                 </div>
                 <p style="font-size:0.85rem; color: var(--medium-gray);">Rates checked July 2026 and subject to change. These are the closest and most practical of the many garages within a mile of the venue &mdash; dozens more can be compared and reserved at <a href="https://www.parkwhiz.com/george-washington-university-parking/">ParkWhiz &mdash; parking near George Washington University</a>.</p>
 
-                <h3>Metro</h3>
+                <h3 id="metro-heading">Metro</h3>
                 <p><strong>Foggy Bottom&ndash;GWU station</strong> (Blue, Orange, Silver) &mdash; entrance at 23rd &amp; I (Eye) St NW, about 0.2 miles from the venue: exit the station, head east on I St, then turn right onto 21st St; the MPA building is at the corner of 21st &amp; H. The station has an elevator to street level &mdash; check <a href="https://www.wmata.com/rider-guide/stations/foggy-bottom.cfm">WMATA&rsquo;s Foggy Bottom station page</a> for real-time elevator status.</p>
 
-                <h3>Food nearby</h3>
+                <h3 id="food-heading">Food nearby</h3>
                 <ul style="padding-left: 22px;">
                     <li><strong>Western Market</strong> (food hall) &mdash; 2000 Pennsylvania Ave NW, 0.1 miles away. 11 quick-service vendors; step-free entry and accessible seating.</li>
                     <li><strong>Founding Farmers DC</strong> &mdash; 1924 Pennsylvania Ave NW, 0.2 miles away. Popular sit-down American; reservations strongly recommended.</li>
