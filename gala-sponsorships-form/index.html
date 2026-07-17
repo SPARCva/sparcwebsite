@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PD1XQ0NDCD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sponsorship form for An Evening to SPARCle. Choose your level, then pay now or submit a pledge, and upload your logo.">
+    <meta name="robots" content="noindex">
+    <title>Sponsorship Form | An Evening to SPARCle | SPARC</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* ============================================================
+           2026 SAFARI THEME tokens — mirrored from /gala/ so this form
+           matches "An Evening to SPARCle". Scoped to .page-gala.
+           This is a STANDALONE, form-only page: no site header, hero,
+           sponsor wall, or footer — just the sponsorship form.
+           ============================================================ */
+        .page-gala {
+            --gala-green-deep:  #184030;
+            --gala-green-dark:  #082820;
+            --gala-green-sage:  #587860;
+            --gala-gold:        #D8A040;
+            --gala-gold-bright: #E8B850;
+            --gala-gold-deep:   #B88020;
+            --gala-ivory:       #F8F8F0;
+            --gala-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+            background: var(--gala-ivory);
+        }
+
+        body.page-gala { margin: 0; }
+
+        .page-gala a:focus-visible,
+        .page-gala button:focus-visible,
+        .page-gala .btn:focus-visible,
+        .page-gala input:focus-visible,
+        .page-gala select:focus-visible,
+        .page-gala textarea:focus-visible,
+        .page-gala [tabindex]:focus-visible,
+        .page-gala [onclick]:focus-visible {
+            outline: 3px solid var(--gala-gold-deep);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* ---------- Gold-diamond divider ---------- */
+        .page-gala .gala-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 320px;
+            margin: 18px auto;
+        }
+        .page-gala .gala-divider .gala-divider-rule { flex: 1; height: 1px; background: var(--gala-gold); opacity: 0.85; }
+        .page-gala .gala-divider .gala-divider-diamond { width: 12px; height: 12px; flex-shrink: 0; transform: rotate(45deg); background: var(--gala-gold); }
+
+        /* ---------- Compact form-page header ---------- */
+        .page-gala .form-page-header {
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            padding: 40px 0 34px;
+            text-align: center;
+        }
+        .page-gala .form-page-header .fp-eyebrow {
+            display: inline-block;
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--gala-gold); margin-bottom: 12px;
+        }
+        .page-gala .form-page-header h1 {
+            font-family: var(--gala-serif); font-weight: 600;
+            font-size: 2.6rem; line-height: 1.1;
+            color: var(--gala-ivory); margin: 0;
+        }
+        .page-gala .form-page-header .fp-meta {
+            margin-top: 14px; font-family: var(--gala-serif); font-style: italic;
+            font-size: 1.15rem; color: var(--gala-gold);
+        }
+
+        /* ---------- Section headers ---------- */
+        .page-gala .section-header { text-align: center; margin-bottom: 32px; }
+        .page-gala .section-header h2 {
+            font-family: var(--gala-serif); font-weight: 600;
+            color: var(--gala-green-deep); font-size: 2rem; margin-bottom: 0.5rem;
+        }
+        .page-gala .section-header p { color: var(--gala-green-deep); max-width: 660px; margin: 0 auto; }
+        .page-gala .step-eyebrow {
+            display: block; text-align: center; font-size: 0.78rem; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase; color: var(--gala-gold-deep); margin-bottom: 6px;
+        }
+
+        .page-gala .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+        /* ---------- Levels ---------- */
+        .page-gala .levels-section { background: var(--gala-ivory); padding: 48px 0 24px; }
+        .page-gala .levels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .page-gala .level-card {
+            background: #fff; border: 1px solid var(--gala-gold); border-radius: 12px;
+            padding: 22px 18px; text-align: center; cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .page-gala .level-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(24, 64, 48, 0.14); border-color: var(--gala-gold-deep); }
+        .page-gala .level-card.selected { border: 2px solid var(--gala-gold-deep); box-shadow: 0 8px 24px rgba(184, 128, 32, 0.22); background: #fffdf6; }
+        .page-gala .level-card .level-name { font-size: 0.82rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gala-green-deep); margin-bottom: 8px; }
+        .page-gala .level-card .level-amount { font-family: var(--gala-serif); font-weight: 700; font-size: 1.7rem; color: var(--gala-gold-deep); line-height: 1.1; }
+        .page-gala .level-card .level-tickets { margin-top: 10px; display: inline-block; background: var(--gala-green-deep); color: var(--gala-ivory); padding: 3px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+        .page-gala .level-card .level-check { margin-top: 12px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gala-gold-deep); opacity: 0; transition: opacity 0.2s ease; }
+        .page-gala .level-card.selected .level-check { opacity: 1; }
+        .page-gala .level-card.level-custom .level-amount { font-size: 1.3rem; }
+
+        /* ---------- Form ---------- */
+        .page-gala .pledge-form-section { background: var(--gala-ivory); padding: 24px 0 60px; }
+        .page-gala .pledge-form-card {
+            max-width: 780px; margin: 0 auto; background: #fff;
+            border: 1.5px solid var(--gala-gold); border-radius: 14px;
+            padding: 44px 44px 40px; box-shadow: 0 10px 40px rgba(24, 64, 48, 0.08);
+        }
+        .page-gala .pledge-form-card h2 { font-family: var(--gala-serif); font-weight: 600; color: var(--gala-green-deep); font-size: 2rem; text-align: center; margin-bottom: 6px; }
+        .page-gala .pledge-form-intro { text-align: center; color: var(--gala-green-sage); margin-bottom: 28px; }
+        .page-gala .selected-banner {
+            text-align: center; margin: 0 auto 24px; max-width: 520px;
+            background: rgba(216,160,64,0.12); border: 1px solid var(--gala-gold);
+            border-radius: 10px; padding: 12px 16px; color: var(--gala-green-deep); font-weight: 600;
+        }
+        .page-gala .selected-banner strong { color: var(--gala-gold-deep); }
+        .page-gala .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+        .page-gala .form-field { display: flex; flex-direction: column; }
+        .page-gala .form-field.full { grid-column: 1 / -1; }
+        .page-gala .form-field label { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--gala-green-deep); margin-bottom: 6px; }
+        .page-gala .form-field label .req { color: #b23b2e; margin-left: 3px; }
+        .page-gala .form-field input,
+        .page-gala .form-field select,
+        .page-gala .form-field textarea {
+            font-family: inherit; font-size: 1rem; color: var(--gala-green-deep);
+            padding: 11px 13px; border: 1.5px solid #d8d3c2; border-radius: 8px;
+            background: #fffdf9; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .page-gala .form-field input:focus,
+        .page-gala .form-field select:focus,
+        .page-gala .form-field textarea:focus { border-color: var(--gala-gold-deep); box-shadow: 0 0 0 3px rgba(216, 160, 64, 0.15); outline: none; }
+        .page-gala .form-field textarea { min-height: 90px; resize: vertical; }
+        .page-gala .amount-wrap { position: relative; }
+        .page-gala .amount-wrap .dollar { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--gala-gold-deep); font-weight: 700; }
+        .page-gala .amount-wrap input { padding-left: 26px; }
+        .page-gala .field-hint { font-size: 0.78rem; color: var(--gala-green-sage); margin-top: 5px; }
+
+        /* ---------- Logo uploader ---------- */
+        .page-gala .logo-uploader { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 150px; gap: 18px; align-items: stretch; }
+        .page-gala .logo-dropzone {
+            border: 2px dashed var(--gala-gold); border-radius: 10px; background: #fffdf6;
+            padding: 22px; text-align: center; cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .page-gala .logo-dropzone:hover, .page-gala .logo-dropzone.dragover { background: #fff8e8; border-color: var(--gala-gold-deep); }
+        .page-gala .logo-dropzone .lz-icon { color: var(--gala-gold-deep); margin-bottom: 8px; }
+        .page-gala .logo-dropzone .lz-title { font-weight: 700; color: var(--gala-green-deep); }
+        .page-gala .logo-dropzone .lz-sub { font-size: 0.8rem; color: var(--gala-green-sage); margin-top: 4px; }
+        .page-gala .logo-dropzone .lz-file { font-size: 0.82rem; color: var(--gala-gold-deep); font-weight: 600; margin-top: 8px; word-break: break-all; }
+        .page-gala .logo-preview { border: 1.5px solid var(--gala-gold); border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 12px; min-height: 120px; }
+        .page-gala .logo-preview img { max-width: 100%; max-height: 108px; object-fit: contain; }
+        .page-gala .logo-preview .lp-empty { font-size: 0.78rem; color: #b7b09a; text-align: center; }
+
+        /* ---------- Consent ---------- */
+        .page-gala .consent-row { grid-column: 1 / -1; display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: var(--gala-green-deep); line-height: 1.5; }
+        .page-gala .consent-row input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--gala-green-deep); }
+
+        /* ---------- Two-path action row ---------- */
+        .page-gala .choose-path { grid-column: 1 / -1; margin-top: 8px; }
+        .page-gala .choose-path .cp-label { text-align: center; color: var(--gala-green-sage); font-size: 0.9rem; margin-bottom: 14px; }
+        .page-gala .path-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .page-gala .path-btn {
+            border-radius: 12px; padding: 18px 20px; cursor: pointer; text-align: center;
+            font-weight: 700; font-size: 1rem; transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
+        }
+        .page-gala .path-btn .pb-title { display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .page-gala .path-btn .pb-sub { display: block; font-size: 0.78rem; font-weight: 500; text-transform: none; letter-spacing: 0; margin-top: 4px; opacity: 0.85; }
+        .page-gala .path-btn.pay {
+            background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%);
+            color: var(--gala-green-deep);
+            box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.5), 0 4px 14px rgba(184,128,32,0.28);
+        }
+        .page-gala .path-btn.pay:hover:not(:disabled) { background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%); transform: translateY(-2px); }
+        .page-gala .path-btn.pledge { background: transparent; color: var(--gala-green-deep); border: 1.5px solid var(--gala-green-deep); }
+        .page-gala .path-btn.pledge:hover:not(:disabled) { background: var(--gala-green-deep); color: var(--gala-ivory); transform: translateY(-2px); }
+        .page-gala .path-btn:disabled { opacity: 0.6; cursor: default; }
+
+        .page-gala .form-error {
+            grid-column: 1 / -1; display: none;
+            background: #fdecea; border: 1px solid #e0a49c; color: #9c2c1e;
+            padding: 12px 14px; border-radius: 8px; font-size: 0.9rem;
+        }
+        .page-gala .pledge-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(24,64,48,0.35); border-top-color: var(--gala-green-deep); border-radius: 50%; animation: pledgeSpin 0.7s linear infinite; vertical-align: -3px; margin-right: 8px; }
+        @keyframes pledgeSpin { to { transform: rotate(360deg); } }
+
+        /* ---------- Bloomerang payment panel ---------- */
+        .page-gala .payment-panel { display: none; max-width: 820px; margin: 30px auto 0; }
+        .page-gala .payment-note {
+            background: rgba(76,187,23,0.10); border: 1px solid var(--gala-green-sage);
+            border-radius: 10px; padding: 14px 18px; color: var(--gala-green-deep);
+            text-align: center; margin-bottom: 20px; font-weight: 600;
+        }
+        .page-gala .payment-card {
+            background: #fff; border: 1.5px solid var(--gala-gold); border-radius: 14px;
+            padding: 30px; box-shadow: 0 10px 40px rgba(24, 64, 48, 0.08);
+        }
+        .page-gala .payment-card h3 { font-family: var(--gala-serif); font-weight: 600; color: var(--gala-green-deep); font-size: 1.6rem; text-align: center; margin-bottom: 4px; }
+        .page-gala .payment-card .pc-sub { text-align: center; color: var(--gala-green-sage); margin-bottom: 18px; }
+
+        /* ---------- Success state ---------- */
+        .page-gala .pledge-success {
+            display: none; max-width: 780px; margin: 0 auto;
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            border: 1.5px solid var(--gala-gold); border-radius: 14px;
+            padding: 50px 44px; text-align: center; color: var(--gala-ivory);
+        }
+        .page-gala .pledge-success .ps-badge { width: 74px; height: 74px; margin: 0 auto 18px; border-radius: 50%; background: rgba(216,160,64,0.18); border: 1.5px solid var(--gala-gold); display: flex; align-items: center; justify-content: center; color: var(--gala-gold); }
+        .page-gala .pledge-success h2 { font-family: var(--gala-serif); font-weight: 600; color: var(--gala-ivory); font-size: 2rem; margin-bottom: 10px; }
+        .page-gala .pledge-success p { color: rgba(248,248,240,0.9); line-height: 1.7; max-width: 520px; margin: 0 auto 8px; }
+        .page-gala .pledge-success .ps-logo { margin: 24px auto 0; width: 180px; height: 120px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 12px; }
+        .page-gala .pledge-success .ps-logo img { max-width: 100%; max-height: 96px; object-fit: contain; }
+        .page-gala .pledge-success .ps-actions { margin-top: 28px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .page-gala .pledge-success .btn {
+            display: inline-block; padding: 12px 26px; border-radius: 8px; font-weight: 700;
+            text-decoration: none; cursor: pointer; border: 1.5px solid var(--gala-gold);
+        }
+        .page-gala .pledge-success .btn-white { background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%); color: var(--gala-green-deep); }
+        .page-gala .pledge-success .btn-secondary { background: transparent; color: var(--gala-ivory); }
+
+        /* ---------- Footer note ---------- */
+        .page-gala .form-page-footnote {
+            background: var(--gala-ivory); text-align: center; padding: 0 20px 48px;
+            color: var(--gala-green-sage); font-size: 0.9rem; line-height: 1.7;
+        }
+        .page-gala .form-page-footnote a { color: var(--gala-gold-deep); font-weight: 600; }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) { .page-gala .levels-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .page-gala .form-page-header { padding: 32px 0 28px; }
+            .page-gala .form-page-header h1 { font-size: 2rem; }
+            .page-gala .pledge-form-card { padding: 30px 22px; }
+            .page-gala .form-grid { grid-template-columns: 1fr; }
+            .page-gala .logo-uploader { grid-template-columns: 1fr; }
+            .page-gala .path-buttons { grid-template-columns: 1fr; }
+            .page-gala .section-header h2 { font-size: 1.7rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .page-gala .level-card:hover, .page-gala .path-btn:hover:not(:disabled) { transform: none; }
+        }
+    </style>
+</head>
+<body class="page-gala">
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Compact header (form-only page — no site nav) -->
+    <header class="form-page-header">
+        <div class="container">
+            <span class="fp-eyebrow">An Evening to SPARCle &bull; Sponsorship</span>
+            <h1>Become a Sponsor</h1>
+            <div class="gala-divider" aria-hidden="true">
+                <span class="gala-divider-rule"></span>
+                <span class="gala-divider-diamond"></span>
+                <span class="gala-divider-rule"></span>
+            </div>
+            <p class="fp-meta">Saturday, November 14, 2026 &bull; Washington Dulles Airport Marriott</p>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Step 1: Levels -->
+        <section class="levels-section" id="levelsSection">
+            <div class="container">
+                <div class="section-header">
+                    <span class="step-eyebrow">Step 1</span>
+                    <h2>Choose Your Level</h2>
+                    <p>Select a level to get started. It fills in your amount below &mdash; prefer a custom amount? Choose &ldquo;Custom.&rdquo;</p>
+                </div>
+                <div class="levels-grid" id="levelsGrid"><!-- populated by JS --></div>
+            </div>
+        </section>
+
+        <!-- Step 2 + 3: details, logo, choose path -->
+        <section class="pledge-form-section">
+            <div class="container">
+                <div class="pledge-form-card" id="pledgeCard">
+                    <span class="step-eyebrow">Step 2</span>
+                    <h2>Your Details &amp; Logo</h2>
+                    <p class="pledge-form-intro">Fields marked with <span style="color:#b23b2e">*</span> are required. Your logo appears on the gala sponsor wall.</p>
+
+                    <div class="selected-banner" id="selectedBanner" style="display:none">
+                        Selected level: <strong id="selectedBannerText"></strong>
+                    </div>
+
+                    <form id="pledgeForm" novalidate>
+                        <div class="form-grid">
+                            <div class="form-error" id="formError" role="alert"></div>
+
+                            <div class="form-field full">
+                                <label for="organization">Organization / Sponsor Name <span class="req">*</span></label>
+                                <input type="text" id="organization" name="organization" autocomplete="organization" required>
+                                <span class="field-hint">Exactly as it should appear in listings and on your logo.</span>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contact">Contact Name</label>
+                                <input type="text" id="contact" name="contact" autocomplete="name">
+                            </div>
+                            <div class="form-field">
+                                <label for="email">Email <span class="req">*</span></label>
+                                <input type="email" id="email" name="email" autocomplete="email" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone" autocomplete="tel">
+                            </div>
+                            <div class="form-field">
+                                <label for="website">Website (for your logo link)</label>
+                                <input type="url" id="website" name="website" placeholder="https://">
+                            </div>
+
+                            <div class="form-field">
+                                <label for="level">Sponsorship Level</label>
+                                <select id="level" name="level"><!-- options by JS --></select>
+                            </div>
+                            <div class="form-field">
+                                <label for="amount">Amount <span class="req" id="amountReq">*</span></label>
+                                <div class="amount-wrap">
+                                    <span class="dollar">$</span>
+                                    <input type="number" id="amount" name="amount" min="1" step="1" inputmode="numeric">
+                                </div>
+                                <span class="field-hint">Required to pledge. For &ldquo;Pay Now,&rdquo; your level sets the amount at checkout.</span>
+                            </div>
+
+                            <!-- Logo uploader -->
+                            <div class="logo-uploader">
+                                <div class="logo-dropzone" id="logoDropzone" role="button" tabindex="0" aria-label="Upload your logo">
+                                    <div class="lz-icon" aria-hidden="true">
+                                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    </div>
+                                    <div class="lz-title">Upload your logo <span class="req" style="color:#b23b2e">*</span></div>
+                                    <div class="lz-sub">PNG, JPG, SVG or WEBP &bull; up to 5&nbsp;MB<br>Click or drag &amp; drop</div>
+                                    <div class="lz-file" id="logoFileName"></div>
+                                    <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" hidden>
+                                </div>
+                                <div class="logo-preview" id="logoPreview">
+                                    <span class="lp-empty">Logo<br>preview</span>
+                                </div>
+                            </div>
+
+                            <div class="form-field full">
+                                <label for="message">Message / Notes</label>
+                                <textarea id="message" name="message" placeholder="Anything you'd like us to know?"></textarea>
+                            </div>
+
+                            <label class="consent-row">
+                                <input type="checkbox" id="consent" checked>
+                                <span>I authorize SPARC to display our organization's logo on the gala sponsor wall, website, and event materials in recognition of this sponsorship.</span>
+                            </label>
+
+                            <!-- Step 3: choose how to complete -->
+                            <div class="choose-path">
+                                <span class="step-eyebrow" style="margin-top:10px">Step 3</span>
+                                <p class="cp-label">How would you like to complete your sponsorship?</p>
+                                <div class="path-buttons">
+                                    <button type="button" class="path-btn pay" id="payNowBtn">
+                                        <span class="pb-title">Pay Now</span>
+                                        <span class="pb-sub">Add your logo &amp; pay securely by card</span>
+                                    </button>
+                                    <button type="button" class="path-btn pledge" id="pledgeBtn">
+                                        <span class="pb-title">Submit a Pledge</span>
+                                        <span class="pb-sub">We'll follow up to arrange payment</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Bloomerang payment panel (revealed after "Pay Now") -->
+                <div class="payment-panel" id="paymentPanel">
+                    <div class="payment-note" id="paymentNote">
+                        Your logo has been added to the sponsor wall. Complete your secure payment below to finish.
+                    </div>
+                    <div class="payment-card">
+                        <h3>Complete Your Payment</h3>
+                        <p class="pc-sub" id="paymentLevelSub">Your selected level is preselected below.</p>
+                        <div class="form-wrapper">
+                            <!-- Bloomerang sponsorship widget (same widget used across the gala site) -->
+                            <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4923392.js" type="text/javascript"></script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pledge success -->
+                <div class="pledge-success" id="pledgeSuccess">
+                    <div class="ps-badge" aria-hidden="true">
+                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h2>Thank You for Your Pledge!</h2>
+                    <p id="successMessage">We've received your pledge and emailed our team. We'll be in touch shortly to confirm the details.</p>
+                    <div class="ps-logo" id="successLogo" style="display:none"><img id="successLogoImg" src="" alt="Your uploaded logo"></div>
+                    <div class="ps-actions">
+                        <a href="javascript:void(0)" onclick="resetSponsorForm()" class="btn btn-secondary btn-lg">Submit Another</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footnote / help -->
+        <div class="form-page-footnote">
+            <div class="container">
+                Questions about sponsorship, or prefer to send your logo separately?
+                Email <a href="mailto:debi@sparcsolutions.org">debi@sparcsolutions.org</a> or call
+                <a href="tel:571-407-1807">(571) 407-1807</a>.
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/gala-sponsors.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        // Sponsorship levels — matches sparcsolutions.org/gala. radioId is the
+        // Bloomerang widget radio for that level (used by "Pay Now"). A level
+        // with amount 0 is a custom amount and has no Bloomerang radio.
+        var LEVELS = [
+            { name: 'Event Sponsor', amount: 25000, tickets: '10 Tickets', radioId: '4925447' },
+            { name: 'Champion',      amount: 10000, tickets: '8 Tickets',  radioId: '4925446' },
+            { name: 'Hero',          amount: 7500,  tickets: '8 Tickets',  radioId: '4925445' },
+            { name: 'Leader',        amount: 5000,  tickets: '8 Tickets',  radioId: '4925444' },
+            { name: 'Partner',       amount: 2500,  tickets: '4 Tickets',  radioId: '4925443' },
+            { name: 'Advocate',      amount: 1000,  tickets: '2 Tickets',  radioId: '4925442' },
+            { name: 'Friend',        amount: 500,   tickets: '2 Tickets',  radioId: '4925441' },
+            { name: 'Custom',        amount: 0,     tickets: '',           radioId: '' }
+        ];
+
+        var MAX_LOGO_BYTES = 5 * 1024 * 1024;
+        var logoDataUrl = '';
+        var logoFileNameStr = '';
+
+        var levelsGrid = document.getElementById('levelsGrid');
+        var levelSelect = document.getElementById('level');
+        var amountInput = document.getElementById('amount');
+        var banner = document.getElementById('selectedBanner');
+        var bannerText = document.getElementById('selectedBannerText');
+
+        function fmt(n) { return n.toLocaleString('en-US'); }
+        function levelByName(name) {
+            for (var i = 0; i < LEVELS.length; i++) { if (LEVELS[i].name === name) { return LEVELS[i]; } }
+            return null;
+        }
+
+        // Build level cards + <select> options.
+        LEVELS.forEach(function (lvl, i) {
+            var card = document.createElement('div');
+            card.className = 'level-card' + (lvl.amount === 0 ? ' level-custom' : '');
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.dataset.index = i;
+            card.innerHTML =
+                '<div class="level-name">' + lvl.name + '</div>' +
+                '<div class="level-amount">' + (lvl.amount === 0 ? 'Your Amount' : '$' + fmt(lvl.amount)) + '</div>' +
+                (lvl.tickets ? '<span class="level-tickets">' + lvl.tickets + '</span>' : '') +
+                '<div class="level-check">&#10003; Selected</div>';
+            card.addEventListener('click', function () { selectLevel(i, true); });
+            card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectLevel(i, true); } });
+            levelsGrid.appendChild(card);
+
+            var opt = document.createElement('option');
+            opt.value = lvl.name;
+            opt.textContent = lvl.name + (lvl.amount ? ' — $' + fmt(lvl.amount) : '');
+            levelSelect.appendChild(opt);
+        });
+
+        function selectLevel(i, scroll) {
+            var lvl = LEVELS[i];
+            Array.prototype.forEach.call(levelsGrid.children, function (c, idx) { c.classList.toggle('selected', idx === i); });
+            levelSelect.value = lvl.name;
+            if (lvl.amount > 0) { amountInput.value = lvl.amount; }
+            bannerText.textContent = lvl.name + (lvl.amount ? ' — $' + fmt(lvl.amount) : ' (your amount)');
+            banner.style.display = 'block';
+            if (scroll) {
+                document.getElementById('pledgeCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        levelSelect.addEventListener('change', function () {
+            var idx = LEVELS.map(function (l) { return l.name; }).indexOf(levelSelect.value);
+            if (idx >= 0) { selectLevel(idx, false); }
+        });
+
+        // Preselect a level from ?level= (e.g. arriving from the gala page).
+        (function preselectFromQuery() {
+            var params = new URLSearchParams(window.location.search);
+            var wanted = params.get('level');
+            if (!wanted) { return; }
+            var idx = LEVELS.map(function (l) { return l.name.toLowerCase(); }).indexOf(wanted.toLowerCase());
+            if (idx >= 0) { selectLevel(idx, false); }
+        })();
+
+        // ---- Logo upload ----
+        var dropzone = document.getElementById('logoDropzone');
+        var fileInput = document.getElementById('logoInput');
+        var previewBox = document.getElementById('logoPreview');
+        var fileNameEl = document.getElementById('logoFileName');
+
+        dropzone.addEventListener('click', function () { fileInput.click(); });
+        dropzone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+        ['dragenter', 'dragover'].forEach(function (ev) { dropzone.addEventListener(ev, function (e) { e.preventDefault(); dropzone.classList.add('dragover'); }); });
+        ['dragleave', 'drop'].forEach(function (ev) { dropzone.addEventListener(ev, function (e) { e.preventDefault(); dropzone.classList.remove('dragover'); }); });
+        dropzone.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) { handleFile(e.dataTransfer.files[0]); } });
+        fileInput.addEventListener('change', function () { if (fileInput.files && fileInput.files[0]) { handleFile(fileInput.files[0]); } });
+
+        function handleFile(file) {
+            var okTypes = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'];
+            if (okTypes.indexOf(file.type) === -1) { return showError('Please upload a PNG, JPG, SVG, or WEBP image.'); }
+            if (file.size > MAX_LOGO_BYTES) { return showError('That logo is larger than 5 MB. Please upload a smaller file.'); }
+            hideError();
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                logoDataUrl = ev.target.result;
+                logoFileNameStr = file.name;
+                fileNameEl.textContent = file.name;
+                previewBox.innerHTML = '<img src="' + logoDataUrl + '" alt="Logo preview">';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ---- Shared field helpers ----
+        var errorBox = document.getElementById('formError');
+        function showError(msg) { errorBox.textContent = msg; errorBox.style.display = 'block'; errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        function hideError() { errorBox.style.display = 'none'; }
+
+        function collect() {
+            return {
+                organization: document.getElementById('organization').value.trim(),
+                contact: document.getElementById('contact').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                level: levelSelect.value,
+                amount: amountInput.value.trim(),
+                website: document.getElementById('website').value.trim(),
+                message: document.getElementById('message').value.trim()
+            };
+        }
+
+        function validateCommon(d, requireAmount) {
+            if (!d.organization) { showError('Please enter your organization or sponsor name.'); return false; }
+            if (!d.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) { showError('Please enter a valid email address.'); return false; }
+            if (requireAmount && (!d.amount || Number(d.amount) <= 0)) { showError('Please enter your pledge amount.'); return false; }
+            if (!logoDataUrl) { showError('Please upload your logo so we can feature it on the sponsor wall.'); return false; }
+            if (!document.getElementById('consent').checked) { showError('Please confirm we may display your logo in recognition of your sponsorship.'); return false; }
+            return true;
+        }
+
+        function post(payload) {
+            var api = window.GalaSponsors && window.GalaSponsors.apiUrl;
+            var configured = window.GalaSponsors && window.GalaSponsors.isConfigured();
+            if (!configured) {
+                return Promise.reject({ notConfigured: true });
+            }
+            return fetch(api, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(function (res) { return res.json(); });
+        }
+
+        function addLogoToWall(sponsor, fallbackOrg, fallbackWebsite) {
+            // Standalone form page has no visible carousel; posting still records
+            // the sponsor in the backend so it shows on the main gala pages.
+            if (!window.GalaSponsors || !document.querySelector('#sponsorTrack')) { return; }
+            if (sponsor && sponsor.logo) {
+                window.GalaSponsors.addSponsor('#sponsorTrack', sponsor);
+            } else if (logoDataUrl) {
+                window.GalaSponsors.addSponsor('#sponsorTrack', { name: fallbackOrg, logo: logoDataUrl, website: fallbackWebsite });
+            }
+        }
+
+        // ---- PAY NOW ----
+        var payNowBtn = document.getElementById('payNowBtn');
+        var pledgeBtn = document.getElementById('pledgeBtn');
+
+        payNowBtn.addEventListener('click', function () {
+            hideError();
+            var d = collect();
+            if (!validateCommon(d, false)) { return; }
+            d.type = 'payment';
+            d.logoData = logoDataUrl;
+            d.logoName = logoFileNameStr;
+
+            setBusy(payNowBtn, true, 'Adding your logo…');
+            post(d).then(function (data) {
+                if (data && data.status === 'success') {
+                    addLogoToWall(data.sponsor, d.organization, d.website);
+                    revealPayment(d.level);
+                } else {
+                    throw new Error((data && data.message) || 'Unexpected response');
+                }
+            }).catch(function (err) {
+                if (err && err.notConfigured) {
+                    // Backend not connected yet — still let them pay; just note the logo step.
+                    revealPayment(d.level);
+                    console.warn('[sponsorship] GALA_SPONSORS_API not configured — logo not stored.');
+                    return;
+                }
+                console.error('[sponsorship] pay-now logo submit failed', err);
+                showError('We couldn\'t save your logo just now, but you can still complete payment below. Please email your logo to debi@sparcsolutions.org.');
+                revealPayment(d.level);
+            }).then(function () { setBusy(payNowBtn, false, null); });
+        });
+
+        function revealPayment(levelName) {
+            var panel = document.getElementById('paymentPanel');
+            panel.style.display = 'block';
+            var lvl = levelByName(levelName);
+            document.getElementById('paymentLevelSub').textContent = (lvl && lvl.amount)
+                ? ('Your selected level (' + lvl.name + ' — $' + fmt(lvl.amount) + ') is preselected below.')
+                : 'Select your level below to complete payment.';
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Preselect the Bloomerang radio for this level (widget loads async).
+            if (lvl && lvl.radioId) {
+                var tries = 0;
+                var iv = setInterval(function () {
+                    tries++;
+                    var radio = document.getElementById(lvl.radioId);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.click();
+                        radio.dispatchEvent(new Event('change', { bubbles: true }));
+                        clearInterval(iv);
+                    }
+                    if (tries > 40) { clearInterval(iv); } // ~10s max
+                }, 250);
+            }
+        }
+
+        // ---- PLEDGE ----
+        pledgeBtn.addEventListener('click', function () {
+            hideError();
+            var d = collect();
+            if (!validateCommon(d, true)) { return; }
+            d.type = 'pledge';
+            d.logoData = logoDataUrl;
+            d.logoName = logoFileNameStr;
+
+            setBusy(pledgeBtn, true, 'Submitting…');
+            post(d).then(function (data) {
+                if (data && data.status === 'success') {
+                    addLogoToWall(data.sponsor, d.organization, d.website);
+                    showSuccess(d.organization);
+                } else {
+                    throw new Error((data && data.message) || 'Unexpected response');
+                }
+            }).catch(function (err) {
+                setBusy(pledgeBtn, false, null);
+                if (err && err.notConfigured) {
+                    showError('Online pledge submission isn\'t connected yet. Please email your pledge and logo to debi@sparcsolutions.org, or use "Pay Now."');
+                    console.warn('[sponsorship] GALA_SPONSORS_API is not configured in /js/gala-sponsors.js');
+                    return;
+                }
+                console.error('[sponsorship] pledge submit failed', err);
+                showError('Sorry — something went wrong sending your pledge. Please try again, or email debi@sparcsolutions.org.');
+            });
+        });
+
+        function setBusy(btn, busy, label) {
+            if (busy) {
+                btn.dataset.orig = btn.innerHTML;
+                btn.disabled = true;
+                payNowBtn.disabled = true; pledgeBtn.disabled = true;
+                btn.innerHTML = '<span class="pledge-spinner"></span>' + (label || 'Working…');
+            } else {
+                if (btn.dataset.orig) { btn.innerHTML = btn.dataset.orig; }
+                payNowBtn.disabled = false; pledgeBtn.disabled = false;
+            }
+        }
+
+        function showSuccess(org) {
+            document.getElementById('pledgeCard').style.display = 'none';
+            document.getElementById('levelsSection').style.display = 'none';
+            document.getElementById('paymentPanel').style.display = 'none';
+            var successEl = document.getElementById('pledgeSuccess');
+            document.getElementById('successMessage').textContent =
+                'We\'ve received ' + org + '\'s pledge and emailed our team. We\'ll be in touch shortly to confirm the details — thank you for helping our participants SPARCle!';
+            if (logoDataUrl) {
+                document.getElementById('successLogo').style.display = 'flex';
+                document.getElementById('successLogoImg').src = logoDataUrl;
+            }
+            successEl.style.display = 'block';
+            successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.resetSponsorForm = function () {
+            document.getElementById('pledgeForm').reset();
+            logoDataUrl = ''; logoFileNameStr = '';
+            fileNameEl.textContent = '';
+            previewBox.innerHTML = '<span class="lp-empty">Logo<br>preview</span>';
+            Array.prototype.forEach.call(levelsGrid.children, function (c) { c.classList.remove('selected'); });
+            banner.style.display = 'none';
+            document.getElementById('consent').checked = true;
+            hideError();
+            document.getElementById('pledgeSuccess').style.display = 'none';
+            document.getElementById('paymentPanel').style.display = 'none';
+            document.getElementById('pledgeCard').style.display = 'block';
+            document.getElementById('levelsSection').style.display = 'block';
+            payNowBtn.disabled = false; pledgeBtn.disabled = false;
+            document.getElementById('levelsSection').scrollIntoView({ behavior: 'smooth' });
+        };
+    })();
+    </script>
+</body>
+</html>
