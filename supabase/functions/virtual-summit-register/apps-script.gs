@@ -54,7 +54,7 @@ var IMPORT_ROWS = [];
 
 // ---- Summit / Zoom constants --------------------------------------------------
 var SUMMIT_NAME = "A Call to Conscience: The SPARC Summit";
-var SUMMIT_TAGLINE = "Advancing Dignity for Adults with Severe and Multiple Disabilities";
+var SUMMIT_TAGLINE = "Advancing Inclusion for Adults with Disabilities who have Significant Support Needs";
 var SUMMIT_WHEN = "Monday, July 27, 2026 · 10:00 AM ET";
 var SUMMIT_HOST = "Co-hosted with the George Washington University. Keynote by Senator Tim Kaine, with a farewell address from Congressman James Walkinshaw.";
 var ZOOM_URL = "https://gwu-edu.zoom.us/s/97988820283?pwd=tyf6ZoWlQ5Wp5VA9LSCGvo7l8xNB5F.1";
