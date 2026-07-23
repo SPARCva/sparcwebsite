@@ -152,6 +152,20 @@
             border-color: white;
             transform: translateY(-2px);
         }
+        .summit-hero-buttons .btn-venue {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.6);
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .summit-hero-buttons .btn-venue svg { flex-shrink: 0; }
+        .summit-hero-buttons .btn-venue:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+            transform: translateY(-2px);
+        }
         @media (max-width: 768px) {
             .summit-hero { padding: 100px 0 50px; }
             .summit-hero-logos { gap: 20px; }
@@ -988,6 +1002,10 @@
                     <a href="javascript:void(0)" onclick="openVirtualModal()" class="btn btn-virtual">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         Join Virtually for Free
+                    </a>
+                    <a href="/summitinfo/" class="btn btn-venue">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Getting Here &amp; Venue Guide
                     </a>
                 </div>
             </div>
