@@ -171,6 +171,7 @@
         .page-gala .logo-dropzone:hover, .page-gala .logo-dropzone.dragover { background: #fff8e8; border-color: var(--gala-gold-deep); }
         .page-gala .logo-dropzone .lz-icon { color: var(--gala-gold-deep); margin-bottom: 8px; }
         .page-gala .logo-dropzone .lz-title { font-weight: 700; color: var(--gala-green-deep); }
+        .page-gala .logo-dropzone .lz-optional { font-weight: 500; color: var(--gala-green-sage); font-size: 0.85rem; }
         .page-gala .logo-dropzone .lz-sub { font-size: 0.8rem; color: var(--gala-green-sage); margin-top: 4px; }
         .page-gala .logo-dropzone .lz-file { font-size: 0.82rem; color: var(--gala-gold-deep); font-weight: 600; margin-top: 8px; word-break: break-all; }
         .page-gala .logo-preview { border: 1.5px solid var(--gala-gold); border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 12px; min-height: 120px; }
@@ -304,7 +305,7 @@
                 <div class="pledge-form-card" id="pledgeCard">
                     <span class="step-eyebrow">Step 2</span>
                     <h2>Your Details &amp; Logo</h2>
-                    <p class="pledge-form-intro">Fields marked with <span style="color:#b23b2e">*</span> are required. Your logo appears on the gala sponsor wall.</p>
+                    <p class="pledge-form-intro">Fields marked with <span style="color:#b23b2e">*</span> are required. A logo is optional &mdash; if you add one, it appears on the gala sponsor wall.</p>
 
                     <div class="selected-banner" id="selectedBanner" style="display:none">
                         Selected level: <strong id="selectedBannerText"></strong>
@@ -357,7 +358,7 @@
                                     <div class="lz-icon" aria-hidden="true">
                                         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                                     </div>
-                                    <div class="lz-title">Upload your logo <span class="req" style="color:#b23b2e">*</span></div>
+                                    <div class="lz-title">Upload your logo <span class="lz-optional">(optional)</span></div>
                                     <div class="lz-sub">PNG, JPG, SVG or WEBP &bull; up to 5&nbsp;MB<br>Click or drag &amp; drop</div>
                                     <div class="lz-file" id="logoFileName"></div>
                                     <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" hidden>
@@ -569,8 +570,7 @@
             if (!d.organization) { showError('Please enter your organization or sponsor name.'); return false; }
             if (!d.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) { showError('Please enter a valid email address.'); return false; }
             if (requireAmount && (!d.amount || Number(d.amount) <= 0)) { showError('Please enter your pledge amount.'); return false; }
-            if (!logoDataUrl) { showError('Please upload your logo so we can feature it on the sponsor wall.'); return false; }
-            if (!document.getElementById('consent').checked) { showError('Please confirm we may display your logo in recognition of your sponsorship.'); return false; }
+            if (logoDataUrl && !document.getElementById('consent').checked) { showError('Please confirm we may display your logo in recognition of your sponsorship.'); return false; }
             return true;
         }
 
@@ -610,7 +610,7 @@
             d.logoData = logoDataUrl;
             d.logoName = logoFileNameStr;
 
-            setBusy(payNowBtn, true, 'Adding your logo…');
+            setBusy(payNowBtn, true, logoDataUrl ? 'Adding your logo…' : 'Saving your details…');
             post(d).then(function (data) {
                 if (data && data.status === 'success') {
                     addLogoToWall(data.sponsor, d.organization, d.website);
@@ -626,7 +626,9 @@
                     return;
                 }
                 console.error('[sponsorship] pay-now logo submit failed', err);
-                showError('We couldn\'t save your logo just now, but you can still complete payment below. Please email your logo to debi@sparcsolutions.org.');
+                showError(logoDataUrl
+                    ? 'We couldn\'t save your logo just now, but you can still complete payment below. Please email your logo to debi@sparcsolutions.org.'
+                    : 'We couldn\'t save your details just now, but you can still complete payment below.');
                 revealPayment(d.level);
             }).then(function () { setBusy(payNowBtn, false, null); });
         });
@@ -634,6 +636,9 @@
         function revealPayment(levelName) {
             var panel = document.getElementById('paymentPanel');
             panel.style.display = 'block';
+            document.getElementById('paymentNote').textContent = logoDataUrl
+                ? 'Your logo has been added to the sponsor wall. Complete your secure payment below to finish.'
+                : 'Complete your secure payment below to finish.';
             var lvl = levelByName(levelName);
             document.getElementById('paymentLevelSub').textContent = (lvl && lvl.amount)
                 ? ('Your selected level (' + lvl.name + ' — $' + fmt(lvl.amount) + ') is preselected below.')
