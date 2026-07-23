@@ -1804,6 +1804,7 @@
                             <div class="sponsor-slide"><a href="https://www.altria.com/" target="_blank" rel="noopener"><img src="/images/sponsors/Altria.png" alt="Altria"></a></div>
                             <div class="sponsor-slide"><img src="/images/sponsors/congressman-mrs-bill-alexander.svg" alt="Congressman & Mrs. Bill Alexander"></div>
                             <div class="sponsor-slide"><img src="/images/sponsors/john-andelin-virginia-geoffrey.svg" alt="John Andelin & Virginia Geoffrey"></div>
+                            <div class="sponsor-slide"><img src="/images/sponsors/john-foust-esq.svg" alt="Hon. John Foust, Esq."></div>
                             <!-- Sponsors pledged through /gala-sponsor-pledge/ are appended here
                                  automatically, and the loop is duplicated, by /js/gala-sponsors.js -->
                         </div>
@@ -1835,7 +1836,7 @@
                 </div>
 
                 <!-- Event Sponsor -->
-                <div class="event-sponsor-card fade-in" onclick="location.href='/gala-sponsorships/?level=Event%20Sponsor'">
+                <div class="event-sponsor-card fade-in" onclick="openSponsorModal('Event Sponsor')">
                     <div class="event-sponsor-info">
                         <h3>Event Sponsor</h3>
                         <div class="price">$25,000</div>
@@ -1859,7 +1860,7 @@
 
                 <!-- Sponsorship Tiers: Friend, Advocate, Partner, Leader, Hero, Champion -->
                 <div class="tiers-grid">
-                    <div class="tier-card fade-in" onclick="location.href='/gala-sponsorships/?level=Friend'">
+                    <div class="tier-card fade-in" onclick="openSponsorModal('Friend')">
                         <div class="tier-header">
                             <div class="tier-name">Friend</div>
                             <div class="tier-price">$500</div>
@@ -1877,7 +1878,7 @@
                         </div>
                     </div>
 
-                    <div class="tier-card fade-in" onclick="location.href='/gala-sponsorships/?level=Advocate'">
+                    <div class="tier-card fade-in" onclick="openSponsorModal('Advocate')">
                         <div class="tier-header">
                             <div class="tier-name">Advocate</div>
                             <div class="tier-price">$1,000</div>
@@ -1896,7 +1897,7 @@
                         </div>
                     </div>
 
-                    <div class="tier-card fade-in" onclick="location.href='/gala-sponsorships/?level=Partner'">
+                    <div class="tier-card fade-in" onclick="openSponsorModal('Partner')">
                         <div class="tier-header">
                             <div class="tier-name">Partner</div>
                             <div class="tier-price">$2,500</div>
@@ -1915,7 +1916,7 @@
                         </div>
                     </div>
 
-                    <div class="tier-card featured fade-in" onclick="location.href='/gala-sponsorships/?level=Leader'">
+                    <div class="tier-card featured fade-in" onclick="openSponsorModal('Leader')">
                         <div class="tier-header">
                             <div class="tier-name">Leader</div>
                             <div class="tier-price">$5,000</div>
@@ -1939,7 +1940,7 @@
                         </div>
                     </div>
 
-                    <div class="tier-card fade-in" onclick="location.href='/gala-sponsorships/?level=Hero'">
+                    <div class="tier-card fade-in" onclick="openSponsorModal('Hero')">
                         <div class="tier-header">
                             <div class="tier-name">Hero</div>
                             <div class="tier-price">$7,500</div>
@@ -1964,7 +1965,7 @@
                         </div>
                     </div>
 
-                    <div class="tier-card fade-in" onclick="location.href='/gala-sponsorships/?level=Champion'">
+                    <div class="tier-card fade-in" onclick="openSponsorModal('Champion')">
                         <div class="tier-header">
                             <div class="tier-name">Champion</div>
                             <div class="tier-price">$10,000</div>
@@ -2097,6 +2098,16 @@
                 </div>
                 <div class="form-wrapper">
                     <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4923392.js" type="text/javascript"></script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sponsorship Form Modal (embeds the bare /gala-sponsorships-form/ page) -->
+        <div class="form-modal-overlay" id="sponsorFormModal" style="display: none;" role="dialog" aria-modal="true" aria-label="Become a sponsor">
+            <div class="form-modal">
+                <button class="form-modal-close" onclick="closeSponsorModal()" aria-label="Close">&times;</button>
+                <div class="form-wrapper">
+                    <iframe id="sponsorFormIframe" src="" title="Sponsorship form" loading="lazy" style="width: 100%; height: 85vh; border: none; display: block;"></iframe>
                 </div>
             </div>
         </div>
@@ -2505,6 +2516,42 @@
             modal.style.display = 'none';
             document.body.style.overflow = '';
         }
+
+        // Open the sponsorship form in a modal, preselecting the chosen level so
+        // the form pops up with the amount already filled in (no full-page redirect).
+        function openSponsorModal(level) {
+            var modal = document.getElementById('sponsorFormModal');
+            var iframe = document.getElementById('sponsorFormIframe');
+            var src = '/gala-sponsorships-form/';
+            if (level) { src += '?level=' + encodeURIComponent(level); }
+            iframe.src = src;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close the sponsorship modal (and unload the iframe to reset the form).
+        function closeSponsorModal() {
+            var modal = document.getElementById('sponsorFormModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            document.getElementById('sponsorFormIframe').src = '';
+        }
+
+        // Close the sponsorship modal on overlay click or Escape.
+        document.addEventListener('DOMContentLoaded', function() {
+            var sponsorModal = document.getElementById('sponsorFormModal');
+            if (sponsorModal) {
+                sponsorModal.addEventListener('click', function(e) {
+                    if (e.target === sponsorModal) { closeSponsorModal(); }
+                });
+            }
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var m = document.getElementById('sponsorFormModal');
+                if (m && m.style.display !== 'none') { closeSponsorModal(); }
+            }
+        });
     </script>
 
 
