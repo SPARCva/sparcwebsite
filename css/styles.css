@@ -212,8 +212,10 @@ p {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    gap: 2px 14px;
     padding: 9px 48px 9px 20px;
 }
 .announcement-bar__link {
@@ -230,9 +232,15 @@ p {
 }
 .announcement-bar__title { font-weight: 700; }
 .announcement-bar__date { opacity: 0.9; }
-.announcement-bar__cta { font-weight: 700; color: #ffd166; white-space: nowrap; }
-.announcement-bar__link:hover .announcement-bar__cta,
-.announcement-bar__link:focus-visible .announcement-bar__cta { text-decoration: underline; }
+.announcement-bar__link:hover, .announcement-bar__link:focus-visible { text-decoration: underline; }
+.announcement-bar__cta {
+    font-weight: 700;
+    color: #ffd166;
+    white-space: nowrap;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+.announcement-bar__cta:hover, .announcement-bar__cta:focus-visible { text-decoration: underline; }
 .announcement-bar__close {
     position: absolute;
     right: 8px;
