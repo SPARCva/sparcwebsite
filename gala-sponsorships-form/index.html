@@ -77,6 +77,14 @@
             padding: 40px 0 34px;
             text-align: center;
         }
+        .page-gala .form-page-header .container {
+            display: flex; align-items: center; justify-content: center;
+            gap: 40px; flex-wrap: wrap;
+        }
+        .page-gala .form-page-header .fp-logo {
+            flex: 0 0 auto; width: 160px; height: auto;
+        }
+        .page-gala .form-page-header .fp-header-text { flex: 0 1 auto; }
         .page-gala .form-page-header .fp-eyebrow {
             display: inline-block;
             font-size: 0.78rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
@@ -256,6 +264,8 @@
         @media (max-width: 900px) { .page-gala .levels-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
             .page-gala .form-page-header { padding: 32px 0 28px; }
+            .page-gala .form-page-header .container { gap: 20px; }
+            .page-gala .form-page-header .fp-logo { width: 120px; }
             .page-gala .form-page-header h1 { font-size: 2rem; }
             .page-gala .pledge-form-card { padding: 30px 22px; }
             .page-gala .form-grid { grid-template-columns: 1fr; }
@@ -275,14 +285,17 @@
     <!-- Compact header (form-only page — no site nav) -->
     <header class="form-page-header">
         <div class="container">
-            <span class="fp-eyebrow">An Evening to SPARCle &bull; Sponsorship</span>
-            <h1>Become a Sponsor</h1>
-            <div class="gala-divider" aria-hidden="true">
-                <span class="gala-divider-rule"></span>
-                <span class="gala-divider-diamond"></span>
-                <span class="gala-divider-rule"></span>
+            <img class="fp-logo" src="/images/gala/sparcle-arch-lockup.png" alt="An Evening to SPARCle — Adventure Begins with Inclusion" width="1056" height="1100">
+            <div class="fp-header-text">
+                <span class="fp-eyebrow">An Evening to SPARCle &bull; Sponsorship</span>
+                <h1>Become a Sponsor</h1>
+                <div class="gala-divider" aria-hidden="true">
+                    <span class="gala-divider-rule"></span>
+                    <span class="gala-divider-diamond"></span>
+                    <span class="gala-divider-rule"></span>
+                </div>
+                <p class="fp-meta">Saturday, November 14, 2026 &bull; Washington Dulles Airport Marriott</p>
             </div>
-            <p class="fp-meta">Saturday, November 14, 2026 &bull; Washington Dulles Airport Marriott</p>
         </div>
     </header>
 
