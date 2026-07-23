@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components
+    initAnnouncementBar();
     initMobileNav();
     initStickyHeader();
     initScrollAnimations();
@@ -9,6 +10,51 @@ document.addEventListener('DOMContentLoaded', function() {
     initDonationForm();
     initContactForm();
 });
+
+// Site-wide announcement bar (promotes the annual gala across every page).
+// Bump ANNOUNCE_KEY to re-show the bar to visitors who previously dismissed it.
+function initAnnouncementBar() {
+    var ANNOUNCE_KEY = 'sparcAnnouncementDismissed:gala-2026';
+    var LINK = '/gala/';
+
+    // Respect a prior dismissal.
+    try {
+        if (window.localStorage && localStorage.getItem(ANNOUNCE_KEY) === '1') { return; }
+    } catch (e) { /* localStorage unavailable — show the bar anyway */ }
+
+    // Don't stack on the bare, embeddable form pages (they have no site header).
+    if (!document.querySelector('.header')) { return; }
+
+    var bar = document.createElement('aside');
+    bar.className = 'announcement-bar';
+    bar.setAttribute('aria-label', 'Site announcement');
+    bar.innerHTML =
+        '<div class="announcement-bar__inner">' +
+            '<a class="announcement-bar__link" href="' + LINK + '">' +
+                '<span class="announcement-bar__title">An Evening to SPARCle</span>' +
+                '<span class="announcement-bar__date">Saturday, November 14, 2026</span>' +
+                '<span class="announcement-bar__cta">Reserve your seat or become a sponsor &rarr;</span>' +
+            '</a>' +
+            '<button type="button" class="announcement-bar__close" aria-label="Dismiss announcement">&times;</button>' +
+        '</div>';
+
+    document.body.insertBefore(bar, document.body.firstChild);
+    document.body.classList.add('has-announcement-bar');
+
+    function setHeight() {
+        document.body.style.setProperty('--announcement-h', bar.offsetHeight + 'px');
+    }
+    setHeight();
+    window.addEventListener('resize', setHeight);
+
+    bar.querySelector('.announcement-bar__close').addEventListener('click', function () {
+        try { if (window.localStorage) { localStorage.setItem(ANNOUNCE_KEY, '1'); } } catch (e) {}
+        window.removeEventListener('resize', setHeight);
+        bar.remove();
+        document.body.classList.remove('has-announcement-bar');
+        document.body.style.removeProperty('--announcement-h');
+    });
+}
 
 // Mobile Navigation Toggle
 function initMobileNav() {
