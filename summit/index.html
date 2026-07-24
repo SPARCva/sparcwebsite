@@ -166,12 +166,41 @@
             border-color: white;
             transform: translateY(-2px);
         }
-        /* Sold-out badge (replaces the in-person "Register to Attend" CTA) */
-        .summit-hero-buttons .btn-soldout {
-            background: rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.9);
-            border: 2px dashed rgba(255,255,255,0.5);
+        /* Sold-out treatment: the old "Register to Attend" button, faded,
+           with a red rubber-stamp "SOLD OUT!" angled across it. */
+        .summit-hero-buttons .soldout-wrap {
+            position: relative;
+            display: inline-block;
+            isolation: isolate;
+        }
+        .summit-hero-buttons .btn-soldout-base {
+            background: var(--sparc-kelly-green);
+            color: #fff;
+            border: 2px solid var(--sparc-kelly-green);
             cursor: default;
+            pointer-events: none;
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+        .summit-hero-buttons .soldout-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-11deg);
+            pointer-events: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #e11d29;
+            border: 3px solid #e11d29;
+            border-radius: 8px;
+            padding: 4px 16px;
+            white-space: nowrap;
+            background: rgba(255,255,255,0.06);
+            box-shadow: inset 0 0 0 2px rgba(225,29,41,0.35);
+            text-shadow: 0 1px 1px rgba(0,0,0,0.35);
         }
         /* Virtual button promoted to the primary action */
         .summit-hero-buttons .btn-virtual-primary {
@@ -1028,7 +1057,10 @@
                     </div>
                 </div>
                 <div class="summit-hero-buttons">
-                    <span class="btn btn-soldout">In-Person Seats Sold Out</span>
+                    <span class="soldout-wrap" role="img" aria-label="In-person seats are sold out">
+                        <span class="btn btn-register btn-soldout-base" aria-hidden="true">Register to Attend</span>
+                        <span class="soldout-stamp" aria-hidden="true">Sold Out!</span>
+                    </span>
                     <a href="javascript:void(0)" onclick="openVirtualModal()" class="btn btn-virtual btn-virtual-primary">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         Join Virtually for Free
