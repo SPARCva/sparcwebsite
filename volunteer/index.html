@@ -12,128 +12,165 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Join SPARC events including our annual An Evening to SPARCle, pancake breakfasts, and community gatherings. Support adults with disabilities.">
-    <title>Events | SPARC - Specially Adapted Resource Centers</title>
+    <meta name="description" content="Apply to volunteer with SPARC. Support adults with intellectual and developmental disabilities in Northern Virginia through program support, special skills, events, or administrative help.">
+    <title>Volunteer With Us | SPARC - Specially Adapted Resource Centers</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-        /* Sponsor Carousel Styles */
-        .sponsor-carousel-section {
-            padding: 60px 0;
-            background: #ffffff;
-        }
-        .sponsor-carousel-section .section-header {
+        /* Hero */
+        .vol-hero {
+            background: linear-gradient(135deg, var(--sparc-kelly-green) 0%, var(--sparc-royal-blue) 100%);
+            padding: 110px 0 90px;
             text-align: center;
-            margin-bottom: 40px;
+            color: white;
         }
-        .sponsor-carousel-section .section-header h2 {
+        .vol-hero h1 {
+            color: white;
+            font-size: 3.25rem;
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+        }
+        .vol-hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Page container: one centered column (see CLAUDE.md) */
+        .vol-main { padding: 80px 0; background: #f5f6fa; }
+        .vol-main .container { max-width: 60rem; }
+
+        .vol-intro { text-align: center; margin-bottom: 40px; }
+        .vol-intro h2 {
             color: var(--sparc-dark-navy);
-            margin-bottom: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 14px;
         }
-        .sponsor-carousel-section .section-header p {
-            color: var(--sparc-charcoal);
+        .vol-intro p { color: #555; font-size: 1.05rem; line-height: 1.65; }
+
+        /* Form card */
+        .vol-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 43, 80, 0.08);
+            padding: 44px 44px 40px;
         }
-        .sponsor-carousel-wrapper {
-            overflow: hidden;
-            position: relative;
+
+        .va-field { margin-bottom: 20px; }
+        .va-field label.va-label {
+            display: block;
+            font-weight: 600;
+            color: var(--sparc-dark-navy);
+            margin-bottom: 7px;
+            font-size: 0.98rem;
         }
-        .sponsor-carousel-wrapper::before,
-        .sponsor-carousel-wrapper::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100px;
-            z-index: 2;
-            pointer-events: none;
-        }
-        .sponsor-carousel-wrapper::before {
-            left: 0;
-            background: linear-gradient(to right, white, transparent);
-        }
-        .sponsor-carousel-wrapper::after {
-            right: 0;
-            background: linear-gradient(to left, white, transparent);
-        }
-        .sponsor-carousel {
-            overflow: hidden;
-        }
-        .sponsor-track {
-            display: flex;
-            width: max-content;
-        }
-        .sponsor-slide {
-            flex-shrink: 0;
-            width: 200px;
-            height: 140px;
-            margin: 0 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-                    }
-        .sponsor-slide a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .va-field .va-optional { font-weight: 400; color: #8a9099; font-size: 0.86rem; }
+        .va-field input[type="text"],
+        .va-field input[type="email"],
+        .va-field input[type="tel"],
+        .va-field textarea {
             width: 100%;
-            height: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d7dbe0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            box-sizing: border-box;
         }
-        .sponsor-slide img {
-            max-width: 100%;
-            max-height: 100px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: all 0.3s ease;
+        .va-field textarea { min-height: 120px; resize: vertical; }
+        .va-field input:focus,
+        .va-field textarea:focus {
+            outline: none;
+            border-color: var(--sparc-royal-blue);
+            box-shadow: 0 0 0 3px rgba(0, 83, 155, 0.12);
         }
-        .sponsor-slide:hover {
-                    }
-        .sponsor-slide:hover img {
-            transform: scale(1.05);
+
+        /* Interest checkboxes */
+        .va-interests {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
-        @media (max-width: 768px) {
-            .sponsor-slide {
-                width: 150px;
-                height: 100px;
-                margin: 0 10px;
-                padding: 15px;
-            }
-            .sponsor-slide img {
-                max-height: 70px;
-            }
-            .sponsor-carousel-wrapper::before,
-            .sponsor-carousel-wrapper::after {
-                width: 50px;
-            }
+        .va-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1.5px solid #d7dbe0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .va-check:hover { border-color: var(--sparc-kelly-green); }
+        .va-check input { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--sparc-kelly-green); }
+        .va-check-text strong { display: block; color: var(--sparc-dark-navy); font-size: 0.96rem; }
+        .va-check-text span { display: block; color: #666; font-size: 0.85rem; line-height: 1.45; margin-top: 2px; }
+
+        /* Honeypot */
+        .va-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+        .va-status {
+            display: none;
+            margin: 4px 0 18px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #eef6ff;
+            color: #00539B;
+        }
+        .va-status.is-error { background: #fdecec; color: #b3261e; }
+
+        .va-btn {
+            width: 100%;
+            padding: 15px 24px;
+            background: var(--sparc-kelly-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .va-btn:hover { background: #43a814; }
+        .va-btn:active { transform: translateY(1px); }
+        .va-btn:disabled { opacity: 0.7; cursor: default; }
+
+        .va-privacy { font-size: 0.84rem; color: #8a9099; text-align: center; margin: 14px 0 0; }
+        .va-privacy a { color: var(--sparc-royal-blue); }
+
+        /* Success */
+        .va-success { text-align: center; padding: 20px 0; }
+        .va-success .va-check-icon {
+            width: 62px; height: 62px; border-radius: 50%;
+            background: #eaf7e2; display: inline-flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+        }
+        .va-success h2 { color: var(--sparc-dark-navy); font-family: 'Montserrat', sans-serif; margin-bottom: 10px; }
+        .va-success p { color: #555; margin: 0 auto 10px; max-width: 460px; line-height: 1.6; }
+
+        @media (max-width: 640px) {
+            .vol-hero h1 { font-size: 2.25rem; }
+            .vol-hero p { font-size: 1.1rem; }
+            .vol-card { padding: 30px 22px; }
+            .va-interests { grid-template-columns: 1fr; }
         }
     </style>
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1437835858120669');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1437835858120669&ev=PageView&noscript=1"/></noscript>
-    <!-- End Meta Pixel Code -->
 </head>
 <body>
-    <!-- Skip to Content Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Header -->
@@ -173,7 +210,7 @@
                     </div>
                 </li>
                 <li class="nav-item-dropdown">
-                    <a href="/events/" class="nav-link active">Events</a>
+                    <a href="/events/" class="nav-link">Events</a>
                     <div class="dropdown-menu">
                         <a href="/gala/">An Evening to SPARCle</a>
                         <a href="/summit/">A Call to Conscience</a>
@@ -181,7 +218,7 @@
                     </div>
                 </li>
                 <li class="nav-item-dropdown">
-                    <a href="/get-involved/" class="nav-link">Get Involved</a>
+                    <a href="/get-involved/" class="nav-link active">Get Involved</a>
                     <div class="dropdown-menu">
                         <a href="/advocate/">Advocate for SPARC</a>
                         <a href="/volunteer/">Volunteer</a>
@@ -217,194 +254,95 @@
         </nav>
     </header>
 
-    <!-- Page Header -->
-    <section class="page-header">
+    <!-- Hero -->
+    <section class="vol-hero">
         <div class="container">
-            <h1>Events</h1>
-            <p>Join us at community events, fundraisers, and celebrations throughout the year</p>
+            <h1>Volunteer With SPARC</h1>
+            <p>Share a few hours or a special skill and help adults with disabilities across Northern Virginia live connected, meaningful lives.</p>
         </div>
     </section>
 
     <!-- Main Content -->
-    <main id="main-content">
-        <!-- Featured Event: An Evening to SPARCle -->
-        <section class="about-content bg-light">
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-image fade-in">
-                        <img src="/images/SPARC-Gala 2025-Photo-402.jpg" alt="An Evening to SPARCle celebration">
-                    </div>
-                    <div class="about-text fade-in">
-                        <span class="location-badge" style="margin-bottom: 15px; display: inline-block;">Featured Event</span>
-                        <h2>An Evening to SPARCle</h2>
-                        <p>Our signature fundraising event brings together participants, families, staff, donors, and community leaders to celebrate our impact and raise funds for the year ahead.</p>
-                        <p>The event features raffles, entertainment, and heartfelt stories from the SPARC community. It's our largest fundraising event of the year.</p>
-                        <p><strong>Master of Ceremonies:</strong> We're honored to welcome Mark Ingrao, CEO of Aspen Strategies, LLC, as our Master of Ceremonies for the evening.</p>
-                        <p><strong>Save the Date:</strong> Join us for our next An Evening to SPARCle on November 14, 2026 at the Washington Dulles Airport Marriott.</p>
-                        <a href="/gala/" class="btn btn-primary">Learn More About An Evening to SPARCle</a>
-                    </div>
-                </div>
+    <main id="main-content" class="vol-main">
+        <div class="container">
+            <div class="vol-intro">
+                <h2>Apply to Volunteer</h2>
+                <p>Tell us a little about yourself and how you'd like to help. A member of our team will reach out about current opportunities that fit your interests and availability.</p>
             </div>
-        </section>
 
-        <!-- Featured Event: A Call to Conscience Summit -->
-        <section class="about-content">
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-text fade-in">
-                        <span class="location-badge" style="margin-bottom: 15px; display: inline-block;">Featured Event</span>
-                        <h2>A Call to Conscience</h2>
-                        <p>Presented in partnership with The George Washington University, our 2026 advocacy summit &mdash; <em>Advancing Inclusion for Adults with Disabilities who have Significant Support Needs</em> &mdash; brings together individuals with lived experience, families, advocates, researchers, policymakers, and community partners for a one-day working forum focused on solutions and collective action.</p>
-                        <p><strong>Keynote:</strong> Virginia Senator Tim Kaine, with a farewell address from Congressman James Walkinshaw.</p>
-                        <p><strong>When &amp; Where:</strong> July 27, 2026, 10:00 AM &ndash; 4:00 PM at the Jack Morton Auditorium, GWU, Washington, DC.</p>
-                        <p><strong>Presenting Sponsor:</strong> Elevance Health.</p>
-                        <a href="/summit/" class="btn btn-primary">Learn More About A Call to Conscience</a>
-                    </div>
-                    <div class="about-image fade-in" style="display: flex; align-items: center; background: #ffffff;">
-                        <img src="/images/summit-call-to-conscience.jpg" alt="A Call to Conscience &ndash; Advancing Inclusion for Adults with Disabilities who have Significant Support Needs" style="height: auto; object-fit: contain;">
-                    </div>
-                </div>
-            </div>
-        </section>
+            <div class="vol-card">
+                <div data-va-root>
+                    <form class="va-form" data-source="volunteer" novalidate>
+                        <div class="va-status" data-va-status role="alert" aria-live="polite"></div>
 
-        <!-- Sponsor Carousel -->
-        <section class="sponsor-carousel-section">
-            <div class="container">
-                <div class="section-header fade-in">
-                    <h2>Our Generous Sponsors</h2>
-                    <p>Thank you to our partners who make our events possible</p>
-                </div>
-                <div class="sponsor-carousel-wrapper">
-                    <div class="sponsor-carousel" id="sponsorCarousel">
-                        <div class="sponsor-track">
-                            <!-- 2026 Gala Sponsors -->
-                            <div class="sponsor-slide"><a href="https://www.marriott.com/en-us/hotels/iadap-washington-dulles-airport-marriott/overview/" target="_blank" rel="noopener"><img src="/images/sponsors/Marriott logo.png" alt="Washington Dulles Airport Marriott"></a></div>
-                            <div class="sponsor-slide"><a href="https://claudemoorefoundation.org/" target="_blank" rel="noopener"><img src="/images/sponsors/Claude Moore Charitable Foundation.jpg" alt="The Claude Moore Foundation"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.micron.com/" target="_blank" rel="noopener"><img src="/images/sponsors/micron-logo-black.png" alt="Micron"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.altria.com/" target="_blank" rel="noopener"><img src="/images/sponsors/Altria.png" alt="Altria"></a></div>
-                            <!-- Duplicates for seamless loop -->
-                            <div class="sponsor-slide"><a href="https://www.marriott.com/en-us/hotels/iadap-washington-dulles-airport-marriott/overview/" target="_blank" rel="noopener"><img src="/images/sponsors/Marriott logo.png" alt="Washington Dulles Airport Marriott"></a></div>
-                            <div class="sponsor-slide"><a href="https://claudemoorefoundation.org/" target="_blank" rel="noopener"><img src="/images/sponsors/Claude Moore Charitable Foundation.jpg" alt="The Claude Moore Foundation"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.micron.com/" target="_blank" rel="noopener"><img src="/images/sponsors/micron-logo-black.png" alt="Micron"></a></div>
-                            <div class="sponsor-slide"><a href="https://www.altria.com/" target="_blank" rel="noopener"><img src="/images/sponsors/Altria.png" alt="Altria"></a></div>
+                        <!-- Honeypot: hidden from real users, catches bots -->
+                        <div class="va-honeypot" aria-hidden="true">
+                            <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Past Events Gallery -->
-        <section class="gallery-section">
-            <div class="container">
-                <div class="section-header fade-in">
-                    <h2>Past Event Highlights</h2>
-                    <p>Memories from our community gatherings</p>
-                </div>
-                <div class="gallery-grid">
-                    <div class="gallery-item fade-in">
-                        <img src="/images/Leadership Fairfax.jpg" alt="Leadership Fairfax">
-                        <div class="gallery-overlay">
-                            <h4>Leadership Fairfax</h4>
+                        <div class="va-field">
+                            <label class="va-label" for="va-name">Full name</label>
+                            <input type="text" id="va-name" name="name" autocomplete="name" required>
                         </div>
-                    </div>
-                    <div class="gallery-item fade-in">
-                        <img src="/images/Jim Dyke and Arienne Plourde.jpg" alt="Jim Dyke and Arienne Thompson Plourde">
-                        <div class="gallery-overlay">
-                            <h4>Jim Dyke and Arienne Thompson Plourde</h4>
+
+                        <div class="va-field">
+                            <label class="va-label" for="va-email">Email address</label>
+                            <input type="email" id="va-email" name="email" autocomplete="email" placeholder="you@example.com" required>
                         </div>
-                    </div>
-                    <div class="gallery-item fade-in">
-                        <img src="/images/Paddles.jpg" alt="Paddles">
-                        <div class="gallery-overlay">
-                            <h4>Paddles</h4>
+
+                        <div class="va-field">
+                            <label class="va-label" for="va-phone">Phone <span class="va-optional">(optional)</span></label>
+                            <input type="tel" id="va-phone" name="phone" autocomplete="tel">
                         </div>
+
+                        <div class="va-field">
+                            <label class="va-label">How would you like to help? <span class="va-optional">(select any that apply)</span></label>
+                            <div class="va-interests">
+                                <label class="va-check">
+                                    <input type="checkbox" name="interests" value="Program Support">
+                                    <span class="va-check-text"><strong>Program Support</strong><span>Assist with daily activities alongside participants.</span></span>
+                                </label>
+                                <label class="va-check">
+                                    <input type="checkbox" name="interests" value="Special Skills">
+                                    <span class="va-check-text"><strong>Special Skills</strong><span>Lead a workshop — art, music, tech, fitness, and more.</span></span>
+                                </label>
+                                <label class="va-check">
+                                    <input type="checkbox" name="interests" value="Event Support">
+                                    <span class="va-check-text"><strong>Event Support</strong><span>Help at galas, celebrations, and community events.</span></span>
+                                </label>
+                                <label class="va-check">
+                                    <input type="checkbox" name="interests" value="Administrative">
+                                    <span class="va-check-text"><strong>Administrative</strong><span>Office tasks, mailings, data entry, and projects.</span></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="va-field">
+                            <label class="va-label" for="va-availability">Availability <span class="va-optional">(optional)</span></label>
+                            <input type="text" id="va-availability" name="availability" placeholder="e.g. weekday mornings, a few hours a month">
+                        </div>
+
+                        <div class="va-field">
+                            <label class="va-label" for="va-message">Anything else you'd like us to know? <span class="va-optional">(optional)</span></label>
+                            <textarea id="va-message" name="message" placeholder="Tell us about your interests, experience, or questions."></textarea>
+                        </div>
+
+                        <button type="submit" class="va-btn" data-va-submit>Submit Application</button>
+                        <p class="va-privacy">We'll only use your details to follow up about volunteering. See our <a href="/compliance/" target="_blank" rel="noopener">privacy practices</a>.</p>
+                    </form>
+
+                    <!-- Revealed after a successful application -->
+                    <div class="va-success" data-va-success hidden>
+                        <div class="va-check-icon">
+                            <svg width="30" height="30" fill="none" stroke="#4CBB17" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/></svg>
+                        </div>
+                        <h2>Thank you, <span data-va-name>friend</span>!</h2>
+                        <p>Your volunteer application is in. A member of our team will be in touch soon about opportunities that match your interests.</p>
+                        <p>We've also sent a confirmation to your email — please add us to your contacts so it doesn't land in spam.</p>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Host an Event -->
-        <section class="about-content">
-            <div class="container">
-                <div class="about-grid reverse">
-                    <div class="about-text fade-in">
-                        <h2>Host a Fundraiser for SPARC</h2>
-                        <p>Want to support SPARC through your own event? We welcome community-led fundraisers including:</p>
-                        <ul style="margin-left: 20px; margin-bottom: 20px;">
-                            <li>Birthday fundraisers</li>
-                            <li>Athletic challenges (5Ks, bike rides, etc.)</li>
-                            <li>Workplace giving campaigns</li>
-                            <li>Social gatherings</li>
-                            <li>Holiday events</li>
-                        </ul>
-                        <p>We'll provide materials, support, and recognition for your efforts. Contact us to get started!</p>
-                        <a href="/contact/" class="btn btn-primary">Start a Fundraiser</a>
-                    </div>
-                    <div class="about-image fade-in">
-                        <img src="/images/Group shot at christmas tea.jpg" alt="SPARC group shot at Christmas tea">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sponsor an Event -->
-        <section class="stats-section">
-            <div class="container">
-                <div class="section-header fade-in" style="margin-bottom: 40px;">
-                    <h2 class="text-white">Become an Event Sponsor</h2>
-                    <p style="color: rgba(255,255,255,0.9);">Support SPARC through event sponsorship and gain visibility with our community</p>
-                </div>
-                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); max-width: 900px; margin: 0 auto;">
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">200+</div>
-                        <div class="stat-label">Gala Attendees</div>
-                    </div>
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">19,000</div>
-                        <div class="stat-label">WBJ Subscribers Reach</div>
-                    </div>
-                    <div class="stat-item fade-in">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Community Impact</div>
-                    </div>
-                </div>
-                <div class="text-center fade-in" style="margin-top: 40px;">
-                    <a href="/contact/" class="btn btn-white btn-lg">Sponsorship Inquiries</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="cta-section">
-            <div class="container">
-                <div class="cta-content fade-in" style="text-align: center;">
-                    <h2>Stay Updated on Events</h2>
-                    <p style="margin-bottom: 30px;">Follow us on social media or sign up for our mailing list to hear about upcoming events.</p>
-
-                    <!-- Social Icons -->
-                    <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 40px;">
-                        <a href="https://www.facebook.com/profile.php?id=100064372517571" target="_blank" style="width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: all 0.3s ease;" onmouseover="this.style.background='var(--sparc-kelly-green)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)'; this.style.transform='translateY(0)';" aria-label="Facebook">
-                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                        </a>
-                        <a href="https://www.instagram.com/sparc.solutions/" target="_blank" style="width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: all 0.3s ease;" onmouseover="this.style.background='var(--sparc-kelly-green)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)'; this.style.transform='translateY(0)';" aria-label="Instagram">
-                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        </a>
-                        <a href="https://www.linkedin.com/company/specially-adapted-resource-centers" target="_blank" style="width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: all 0.3s ease;" onmouseover="this.style.background='var(--sparc-kelly-green)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)'; this.style.transform='translateY(0)';" aria-label="LinkedIn">
-                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                        </a>
-                        <a href="https://www.youtube.com/@SPARC_VA" target="_blank" style="width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: all 0.3s ease;" onmouseover="this.style.background='var(--sparc-kelly-green)'; this.style.transform='translateY(-5px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)'; this.style.transform='translateY(0)';" aria-label="YouTube">
-                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                        </a>
-                    </div>
-
-                    <!-- CTA Buttons -->
-                    <div class="cta-buttons" style="justify-content: center;">
-                        <a href="javascript:void(0)" onclick="openMailingListModal()" class="btn btn-white btn-lg">Join Our Mailing List</a>
-                        <a href="/contact/" class="btn btn-secondary btn-lg">Contact Us</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -482,38 +420,7 @@
     </div>
 
     <script src="/js/main.js"></script>
-    <script>
-        // Sponsor Carousel Animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const track = document.querySelector('.sponsor-track');
-            if (track) {
-                const slides = track.querySelectorAll('.sponsor-slide');
-                const totalSlides = slides.length / 2; // Half are duplicates
-                const slideWidth = 230; // 200px width + 30px margin
-                const totalWidth = totalSlides * slideWidth;
-
-                let position = 0;
-                const speed = 1; // pixels per frame
-                let isPaused = false;
-
-                track.addEventListener('mouseenter', () => isPaused = true);
-                track.addEventListener('mouseleave', () => isPaused = false);
-
-                function animate() {
-                    if (!isPaused) {
-                        position -= speed;
-                        if (Math.abs(position) >= totalWidth) {
-                            position = 0;
-                        }
-                        track.style.transform = `translateX(${position}px)`;
-                    }
-                    requestAnimationFrame(animate);
-                }
-
-                animate();
-            }
-        });
-    </script>
+    <script src="/js/volunteer-apply.js"></script>
 
 <!-- Mailing List Modal -->
 <div class="mailing-list-modal-overlay" id="mailingListModal">
