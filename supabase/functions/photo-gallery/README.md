@@ -16,7 +16,8 @@ and a header "scroll" of featured photos kept in chronological order.
 | --- | --- |
 | `/photogallery/` | Landing page with the three album cards (live cover images) |
 | `/photogallery/gala/` · `/summit/` · `/life/` | Public gallery for one album |
-| `/photogallery/admin/` | Passphrase-gated upload / tagging / management tool (`noindex`) |
+| `/photogallery/admin/` | Admin-passphrase upload / tagging / management tool (`noindex`) |
+| `/photogallery/upload/` | Photographer batch-upload page (`noindex`); uploads land unpublished for admin review |
 
 Client code: `js/photo-gallery.js` (public), `css/photo-gallery.css`, and the
 inline script in `photogallery/admin/index.html`.
@@ -71,6 +72,18 @@ where id = true;
 
 Then sign in at `/photogallery/admin/` with the plaintext passphrase. Until a
 hash is set, all writes are denied.
+
+## Two roles
+
+| Role | Column | Can do | Where |
+| --- | --- | --- | --- |
+| **Admin** | `admin_token_sha256` | Everything: upload (publishes immediately), import, edit/tag, feature, publish/hide, delete | `/photogallery/admin/` |
+| **Photographer** | `photographer_token_sha256` | Batch-upload only; photos land **unpublished** (`source = 'photographer'`) for admin review | `/photogallery/upload/` |
+
+Set the photographer passphrase the same way as the admin one, hashing into
+`photographer_token_sha256`. Photographer uploads appear dimmed in the admin
+grid with a **Show** button — that's the review queue: the admin approves
+(publishes) or deletes each batch.
 
 ## Importing from other sources — "make it easy"
 

@@ -36,7 +36,7 @@ const CORS = {
 
 const BUCKET = "gallery";
 const GALLERIES = ["gala", "summit", "life"];
-const SOURCES = ["upload", "google_photos", "gdrive", "onedrive", "facebook", "repo"];
+const SOURCES = ["upload", "photographer", "google_photos", "gdrive", "onedrive", "facebook", "repo"];
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -57,23 +57,33 @@ async function sha256Hex(s: string): Promise<string> {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// Verify the x-admin-token header against the stored hash. Returns true/false.
-async function isAdmin(req: Request, sb: ReturnType<typeof supa>): Promise<boolean> {
-  const token = req.headers.get("x-admin-token") ?? "";
-  if (!token) return false;
-  const { data } = await sb
-    .from("photo_gallery_config")
-    .select("admin_token_sha256")
-    .eq("id", true)
-    .maybeSingle();
-  const stored = data?.admin_token_sha256;
-  if (!stored) return false; // not configured yet -> deny all writes
-  const provided = await sha256Hex(token);
-  // constant-time-ish compare
+function tokenMatches(provided: string, stored: string | null | undefined): boolean {
+  if (!stored) return false;
   if (provided.length !== stored.length) return false;
   let diff = 0;
   for (let i = 0; i < provided.length; i++) diff |= provided.charCodeAt(i) ^ stored.charCodeAt(i);
   return diff === 0;
+}
+
+// Resolve the caller's access level from the x-admin-token header:
+//   "admin"        -> full access (matches admin_token_sha256)
+//   "photographer" -> upload only; photos land unpublished for review
+//   null           -> unauthorized
+async function authLevel(
+  req: Request,
+  sb: ReturnType<typeof supa>,
+): Promise<"admin" | "photographer" | null> {
+  const token = req.headers.get("x-admin-token") ?? "";
+  if (!token) return null;
+  const { data } = await sb
+    .from("photo_gallery_config")
+    .select("admin_token_sha256, photographer_token_sha256")
+    .eq("id", true)
+    .maybeSingle();
+  const provided = await sha256Hex(token);
+  if (tokenMatches(provided, data?.admin_token_sha256)) return "admin";
+  if (tokenMatches(provided, data?.photographer_token_sha256)) return "photographer";
+  return null;
 }
 
 // Public shape returned to the browser (never leaks internal columns).
@@ -235,10 +245,13 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   // ==========================================================================
-  // ADMIN WRITES (POST) — all require a valid x-admin-token
+  // AUTHENTICATED WRITES (POST)
+  //   admin        -> every action
+  //   photographer -> multipart upload only; forced to published=false (review)
   // ==========================================================================
-  if (!(await isAdmin(req, sb))) {
-    return json({ error: "Unauthorized. Check the gallery admin passphrase." }, 401);
+  const level = await authLevel(req, sb);
+  if (!level) {
+    return json({ error: "Unauthorized. Check the gallery passphrase." }, 401);
   }
 
   const contentType = req.headers.get("content-type") ?? "";
@@ -274,6 +287,9 @@ Deno.serve(async (req: Request) => {
     }
 
     const takenAtRaw = String(form.get("taken_at") ?? "").trim();
+    // Photographer uploads land unpublished and un-featured for admin review;
+    // admin uploads publish immediately unless told otherwise.
+    const isPhotographer = level === "photographer";
     const row = {
       gallery,
       year,
@@ -283,8 +299,9 @@ Deno.serve(async (req: Request) => {
       alt_text: String(form.get("alt_text") ?? "").slice(0, 2000),
       people: normPeople(form.get("people")),
       taken_at: takenAtRaw || null,
-      is_featured: String(form.get("is_featured") ?? "") === "true",
-      source: "upload",
+      is_featured: !isPhotographer && String(form.get("is_featured") ?? "") === "true",
+      source: isPhotographer ? "photographer" : "upload",
+      published: !isPhotographer,
     };
     const { data, error } = await sb.from("gallery_photos").insert(row).select("*").single();
     if (error) {
@@ -294,7 +311,10 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true, photo: publicRow(data) });
   }
 
-  // ---- JSON actions --------------------------------------------------------
+  // ---- JSON actions (admin only) -------------------------------------------
+  if (level !== "admin") {
+    return json({ error: "This action requires the admin passphrase." }, 403);
+  }
   let payload: Record<string, unknown>;
   try {
     payload = await req.json();
