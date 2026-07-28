@@ -95,17 +95,29 @@ one-time credential setup, noted inline.
 In the admin **Import** panel, paste public image URLs (one per line) and pick
 a source label. Good for Google Photos share-link images or any public URL.
 
-### 2. Google Photos — Picker API (recommended)
+### 2. Google Photos — Picker API (IMPLEMENTED)
 Google retired broad Library/album read access in 2025; the supported path is
-the **[Photos Picker API](https://developers.google.com/photos/picker/guides/get-started)**:
-the user opens a Google-hosted picker, selects photos (from *any* album,
-including "shared with me"), and the app receives temporary `baseUrl`s.
-Setup: create an OAuth client (Google Cloud console) for `sparcsolutions.org`,
-enable the Photos Picker API, add a "Pick from Google Photos" button to the
-admin page that opens the picker, then POST the chosen `baseUrl`s (append
-`=d` for full-res) to `action:"import"` with `source:"google_photos"` and each
-photo's `id` as `external_id`. Because import re-hosts immediately, the
-short-lived picker URLs don't matter.
+the **[Photos Picker API](https://developers.google.com/photos/picker/guides/get-started)**,
+now wired into the admin page ("📷 Add from Google Photos").
+
+Flow (`photogallery/admin/index.html`): Google Identity Services gets an OAuth
+token for the `photospicker.mediaitems.readonly` scope → `POST /v1/sessions`
+opens Google's picker → poll the session until `mediaItemsSet` → read
+`/v1/mediaItems` → POST each `baseUrl` (`=w2000`) to `action:"import"` with
+`source:"google_photos"`, the photo `id` as `external_id`, `createTime` as
+`taken_at`, and the OAuth token as `auth`. The import action fetches each
+photo server-side with that bearer token (never stored) and re-hosts it.
+
+- **OAuth Client ID** (public, in the admin page): `GOOGLE_CLIENT_ID` constant.
+  It's an OAuth *client id*, not a secret. Origins authorized:
+  `https://sparcsolutions.org`, `https://www.sparcsolutions.org`.
+- Requires the **Google Photos Picker API** enabled and an OAuth consent
+  screen (Internal user type works for the Workspace org — no verification).
+- Only works on the production origins above (not Netlify deploy previews),
+  since the origin must be allow-listed on the OAuth client.
+- Google does **not** expose the person names / face groups you set inside
+  Google Photos — those cannot be imported. People search comes from our own
+  tagging / face recognition.
 
 ### 3. Google Drive — Picker API
 For photos already in Google Drive, use the

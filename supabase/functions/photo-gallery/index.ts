@@ -345,6 +345,9 @@ Deno.serve(async (req: Request) => {
     const year = parseInt(String(payload.year ?? ""), 10);
     const source = String(payload.source ?? "google_photos");
     const items = Array.isArray(payload.items) ? payload.items : [];
+    // Optional OAuth bearer token (e.g. Google Photos Picker) used only to
+    // fetch the source images server-side. Never stored or logged.
+    const auth = payload.auth ? String(payload.auth) : null;
     if (!GALLERIES.includes(gallery)) return json({ error: "Unknown gallery" }, 400);
     if (Number.isNaN(year)) return json({ error: "Invalid year" }, 400);
     if (!SOURCES.includes(source)) return json({ error: "Unknown source" }, 400);
@@ -365,7 +368,7 @@ Deno.serve(async (req: Request) => {
       }
 
       try {
-        const resp = await fetch(imageUrl);
+        const resp = await fetch(imageUrl, auth ? { headers: { Authorization: "Bearer " + auth } } : undefined);
         if (!resp.ok) throw new Error(`fetch ${resp.status}`);
         const ct = resp.headers.get("content-type") ?? "image/jpeg";
         if (!ct.startsWith("image/")) throw new Error("not an image");

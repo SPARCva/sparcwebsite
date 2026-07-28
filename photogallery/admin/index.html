@@ -121,9 +121,15 @@
             <div class="ad-queue" id="queue"></div>
             <div class="ad-status-line" id="uploadStatus"></div>
 
-            <details class="ad-import">
+            <details class="ad-import" open>
                 <summary>Import from Google Photos, Google Drive, OneDrive &amp; Facebook</summary>
-                <p><strong>Import by link (works today):</strong> paste one or more publicly-viewable image URLs (one per line) and they'll be copied into this album. Great for Google Photos "share link" images or any public image URL.</p>
+                <p style="margin-top:12px;"><strong>Add from Google Photos:</strong> pick photos in Google's own picker (from any album, including ones shared with you) and they import into the album &amp; year selected above. Capture dates come across automatically.</p>
+                <div class="ad-row">
+                    <button class="btn-blue" id="gpBtn" onclick="pgGooglePhotos()">📷 Add from Google Photos</button>
+                    <span class="ad-status-line" id="gpStatus" style="margin:0;"></span>
+                </div>
+                <hr style="border:none;border-top:1px solid #e3e9ef;margin:16px 0;">
+                <p><strong>Import by link:</strong> paste one or more publicly-viewable image URLs (one per line) and they'll be copied into this album. Works for any public image URL.</p>
                 <div class="ad-field">
                     <textarea id="importUrls" rows="4" placeholder="https://…/photo1.jpg&#10;https://…/photo2.jpg"></textarea>
                 </div>
@@ -140,7 +146,7 @@
                     </div>
                     <button class="btn-blue" onclick="pgImportUrls()">Import links</button>
                 </div>
-                <p style="margin-top:14px;"><strong>One-click pickers &amp; auto-sync (next step):</strong> a Google Photos / Google&nbsp;Drive picker button and automatic OneDrive "Summit Photos" + Facebook album sync can be wired up once the matching API app credentials are added. See <code>supabase/functions/photo-gallery/README.md</code> for the exact setup, and Claude can also bulk-import directly from a shared Google&nbsp;Drive folder on request.</p>
+                <p style="margin-top:14px;"><strong>Auto-sync (next step):</strong> automatic OneDrive "Summit Photos" + Facebook album sync, and a scheduled Google Drive folder sync, can be wired up once the matching API credentials are added. See <code>supabase/functions/photo-gallery/README.md</code>.</p>
             </details>
         </div>
 
@@ -473,6 +479,87 @@
 
       function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 
+      // ---- Google Photos Picker ----
+      // Flow: get an OAuth token (Google Identity Services) -> create a picker
+      // session -> open Google's picker -> poll until the user is done -> read
+      // the picked items -> hand their URLs + the token to the import action,
+      // which fetches each photo server-side and re-hosts it in our bucket.
+      var GOOGLE_CLIENT_ID = "672621166742-d9e8iofm7ri6qop5t78a2hshtfh12bb5.apps.googleusercontent.com";
+      var GP_SCOPE = "https://www.googleapis.com/auth/photospicker.mediaitems.readonly";
+      var gpToken = null;
+      function gpStatus(m) { $("gpStatus").textContent = m || ""; }
+      function gpFetch(url, opts) {
+        opts = opts || {};
+        opts.headers = Object.assign({ Authorization: "Bearer " + gpToken }, opts.headers || {});
+        return fetch(url, opts);
+      }
+      window.pgGooglePhotos = function () {
+        if (!year() || year() < 1990) { alert("Enter a valid year first."); return; }
+        if (!(window.google && google.accounts && google.accounts.oauth2)) {
+          gpStatus("Google library still loading — try again in a moment."); return;
+        }
+        var tc = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID, scope: GP_SCOPE,
+          callback: function (resp) {
+            if (resp && resp.access_token) { gpToken = resp.access_token; gpCreateSession(); }
+            else gpStatus("Google sign-in was cancelled.");
+          },
+        });
+        tc.requestAccessToken();
+      };
+      function gpCreateSession() {
+        gpStatus("Opening Google Photos…");
+        gpFetch("https://photospicker.googleapis.com/v1/sessions", {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: "{}",
+        }).then(function (r) { return r.json(); }).then(function (s) {
+          if (!s || !s.id) { gpStatus("Could not start the Google Photos picker."); return; }
+          window.open(s.pickerUri, "_blank", "noopener");
+          var iv = (s.pollingConfig && s.pollingConfig.pollInterval)
+            ? parseInt(String(s.pollingConfig.pollInterval), 10) : 3;
+          gpPoll(s.id, Math.max(iv || 3, 2), 0);
+        }).catch(function () { gpStatus("Could not reach Google Photos."); });
+      }
+      function gpPoll(sessionId, iv, tries) {
+        gpStatus("Waiting for you to choose photos in the Google Photos tab…");
+        gpFetch("https://photospicker.googleapis.com/v1/sessions/" + encodeURIComponent(sessionId))
+          .then(function (r) { return r.json(); }).then(function (s) {
+            if (s && s.mediaItemsSet) { gpFetchItems(sessionId, null, []); return; }
+            if (tries > 300) { gpStatus("Timed out waiting for Google Photos."); return; }
+            setTimeout(function () { gpPoll(sessionId, iv, tries + 1); }, iv * 1000);
+          }).catch(function () { setTimeout(function () { gpPoll(sessionId, iv, tries + 1); }, iv * 1000); });
+      }
+      function gpFetchItems(sessionId, pageToken, acc) {
+        gpStatus("Loading your selection…");
+        var u = "https://photospicker.googleapis.com/v1/mediaItems?sessionId=" + encodeURIComponent(sessionId) + "&pageSize=100";
+        if (pageToken) u += "&pageToken=" + encodeURIComponent(pageToken);
+        gpFetch(u).then(function (r) { return r.json(); }).then(function (d) {
+          (d.mediaItems || []).forEach(function (mi) {
+            var mf = mi.mediaFile || {};
+            if (mf.mimeType && mf.mimeType.indexOf("image/") !== 0) return; // skip video
+            if (!mf.baseUrl) return;
+            acc.push({ image_url: mf.baseUrl + "=w2000", external_id: mi.id, taken_at: mi.createTime || null, caption: "" });
+          });
+          if (d.nextPageToken) gpFetchItems(sessionId, d.nextPageToken, acc);
+          else gpImport(acc);
+        }).catch(function () { gpStatus("Could not load your selection."); });
+      }
+      function gpImport(items) {
+        if (!items.length) { gpStatus("No photos were selected."); return; }
+        var BATCH = 40, done = 0, failed = 0;
+        (function batch(i) {
+          if (i >= items.length) {
+            gpStatus("Imported " + done + " from Google Photos" + (failed ? ", " + failed + " failed" : "") + ".");
+            refreshManage(); return;
+          }
+          var slice = items.slice(i, i + BATCH);
+          fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+            body: JSON.stringify({ action: "import", gallery: gallery(), year: year(), source: "google_photos", auth: gpToken, items: slice }) })
+            .then(function (r) { return r.json(); })
+            .then(function (d) { if (d.ok) { done += d.imported; failed += d.failed; } gpStatus("Imported " + done + " of " + items.length + "…"); batch(i + BATCH); })
+            .catch(function () { failed += slice.length; batch(i + BATCH); });
+        })(0);
+      }
+
       // ---- boot ----
       if (TOKEN) {
         fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
@@ -484,5 +571,7 @@
       }
     })();
     </script>
+    <!-- Google Identity Services (for the Google Photos picker) -->
+    <script src="https://accounts.google.com/gsi/client" async></script>
 </body>
 </html>
