@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Photo Gallery Admin | SPARC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body { background: var(--sparc-soft-gray); }
+        .ad-bar { background: var(--sparc-dark-navy); color: #fff; padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; }
+        .ad-bar img { height: 38px; }
+        .ad-bar h1 { color: #fff; font-size: 1.15rem; margin: 0 0 0 14px; font-weight: 600; }
+        .ad-bar .ad-left { display: flex; align-items: center; }
+        .ad-bar button { background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; }
+        .ad-wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; }
+
+        /* login */
+        .ad-login { max-width: 400px; margin: 90px auto; background: #fff; padding: 34px; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,43,80,0.12); text-align: center; }
+        .ad-login h2 { color: var(--sparc-royal-blue); margin-top: 0; }
+        .ad-login input { width: 100%; padding: 12px; border: 2px solid #d9e2ec; border-radius: 8px; font-size: 1rem; margin: 14px 0; box-sizing: border-box; }
+        .ad-login button { width: 100%; background: var(--sparc-kelly-green); color: #fff; border: none; padding: 13px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .ad-err { color: #b00020; font-size: 0.9rem; min-height: 1.2em; }
+
+        .ad-panel { background: #fff; border-radius: 14px; padding: 22px 24px; margin-bottom: 22px; box-shadow: 0 3px 14px rgba(0,43,80,0.08); }
+        .ad-panel h2 { color: var(--sparc-royal-blue); margin: 0 0 4px; font-size: 1.25rem; }
+        .ad-panel .ad-hint { color: #667; font-size: 0.9rem; margin: 0 0 16px; }
+        .ad-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+        .ad-field { display: flex; flex-direction: column; gap: 4px; }
+        .ad-field label { font-size: 0.82rem; font-weight: 600; color: #445; }
+        .ad-field input, .ad-field select, .ad-field textarea { padding: 9px 11px; border: 2px solid #d9e2ec; border-radius: 7px; font-family: inherit; font-size: 0.95rem; }
+        .ad-field input[type=text], .ad-field textarea { min-width: 240px; }
+        .btn-green { background: var(--sparc-kelly-green); color: #fff; border: none; padding: 10px 18px; border-radius: 7px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-blue { background: var(--sparc-royal-blue); color: #fff; border: none; padding: 10px 18px; border-radius: 7px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-ghost { background: #eef2f6; color: var(--sparc-royal-blue); border: none; padding: 9px 15px; border-radius: 7px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-danger { background: #fdecef; color: #b00020; border: none; padding: 9px 15px; border-radius: 7px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        button:disabled { opacity: .5; cursor: default; }
+
+        .ad-drop { border: 2.5px dashed #c3d0dd; border-radius: 12px; padding: 34px; text-align: center; color: #667; cursor: pointer; transition: all .15s ease; margin-top: 14px; }
+        .ad-drop.drag { border-color: var(--sparc-kelly-green); background: #f2fbec; }
+        .ad-queue { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 18px; }
+        .ad-qitem { border: 1px solid #e3e9ef; border-radius: 10px; overflow: hidden; background: #fbfcfd; }
+        .ad-qitem img { width: 100%; height: 130px; object-fit: cover; display: block; background: #eee; }
+        .ad-qbody { padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+        .ad-qbody input[type=text] { width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1.5px solid #d9e2ec; border-radius: 6px; font-family: inherit; font-size: 0.86rem; }
+        .ad-qbody label.feat { font-size: 0.8rem; display: flex; align-items: center; gap: 5px; color: #445; }
+        .ad-qstatus { font-size: 0.78rem; font-weight: 600; }
+        .ad-qstatus.ok { color: var(--sparc-kelly-green-dark); }
+        .ad-qstatus.err { color: #b00020; }
+
+        .ad-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 6px 0 16px; padding: 12px; background: #f4f8fb; border-radius: 9px; }
+        .ad-toolbar .sel-count { font-weight: 600; color: var(--sparc-royal-blue); margin-right: auto; }
+        .ad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+        .ad-cell { position: relative; border: 2px solid transparent; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,43,80,0.08); }
+        .ad-cell.sel { border-color: var(--sparc-kelly-green); }
+        .ad-cell.unpub { opacity: .55; }
+        .ad-cell img { width: 100%; height: 150px; object-fit: cover; display: block; cursor: pointer; }
+        .ad-cell .ad-check { position: absolute; top: 8px; left: 8px; width: 20px; height: 20px; }
+        .ad-cell .ad-meta { padding: 8px 10px; font-size: 0.8rem; }
+        .ad-cell .ad-meta .ppl { color: var(--sparc-royal-blue); font-weight: 600; }
+        .ad-cell .ad-badges { position: absolute; top: 6px; right: 8px; display: flex; gap: 4px; }
+        .ad-badge { background: rgba(0,43,80,0.8); color: #fff; font-size: 0.66rem; padding: 2px 6px; border-radius: 999px; }
+        .ad-badge.feat { background: var(--sparc-kelly-green); }
+        details.ad-import { border: 1px solid #e3e9ef; border-radius: 9px; padding: 12px 16px; margin-top: 10px; }
+        details.ad-import summary { cursor: pointer; font-weight: 600; color: var(--sparc-royal-blue); }
+        details.ad-import p { color: #556; font-size: 0.9rem; line-height: 1.5; }
+        .ad-status-line { margin-top: 10px; font-size: 0.9rem; color: var(--sparc-royal-blue); min-height: 1.2em; }
+        code { background: #eef2f6; padding: 1px 5px; border-radius: 4px; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+    <div class="ad-bar">
+        <div class="ad-left">
+            <img src="/images/SPARC_logo_white.png" alt="SPARC">
+            <h1>Photo Gallery Admin</h1>
+        </div>
+        <button id="logoutBtn" hidden onclick="pgLogout()">Sign out</button>
+    </div>
+
+    <!-- Login -->
+    <div class="ad-login" id="loginBox">
+        <h2>Gallery Admin</h2>
+        <p style="color:#667;font-size:.92rem;">Enter the gallery admin passphrase to upload and manage photos.</p>
+        <input type="password" id="pw" placeholder="Admin passphrase" autocomplete="current-password">
+        <button onclick="pgLogin()">Sign in</button>
+        <p class="ad-err" id="loginErr"></p>
+    </div>
+
+    <!-- App -->
+    <div class="ad-wrap" id="app" hidden>
+        <!-- Context -->
+        <div class="ad-panel">
+            <div class="ad-row">
+                <div class="ad-field">
+                    <label for="ctxGallery">Album</label>
+                    <select id="ctxGallery">
+                        <option value="gala">An Evening to SPARCle (Gala)</option>
+                        <option value="summit">A Call to Conscience (Summit)</option>
+                        <option value="life">Everyday Life at SPARC</option>
+                    </select>
+                </div>
+                <div class="ad-field">
+                    <label for="ctxYear">Year</label>
+                    <input type="number" id="ctxYear" min="1990" max="2100" step="1">
+                </div>
+                <div class="ad-field" style="flex:1"></div>
+                <a class="btn-ghost" id="viewLink" href="/photogallery/gala/" target="_blank" style="text-decoration:none;">View public page &rsaquo;</a>
+            </div>
+        </div>
+
+        <!-- Upload -->
+        <div class="ad-panel">
+            <h2>Upload photos</h2>
+            <p class="ad-hint">Drag in photos (or click to choose). Capture dates are read from each photo automatically so the header scroll stays in order through the day. Add a caption and the names of people in the photo, then upload.</p>
+            <div class="ad-drop" id="drop">
+                <strong>Drop photos here</strong> or click to choose &nbsp;·&nbsp; JPG / PNG / WEBP, up to 25&nbsp;MB each
+                <input type="file" id="fileInput" accept="image/*" multiple hidden>
+            </div>
+            <div class="ad-queue" id="queue"></div>
+            <div class="ad-status-line" id="uploadStatus"></div>
+
+            <details class="ad-import">
+                <summary>Import from Google Photos, Google Drive, OneDrive &amp; Facebook</summary>
+                <p><strong>Import by link (works today):</strong> paste one or more publicly-viewable image URLs (one per line) and they'll be copied into this album. Great for Google Photos "share link" images or any public image URL.</p>
+                <div class="ad-field">
+                    <textarea id="importUrls" rows="4" placeholder="https://…/photo1.jpg&#10;https://…/photo2.jpg"></textarea>
+                </div>
+                <div class="ad-row" style="margin-top:10px;">
+                    <div class="ad-field">
+                        <label for="importSource">Source label</label>
+                        <select id="importSource">
+                            <option value="google_photos">Google Photos</option>
+                            <option value="gdrive">Google Drive</option>
+                            <option value="onedrive">OneDrive</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="upload">Other</option>
+                        </select>
+                    </div>
+                    <button class="btn-blue" onclick="pgImportUrls()">Import links</button>
+                </div>
+                <p style="margin-top:14px;"><strong>One-click pickers &amp; auto-sync (next step):</strong> a Google Photos / Google&nbsp;Drive picker button and automatic OneDrive "Summit Photos" + Facebook album sync can be wired up once the matching API app credentials are added. See <code>supabase/functions/photo-gallery/README.md</code> for the exact setup, and Claude can also bulk-import directly from a shared Google&nbsp;Drive folder on request.</p>
+            </details>
+        </div>
+
+        <!-- Manage -->
+        <div class="ad-panel">
+            <h2>Manage photos</h2>
+            <p class="ad-hint">Select photos to tag several at once, mark which appear in the header scroll, change the year, or remove them. Click a photo to edit its caption and people.</p>
+            <div class="ad-toolbar">
+                <span class="sel-count" id="selCount">0 selected</span>
+                <button class="btn-ghost" onclick="pgSelectAll()">Select all</button>
+                <button class="btn-ghost" onclick="pgClearSel()">Clear</button>
+                <button class="btn-green" onclick="pgBulkTag()">Add people…</button>
+                <button class="btn-ghost" onclick="pgBulkYear()">Set year…</button>
+                <button class="btn-ghost" onclick="pgBulkFeatured(true)">★ Feature</button>
+                <button class="btn-ghost" onclick="pgBulkFeatured(false)">Un-feature</button>
+                <button class="btn-ghost" onclick="pgBulkPublish(false)">Hide</button>
+                <button class="btn-ghost" onclick="pgBulkPublish(true)">Show</button>
+                <button class="btn-danger" onclick="pgBulkDelete()">Delete</button>
+            </div>
+            <div class="ad-status-line" id="manageStatus"></div>
+            <div class="ad-grid" id="manageGrid"></div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+      "use strict";
+      var ENDPOINT = "https://ldxpockcgcxvsrbyhcnt.supabase.co/functions/v1/photo-gallery";
+      var ANON_KEY = "sb_publishable_3tn2UadRVekIf5Pw6F5z-A_40ZbdvTm";
+      var TOKEN = sessionStorage.getItem("pg_admin_token") || "";
+      var photos = [];          // current manage list
+      var selected = {};        // id -> true
+      var queue = [];           // pending upload descriptors
+
+      function $(id) { return document.getElementById(id); }
+      function gallery() { return $("ctxGallery").value; }
+      function year() { return parseInt($("ctxYear").value, 10); }
+      function headers(extra) {
+        var h = { apikey: ANON_KEY, Authorization: "Bearer " + ANON_KEY, "x-admin-token": TOKEN };
+        if (extra) Object.keys(extra).forEach(function (k) { h[k] = extra[k]; });
+        return h;
+      }
+
+      // ---- auth ----
+      window.pgLogin = function () {
+        var pw = $("pw").value.trim();
+        if (!pw) return;
+        TOKEN = pw;
+        // Verify by attempting an authenticated call.
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "list-admin", gallery: gallery() }) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (res) {
+            if (!res.ok) { $("loginErr").textContent = res.d.error || "Incorrect passphrase."; return; }
+            sessionStorage.setItem("pg_admin_token", TOKEN);
+            showApp();
+            photos = res.d.photos || [];
+            renderManage();
+          })
+          .catch(function () { $("loginErr").textContent = "Could not reach the server."; });
+      };
+      window.pgLogout = function () {
+        sessionStorage.removeItem("pg_admin_token"); TOKEN = "";
+        $("app").hidden = true; $("loginBox").hidden = false; $("logoutBtn").hidden = true;
+      };
+      function showApp() {
+        $("loginBox").hidden = true; $("app").hidden = false; $("logoutBtn").hidden = false;
+      }
+
+      // ---- context ----
+      var now = new Date();
+      $("ctxYear").value = 2025; // default to the most recent gala year
+      $("ctxGallery").addEventListener("change", function () {
+        $("viewLink").href = "/photogallery/" + gallery() + "/";
+        refreshManage();
+      });
+
+      // ---- EXIF capture date (JPEG DateTimeOriginal) ----
+      function readTakenAt(file, cb) {
+        if (!/jpe?g/i.test(file.type)) return cb(fallbackDate(file));
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            var view = new DataView(e.target.result);
+            if (view.getUint16(0) !== 0xFFD8) return cb(fallbackDate(file));
+            var off = 2, len = view.byteLength;
+            while (off < len) {
+              var marker = view.getUint16(off); off += 2;
+              if (marker === 0xFFE1) {
+                if (view.getUint32(off + 2) !== 0x45786966) return cb(fallbackDate(file));
+                var tiff = off + 8;
+                var little = view.getUint16(tiff) === 0x4949;
+                var u16 = function (o) { return view.getUint16(o, little); };
+                var u32 = function (o) { return view.getUint32(o, little); };
+                var ifd0 = tiff + u32(tiff + 4);
+                var n0 = u16(ifd0), exifIFD = null;
+                for (var i = 0; i < n0; i++) {
+                  var en = ifd0 + 2 + i * 12;
+                  if (u16(en) === 0x8769) exifIFD = tiff + u32(en + 8);
+                }
+                if (exifIFD) {
+                  var n = u16(exifIFD);
+                  for (var j = 0; j < n; j++) {
+                    var e2 = exifIFD + 2 + j * 12, tag = u16(e2);
+                    if (tag === 0x9003 || tag === 0x9004) {
+                      var cnt = u32(e2 + 4), vo = tiff + u32(e2 + 8), s = "";
+                      for (var k = 0; k < cnt - 1; k++) s += String.fromCharCode(view.getUint8(vo + k));
+                      var m = s.match(/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
+                      if (m) return cb(m[1] + "-" + m[2] + "-" + m[3] + "T" + m[4] + ":" + m[5] + ":" + m[6]);
+                    }
+                  }
+                }
+                return cb(fallbackDate(file));
+              } else if ((marker & 0xFF00) !== 0xFF00) { break; }
+              else { off += view.getUint16(off); }
+            }
+            cb(fallbackDate(file));
+          } catch (err) { cb(fallbackDate(file)); }
+        };
+        reader.readAsArrayBuffer(file.slice(0, 131072));
+      }
+      function fallbackDate(file) {
+        return file.lastModified ? new Date(file.lastModified).toISOString() : null;
+      }
+
+      // ---- upload queue ----
+      var drop = $("drop"), fileInput = $("fileInput");
+      drop.addEventListener("click", function () { fileInput.click(); });
+      fileInput.addEventListener("change", function () { addFiles(fileInput.files); fileInput.value = ""; });
+      ["dragover", "dragenter"].forEach(function (ev) {
+        drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("drag"); });
+      });
+      ["dragleave", "drop"].forEach(function (ev) {
+        drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("drag"); });
+      });
+      drop.addEventListener("drop", function (e) { if (e.dataTransfer) addFiles(e.dataTransfer.files); });
+
+      function addFiles(fileList) {
+        var files = Array.prototype.slice.call(fileList).filter(function (f) { return /^image\//.test(f.type); });
+        files.forEach(function (file) {
+          var item = { file: file, caption: "", people: "", featured: false, taken_at: null, status: "" };
+          queue.push(item);
+          readTakenAt(file, function (d) { item.taken_at = d; });
+        });
+        renderQueue();
+      }
+
+      function renderQueue() {
+        var q = $("queue"); q.innerHTML = "";
+        if (!queue.length) return;
+        queue.forEach(function (item, idx) {
+          var url = URL.createObjectURL(item.file);
+          var cell = document.createElement("div"); cell.className = "ad-qitem";
+          cell.innerHTML =
+            '<img src="' + url + '" alt="">' +
+            '<div class="ad-qbody">' +
+              '<input type="text" placeholder="Caption" value="' + esc(item.caption) + '" data-f="caption">' +
+              '<input type="text" placeholder="People (comma separated)" value="' + esc(item.people) + '" data-f="people">' +
+              '<label class="feat"><input type="checkbox" data-f="featured"' + (item.featured ? " checked" : "") + '> Show in header scroll</label>' +
+              '<div class="ad-qstatus">' + (item.status || "") + '</div>' +
+            '</div>';
+          cell.querySelectorAll("[data-f]").forEach(function (inp) {
+            inp.addEventListener("input", function () {
+              var f = inp.getAttribute("data-f");
+              item[f] = f === "featured" ? inp.checked : inp.value;
+            });
+          });
+          q.appendChild(cell);
+        });
+        var bar = document.createElement("div");
+        bar.style.gridColumn = "1 / -1";
+        bar.innerHTML = '<button class="btn-green" id="doUpload">Upload ' + queue.length + ' photo' + (queue.length > 1 ? "s" : "") + '</button> ' +
+                        '<button class="btn-ghost" id="clearQueue">Clear</button>';
+        q.appendChild(bar);
+        $("doUpload").addEventListener("click", uploadAll);
+        $("clearQueue").addEventListener("click", function () { queue = []; renderQueue(); });
+      }
+
+      function uploadAll() {
+        if (!year() || year() < 1990) { alert("Enter a valid year first."); return; }
+        $("doUpload").disabled = true;
+        var done = 0, failed = 0;
+        var pending = queue.slice();
+        setUploadStatus("Uploading…");
+        // Upload sequentially to keep it gentle and show clear progress.
+        (function next(i) {
+          if (i >= pending.length) {
+            setUploadStatus("Uploaded " + done + " photo" + (done === 1 ? "" : "s") + (failed ? ", " + failed + " failed." : "."));
+            queue = queue.filter(function (it) { return it.status !== "ok"; });
+            renderQueue(); refreshManage();
+            return;
+          }
+          var item = pending[i];
+          var fd = new FormData();
+          fd.append("action", "upload");
+          fd.append("file", item.file);
+          fd.append("gallery", gallery());
+          fd.append("year", String(year()));
+          fd.append("caption", item.caption || "");
+          fd.append("people", item.people || "");
+          if (item.taken_at) fd.append("taken_at", item.taken_at);
+          fd.append("is_featured", item.featured ? "true" : "false");
+          fetch(ENDPOINT, { method: "POST", headers: headers(), body: fd })
+            .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+            .then(function (res) {
+              item.status = res.ok ? "ok" : "err";
+              if (res.ok) done++; else failed++;
+              setUploadStatus("Uploaded " + done + " of " + pending.length + "…");
+              next(i + 1);
+            })
+            .catch(function () { item.status = "err"; failed++; next(i + 1); });
+        })(0);
+      }
+      function setUploadStatus(m) { $("uploadStatus").textContent = m; }
+
+      // ---- import by URL ----
+      window.pgImportUrls = function () {
+        var raw = $("importUrls").value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+        if (!raw.length) return;
+        if (!year() || year() < 1990) { alert("Enter a valid year first."); return; }
+        var items = raw.map(function (u) { return { image_url: u }; });
+        setUploadStatus("Importing " + items.length + " link(s)…");
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "import", gallery: gallery(), year: year(), source: $("importSource").value, items: items }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (!d.ok) { setUploadStatus(d.error || "Import failed."); return; }
+            setUploadStatus("Imported " + d.imported + ", failed " + d.failed + ".");
+            $("importUrls").value = ""; refreshManage();
+          })
+          .catch(function () { setUploadStatus("Import failed."); });
+      };
+
+      // ---- manage ----
+      function refreshManage() {
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "list-admin", gallery: gallery() }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { photos = d.photos || []; selected = {}; renderManage(); })
+          .catch(function () {});
+      }
+      function renderManage() {
+        updateSelCount();
+        var grid = $("manageGrid"); grid.innerHTML = "";
+        if (!photos.length) { grid.innerHTML = '<p style="color:#667">No photos in this album yet.</p>'; return; }
+        photos.forEach(function (p) {
+          var cell = document.createElement("div");
+          cell.className = "ad-cell" + (selected[p.id] ? " sel" : "") + (p.published === false ? " unpub" : "");
+          var badges = '<div class="ad-badges">' +
+            (p.is_featured ? '<span class="ad-badge feat">★</span>' : '') +
+            '<span class="ad-badge">' + p.year + '</span></div>';
+          cell.innerHTML =
+            '<input type="checkbox" class="ad-check"' + (selected[p.id] ? " checked" : "") + '>' + badges +
+            '<img src="' + (p.thumb_url || p.image_url) + '" alt="' + esc(p.alt_text || p.caption || "") + '">' +
+            '<div class="ad-meta">' +
+              '<div>' + (p.caption ? esc(p.caption) : '<em style="color:#99a">no caption</em>') + '</div>' +
+              ((p.people || []).length ? '<div class="ppl">' + esc(p.people.join(", ")) + '</div>' : '') +
+            '</div>';
+          cell.querySelector(".ad-check").addEventListener("change", function (e) {
+            if (e.target.checked) selected[p.id] = true; else delete selected[p.id];
+            cell.classList.toggle("sel", !!selected[p.id]); updateSelCount();
+          });
+          cell.querySelector("img").addEventListener("click", function () { editPhoto(p); });
+          grid.appendChild(cell);
+        });
+      }
+      function updateSelCount() {
+        var n = Object.keys(selected).length;
+        $("selCount").textContent = n + " selected";
+      }
+      function selIds() { return Object.keys(selected); }
+      window.pgSelectAll = function () { photos.forEach(function (p) { selected[p.id] = true; }); renderManage(); };
+      window.pgClearSel = function () { selected = {}; renderManage(); };
+
+      function editPhoto(p) {
+        var caption = prompt("Caption:", p.caption || "");
+        if (caption === null) return;
+        var people = prompt("People (comma separated):", (p.people || []).join(", "));
+        if (people === null) return;
+        patch(p.id, { caption: caption, people: people });
+      }
+      function patch(id, patchObj) {
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "update", id: id, patch: patchObj }) })
+          .then(function (r) { return r.json(); })
+          .then(function () { refreshManage(); });
+      }
+
+      window.pgBulkTag = function () {
+        var ids = selIds(); if (!ids.length) return alert("Select photos first.");
+        var names = prompt("Add these people to " + ids.length + " photo(s) (comma separated):", "");
+        if (!names) return;
+        bulk(ids, { add_people: names });
+      };
+      window.pgBulkYear = function () {
+        var ids = selIds(); if (!ids.length) return alert("Select photos first.");
+        var y = prompt("Set year for " + ids.length + " photo(s):", String(year()));
+        if (!y) return;
+        bulk(ids, { year: y });
+      };
+      window.pgBulkFeatured = function (v) {
+        var ids = selIds(); if (!ids.length) return alert("Select photos first.");
+        bulk(ids, { is_featured: v });
+      };
+      window.pgBulkPublish = function (v) {
+        var ids = selIds(); if (!ids.length) return alert("Select photos first.");
+        bulk(ids, { published: v });
+      };
+      window.pgBulkDelete = function () {
+        var ids = selIds(); if (!ids.length) return alert("Select photos first.");
+        if (!confirm("Permanently delete " + ids.length + " photo(s)? This cannot be undone.")) return;
+        setManageStatus("Deleting…");
+        var i = 0;
+        (function nextDel() {
+          if (i >= ids.length) { setManageStatus("Deleted " + ids.length + " photo(s)."); refreshManage(); return; }
+          fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+            body: JSON.stringify({ action: "delete", id: ids[i] }) })
+            .then(function () { i++; nextDel(); }).catch(function () { i++; nextDel(); });
+        })();
+      };
+      function bulk(ids, patchObj) {
+        setManageStatus("Updating " + ids.length + " photo(s)…");
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "bulk-update", ids: ids, patch: patchObj }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { setManageStatus(d.ok ? "Updated " + d.updated + " photo(s)." : (d.error || "Update failed.")); refreshManage(); })
+          .catch(function () { setManageStatus("Update failed."); });
+      }
+      function setManageStatus(m) { $("manageStatus").textContent = m; }
+
+      function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+      // ---- boot ----
+      if (TOKEN) {
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "list-admin", gallery: gallery() }) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (res) {
+            if (res.ok) { showApp(); photos = res.d.photos || []; renderManage(); }
+          }).catch(function () {});
+      }
+    })();
+    </script>
+</body>
+</html>
