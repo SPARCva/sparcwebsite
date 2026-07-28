@@ -65,7 +65,16 @@ Tags get onto photos two ways:
    face within a Euclidean-distance threshold (default 0.55) and writes the name
    into each matched photo's `people[]`. Future photos: scan, name only the new
    faces. Face actions: `faces-status`, `faces-save`, `faces-unnamed`,
-   `faces-name` (all admin-only). See `migrations/20260728_create_gallery_faces.sql`.
+   `faces-for-photo`, `faces-name` (all admin-only). See
+   `migrations/20260728_create_gallery_faces.sql`.
+
+**Two ways to tag:** the "People & faces" panel lists all unnamed faces at once
+(fastest for a big backfill), OR click any photo in the **Manage** grid to open
+the per-photo **tag modal** — it shows every detected face (so you can tag
+several people in one photo) plus a box for anyone whose face wasn't detected.
+Either way, naming a face propagates to **every gallery** — tag someone in Gala
+and they're tagged in Summit too. A photo is scanned on the fly the first time
+you open its tag modal, so you can tag already-uploaded photos just by browsing.
 
 ## Setting the admin passphrase (one-time)
 

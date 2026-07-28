@@ -501,6 +501,17 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true, faces });
   }
 
+  // faces-for-photo: the faces detected in one photo (with any names), so the
+  // admin can browse a gallery and tag people photo by photo.
+  if (action === "faces-for-photo") {
+    const photoId = String(payload.photo_id ?? "");
+    if (!photoId) return json({ error: "Missing photo_id" }, 400);
+    const { data: ph } = await sb.from("gallery_photos").select("face_scanned").eq("id", photoId).maybeSingle();
+    const { data, error } = await sb.from("gallery_faces").select("id, box, person_name").eq("photo_id", photoId);
+    if (error) return json({ error: error.message }, 500);
+    return json({ ok: true, scanned: !!ph?.face_scanned, faces: data ?? [] });
+  }
+
   // faces-name: assign a name to one face and propagate it to every face whose
   // descriptor is within `threshold` Euclidean distance, then add the name to
   // each of those photos' people[] (so site search finds them).
