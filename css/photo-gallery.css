@@ -82,6 +82,11 @@
 .pg-lb-caption { display: block; font-size: 1.05rem; }
 .pg-lb-people { display: block; color: var(--sparc-kelly-green); font-weight: 600; margin-top: 4px; }
 .pg-lb-date { display: block; font-size: 0.85rem; opacity: .7; margin-top: 4px; }
+.pg-lb-download { display: inline-block; margin-top: 12px; background: var(--sparc-kelly-green); color: #fff; border: none;
+  padding: 9px 20px; border-radius: 999px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background .15s ease; }
+.pg-lb-download:hover { background: var(--sparc-kelly-green-dark); }
+.pg-lb-download:disabled { opacity: .6; cursor: default; }
+.pg-lb-download:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .pg-lb-count { display: block; font-size: 0.8rem; opacity: .55; margin-top: 8px; }
 .pg-lb-close { position: absolute; top: 18px; right: 22px; background: none; border: none; color: #fff; font-size: 2.4rem; line-height: 1; cursor: pointer; }
 .pg-lb-nav { background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 2.2rem; width: 54px; height: 54px; border-radius: 50%;

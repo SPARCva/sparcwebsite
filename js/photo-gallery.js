@@ -168,6 +168,33 @@
     return el("div", { class: "pg-controls" }, [pills, search]);
   }
 
+  // ---- per-photo download ---------------------------------------------------
+  function extOf(url) {
+    var m = url.split("?")[0].match(/\.([a-z0-9]{3,4})$/i);
+    return m ? m[1].toLowerCase() : "jpg";
+  }
+  function safeName(s, fallback) {
+    var t = (s || "").replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "_").slice(0, 50);
+    return t || fallback;
+  }
+  // Fetch the image and save it (a plain <a download> is ignored for
+  // cross-origin URLs, so we download the blob and save that).
+  function downloadOne(p, btn) {
+    var label = btn ? btn.textContent : "";
+    if (btn) { btn.disabled = true; btn.textContent = "Downloading…"; }
+    fetch(p.image_url).then(function (r) { return r.blob(); }).then(function (blob) {
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = safeName(p.caption, GALLERY + "-photo") + "." + extOf(p.image_url);
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+    }).catch(function () {
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+      window.open(p.image_url, "_blank", "noopener");
+    });
+  }
+
   // ---- grid -----------------------------------------------------------------
   function buildGrid() {
     if (state.loading) return el("div", { class: "pg-empty", text: "Loading photos…" });
@@ -260,6 +287,10 @@
     if (p.caption) cap.appendChild(el("span", { class: "pg-lb-caption", text: p.caption }));
     if ((p.people || []).length) cap.appendChild(el("span", { class: "pg-lb-people", text: p.people.join(" · ") }));
     if (p.taken_at) cap.appendChild(el("span", { class: "pg-lb-date", text: fmtDate(p.taken_at) }));
+    cap.appendChild(el("button", {
+      class: "pg-lb-download", type: "button", html: "&#8681; Download photo",
+      onclick: function (e) { downloadOne(p, e.currentTarget); },
+    }));
     cap.appendChild(el("span", { class: "pg-lb-count", text: (lbIndex + 1) + " of " + state.photos.length }));
   }
 
