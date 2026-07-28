@@ -50,13 +50,22 @@ get `401`.
 | `{ action:"bulk-update", ids:[…], patch:{…} }` | Same fields across many rows. `patch.add_people` **appends** tags without clobbering existing ones. |
 | `{ action:"delete", id }` | Deletes the row and its storage object. |
 
-## People search & privacy
+## People search & face recognition
 
-Person tags in `people` are **manually assigned** in the admin tool. No face
-recognition and **no biometric/face data is ever computed or stored** — an
-intentional choice given that many SPARC constituents are adults with
-disabilities and cannot be assumed to have consented to biometric processing.
-Search is a plain substring match over those hand-entered names plus captions.
+Search is a substring match over each photo's `people` tags plus its caption.
+Tags get onto photos two ways:
+
+1. **Manual** — typed in the admin (per-photo or bulk "Add people…").
+2. **Face recognition** — the "People & faces" panel. Faceprints are computed
+   **in the browser** by the open-source **face-api.js** (128-float
+   descriptors), stored in `gallery_faces`. **No face data ever leaves SPARC
+   infrastructure** — nothing is sent to AWS/Google/etc. Workflow: click
+   **Scan photos for faces** (one-time per photo, incremental via
+   `face_scanned`), then **name each person once** — naming propagates to every
+   face within a Euclidean-distance threshold (default 0.55) and writes the name
+   into each matched photo's `people[]`. Future photos: scan, name only the new
+   faces. Face actions: `faces-status`, `faces-save`, `faces-unnamed`,
+   `faces-name` (all admin-only). See `migrations/20260728_create_gallery_faces.sql`.
 
 ## Setting the admin passphrase (one-time)
 

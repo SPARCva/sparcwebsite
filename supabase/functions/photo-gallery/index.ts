@@ -446,6 +446,104 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true });
   }
 
+  // ==========================================================================
+  // FACE RECOGNITION — descriptors are computed in the browser (face-api.js);
+  // this side just stores them and propagates a name to every matching face.
+  // ==========================================================================
+
+  // faces-status: which photos in a gallery already had faces computed.
+  if (action === "faces-status") {
+    const gallery = String(payload.gallery ?? "").trim();
+    let q = sb.from("gallery_photos").select("id").eq("face_scanned", true).limit(20000);
+    if (GALLERIES.includes(gallery)) q = q.eq("gallery", gallery);
+    const { data, error } = await q;
+    if (error) return json({ error: error.message }, 500);
+    return json({ ok: true, scanned: (data ?? []).map((r) => r.id) });
+  }
+
+  // faces-save: store the descriptors the browser computed for a batch of
+  // photos. Replaces any existing faces for those photos and marks them scanned
+  // (a photo with zero faces is still marked scanned so it isn't reprocessed).
+  if (action === "faces-save") {
+    const photos = Array.isArray(payload.photos) ? payload.photos : [];
+    if (!photos.length) return json({ error: "No photos." }, 400);
+    let inserted = 0;
+    for (const p of photos as Record<string, unknown>[]) {
+      const photoId = String(p.photo_id ?? "");
+      if (!photoId) continue;
+      const faces = Array.isArray(p.faces) ? p.faces as Record<string, unknown>[] : [];
+      await sb.from("gallery_faces").delete().eq("photo_id", photoId);
+      const valid = faces.filter((f) => Array.isArray(f.embedding) && (f.embedding as unknown[]).length === 128);
+      if (valid.length) {
+        const rows = valid.map((f) => ({ photo_id: photoId, embedding: f.embedding, box: f.box ?? null }));
+        const { error } = await sb.from("gallery_faces").insert(rows);
+        if (!error) inserted += rows.length;
+      }
+      await sb.from("gallery_photos").update({ face_scanned: true }).eq("id", photoId);
+    }
+    return json({ ok: true, inserted });
+  }
+
+  // faces-unnamed: faces not yet assigned a name, with their photo's URL + box
+  // so the admin can preview and name them. Embeddings are NOT returned.
+  if (action === "faces-unnamed") {
+    const { data, error } = await sb.from("gallery_faces")
+      .select("id, photo_id, box, photo:gallery_photos(image_url, gallery, year)")
+      .is("person_name", null).limit(3000);
+    if (error) return json({ error: error.message }, 500);
+    const faces = (data ?? []).map((r) => {
+      const ph = (r as Record<string, unknown>).photo as Record<string, unknown> | null;
+      return {
+        id: r.id, photo_id: r.photo_id, box: r.box,
+        image_url: ph?.image_url, gallery: ph?.gallery, year: ph?.year,
+      };
+    });
+    return json({ ok: true, faces });
+  }
+
+  // faces-name: assign a name to one face and propagate it to every face whose
+  // descriptor is within `threshold` Euclidean distance, then add the name to
+  // each of those photos' people[] (so site search finds them).
+  if (action === "faces-name") {
+    const name = String(payload.name ?? "").trim().slice(0, 120);
+    const faceId = String(payload.face_id ?? "");
+    const threshold = typeof payload.threshold === "number" ? payload.threshold : 0.55;
+    if (!name) return json({ error: "Missing name." }, 400);
+    if (!faceId) return json({ error: "Missing face." }, 400);
+
+    const { data: src } = await sb.from("gallery_faces").select("embedding").eq("id", faceId).maybeSingle();
+    const emb = src?.embedding as number[] | undefined;
+    if (!Array.isArray(emb) || emb.length !== 128) return json({ error: "Invalid face." }, 400);
+
+    // Match against still-unnamed faces (naming never overwrites an existing name).
+    const { data: faces, error } = await sb.from("gallery_faces")
+      .select("id, photo_id, embedding").is("person_name", null).limit(20000);
+    if (error) return json({ error: error.message }, 500);
+
+    const matchedFaceIds: string[] = [];
+    const matchedPhotoIds = new Set<string>();
+    for (const f of faces ?? []) {
+      const fe = f.embedding as number[];
+      if (!Array.isArray(fe) || fe.length !== 128) continue;
+      let sum = 0;
+      for (let i = 0; i < 128; i++) { const d = fe[i] - emb[i]; sum += d * d; }
+      if (Math.sqrt(sum) <= threshold) {
+        matchedFaceIds.push(f.id as string);
+        matchedPhotoIds.add(f.photo_id as string);
+      }
+    }
+    if (!matchedFaceIds.length) return json({ ok: true, faces: 0, photos: 0 });
+
+    await sb.from("gallery_faces").update({ person_name: name }).in("id", matchedFaceIds);
+    const photoIds = [...matchedPhotoIds];
+    const { data: prows } = await sb.from("gallery_photos").select("id, people").in("id", photoIds);
+    for (const r of prows ?? []) {
+      const merged = [...new Set([...((r.people as string[]) ?? []), name])];
+      await sb.from("gallery_photos").update({ people: merged }).eq("id", r.id);
+    }
+    return json({ ok: true, faces: matchedFaceIds.length, photos: photoIds.length });
+  }
+
   return json({ error: "Unknown action" }, 400);
 });
 

@@ -169,6 +169,19 @@
             <div class="ad-status-line" id="manageStatus"></div>
             <div class="ad-grid" id="manageGrid"></div>
         </div>
+
+        <!-- People & Faces -->
+        <div class="ad-panel">
+            <h2>People &amp; faces</h2>
+            <p class="ad-hint">Free, private face recognition that runs entirely in your browser — no accounts, and no photos are ever sent to another company. First <strong>scan</strong> the photos to find faces, then <strong>name each person once</strong>; every matching photo is tagged automatically and becomes searchable by that name on the site.</p>
+            <div class="ad-row" style="align-items:center;">
+                <button class="btn-green" id="faceScanBtn" onclick="pgScanFaces()">Scan photos for faces</button>
+                <label style="font-size:.85rem;display:flex;align-items:center;gap:6px;color:#445;"><input type="checkbox" id="faceScanAll"> Scan all albums (otherwise just the album selected above)</label>
+                <span class="ad-status-line" id="faceScanStatus" style="margin:0;"></span>
+            </div>
+            <div id="faceNameArea" style="margin-top:18px;"></div>
+            <datalist id="faceNameList"></datalist>
+        </div>
     </div>
 
     <script>
@@ -205,6 +218,7 @@
             showApp();
             photos = res.d.photos || [];
             renderManage();
+            loadUnnamed();
           })
           .catch(function () { $("loginErr").textContent = "Could not reach the server."; });
       };
@@ -560,18 +574,147 @@
         })(0);
       }
 
+      // ---- Face recognition (in-browser, face-api.js) ----
+      var FACE_MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model";
+      var faceModelsLoaded = false;
+      function faceStatus(m) { $("faceScanStatus").textContent = m || ""; }
+      function loadFaceModels() {
+        if (faceModelsLoaded) return Promise.resolve();
+        if (!window.faceapi) return Promise.reject(new Error("face library not loaded"));
+        return Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODEL_URL),
+          faceapi.nets.faceLandmark68Net.loadFromUri(FACE_MODEL_URL),
+          faceapi.nets.faceRecognitionNet.loadFromUri(FACE_MODEL_URL),
+        ]).then(function () { faceModelsLoaded = true; });
+      }
+      function loadImage(url) {
+        return new Promise(function (res, rej) {
+          var img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = function () { res(img); };
+          img.onerror = function () { rej(new Error("image load failed")); };
+          img.src = url;
+        });
+      }
+      window.pgScanFaces = function () {
+        if (!window.faceapi) { faceStatus("Face library still loading — try again in a moment."); return; }
+        $("faceScanBtn").disabled = true;
+        faceStatus("Loading face models…");
+        var g = $("faceScanAll").checked ? "" : gallery();
+        var scanned = {};
+        loadFaceModels().then(function () {
+          return fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "faces-status", gallery: g }) }).then(function (r) { return r.json(); });
+        }).then(function (st) {
+          (st.scanned || []).forEach(function (id) { scanned[id] = 1; });
+          return fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "list-admin", gallery: g }) }).then(function (r) { return r.json(); });
+        }).then(function (d) {
+          var todo = (d.photos || []).filter(function (p) { return !scanned[p.id]; });
+          if (!todo.length) { faceStatus("All photos already scanned. Loading people…"); $("faceScanBtn").disabled = false; loadUnnamed(); return; }
+          var opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.5 });
+          var i = 0, faced = 0, batch = [];
+          (function next() {
+            if (i >= todo.length) {
+              flushFaces(batch).then(function () { faceStatus("Done — scanned " + todo.length + " photos, found " + faced + " faces. Loading people…"); $("faceScanBtn").disabled = false; loadUnnamed(); });
+              return;
+            }
+            var p = todo[i++];
+            faceStatus("Scanning " + i + " of " + todo.length + " — " + faced + " faces found…");
+            loadImage(p.thumb_url || p.image_url).then(function (img) {
+              return faceapi.detectAllFaces(img, opts).withFaceLandmarks().withFaceDescriptors();
+            }).then(function (dets) {
+              var faces = (dets || []).map(function (det) {
+                faced++;
+                var b = det.detection.box;
+                return { embedding: Array.from(det.descriptor), box: { x: Math.round(b.x), y: Math.round(b.y), width: Math.round(b.width), height: Math.round(b.height) } };
+              });
+              batch.push({ photo_id: p.id, faces: faces });
+              if (batch.length >= 20) { var b2 = batch; batch = []; flushFaces(b2).then(next); } else next();
+            }).catch(function () { batch.push({ photo_id: p.id, faces: [] }); next(); });
+          })();
+        }).catch(function (e) { faceStatus("Face scan failed: " + (e && e.message || e)); $("faceScanBtn").disabled = false; });
+      };
+      function flushFaces(batch) {
+        if (!batch.length) return Promise.resolve();
+        return fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "faces-save", photos: batch }) }).then(function (r) { return r.json(); }).catch(function () {});
+      }
+      function loadUnnamed() {
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "faces-unnamed" }) })
+          .then(function (r) { return r.json(); }).then(function (d) { renderUnnamed(d.faces || []); }).catch(function () {});
+      }
+      function refreshNameList() {
+        var names = {};
+        photos.forEach(function (p) { (p.people || []).forEach(function (n) { names[n] = 1; }); });
+        var dl = $("faceNameList"); dl.innerHTML = "";
+        Object.keys(names).sort().forEach(function (n) { var o = document.createElement("option"); o.value = n; dl.appendChild(o); });
+      }
+      function renderUnnamed(faces) {
+        refreshNameList();
+        var area = $("faceNameArea"); area.innerHTML = "";
+        if (!faces.length) { area.innerHTML = '<p style="color:#667">No unnamed faces yet — scan photos above, or everyone found has been named. 🎉</p>'; return; }
+        var head = document.createElement("p");
+        head.innerHTML = "<strong>" + faces.length + "</strong> unnamed face(s). Name anyone once and every matching photo is tagged.";
+        area.appendChild(head);
+        var grid = document.createElement("div");
+        grid.style.cssText = "display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;";
+        area.appendChild(grid);
+        faces.slice(0, 150).forEach(function (f) {
+          var cell = document.createElement("div");
+          cell.style.cssText = "border:1px solid #e3e9ef;border-radius:10px;padding:8px;background:#fbfcfd;";
+          var canvas = document.createElement("canvas");
+          canvas.width = 150; canvas.height = 150;
+          canvas.style.cssText = "width:100%;height:120px;border-radius:6px;background:#eee;object-fit:cover;";
+          cell.appendChild(canvas);
+          var inp = document.createElement("input");
+          inp.type = "text"; inp.placeholder = "Who is this?"; inp.setAttribute("list", "faceNameList");
+          inp.style.cssText = "width:100%;box-sizing:border-box;margin-top:6px;padding:6px 8px;border:1.5px solid #d9e2ec;border-radius:6px;font-family:inherit;font-size:.85rem;";
+          var btn = document.createElement("button");
+          btn.className = "btn-green"; btn.textContent = "Tag this person";
+          btn.style.cssText = "margin-top:6px;width:100%;padding:7px;font-size:.82rem;";
+          function submit() {
+            var name = inp.value.trim(); if (!name) return;
+            btn.disabled = true; btn.textContent = "Tagging…";
+            fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "faces-name", face_id: f.id, name: name }) })
+              .then(function (r) { return r.json(); }).then(function (d) {
+                if (d.ok) { faceStatus('Tagged "' + name + '" across ' + d.photos + ' photo(s).'); refreshManage(); loadUnnamed(); }
+                else { btn.disabled = false; btn.textContent = "Tag this person"; faceStatus(d.error || "Failed."); }
+              }).catch(function () { btn.disabled = false; btn.textContent = "Tag this person"; });
+          }
+          btn.onclick = submit;
+          inp.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
+          cell.appendChild(inp); cell.appendChild(btn);
+          grid.appendChild(cell);
+          drawFaceCrop(canvas, f);
+        });
+      }
+      function drawFaceCrop(canvas, f) {
+        loadImage(f.image_url).then(function (img) {
+          var ctx = canvas.getContext("2d");
+          var b = f.box || {};
+          var pad = 0.4;
+          var bw = b.width || img.naturalWidth, bh = b.height || img.naturalHeight;
+          var x = Math.max(0, (b.x || 0) - bw * pad);
+          var y = Math.max(0, (b.y || 0) - bh * pad);
+          var w = Math.min(img.naturalWidth - x, bw * (1 + 2 * pad));
+          var h = Math.min(img.naturalHeight - y, bh * (1 + 2 * pad));
+          if (w <= 0 || h <= 0) { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); return; }
+          ctx.drawImage(img, x, y, w, h, 0, 0, canvas.width, canvas.height);
+        }).catch(function () {});
+      }
+
       // ---- boot ----
       if (TOKEN) {
         fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
           body: JSON.stringify({ action: "list-admin", gallery: gallery() }) })
           .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (res) {
-            if (res.ok) { showApp(); photos = res.d.photos || []; renderManage(); }
+            if (res.ok) { showApp(); photos = res.d.photos || []; renderManage(); loadUnnamed(); }
           }).catch(function () {});
       }
     })();
     </script>
     <!-- Google Identity Services (for the Google Photos picker) -->
     <script src="https://accounts.google.com/gsi/client" async></script>
+    <!-- face-api.js (in-browser face recognition for the People & faces panel) -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
 </body>
 </html>
