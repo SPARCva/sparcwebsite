@@ -74,6 +74,10 @@
                     <label for="year">Year</label>
                     <input type="number" id="year" min="1990" max="2100" step="1">
                 </div>
+                <div class="up-field" style="flex:1;min-width:220px;">
+                    <label for="submission">Album / event name <span style="font-weight:400;color:#889;">(optional)</span></label>
+                    <input type="text" id="submission" placeholder="e.g. 2026 Summit — Day 1" style="width:100%;box-sizing:border-box;">
+                </div>
             </div>
             <div class="up-drop" id="drop">
                 <strong>Drop photos here</strong><br>or click to choose &nbsp;·&nbsp; JPG / PNG / WEBP, up to 25&nbsp;MB each
@@ -154,7 +158,7 @@
         var year = parseInt($("year").value, 10);
         if (!year || year < 1990) { alert("Please enter a valid year."); return; }
         $("send").disabled = true; $("clear").disabled = true;
-        var gallery = $("gallery").value, done = 0, failed = 0;
+        var gallery = $("gallery").value, submission = $("submission").value.trim(), done = 0, failed = 0;
         var pending = queue.filter(function (it) { return it.status !== "ok"; });
         (function next(i) {
           if (i >= pending.length) {
@@ -171,6 +175,7 @@
           var fd = new FormData();
           fd.append("action", "upload"); fd.append("file", it.file);
           fd.append("gallery", gallery); fd.append("year", String(year));
+          if (submission) fd.append("submission", submission);
           fetch(ENDPOINT, { method: "POST", headers: headers(), body: fd })
             .then(function (r) { return { ok: r.ok }; })
             .then(function (res) { it.status = res.ok ? "ok" : "err"; res.ok ? done++ : failed++; })

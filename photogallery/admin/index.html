@@ -94,20 +94,25 @@
         <div class="ad-panel">
             <div class="ad-row">
                 <div class="ad-field">
-                    <label for="ctxGallery">Album</label>
-                    <select id="ctxGallery">
-                        <option value="gala">An Evening to SPARCle (Gala)</option>
-                        <option value="summit">A Call to Conscience (Summit)</option>
-                        <option value="life">Everyday Life at SPARC</option>
-                    </select>
+                    <label for="ctxGallery">Album / category</label>
+                    <select id="ctxGallery"></select>
                 </div>
                 <div class="ad-field">
                     <label for="ctxYear">Year</label>
                     <input type="number" id="ctxYear" min="1990" max="2100" step="1">
                 </div>
+                <button class="btn-ghost" onclick="pgNewCategory()">+ New category</button>
                 <div class="ad-field" style="flex:1"></div>
                 <a class="btn-ghost" id="viewLink" href="/photogallery/gala/" target="_blank" style="text-decoration:none;">View public page &rsaquo;</a>
             </div>
+        </div>
+
+        <!-- Review queue -->
+        <div class="ad-panel" id="reviewPanel" hidden>
+            <h2>Review queue <span id="reviewCount" class="ad-badge" style="background:#b00020;vertical-align:middle;"></span></h2>
+            <p class="ad-hint">Albums submitted by photographers (and anything hidden) wait here for your approval. Review each group, click any item to view it and edit its details or category, then <strong>Approve</strong> to publish or <strong>Reject</strong> to delete.</p>
+            <div class="ad-status-line" id="reviewStatus"></div>
+            <div id="reviewArea"></div>
         </div>
 
         <!-- Upload -->
@@ -150,9 +155,29 @@
             </details>
         </div>
 
+        <!-- Add a video -->
+        <div class="ad-panel">
+            <h2>Add a video</h2>
+            <p class="ad-hint">Paste a <strong>YouTube</strong> or <strong>Vimeo</strong> link and it will appear in the album &amp; year selected above, with a thumbnail pulled in automatically. Videos play in the gallery lightbox — nothing is uploaded to us, so there are no file-size limits.</p>
+            <div class="ad-row">
+                <div class="ad-field" style="flex:1;min-width:280px;">
+                    <label for="vidUrl">Video link</label>
+                    <input type="text" id="vidUrl" placeholder="https://www.youtube.com/watch?v=…  or  https://vimeo.com/…">
+                </div>
+                <div class="ad-field" style="flex:1;min-width:220px;">
+                    <label for="vidCaption">Caption (optional)</label>
+                    <input type="text" id="vidCaption" placeholder="e.g. 2026 Gala highlight reel">
+                </div>
+            </div>
+            <div class="ad-row" style="margin-top:10px;">
+                <button class="btn-green" onclick="pgAddVideo()">Add video</button>
+                <span class="ad-status-line" id="vidStatus" style="margin:0;"></span>
+            </div>
+        </div>
+
         <!-- Manage -->
         <div class="ad-panel">
-            <h2>Manage photos</h2>
+            <h2>Manage photos &amp; videos</h2>
             <p class="ad-hint">Select photos to tag several at once, mark which appear in the header scroll, change the year, or remove them. Click a photo to edit its caption and people.</p>
             <div class="ad-toolbar">
                 <span class="sel-count" id="selCount">0 selected</span>
@@ -203,22 +228,144 @@
         return h;
       }
 
+      // ---- categories (dynamic albums) ----
+      var categories = [];  // [{slug,name,is_public,sort_order}]
+      function catName(slug) { for (var i = 0; i < categories.length; i++) if (categories[i].slug === slug) return categories[i].name; return slug; }
+      function isPublicCat(slug) { for (var i = 0; i < categories.length; i++) if (categories[i].slug === slug) return !!categories[i].is_public; return false; }
+      function catOptionLabel(c) { return c.name + (c.is_public ? "" : " · private"); }
+      function fillCategorySelects() {
+        var sel = $("ctxGallery"), cur = sel.value;
+        sel.innerHTML = "";
+        categories.forEach(function (c) {
+          var o = document.createElement("option"); o.value = c.slug; o.textContent = catOptionLabel(c); sel.appendChild(o);
+        });
+        if (cur) sel.value = cur;
+        if (!sel.value && categories.length) sel.value = categories[0].slug;
+        updateViewLink();
+      }
+      function updateViewLink() {
+        var link = $("viewLink");
+        if (isPublicCat(gallery())) { link.href = "/photogallery/" + gallery() + "/"; link.hidden = false; }
+        else { link.hidden = true; }
+      }
+      function loadCategories(cb) {
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "categories" }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { if (d.ok) { categories = d.categories || []; fillCategorySelects(); } if (cb) cb(); })
+          .catch(function () { if (cb) cb(); });
+      }
+      window.pgNewCategory = function () {
+        var name = prompt("Name of the new category / album (e.g. “Community Events”):", "");
+        if (!name || !name.trim()) return;
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "category-create", name: name.trim(), is_public: false }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (!d.ok) { alert(d.error || "Could not create the category."); return; }
+            loadCategories(function () { $("ctxGallery").value = d.category.slug; updateViewLink(); refreshManage(); });
+          })
+          .catch(function () { alert("Could not reach the server."); });
+      };
+
+      // ---- add a video (embed link) ----
+      window.pgAddVideo = function () {
+        var u = $("vidUrl").value.trim();
+        if (!u) { $("vidStatus").textContent = "Paste a YouTube or Vimeo link first."; return; }
+        if (!year() || year() < 1990) { alert("Enter a valid year first."); return; }
+        $("vidStatus").textContent = "Adding…";
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "video-add", gallery: gallery(), year: year(), video_url: u, caption: $("vidCaption").value }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (!d.ok) { $("vidStatus").textContent = d.error || "Could not add the video."; return; }
+            $("vidStatus").textContent = "Video added to " + catName(gallery()) + ".";
+            $("vidUrl").value = ""; $("vidCaption").value = ""; refreshManage();
+          })
+          .catch(function () { $("vidStatus").textContent = "Could not reach the server."; });
+      };
+
+      // ---- review queue (pending photographer submissions / hidden items) ----
+      function loadReview() {
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "list-admin" }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { renderReview((d.photos || []).filter(function (p) { return p.published === false; })); })
+          .catch(function () {});
+      }
+      function renderReview(pending) {
+        var panel = $("reviewPanel"), area = $("reviewArea"), badge = $("reviewCount");
+        if (!pending.length) { panel.hidden = true; area.innerHTML = ""; badge.textContent = ""; return; }
+        panel.hidden = false; badge.textContent = pending.length;
+        var groups = {}, order = [];
+        pending.forEach(function (p) {
+          var key = (p.submission && p.submission.trim()) ? p.submission.trim() : (catName(p.gallery) + " · " + p.year);
+          if (!groups[key]) { groups[key] = []; order.push(key); }
+          groups[key].push(p);
+        });
+        area.innerHTML = "";
+        order.forEach(function (key) {
+          var items = groups[key];
+          var wrap = document.createElement("div");
+          wrap.style.cssText = "border:1px solid #e3e9ef;border-radius:12px;padding:14px;margin-bottom:14px;background:#fbfcfd;";
+          var head = document.createElement("div");
+          head.style.cssText = "display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;";
+          head.innerHTML = '<strong style="color:var(--sparc-royal-blue);font-size:1.02rem;">' + esc(key) + '</strong>' +
+            '<span style="color:#667;font-size:.85rem;">' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' · ' + esc(catName(items[0].gallery)) + '</span>';
+          var spacer = document.createElement("span"); spacer.style.flex = "1"; head.appendChild(spacer);
+          var ids = items.map(function (p) { return p.id; });
+          var ap = document.createElement("button"); ap.className = "btn-green"; ap.textContent = "Approve all"; ap.onclick = function () { reviewApprove(ids); };
+          var rj = document.createElement("button"); rj.className = "btn-danger"; rj.textContent = "Reject all"; rj.onclick = function () { reviewReject(ids); };
+          head.appendChild(ap); head.appendChild(rj); wrap.appendChild(head);
+          var grid = document.createElement("div"); grid.className = "ad-queue";
+          items.forEach(function (p) {
+            var cell = document.createElement("div"); cell.className = "ad-qitem"; cell.style.position = "relative";
+            var vbadge = p.media_type === "video" ? '<span class="ad-badge" style="position:absolute;top:6px;left:6px;">▶ video</span>' : '';
+            cell.innerHTML = vbadge + '<img src="' + (p.thumb_url || p.image_url) + '" alt="' + esc(p.caption || "") + '" style="cursor:pointer;">' +
+              '<div class="ad-qbody"><div style="font-size:.82rem;">' + (p.caption ? esc(p.caption) : '<em style="color:#99a">no caption</em>') + '</div>' +
+              '<div style="display:flex;gap:6px;"><button class="btn-green" style="flex:1;padding:6px;font-size:.78rem;">Approve</button>' +
+              '<button class="btn-danger" style="flex:1;padding:6px;font-size:.78rem;">Reject</button></div></div>';
+            cell.querySelector("img").onclick = function () { openTagModal(p); };
+            var b = cell.querySelectorAll("button");
+            b[0].onclick = function () { reviewApprove([p.id]); };
+            b[1].onclick = function () { reviewReject([p.id]); };
+            grid.appendChild(cell);
+          });
+          wrap.appendChild(grid); area.appendChild(wrap);
+        });
+      }
+      function reviewApprove(ids) {
+        if (!ids.length) return;
+        $("reviewStatus").textContent = "Approving " + ids.length + "…";
+        fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "bulk-update", ids: ids, patch: { published: true } }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { $("reviewStatus").textContent = d.ok ? ("Approved " + ids.length + " item(s).") : (d.error || "Failed."); loadReview(); refreshManage(); })
+          .catch(function () { $("reviewStatus").textContent = "Failed."; });
+      }
+      function reviewReject(ids) {
+        if (!ids.length) return;
+        if (!confirm("Reject and permanently delete " + ids.length + " item(s)? This cannot be undone.")) return;
+        $("reviewStatus").textContent = "Rejecting…";
+        var i = 0;
+        (function nx() {
+          if (i >= ids.length) { $("reviewStatus").textContent = "Rejected " + ids.length + " item(s)."; loadReview(); refreshManage(); return; }
+          fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "delete", id: ids[i] }) })
+            .then(function () { i++; nx(); }).catch(function () { i++; nx(); });
+        })();
+      }
+
       // ---- auth ----
       window.pgLogin = function () {
         var pw = $("pw").value.trim();
         if (!pw) return;
         TOKEN = pw;
-        // Verify by attempting an authenticated call.
+        // Verify the passphrase and load categories in one call.
         fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
-          body: JSON.stringify({ action: "list-admin", gallery: gallery() }) })
+          body: JSON.stringify({ action: "categories" }) })
           .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (res) {
             if (!res.ok) { $("loginErr").textContent = res.d.error || "Incorrect passphrase."; return; }
             sessionStorage.setItem("pg_admin_token", TOKEN);
+            categories = res.d.categories || []; fillCategorySelects();
             showApp();
-            photos = res.d.photos || [];
-            renderManage();
-            loadUnnamed();
+            refreshManage(); loadReview(); loadUnnamed();
           })
           .catch(function () { $("loginErr").textContent = "Could not reach the server."; });
       };
@@ -234,7 +381,7 @@
       var now = new Date();
       $("ctxYear").value = 2025; // default to the most recent gala year
       $("ctxGallery").addEventListener("change", function () {
-        $("viewLink").href = "/photogallery/" + gallery() + "/";
+        updateViewLink();
         refreshManage();
       });
 
@@ -410,6 +557,7 @@
           var cell = document.createElement("div");
           cell.className = "ad-cell" + (selected[p.id] ? " sel" : "") + (p.published === false ? " unpub" : "");
           var badges = '<div class="ad-badges">' +
+            (p.media_type === "video" ? '<span class="ad-badge">▶</span>' : '') +
             (p.is_featured ? '<span class="ad-badge feat">★</span>' : '') +
             '<span class="ad-badge">' + p.year + '</span></div>';
           cell.innerHTML =
@@ -440,7 +588,7 @@
       // ---- Browse-and-tag modal (multiple people per photo; names propagate
       //      to every matching face across ALL galleries) ----
       var tagModal = null;
-      function closeTagModal() { if (tagModal) tagModal.style.display = "none"; document.body.style.overflow = ""; refreshManage(); loadUnnamed(); }
+      function closeTagModal() { if (tagModal) tagModal.style.display = "none"; document.body.style.overflow = ""; refreshManage(); loadReview(); loadUnnamed(); }
       function openTagModal(p) {
         if (!tagModal) {
           tagModal = document.createElement("div");
@@ -456,15 +604,26 @@
 
         var hd = document.createElement("div");
         hd.style.cssText = "display:flex;justify-content:space-between;align-items:center;";
-        hd.innerHTML = '<h3 style="margin:0;color:var(--sparc-royal-blue);">Tag people in this photo</h3>';
+        hd.innerHTML = '<h3 style="margin:0;color:var(--sparc-royal-blue);">' + (p.media_type === "video" ? "Video details" : "Tag people in this photo") + '</h3>';
         var x = document.createElement("button"); x.textContent = "✕"; x.setAttribute("aria-label", "Close");
         x.style.cssText = "border:none;background:#eef2f6;border-radius:8px;font-size:1.05rem;cursor:pointer;padding:6px 12px;";
         x.onclick = closeTagModal; hd.appendChild(x); card.appendChild(hd);
 
-        var img = document.createElement("img");
-        img.src = p.thumb_url || p.image_url; img.alt = p.caption || "";
-        img.style.cssText = "width:100%;max-height:38vh;object-fit:contain;border-radius:8px;background:#f2f4f7;margin-top:10px;";
-        card.appendChild(img);
+        if (p.media_type === "video" && p.video_url) {
+          var vwrap = document.createElement("div");
+          vwrap.style.cssText = "position:relative;padding-bottom:56.25%;height:0;margin-top:10px;border-radius:8px;overflow:hidden;background:#000;";
+          var ifr = document.createElement("iframe");
+          ifr.src = p.video_url;
+          ifr.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+          ifr.setAttribute("allowfullscreen", "true"); ifr.setAttribute("title", p.caption || "Video");
+          ifr.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;border:0;";
+          vwrap.appendChild(ifr); card.appendChild(vwrap);
+        } else {
+          var img = document.createElement("img");
+          img.src = p.thumb_url || p.image_url; img.alt = p.caption || "";
+          img.style.cssText = "width:100%;max-height:38vh;object-fit:contain;border-radius:8px;background:#f2f4f7;margin-top:10px;";
+          card.appendChild(img);
+        }
 
         var capWrap = document.createElement("div"); capWrap.style.cssText = "margin-top:10px;";
         capWrap.innerHTML = '<label style="font-size:.82rem;font-weight:600;color:#445;">Caption</label>';
@@ -472,6 +631,57 @@
         cap.style.cssText = "width:100%;box-sizing:border-box;padding:8px 10px;border:1.5px solid #d9e2ec;border-radius:7px;font-family:inherit;margin-top:4px;";
         cap.addEventListener("change", function () { patch(p.id, { caption: cap.value }); p.caption = cap.value; });
         capWrap.appendChild(cap); card.appendChild(capWrap);
+
+        // Album / category + year — reassign, or move to a brand-new category.
+        var metaRow = document.createElement("div"); metaRow.style.cssText = "display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;";
+        var catField = document.createElement("div"); catField.style.cssText = "display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px;";
+        catField.innerHTML = '<label style="font-size:.82rem;font-weight:600;color:#445;">Album / category</label>';
+        var catSel = document.createElement("select"); catSel.style.cssText = "padding:8px 10px;border:1.5px solid #d9e2ec;border-radius:7px;font-family:inherit;";
+        categories.forEach(function (c) { var o = document.createElement("option"); o.value = c.slug; o.textContent = catOptionLabel(c); catSel.appendChild(o); });
+        var newOpt = document.createElement("option"); newOpt.value = "__new__"; newOpt.textContent = "+ New category…"; catSel.appendChild(newOpt);
+        catSel.value = p.gallery;
+        catSel.addEventListener("change", function () {
+          if (catSel.value === "__new__") {
+            var name = prompt("Name of the new category / album:", "");
+            if (!name || !name.trim()) { catSel.value = p.gallery; return; }
+            fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "category-create", name: name.trim(), is_public: false }) })
+              .then(function (r) { return r.json(); })
+              .then(function (d) {
+                if (!d.ok) { alert(d.error || "Could not create the category."); catSel.value = p.gallery; return; }
+                loadCategories(function () {
+                  var o = document.createElement("option"); o.value = d.category.slug; o.textContent = catOptionLabel(d.category);
+                  catSel.insertBefore(o, newOpt); catSel.value = d.category.slug;
+                  patch(p.id, { gallery: d.category.slug }); p.gallery = d.category.slug;
+                });
+              }).catch(function () { alert("Could not reach the server."); catSel.value = p.gallery; });
+            return;
+          }
+          patch(p.id, { gallery: catSel.value }); p.gallery = catSel.value;
+        });
+        catField.appendChild(catSel); metaRow.appendChild(catField);
+        var yrField = document.createElement("div"); yrField.style.cssText = "display:flex;flex-direction:column;gap:4px;width:120px;";
+        yrField.innerHTML = '<label style="font-size:.82rem;font-weight:600;color:#445;">Year</label>';
+        var yrInp = document.createElement("input"); yrInp.type = "number"; yrInp.min = "1990"; yrInp.max = "2100"; yrInp.value = p.year;
+        yrInp.style.cssText = "padding:8px 10px;border:1.5px solid #d9e2ec;border-radius:7px;font-family:inherit;";
+        yrInp.addEventListener("change", function () { var y = parseInt(yrInp.value, 10); if (y >= 1990 && y <= 2100) { patch(p.id, { year: y }); p.year = y; } });
+        yrField.appendChild(yrInp); metaRow.appendChild(yrField);
+        card.appendChild(metaRow);
+
+        // Pending-review controls (only for items awaiting approval).
+        if (p.published === false) {
+          var rbar = document.createElement("div");
+          rbar.style.cssText = "display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding:12px;background:#fff7e6;border:1px solid #ffe0a3;border-radius:9px;";
+          rbar.innerHTML = '<span style="font-weight:600;color:#8a5a00;flex:1;min-width:180px;">Pending review — not visible on the site yet.</span>';
+          var apb = document.createElement("button"); apb.className = "btn-green"; apb.textContent = "Approve & publish";
+          apb.onclick = function () { patch(p.id, { published: true }); p.published = true; closeTagModal(); };
+          var rjb = document.createElement("button"); rjb.className = "btn-danger"; rjb.textContent = "Reject";
+          rjb.onclick = function () {
+            if (!confirm("Reject and permanently delete this item?")) return;
+            fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ action: "delete", id: p.id }) })
+              .then(function () { closeTagModal(); }).catch(function () { closeTagModal(); });
+          };
+          rbar.appendChild(apb); rbar.appendChild(rjb); card.appendChild(rbar);
+        }
 
         var tagsWrap = document.createElement("div"); tagsWrap.style.cssText = "margin-top:12px;"; card.appendChild(tagsWrap);
         function renderTags() {
@@ -491,9 +701,12 @@
         }
         renderTags();
 
-        var facesWrap = document.createElement("div"); facesWrap.style.cssText = "margin-top:16px;";
-        facesWrap.innerHTML = '<label style="font-size:.82rem;font-weight:600;color:#445;">Faces detected — name each once to tag that person everywhere on the site</label><div class="tm-status" style="font-size:.85rem;color:var(--sparc-royal-blue);margin:6px 0;"></div><div class="tm-faces" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;"></div>';
-        card.appendChild(facesWrap);
+        var facesWrap = null;
+        if (p.media_type !== "video") {
+          facesWrap = document.createElement("div"); facesWrap.style.cssText = "margin-top:16px;";
+          facesWrap.innerHTML = '<label style="font-size:.82rem;font-weight:600;color:#445;">Faces detected — name each once to tag that person everywhere on the site</label><div class="tm-status" style="font-size:.85rem;color:var(--sparc-royal-blue);margin:6px 0;"></div><div class="tm-faces" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;"></div>';
+          card.appendChild(facesWrap);
+        }
 
         var manual = document.createElement("div"); manual.style.cssText = "margin-top:14px;";
         manual.innerHTML = '<label style="font-size:.82rem;font-weight:600;color:#445;">Add someone whose face wasn\'t detected (this photo only)</label>';
@@ -511,7 +724,7 @@
         };
         mrow.appendChild(minp); mrow.appendChild(mbtn); manual.appendChild(mrow); card.appendChild(manual);
 
-        loadPhotoFaces(p, facesWrap.querySelector(".tm-faces"), facesWrap.querySelector(".tm-status"), renderTags);
+        if (facesWrap) loadPhotoFaces(p, facesWrap.querySelector(".tm-faces"), facesWrap.querySelector(".tm-status"), renderTags);
       }
       function loadPhotoFaces(p, container, statusEl, renderTags) {
         container.innerHTML = ""; statusEl.textContent = "Loading faces…";
@@ -828,10 +1041,10 @@
       // ---- boot ----
       if (TOKEN) {
         fetch(ENDPOINT, { method: "POST", headers: headers({ "Content-Type": "application/json" }),
-          body: JSON.stringify({ action: "list-admin", gallery: gallery() }) })
+          body: JSON.stringify({ action: "categories" }) })
           .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (res) {
-            if (res.ok) { showApp(); photos = res.d.photos || []; renderManage(); loadUnnamed(); }
+            if (res.ok) { categories = res.d.categories || []; fillCategorySelects(); showApp(); refreshManage(); loadReview(); loadUnnamed(); }
           }).catch(function () {});
       }
     })();
