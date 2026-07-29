@@ -19,20 +19,50 @@ and a header "scroll" of featured photos kept in chronological order.
 | --- | --- |
 | `/photogallery/` | Landing page with the three album cards (live cover images) |
 | `/photogallery/gala/` · `/summit/` · `/life/` | Public gallery for one album |
-| `/photogallery/admin/` | Admin-passphrase upload / tagging / management tool (`noindex`) |
+| `/photogallery/admin/` | Admin-passphrase tabbed workspace: upload, library, people & faces, review (`noindex`) |
+| `/photogallery/upload/` | Photographer-passphrase drop-off; submissions land unpublished for review (`noindex`) |
 
-Client code: `js/photo-gallery.js` (public), `css/photo-gallery.css`, and the
-inline script in `photogallery/admin/index.html`.
+Client code:
+
+| Path | Role |
+| --- | --- |
+| `js/photo-gallery.js` · `css/photo-gallery.css` | The **public** gallery engine. Not used by the admin. |
+| `css/photo-gallery-admin.css` | Shared by both admin pages. |
+| `js/photogallery/api.js` | `api(action, payload)` wrapper, `PGError`, token session, signed PUT. |
+| `js/photogallery/ui.js` | Dialogs (focus-trapped), toasts, live region, empty states, concurrency pool. |
+| `js/photogallery/imaging.js` | Canvas resize, thumbnails, EXIF capture date, face crops from fractional boxes. |
+| `js/photogallery/uploader.js` | The signed direct-to-storage pipeline, shared by both pages. |
+| `js/photogallery/faces.js` | face-api.js loading, detection, pixel→fraction box conversion. |
+| `js/photogallery/admin.js` | Shell: sign-in, hash router, context bar, Dashboard, Settings. |
+| `js/photogallery/admin-upload.js` · `admin-library.js` · `admin-people.js` | The tab views, imported lazily on first visit. |
+
+Views are lazy-loaded, so face-api.js (~1 MB of script plus ~6 MB of model
+weights) is fetched only when someone opens **People & Faces** — not on every
+admin page load, as the previous single-file page did.
 
 ## Auth
 
-There is **one role**. Every write is a `POST` with an `x-admin-token` header;
-the value is hashed (SHA-256) and compared, in constant time, against
-`photo_gallery_config.admin_token_sha256`. Anything else gets a `401` — after a
-~300 ms delay to blunt brute-forcing. There is deliberately **no lockout**: a
-single shared passphrase with a lockout would be a self-inflicted denial of
-service. Postgres error text is never returned to the client (it leaks schema);
-errors are logged server-side and a generic message is returned.
+Every write is a `POST` with an `x-admin-token` header. The value is hashed
+(SHA-256) and compared, in constant time, against the stored hashes; the match
+resolves to a **role**:
+
+| Role | Passphrase column | May call | Notes |
+| --- | --- | --- | --- |
+| `admin` | `admin_token_sha256` | everything | The `/photogallery/admin/` tool. |
+| `photographer` | `photographer_token_sha256` | `categories`, `upload-urls`, `upload-commit` only | The `/photogallery/upload/` page. Its commits are **forced `published: false`**, so submissions land in the admin review queue. It cannot read the library, edit, or delete. |
+
+An unrecognised or missing token gets a `401` after a ~300 ms delay to blunt
+brute-forcing. A **valid photographer token calling an admin action gets `403`**,
+not `401` — the passphrase was fine, the action just isn't permitted, and a 401
+would send the upload page into a re-authentication loop it can't win. Both hash
+comparisons always run so response time doesn't reveal which passphrase was
+closer. If `photographer_token_sha256` is `NULL`, photographer uploads are
+simply denied.
+
+There is deliberately **no lockout**: a shared passphrase with a lockout would
+be a self-inflicted denial of service. Postgres error text is never returned to
+the client (it leaks schema); errors are logged server-side and a generic
+message is returned.
 
 ## Public read (GET — only the Supabase gateway apikey)
 
@@ -61,7 +91,13 @@ against signed URLs.
 | Payload | Behavior |
 | --- | --- |
 | `{ action:"upload-urls", gallery, year, files:[{name, content_type}] }` | Returns `{ ok, uploads:[{ index, main:{path,token,signedUrl}, thumb:{path,token,signedUrl} }] }`. Main object at `<gallery>/<year>/<uuid>.<ext>`, thumb at `<gallery>/<year>/thumbs/<uuid>.jpg`. ≤50 files per call. |
-| `{ action:"upload-commit", gallery, year, items:[{storage_path, thumb_path, caption?, alt_text?, taken_at?, width?, height?, is_featured?, source?}] }` | Inserts rows for objects that were actually PUT. **Each `storage_path` is verified to exist in the bucket first**, so a failed browser PUT can't create an orphan row. Resolves `image_url`/`thumb_url` via `getPublicUrl`, sets `needs_alt` when neither alt nor caption is present. Does **not** accept a `people` field. Returns `{ ok, inserted, ids, skipped }`. |
+| `{ action:"upload-commit", gallery, year, submission?, published?, items:[{storage_path, thumb_path, caption?, alt_text?, taken_at?, width?, height?, is_featured?, source?}] }` | Inserts rows for objects that were actually PUT. **Each `storage_path` is verified to exist in the bucket first**, so a failed browser PUT can't create an orphan row. Resolves `image_url`/`thumb_url` via `getPublicUrl`, sets `needs_alt` when neither alt nor caption is present. `published` defaults to `true` for an admin (pass `false` to stage a batch) and is **forced to `false`** for a photographer token. `submission` (≤200 chars) is the batch label that groups the review queue. Does **not** accept a `people` field. Returns `{ ok, inserted, ids, skipped }`. |
+
+There is **no idempotency key** on `upload-commit`. If the response is lost in
+flight, retrying can double-insert — so a client must not auto-retry a commit
+whose outcome is unknown. Retrying after a *confirmed* failure is safe, and
+re-committing the same paths is safe, because commit is path-based rather than
+session-based.
 
 ### Import (re-host external images)
 
@@ -86,11 +122,19 @@ function would be an open fetch proxy.
 | Payload | Behavior |
 | --- | --- |
 | `{ action:"list-admin", gallery?, year?, filter?, limit?, offset? }` | Paginated management grid. `limit` default 100 / max 500, `offset` default 0. `filter` ∈ `needs_alt` / `unscanned` (`face_scanned=false`) / `untagged` (no `gallery_photo_people` rows) / `unpublished`. Returns `{ ok, photos, total }` (`total` is an exact head count for paging). |
+
+Rows from `list-admin` carry both `alt_text` and **`alt_text_raw`**. `alt_text`
+is coalesced to the caption (right for the public site — better a caption than
+nothing), which would make a photo with only a caption look like it already has
+an image description. `alt_text_raw` is the column as stored, so an editor can
+tell the two apart and prompt for a real description. `needs_alt` is true only
+when **neither** an alt nor a caption is present.
 | `{ action:"update", id, patch }` | Edits one row: `caption, alt_text, year, gallery, is_featured, featured_order, sort_order, taken_at, published, submission`. Recomputes `needs_alt` when caption/alt change. |
 | `{ action:"bulk-update", ids, patch }` | Same fields across ≤1000 rows; recomputes `needs_alt` for the batch. Approving a review batch is `patch:{published:true}`. |
 | `{ action:"delete", id }` | Deletes the row **and both** its storage objects (`storage_path` + `thumb_path`). |
 | `{ action:"video-add", gallery, year, video_url, caption?, alt_text?, taken_at?, is_featured?, submission? }` | Adds an embedded YouTube/Vimeo video (`media_type='video'`, embed URL in `video_url`, thumbnail in `image_url`). |
 | `{ action:"categories" }` / `{ action:"category-create", name, slug?, is_public? }` | List / create categories. New categories default to `is_public:false` (not served publicly). |
+| `{ action:"category-update", slug, patch:{ name?, is_public?, sort_order? } }` | Rename an album or change whether the public site serves it. The **slug is not editable** — it's part of the public URL and of every storage path already written for that album. |
 
 **`people[]` is never written by an `update`/`bulk-update` patch.** It is a
 denormalised **cache**, maintained by a trigger from `gallery_photo_people`
@@ -142,20 +186,28 @@ confirmed (or the photo is tagged manually).
 | `{ action:"photo-tag", photo_id, person_id }` | Manually links a person to a photo (no face), `via='manual'`. |
 | `{ action:"photo-untag", photo_id, person_id }` | Removes a manual link. Returns `409` if a confirmed face for that person is still on the photo (unconfirm the face instead — otherwise the trigger would just re-add the tag). |
 
-## Setting the admin passphrase (one-time)
+## Setting the passphrases
 
-The passphrase is stored only as a SHA-256 hash. To set or rotate it:
+Both are stored only as SHA-256 hashes. To set or rotate either:
 
 ```sql
 -- compute the hash of your chosen passphrase, e.g.:
 --   printf '%s' 'YOUR-PASSPHRASE' | sha256sum
+
+-- admin (full access, /photogallery/admin/)
 update public.photo_gallery_config
 set admin_token_sha256 = '<64-char-hex>', updated_at = now()
 where id = true;
+
+-- photographer (upload only, /photogallery/upload/)
+update public.photo_gallery_config
+set photographer_token_sha256 = '<64-char-hex>', updated_at = now()
+where id = true;
 ```
 
-Then sign in at `/photogallery/admin/` with the plaintext passphrase. Until a
-hash is set, all writes are denied.
+Then sign in at the matching page with the plaintext passphrase. Until a hash is
+set, that role is denied. To revoke photographer access, set its column back to
+`null`. Schema: `migrations/20260730_photographer_upload_token.sql`.
 
 ## Importing from other sources
 

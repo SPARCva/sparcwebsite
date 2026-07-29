@@ -148,7 +148,12 @@ export function hasToken() {
 export async function putSigned(signedUrl, blob, contentType) {
   const res = await fetch(signedUrl, {
     method: "PUT",
-    headers: { "Content-Type": contentType || blob.type || "application/octet-stream" },
+    headers: {
+      "Content-Type": contentType || blob.type || "application/octet-stream",
+      // A retry may re-PUT a path whose first attempt partly landed; without
+      // upsert the storage API answers 409 and the retry can never succeed.
+      "x-upsert": "true",
+    },
     body: blob,
   });
   if (!res.ok) {

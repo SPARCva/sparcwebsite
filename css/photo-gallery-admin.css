@@ -96,11 +96,13 @@ body.pga {
     scrollbar-width: thin;
 }
 
+/* Anchors, so deep-linking and middle-click work — styled as tabs. */
 .pga-tab {
     appearance: none;
     background: transparent;
     border: none;
     border-bottom: 4px solid transparent;
+    text-decoration: none;
     color: rgba(255, 255, 255, 0.82);
     font-family: var(--font-heading);
     font-size: 0.9rem;
