@@ -411,6 +411,83 @@ const hUploadCommit: Handler = async ({ sb, payload, slugs, role }) => {
   return json({ ok: true, inserted: (data ?? []).length, ids: (data ?? []).map((r) => r.id), skipped });
 };
 
+// ---- thumbnail backfill (for imports, which arrive with thumb_path null) ---
+//
+// `import` re-hosts external images but cannot render a thumbnail server-side
+// (there is no image library in this runtime), so those rows served their
+// full-size image into every grid. These two actions let the browser do the
+// rendering: ask for signed URLs, PUT the 400px JPEGs, then commit.
+//
+// The thumb path is derived from the main object's path so it lands beside
+// every other thumbnail: <gallery>/<year>/thumbs/<uuid>.jpg.
+function thumbPathFor(storagePath: string): string | null {
+  const lastSlash = storagePath.lastIndexOf("/");
+  if (lastSlash < 0) return null;
+  const dir = storagePath.slice(0, lastSlash);
+  const file = storagePath.slice(lastSlash + 1);
+  const dot = file.lastIndexOf(".");
+  const stem = dot > 0 ? file.slice(0, dot) : file;
+  if (!stem) return null;
+  return `${dir}/thumbs/${stem}.jpg`;
+}
+
+const hThumbUrls: Handler = async ({ sb, payload }) => {
+  const ids = Array.isArray(payload.ids) ? payload.ids.map((v) => str(v)).filter(nonEmpty) : [];
+  if (!ids.length) return json({ error: "No photo ids." }, 400);
+  if (ids.length > 50) return json({ error: "Request at most 50 thumbnail URLs at a time." }, 400);
+
+  const { data: rows, error } = await sb.from("gallery_photos")
+    .select("id, storage_path, image_url, thumb_path").in("id", ids);
+  if (error) { console.error("thumb-urls:", error.message); return json({ error: "Could not load those photos." }, 500); }
+
+  const uploads: unknown[] = [];
+  const skipped: { id: string; reason: string }[] = [];
+  for (const row of rows ?? []) {
+    const id = row.id as string;
+    if (row.thumb_path) { skipped.push({ id, reason: "already has a thumbnail" }); continue; }
+    const storagePath = str(row.storage_path);
+    // Imports are always re-hosted, so a row without a storage_path is a video
+    // or a legacy row we cannot generate a thumbnail for.
+    if (!storagePath) { skipped.push({ id, reason: "not stored in our bucket" }); continue; }
+    const thumbPath = thumbPathFor(storagePath);
+    if (!thumbPath) { skipped.push({ id, reason: "could not derive a thumbnail path" }); continue; }
+
+    const signed = await sb.storage.from(BUCKET).createSignedUploadUrl(thumbPath);
+    if (signed.error) { skipped.push({ id, reason: "could not create an upload URL" }); continue; }
+    uploads.push({
+      id,
+      image_url: row.image_url,
+      thumb: { path: signed.data.path, token: signed.data.token, signedUrl: signed.data.signedUrl },
+    });
+  }
+  return json({ ok: true, uploads, skipped });
+};
+
+const hThumbCommit: Handler = async ({ sb, payload }) => {
+  const items = Array.isArray(payload.items) ? payload.items as Record<string, unknown>[] : [];
+  if (!items.length) return json({ error: "No thumbnails to commit." }, 400);
+  if (items.length > 50) return json({ error: "Commit at most 50 thumbnails at a time." }, 400);
+
+  let updated = 0;
+  const skipped: { id: string; reason: string }[] = [];
+  for (const item of items) {
+    const id = str(item.id);
+    const thumbPath = trimmed(item.thumb_path);
+    if (!id || !thumbPath) { skipped.push({ id, reason: "missing id or thumb_path" }); continue; }
+    // Same orphan guard as upload-commit: never record a path that isn't there.
+    if (!(await objectExists(sb, thumbPath))) { skipped.push({ id, reason: "object not found in storage" }); continue; }
+
+    const { data: pub } = sb.storage.from(BUCKET).getPublicUrl(thumbPath);
+    const { data: ok, error } = await sb.rpc("gallery_set_thumb", {
+      p_photo_id: id, p_thumb_path: thumbPath, p_thumb_url: pub.publicUrl,
+    });
+    if (error) { console.error("thumb-commit:", error.message); skipped.push({ id, reason: "could not record the thumbnail" }); continue; }
+    if (ok === true) updated++;
+    else skipped.push({ id, reason: "already had a thumbnail" });
+  }
+  return json({ ok: true, updated, skipped });
+};
+
 // ---- import (re-host external images) -------------------------------------
 const hImport: Handler = async ({ sb, payload, slugs }) => {
   const gallery = trimmed(payload.gallery);
@@ -445,8 +522,10 @@ const hImport: Handler = async ({ sb, payload, slugs }) => {
       const bytes = new Uint8Array(await resp.arrayBuffer());
       if (bytes.length > 25 * 1024 * 1024) throw new Error("too large");
       const stored = await storeBytes(sb, gallery, year, bytes, ct, extFromType(ct, imageUrl));
-      // thumb_path is left null for imports; a later backfill renders 400px
-      // thumbnails for imported rows (uploads carry their own browser-made thumb).
+      // thumb_path is left null: there is no image library in this runtime, so
+      // the thumbnail is rendered later by the browser via thumb-urls /
+      // thumb-commit ("Generate missing thumbnails" in the admin's Settings).
+      // Uploads carry their own browser-made thumb and skip that step.
       const { data, error } = await sb.from("gallery_photos").insert({
         gallery, year, storage_path: stored.path, thumb_path: null, image_url: stored.url,
         caption, alt_text: alt, needs_alt: !(nonEmpty(alt) || nonEmpty(caption)),
@@ -513,6 +592,10 @@ const hListAdmin: Handler = async ({ sb, payload, slugs }) => {
     else if (filter === "unscanned") q = q.eq("face_scanned", false);
     else if (filter === "unpublished") q = q.eq("published", false);
     else if (filter === "untagged" && taggedIds.length) q = q.not("id", "in", "(" + taggedIds.join(",") + ")");
+    // Imports arrive with thumb_path null and serve their full-size image into
+    // grids until the browser backfills a thumbnail. Videos are excluded —
+    // their image_url is a provider poster, not something we can thumbnail.
+    else if (filter === "no_thumb") q = q.is("thumb_path", null).eq("media_type", "photo");
     return q;
   };
 
@@ -861,6 +944,27 @@ const hFaceReject: Handler = async ({ sb, payload }) => {
   return json({ ok: true });
 };
 
+// Undo a rejection. Without this, Reject was the only irreversible action in
+// the triage flow: gallery_match_face permanently excludes any (face, person)
+// pair in gallery_face_rejections, so one mis-tap stopped that person from ever
+// being suggested for that face again.
+const hFaceUnreject: Handler = async ({ sb, payload }) => {
+  const faceId = str(payload.face_id), personId = str(payload.person_id);
+  if (!faceId || !personId) return json({ error: "face_id and person_id are required." }, 400);
+  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : 0.55;
+  const { data, error } = await sb.rpc("gallery_unreject_face", {
+    p_face_id: faceId, p_person_id: personId, p_max_distance: maxD,
+  });
+  if (error) { console.error("face-unreject:", error.message); return json({ error: "Could not undo the rejection." }, 500); }
+  // The RPC returns the restored suggestion, or no rows if nothing matches now
+  // — the caller should say which, rather than implying the guess came back.
+  const row = Array.isArray(data) ? data[0] : null;
+  return json({
+    ok: true,
+    suggestion: row ? { id: row.person_id, name: row.display_name, distance: row.distance } : null,
+  });
+};
+
 const hFaceUnconfirm: Handler = async ({ sb, payload }) => {
   const faceId = str(payload.face_id);
   if (!faceId) return json({ error: "Missing face_id" }, 400);
@@ -985,6 +1089,8 @@ const HANDLERS: Record<string, Handler> = {
   "category-update": hCategoryUpdate,
   "upload-urls": hUploadUrls,
   "upload-commit": hUploadCommit,
+  "thumb-urls": hThumbUrls,
+  "thumb-commit": hThumbCommit,
   "import": hImport,
   "video-add": hVideoAdd,
   "list-admin": hListAdmin,
@@ -1001,6 +1107,7 @@ const HANDLERS: Record<string, Handler> = {
   "face-add-manual": hFaceAddManual,
   "face-confirm": hFaceConfirm,
   "face-reject": hFaceReject,
+  "face-unreject": hFaceUnreject,
   "face-unconfirm": hFaceUnconfirm,
   "face-delete": hFaceDelete,
   "faces-review": hFacesReview,

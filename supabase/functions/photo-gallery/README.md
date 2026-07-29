@@ -7,11 +7,52 @@ and a header "scroll" of featured photos kept in chronological order.
 - **Project:** `ldxpockcgcxvsrbyhcnt` (SPARC Website And Accessibility Project)
 - **Endpoint:** `https://ldxpockcgcxvsrbyhcnt.supabase.co/functions/v1/photo-gallery`
 - **Storage bucket:** `gallery` (public read; writes only via this function)
-- **Schema:** `migrations/20260729_gallery_people_and_faces_v2.sql` (people
-  roster + face recognition v2) and `migrations/20260729_gallery_resuggest_and_search.sql`
-  (the `gallery_list_photos` search helper and `gallery_resuggest_for_person`).
+- **Schema**, in order:
+  - `migrations/20260729_gallery_people_and_faces_v2.sql` — people roster +
+    face recognition v2
+  - `migrations/20260729_gallery_resuggest_and_search.sql` — the
+    `gallery_list_photos` search helper and `gallery_resuggest_for_person`
+  - `migrations/20260730_photographer_upload_token.sql` — the upload-only
+    photographer passphrase column
+  - `migrations/20260730_unreject_and_thumb_backfill.sql` —
+    `gallery_unreject_face` and `gallery_set_thumb`
+
   All gallery tables are RLS-locked with no policies → service-role only, and
-  the `gallery_*` RPCs are granted to `service_role` only.
+  the `gallery_*` RPCs are granted to `service_role` only. Each new function
+  revokes `public`/`anon`/`authenticated` for itself: the v2 migration's
+  blanket lockdown only covered functions that existed when it ran, and a
+  `SECURITY DEFINER` function is otherwise auto-exposed as an RPC.
+
+## Deploying
+
+The repo only mirrors the function source — nothing here deploys itself, and
+Netlify only publishes the static site. After changing `index.ts` or adding a
+migration, both have to be applied by hand:
+
+```sh
+# 1. Apply any new migrations (in filename order).
+#    Via the Supabase SQL editor, or with the CLI:
+supabase link --project-ref ldxpockcgcxvsrbyhcnt
+supabase db push
+
+# 2. Deploy the function.
+supabase functions deploy photo-gallery --project-ref ldxpockcgcxvsrbyhcnt
+```
+
+Migrations first, always: the function calls RPCs the migrations create, so a
+function deployed against an older schema fails at runtime.
+
+To confirm which version is live without a passphrase, search for a term that
+matches nothing:
+
+```sh
+curl -s "https://ldxpockcgcxvsrbyhcnt.supabase.co/functions/v1/photo-gallery?action=list&gallery=gala&q=zzzznomatch" \
+  -H "apikey: $ANON" -H "Authorization: Bearer $ANON"
+```
+
+`photos: []` with `featured` still populated means v2 or later (search is pushed
+into SQL and only filters `photos`). If `featured` is also empty, the old v1
+function is still deployed.
 
 ## Pages
 
@@ -33,12 +74,19 @@ Client code:
 | `js/photogallery/imaging.js` | Canvas resize, thumbnails, EXIF capture date, face crops from fractional boxes. |
 | `js/photogallery/uploader.js` | The signed direct-to-storage pipeline, shared by both pages. |
 | `js/photogallery/faces.js` | face-api.js loading, detection, pixel→fraction box conversion. |
+| `js/photogallery/faceapi/` | **Vendored** face-api.js bundle + the three model nets (~8 MB). See the README there. Served from our own origin so face tagging still works at an event on bad wifi, and so no third-party request is made while handling constituents' photos. |
 | `js/photogallery/admin.js` | Shell: sign-in, hash router, context bar, Dashboard, Settings. |
 | `js/photogallery/admin-upload.js` · `admin-library.js` · `admin-people.js` | The tab views, imported lazily on first visit. |
 
-Views are lazy-loaded, so face-api.js (~1 MB of script plus ~6 MB of model
+Views are lazy-loaded, so face-api.js (~1 MB of script plus ~7 MB of model
 weights) is fetched only when someone opens **People & Faces** — not on every
 admin page load, as the previous single-file page did.
+
+The one third-party script that remains is `accounts.google.com/gsi/client`,
+for the Google Photos picker. It **cannot** be vendored: Google requires it to
+be served from their origin, and self-hosting a copy is unsupported and breaks
+sign-in. It is loaded lazily, only when "Add from Google Photos" is clicked, so
+a Google outage affects that one button and nothing else.
 
 ## Auth
 
@@ -109,14 +157,23 @@ Downloads each image and **re-hosts it in the bucket** (so expiring share URLs
 never break), then inserts rows. De-dupes on `(source, external_id)`. ≤200 per
 call, ≤25 MB per image. Sets `needs_alt` unless a caption or alt was supplied.
 
-**Imports get no thumbnail, and this cannot be fixed from the browser.**
-`thumb_path` is left `null`, and there is no way to attach one afterwards:
-`upload-urls` only mints fresh UUID paths, and `buildPatch` does not accept
-`thumb_path`. The consequence is cosmetic rather than broken — `publicRow`
-falls back to `thumb_url ?? image_url`, so imported photos serve their
-full-size image into grids, which is slower to load. Closing the gap needs a
-server-side action (a signed URL for an existing `thumb_path`, or a
-`thumb_path` field on `update`); it is deliberately not attempted client-side.
+**Imports arrive with `thumb_path` null**, because there is no image library in
+the edge runtime. Until a thumbnail exists, `publicRow` falls back to
+`thumb_url ?? image_url`, so those photos serve their full-size image into
+grids — correct but slow. The two actions below let the browser fill them in.
+
+### Thumbnail backfill
+
+| Payload | Behavior |
+| --- | --- |
+| `{ action:"thumb-urls", ids:[…] }` | For each photo whose `thumb_path` is null, returns `{ id, image_url, thumb:{path,token,signedUrl} }`. The thumb path is derived from the main object (`<gallery>/<year>/thumbs/<uuid>.jpg`) so it lands beside every other thumbnail. ≤50 per call. Rows that already have a thumbnail, or have no `storage_path`, come back in `skipped`. |
+| `{ action:"thumb-commit", items:[{id, thumb_path}] }` | Verifies each object really exists in the bucket, then records it via `gallery_set_thumb`. ≤50 per call. Returns `{ ok, updated, skipped }`. |
+
+`gallery_set_thumb` only ever fills a **null** `thumb_path`, so this can never
+repoint an existing thumbnail at another object. `list-admin` accepts
+`filter:"no_thumb"` to find the work (photos only — a video's `image_url` is a
+provider poster). Driven from the admin's **Settings → Thumbnails**; safe to
+re-run, since it only fills in what's absent.
 
 **SSRF allowlist:** `import` only fetches `https:` URLs whose host is (a suffix
 of) `googleusercontent.com`, `googleapis.com`, `photoslibrary.googleapis.com`,
@@ -128,7 +185,7 @@ function would be an open fetch proxy.
 
 | Payload | Behavior |
 | --- | --- |
-| `{ action:"list-admin", gallery?, year?, filter?, limit?, offset? }` | Paginated management grid. `limit` default 100 / max 500, `offset` default 0. `filter` ∈ `needs_alt` / `unscanned` (`face_scanned=false`) / `untagged` (no `gallery_photo_people` rows) / `unpublished`. Returns `{ ok, photos, total }` (`total` is an exact head count for paging). |
+| `{ action:"list-admin", gallery?, year?, filter?, limit?, offset? }` | Paginated management grid. `limit` default 100 / max 500, `offset` default 0. `filter` ∈ `needs_alt` / `unscanned` (`face_scanned=false`) / `untagged` (no `gallery_photo_people` rows) / `unpublished` / `no_thumb` (`thumb_path` null, photos only). Returns `{ ok, photos, total }` (`total` is an exact head count for paging). |
 
 Rows from `list-admin` carry both `alt_text` and **`alt_text_raw`**. `alt_text`
 is coalesced to the caption (right for the public site — better a caption than
@@ -167,7 +224,8 @@ exemplar under a distance threshold) that a human then **confirms** or
   improves with use, and links the photo to the person (via
   `gallery_photo_people`, which refreshes `people[]`).
 - **Reject** is remembered per `(face, person)`, so a wrong guess is never
-  suggested again — even after a re-suggest sweep.
+  suggested again — even after a re-suggest sweep. **`face-unreject` undoes
+  it**, which is what makes Reject safe to offer as a fast keystroke.
 
 Nothing is auto-applied; `people[]` on a photo stays empty until a face on it is
 confirmed (or the photo is tagged manually).
@@ -184,6 +242,7 @@ confirmed (or the photo is tagged manually).
 | `{ action:"face-add-manual", photo_id, box, embedding, person_id? }` | Hand-drawn face the detector missed (`origin='manual'`). With `person_id`, confirms it immediately so it becomes an exemplar. |
 | `{ action:"face-confirm", face_id, person_id? \| new_person_name? }` | Confirms a face. With `new_person_name`, creates (or reuses on case-insensitive name match) the person first. Returns the `person_id`. |
 | `{ action:"face-reject", face_id, person_id }` | Records the rejection and clears the suggestion. |
+| `{ action:"face-unreject", face_id, person_id, max_distance? }` | Undoes a rejection: drops the `(face, person)` row and recomputes that face's suggestion. Returns `{ ok, suggestion }`, where `suggestion` is `null` if that person is no longer the closest match — so the UI can say "undone, but no longer a match" rather than implying the guess returned. Only re-suggests for a face nobody has named. |
 | `{ action:"face-unconfirm", face_id }` | Detaches a confirmed face; drops the photo link if it was the only reason for it. |
 | `{ action:"face-delete", face_id }` | Hard-deletes a spurious detection (poster, reflection). |
 | `{ action:"faces-review", limit?, offset?, min_distance?, max_distance? }` | The confirm/reject queue: unnamed faces **with** a suggestion, most-confident first. |

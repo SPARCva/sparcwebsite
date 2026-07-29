@@ -504,9 +504,24 @@ function buildFacesPanel(photo, onPeopleChange) {
           el("button.pga-btn.pga-btn-outline.pga-btn-sm", {
             type: "button",
             onclick: async () => {
+              const suggested = face.suggestion;
               try {
-                await api("face-reject", { face_id: face.id, person_id: face.suggestion.id });
-                toast("Rejected — won't be suggested again.");
+                await api("face-reject", { face_id: face.id, person_id: suggested.id });
+                toast(`Rejected — ${suggested.name} won't be suggested for this face again.`, {
+                  duration: 6000,
+                  action: {
+                    label: "Undo",
+                    run: async () => {
+                      try {
+                        const res = await api("face-unreject", { face_id: face.id, person_id: suggested.id });
+                        toast(res.suggestion
+                          ? `Undone — ${res.suggestion.name} is suggested again.`
+                          : "Undone. That guess no longer matches closely enough to be re-suggested.");
+                        await load();
+                      } catch (err) { toastError(err); }
+                    },
+                  },
+                });
                 await load();
               } catch (err) { toastError(err); }
             },

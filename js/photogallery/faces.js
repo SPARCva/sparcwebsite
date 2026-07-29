@@ -31,8 +31,13 @@ import { renderToCanvas, decode, loadImage } from "./imaging.js";
 /** Long edge we detect against. Fixed cost per photo regardless of source. */
 export const DETECT_EDGE = 1000;
 
-const FACE_API_SRC = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js";
-const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model";
+// Vendored rather than loaded from jsDelivr. This tool gets used at events on
+// unreliable wifi, and a CDN outage or a blocked third-party request would take
+// face tagging down entirely. Serving from our own origin also means no
+// third-party request is made at all while handling constituents' photos.
+// Sources: @vladmandic/face-api dist + model. See the README in that folder.
+const FACE_API_SRC = "/js/photogallery/faceapi/face-api.min.js";
+const MODEL_URL = "/js/photogallery/faceapi/model";
 
 let scriptPromise = null;
 let modelsPromise = null;
