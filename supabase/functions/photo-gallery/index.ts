@@ -8,7 +8,16 @@
 // migrations/20260729_gallery_people_and_faces_v2.sql plus the helpers in
 // migrations/20260729_gallery_resuggest_and_search.sql. Key differences from v1:
 //
-//   * There is no photographer role. Auth is a boolean: valid admin token or 401.
+//   * Two roles, both shared passphrases hashed with SHA-256:
+//       - admin        (photo_gallery_config.admin_token_sha256) — everything.
+//       - photographer (photo_gallery_config.photographer_token_sha256) —
+//         upload only: `categories`, `upload-urls`, `upload-commit`. Its
+//         commits are FORCED unpublished so a submission lands in the admin
+//         review queue and can never appear on the public site unreviewed.
+//         It cannot read, edit or delete anything. This exists so the
+//         /photogallery/upload/ link can be handed to a photographer without
+//         handing over the ability to delete the gallery.
+//       Anything else, or no token, is 401.
 //   * gallery_photos.people[] is a TRIGGER-MAINTAINED CACHE derived from
 //     gallery_photo_people. The function NEVER writes it directly. To tag a
 //     photo, insert into gallery_photo_people; the trigger rebuilds people[].
@@ -192,9 +201,16 @@ function publicRow(r: Record<string, unknown>) {
 }
 
 // Admin grid row — the management UI needs the operational columns too.
+//
+// publicRow coalesces alt_text to the caption, which is right for the public
+// site (better a caption than nothing) but misleading in an editor: it makes a
+// photo with only a caption look like it already has an image description.
+// alt_text_raw is the column as stored, so the admin UI can tell the two apart
+// and prompt for a real description.
 function adminRow(r: Record<string, unknown>) {
   return {
     ...publicRow(r),
+    alt_text_raw: (r.alt_text as string) ?? "",
     published: r.published, source: r.source,
     storage_path: r.storage_path, thumb_path: r.thumb_path,
     submission: r.submission, video_provider: r.video_provider,
@@ -250,8 +266,14 @@ async function handleGet(sb: Supa, url: URL): Promise<Response> {
 // ---------------------------------------------------------------------------
 // Admin handler context + action map
 // ---------------------------------------------------------------------------
-type Ctx = { sb: Supa; payload: Record<string, unknown>; cats: Category[]; slugs: Set<string> };
+type Role = "admin" | "photographer";
+type Ctx = { sb: Supa; payload: Record<string, unknown>; cats: Category[]; slugs: Set<string>; role: Role };
 type Handler = (c: Ctx) => Promise<Response>;
+
+// The only actions the upload-only photographer token may call. Everything
+// else — including every read of the library — is admin-only, so the token can
+// be shared with a photographer without exposing the gallery's contents.
+const PHOTOGRAPHER_ACTIONS = new Set(["categories", "upload-urls", "upload-commit"]);
 
 const str = (v: unknown, max = 0): string => { const s = String(v ?? ""); return max ? s.slice(0, max) : s; };
 const trimmed = (v: unknown, max = 0): string => str(v, max).trim();
@@ -269,6 +291,34 @@ const hCategoryCreate: Handler = async ({ sb, payload, cats, slugs }) => {
   const { data, error } = await sb.from("gallery_categories")
     .insert({ slug, name, is_public: payload.is_public === true, sort_order: sort }).select("*").single();
   if (error) { console.error("category-create:", error.message); return json({ error: "Could not create the category." }, 500); }
+  return json({ ok: true, category: data });
+};
+
+// Rename an album or change whether the public site serves it. Without this,
+// `category-create` (which always starts private) is a dead end: an album made
+// in the admin UI could only be published by hand-editing the table.
+const hCategoryUpdate: Handler = async ({ sb, payload, slugs }) => {
+  const slug = trimmed(payload.slug);
+  if (!slugs.has(slug)) return json({ error: "Unknown gallery" }, 400);
+  const patch = (payload.patch ?? {}) as Record<string, unknown>;
+  const clean: Record<string, unknown> = {};
+  if ("name" in patch) {
+    const name = trimmed(patch.name, 80);
+    if (!name) return json({ error: "Category name cannot be empty." }, 400);
+    clean.name = name;
+  }
+  if ("is_public" in patch) clean.is_public = patch.is_public === true;
+  if ("sort_order" in patch) {
+    const n = parseInt(str(patch.sort_order), 10);
+    if (!Number.isNaN(n)) clean.sort_order = n;
+  }
+  // The slug is part of the public URL and of every storage path already
+  // written for this album, so it is deliberately not editable.
+  if (!Object.keys(clean).length) return json({ error: "Nothing to update." }, 400);
+
+  const { data, error } = await sb.from("gallery_categories")
+    .update(clean).eq("slug", slug).select("*").single();
+  if (error) { console.error("category-update:", error.message); return json({ error: "Could not update the album." }, 500); }
   return json({ ok: true, category: data });
 };
 
@@ -306,7 +356,7 @@ const hUploadUrls: Handler = async ({ sb, payload, slugs }) => {
   return json({ ok: true, uploads });
 };
 
-const hUploadCommit: Handler = async ({ sb, payload, slugs }) => {
+const hUploadCommit: Handler = async ({ sb, payload, slugs, role }) => {
   const gallery = trimmed(payload.gallery);
   const year = parseInt(str(payload.year), 10);
   if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
@@ -314,6 +364,13 @@ const hUploadCommit: Handler = async ({ sb, payload, slugs }) => {
   const items = Array.isArray(payload.items) ? payload.items as Record<string, unknown>[] : [];
   if (!items.length) return json({ error: "No items to commit." }, 400);
   if (items.length > 50) return json({ error: "Commit at most 50 photos at a time." }, 400);
+
+  // A photographer's upload always lands unpublished, whatever it asks for —
+  // the review queue is the point of that role. An admin may publish straight
+  // away (the default) or stage a batch with published:false.
+  const published = role === "photographer" ? false : payload.published !== false;
+  // Batch label used to group the admin review queue.
+  const submission = payload.submission ? str(payload.submission, 200) : null;
 
   const rows: Record<string, unknown>[] = [];
   const skipped: { index: number; reason: string }[] = [];
@@ -343,7 +400,8 @@ const hUploadCommit: Handler = async ({ sb, payload, slugs }) => {
       height: it.height != null ? Number(it.height) || null : null,
       is_featured: it.is_featured === true,
       needs_alt: !(nonEmpty(alt) || nonEmpty(caption)),
-      published: true,
+      published,
+      submission,
     });
   }
 
@@ -924,6 +982,7 @@ const hPhotoUntag: Handler = async ({ sb, payload }) => {
 const HANDLERS: Record<string, Handler> = {
   "categories": hCategories,
   "category-create": hCategoryCreate,
+  "category-update": hCategoryUpdate,
   "upload-urls": hUploadUrls,
   "upload-commit": hUploadCommit,
   "import": hImport,
@@ -962,13 +1021,25 @@ Deno.serve(async (req: Request) => {
   if (req.method === "GET") return handleGet(sb, new URL(req.url));
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
-  // Auth is a boolean now: valid admin token or 401. On failure, wait ~300ms
-  // before responding to blunt brute-forcing (no lockout — a single shared
+  // Resolve the token to a role: admin, photographer, or nothing. Both are
+  // compared constant-time against their stored SHA-256. On failure, wait
+  // ~300ms before responding to blunt brute-forcing (no lockout — a shared
   // passphrase with a lockout would be a self-inflicted denial of service).
   const token = req.headers.get("x-admin-token") ?? "";
-  const { data: cfg } = await sb.from("photo_gallery_config").select("admin_token_sha256").eq("id", true).maybeSingle();
-  const ok = token ? tokenMatches(await sha256Hex(token), cfg?.admin_token_sha256) : false;
-  if (!ok) { await delay(300); return json({ error: "Unauthorized. Check the gallery passphrase." }, 401); }
+  const { data: cfg } = await sb.from("photo_gallery_config")
+    .select("admin_token_sha256, photographer_token_sha256").eq("id", true).maybeSingle();
+
+  let role: Role | null = null;
+  if (token) {
+    const hash = await sha256Hex(token);
+    // Both comparisons always run, so the response time doesn't reveal which
+    // passphrase was closer to correct.
+    const isAdmin = tokenMatches(hash, cfg?.admin_token_sha256);
+    const isPhotographer = tokenMatches(hash, cfg?.photographer_token_sha256);
+    if (isAdmin) role = "admin";
+    else if (isPhotographer) role = "photographer";
+  }
+  if (!role) { await delay(300); return json({ error: "Unauthorized. Check the gallery passphrase." }, 401); }
 
   let payload: Record<string, unknown>;
   try { payload = await req.json(); } catch { return json({ error: "Invalid JSON body." }, 400); }
@@ -976,10 +1047,17 @@ Deno.serve(async (req: Request) => {
   const handler = HANDLERS[action];
   if (!handler) return json({ error: "Unknown action" }, 400);
 
+  // A photographer token outside its allowlist is a 403, not a 401: the
+  // passphrase was valid, the action just isn't permitted. A 401 would send
+  // the upload page into a re-authentication loop it can never win.
+  if (role === "photographer" && !PHOTOGRAPHER_ACTIONS.has(action)) {
+    return json({ error: "That passphrase can only add photos. Ask an administrator for admin access." }, 403);
+  }
+
   const cats = await loadCats(sb);
   const slugs = new Set(cats.map((c) => c.slug));
   try {
-    return await handler({ sb, payload, cats, slugs });
+    return await handler({ sb, payload, cats, slugs, role });
   } catch (e) {
     console.error(`action ${action}:`, e instanceof Error ? e.message : String(e));
     return json({ error: "Something went wrong." }, 500);

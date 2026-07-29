@@ -4,188 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Photo Upload | SPARC</title>
+    <title>Send Photos to SPARC</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
-    <style>
-        body { background: var(--sparc-soft-gray); }
-        .up-bar { background: var(--sparc-dark-navy); color: #fff; padding: 14px 22px; display: flex; align-items: center; gap: 14px; }
-        .up-bar img { height: 38px; }
-        .up-bar h1 { color: #fff; font-size: 1.15rem; margin: 0; font-weight: 600; }
-        .up-wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
-        .up-login { max-width: 420px; margin: 80px auto; background: #fff; padding: 34px; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,43,80,0.12); text-align: center; }
-        .up-login h2 { color: var(--sparc-royal-blue); margin-top: 0; }
-        .up-login p { color: #667; font-size: .95rem; }
-        .up-login input { width: 100%; padding: 12px; border: 2px solid #d9e2ec; border-radius: 8px; font-size: 1rem; margin: 14px 0; box-sizing: border-box; }
-        .up-login button { width: 100%; background: var(--sparc-kelly-green); color: #fff; border: none; padding: 13px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
-        .up-err { color: #b00020; font-size: 0.9rem; min-height: 1.2em; }
-        .up-panel { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 3px 14px rgba(0,43,80,0.08); }
-        .up-intro { color: #445; line-height: 1.55; margin-top: 0; }
-        .up-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; margin-bottom: 8px; }
-        .up-field { display: flex; flex-direction: column; gap: 5px; }
-        .up-field label { font-size: 0.82rem; font-weight: 600; color: #445; }
-        .up-field select, .up-field input { padding: 10px 12px; border: 2px solid #d9e2ec; border-radius: 8px; font-family: inherit; font-size: 0.98rem; }
-        .up-drop { border: 2.5px dashed #c3d0dd; border-radius: 12px; padding: 46px 20px; text-align: center; color: #667; cursor: pointer; margin-top: 16px; transition: all .15s ease; }
-        .up-drop.drag { border-color: var(--sparc-kelly-green); background: #f2fbec; }
-        .up-drop strong { color: var(--sparc-royal-blue); font-size: 1.1rem; }
-        .up-count { margin-top: 16px; font-weight: 600; color: var(--sparc-royal-blue); }
-        .up-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 8px; margin-top: 12px; }
-        .up-thumbs .t { position: relative; }
-        .up-thumbs img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; }
-        .up-thumbs .st { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border-radius: 6px; }
-        .up-thumbs .st.ok { background: rgba(76,187,23,0.55); color: #fff; }
-        .up-thumbs .st.err { background: rgba(176,0,32,0.6); color: #fff; }
-        .up-actions { margin-top: 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        .btn-green { background: var(--sparc-kelly-green); color: #fff; border: none; padding: 13px 26px; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; font-family: inherit; }
-        .btn-ghost { background: #eef2f6; color: var(--sparc-royal-blue); border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; }
-        button:disabled { opacity: .5; cursor: default; }
-        .up-status { font-weight: 600; color: var(--sparc-royal-blue); }
-        .up-done { background: #f2fbec; border: 1px solid #bfe6a4; color: #2f6b12; padding: 16px; border-radius: 10px; margin-top: 16px; line-height: 1.5; }
-    </style>
+    <link rel="stylesheet" href="/css/photo-gallery-admin.css">
 </head>
-<body>
-    <div class="up-bar">
+<body class="pga">
+    <a href="#pgu-main" class="skip-link">Skip to main content</a>
+
+    <div class="pga-bar">
         <img src="/images/SPARC_logo_white.png" alt="SPARC">
-        <h1>Photo Upload</h1>
+        <h1>Send photos to SPARC</h1>
     </div>
 
-    <div class="up-login" id="loginBox">
-        <h2>SPARC Photo Upload</h2>
-        <p>Enter the upload passphrase to send photos to the SPARC team.</p>
-        <input type="password" id="pw" placeholder="Upload passphrase" autocomplete="current-password">
-        <button onclick="upLogin()">Continue</button>
-        <p class="up-err" id="loginErr"></p>
+    <!-- Sign-in ---------------------------------------------------------- -->
+    <div class="pga-login" id="pgu-login" hidden>
+        <h2>Upload photos</h2>
+        <p>Enter the upload passphrase the SPARC team gave you. It only lets you
+        add photos — nothing already on the website can be changed or removed with it.</p>
+        <form id="pgu-login-form" novalidate>
+            <div class="pga-field">
+                <label for="pgu-pw">Upload passphrase</label>
+                <input type="password" id="pgu-pw" autocomplete="current-password" required
+                       aria-describedby="pgu-login-err">
+            </div>
+            <p class="pga-error" id="pgu-login-err" role="alert"></p>
+            <button class="pga-btn pga-btn-primary" type="submit" id="pgu-login-btn">Continue</button>
+        </form>
     </div>
 
-    <div class="up-wrap" id="app" hidden>
-        <div class="up-panel">
-            <p class="up-intro">Thanks for sharing photos with SPARC! Pick the event and year, drag in your photos (a whole folder at once is fine), and upload. Your photos go to the SPARC team for review before they appear on the website — you don't need to do anything else.</p>
-            <div class="up-row">
-                <div class="up-field">
-                    <label for="gallery">Event / album</label>
-                    <select id="gallery">
-                        <option value="summit">A Call to Conscience (Summit)</option>
-                        <option value="gala">An Evening to SPARCle (Gala)</option>
-                        <option value="life">Everyday Life at SPARC</option>
-                    </select>
+    <!-- App -------------------------------------------------------------- -->
+    <main class="pga-wrap" id="pgu-main" tabindex="-1" hidden>
+        <div class="pga-panel">
+            <h2>Thanks for sharing your photos</h2>
+            <p class="pga-hint">
+                Pick the event and year, drag in your photos — a whole folder at once
+                is fine — and upload. Everything you send goes to the SPARC team for
+                review before it appears on the website, so there is nothing else you
+                need to do. A large batch can take several minutes; please leave this
+                tab open until it finishes.
+            </p>
+
+            <div class="pga-row">
+                <div class="pga-field">
+                    <label for="pgu-gallery">Event / album</label>
+                    <select id="pgu-gallery"></select>
                 </div>
-                <div class="up-field">
-                    <label for="year">Year</label>
-                    <input type="number" id="year" min="1990" max="2100" step="1">
+                <div class="pga-field">
+                    <label for="pgu-year">Year</label>
+                    <input type="number" id="pgu-year" min="1990" max="2100" step="1"
+                           inputmode="numeric" style="width: 7.5rem;">
                 </div>
-                <div class="up-field" style="flex:1;min-width:220px;">
-                    <label for="submission">Album / event name <span style="font-weight:400;color:#889;">(optional)</span></label>
-                    <input type="text" id="submission" placeholder="e.g. 2026 Summit — Day 1" style="width:100%;box-sizing:border-box;">
+                <div class="pga-field grow">
+                    <label for="pgu-submission">
+                        Batch name <span class="pga-muted" style="font-weight: 400;">(optional)</span>
+                    </label>
+                    <input type="text" id="pgu-submission" placeholder="e.g. 2026 Summit — Day 1"
+                           aria-describedby="pgu-submission-hint">
+                    <p class="pga-hint" id="pgu-submission-hint" style="margin: 4px 0 0;">
+                        Helps the team keep your photos together when they review them.
+                    </p>
                 </div>
             </div>
-            <div class="up-drop" id="drop">
-                <strong>Drop photos here</strong><br>or click to choose &nbsp;·&nbsp; JPG / PNG / WEBP, up to 25&nbsp;MB each
-                <input type="file" id="fileInput" accept="image/*" multiple hidden>
+
+            <button class="pga-drop" type="button" id="pgu-drop">
+                <strong>Drop photos here</strong><br>
+                or choose files — JPG, PNG or WEBP, up to 25 MB each
+            </button>
+            <input type="file" id="pgu-file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+
+            <p class="pga-hint" id="pgu-count" role="status" style="margin: 14px 0 0;"></p>
+            <div class="pga-queue" id="pgu-queue"></div>
+
+            <div class="pga-row" id="pgu-actions" hidden style="margin-top: 16px;">
+                <button class="pga-btn pga-btn-primary pga-btn-lg" type="button" id="pgu-send">Upload</button>
+                <button class="pga-btn pga-btn-outline" type="button" id="pgu-retry" hidden>Retry failures</button>
+                <button class="pga-btn pga-btn-ghost" type="button" id="pgu-clear">Clear</button>
             </div>
-            <div class="up-count" id="count"></div>
-            <div class="up-thumbs" id="thumbs"></div>
-            <div class="up-actions" id="actions" hidden>
-                <button class="btn-green" id="send">Upload</button>
-                <button class="btn-ghost" id="clear">Clear</button>
-                <span class="up-status" id="status"></span>
+
+            <div id="pgu-progress" hidden style="margin-top: 16px;">
+                <div class="pga-progress"><div class="pga-progress-fill" id="pgu-progress-fill"></div></div>
+                <p class="pga-muted" id="pgu-progress-text" style="font-size: 0.85rem; margin: 0;"></p>
             </div>
-            <div class="up-done" id="done" hidden></div>
+
+            <div id="pgu-done" hidden></div>
         </div>
-    </div>
+    </main>
 
-    <script>
-    (function () {
-      "use strict";
-      var ENDPOINT = "https://ldxpockcgcxvsrbyhcnt.supabase.co/functions/v1/photo-gallery";
-      var ANON = "sb_publishable_3tn2UadRVekIf5Pw6F5z-A_40ZbdvTm";
-      var TOKEN = sessionStorage.getItem("pg_upload_token") || "";
-      var queue = [];
+    <noscript>
+        <div class="pga-wrap">
+            <div class="pga-panel">
+                <h2>JavaScript required</h2>
+                <p class="pga-hint">This uploader needs JavaScript to work. Please enable it,
+                or email your photos to the SPARC team instead.</p>
+            </div>
+        </div>
+    </noscript>
 
-      function $(id) { return document.getElementById(id); }
-      $("year").value = new Date().getFullYear();
-
-      function headers(extra) {
-        var h = { apikey: ANON, Authorization: "Bearer " + ANON, "x-admin-token": TOKEN };
-        if (extra) Object.keys(extra).forEach(function (k) { h[k] = extra[k]; });
-        return h;
-      }
-
-      window.upLogin = function () {
-        var pw = $("pw").value.trim(); if (!pw) return;
-        TOKEN = pw;
-        // Verify by sending a tiny invalid multipart and reading the auth result:
-        // simplest is a no-file upload attempt -> 401 if wrong passphrase,
-        // 400 ("No file provided") if the passphrase is accepted.
-        var fd = new FormData(); fd.append("action", "upload");
-        fetch(ENDPOINT, { method: "POST", headers: headers(), body: fd })
-          .then(function (r) { return r.json().then(function (d) { return { s: r.status, d: d }; }); })
-          .then(function (res) {
-            if (res.s === 401) { $("loginErr").textContent = "Incorrect passphrase."; return; }
-            sessionStorage.setItem("pg_upload_token", TOKEN);
-            $("loginBox").hidden = true; $("app").hidden = false;
-          })
-          .catch(function () { $("loginErr").textContent = "Could not reach the server."; });
-      };
-
-      var drop = $("drop"), fileInput = $("fileInput");
-      drop.addEventListener("click", function () { fileInput.click(); });
-      fileInput.addEventListener("change", function () { add(fileInput.files); fileInput.value = ""; });
-      ["dragover", "dragenter"].forEach(function (e) { drop.addEventListener(e, function (ev) { ev.preventDefault(); drop.classList.add("drag"); }); });
-      ["dragleave", "drop"].forEach(function (e) { drop.addEventListener(e, function (ev) { ev.preventDefault(); drop.classList.remove("drag"); }); });
-      drop.addEventListener("drop", function (ev) { if (ev.dataTransfer) add(ev.dataTransfer.files); });
-
-      function add(list) {
-        Array.prototype.slice.call(list).filter(function (f) { return /^image\//.test(f.type); })
-          .forEach(function (f) { queue.push({ file: f, status: "" }); });
-        render();
-      }
-      function render() {
-        $("count").textContent = queue.length ? (queue.length + " photo" + (queue.length > 1 ? "s" : "") + " ready") : "";
-        $("actions").hidden = queue.length === 0;
-        var t = $("thumbs"); t.innerHTML = "";
-        queue.forEach(function (it) {
-          var d = document.createElement("div"); d.className = "t";
-          var img = document.createElement("img"); img.src = URL.createObjectURL(it.file); img.alt = "";
-          d.appendChild(img);
-          if (it.status) { var s = document.createElement("div"); s.className = "st " + it.status; s.textContent = it.status === "ok" ? "✓" : "✗"; d.appendChild(s); }
-          t.appendChild(d);
-        });
-      }
-      $("clear").addEventListener("click", function () { queue = []; $("done").hidden = true; render(); });
-
-      $("send").addEventListener("click", function () {
-        var year = parseInt($("year").value, 10);
-        if (!year || year < 1990) { alert("Please enter a valid year."); return; }
-        $("send").disabled = true; $("clear").disabled = true;
-        var gallery = $("gallery").value, submission = $("submission").value.trim(), done = 0, failed = 0;
-        var pending = queue.filter(function (it) { return it.status !== "ok"; });
-        (function next(i) {
-          if (i >= pending.length) {
-            $("send").disabled = false; $("clear").disabled = false;
-            $("status").textContent = "";
-            var msg = "Thank you! " + done + " photo" + (done === 1 ? "" : "s") + " sent to SPARC for review";
-            if (failed) msg += " (" + failed + " could not be sent — please try those again)";
-            $("done").textContent = msg + ".";
-            $("done").hidden = false;
-            render();
-            return;
-          }
-          var it = pending[i];
-          var fd = new FormData();
-          fd.append("action", "upload"); fd.append("file", it.file);
-          fd.append("gallery", gallery); fd.append("year", String(year));
-          if (submission) fd.append("submission", submission);
-          fetch(ENDPOINT, { method: "POST", headers: headers(), body: fd })
-            .then(function (r) { return { ok: r.ok }; })
-            .then(function (res) { it.status = res.ok ? "ok" : "err"; res.ok ? done++ : failed++; })
-            .catch(function () { it.status = "err"; failed++; })
-            .then(function () { $("status").textContent = "Uploading " + (i + 1) + " of " + pending.length + "…"; render(); next(i + 1); });
-        })(0);
-      });
-
-      if (TOKEN) { $("loginBox").hidden = true; $("app").hidden = false; }
-    })();
-    </script>
+    <script type="module" src="/js/photogallery/upload-app.js"></script>
 </body>
 </html>
