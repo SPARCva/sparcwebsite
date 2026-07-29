@@ -4,8 +4,10 @@
 /* ========== CSS Variables ========== */
 :root {
     /* SPARC Official Brand Colors - WCAG 2.1 AA Compliant */
-    --sparc-kelly-green: #4CBB17;      /* Primary accent - decorative use */
+    --sparc-kelly-green: #4CBB17;      /* Primary accent - decorative use only (2.49:1 on white — not for text) */
     --sparc-kelly-green-dark: #3a9212; /* Hover state for green */
+    --sparc-green-accessible: #2F7D14;      /* Deep green for text/buttons: 5.17:1 on white — WCAG AA */
+    --sparc-green-accessible-hover: #256b0f;/* Hover for accessible green: 6.59:1 on white */
     --sparc-royal-blue: #00539B;       /* Primary blue - headings, text */
     --sparc-dark-navy: #002B50;        /* Dark accents, footer */
     --sparc-soft-gray: #F5F5F5;        /* Backgrounds */
@@ -142,12 +144,12 @@ p {
 }
 
 .btn-primary {
-    background-color: var(--accent-orange);
+    background-color: var(--sparc-green-accessible);
     color: var(--white);
 }
 
 .btn-primary:hover {
-    background-color: var(--accent-orange-hover);
+    background-color: var(--sparc-green-accessible-hover);
     color: var(--white);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
@@ -787,12 +789,12 @@ body.has-announcement-bar .header { top: var(--announcement-h, 48px); }
 
 .btn-white {
     background-color: var(--white);
-    color: var(--accent-orange);
+    color: var(--sparc-green-accessible);
 }
 
 .btn-white:hover {
     background-color: var(--off-white);
-    color: var(--accent-orange-hover);
+    color: var(--sparc-green-accessible-hover);
 }
 
 /* ========== Contact Section ========== */
