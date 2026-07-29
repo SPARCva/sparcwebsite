@@ -69,13 +69,17 @@ body.pga {
     color: #fff;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 0 20px;
+    gap: 10px 16px;
+    /* Wraps rather than overflowing: at 375px the logo, title, public-gallery
+       link and sign-out button do not fit on one line, and an unwrapped bar
+       pushed the whole document 19px wide. */
+    flex-wrap: wrap;
+    padding: 8px 16px;
     min-height: var(--pga-bar-h);
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(8px + env(safe-area-inset-top));
 }
 
-.pga-bar img { height: 34px; width: auto; display: block; }
+.pga-bar img { height: 34px; width: auto; display: block; flex-shrink: 0; }
 
 .pga-bar h1 {
     font-family: var(--font-heading);
@@ -84,8 +88,14 @@ body.pga {
     color: #fff;
     margin: 0;
     line-height: 1.2;
+    /* Truncate rather than force the bar wider. */
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+/* Pushes the actions right on a wide bar; harmless once the bar wraps. */
 .pga-bar-spacer { margin-left: auto; }
 
 .pga-bar a,
@@ -328,7 +338,15 @@ body.pga {
 .pga-btn-sm { font-size: 0.82rem; padding: 6px 11px; }
 .pga-btn-lg { font-size: 1rem; padding: 12px 22px; }
 
-.pga-btn:disabled { opacity: 0.5; cursor: default; }
+/* Drop the fill entirely rather than just fading it: a 50%-opacity green
+   button still reads as pressable, which is how the bulk-action bar looked
+   before anything was selected. */
+.pga-btn:disabled {
+    background: var(--pga-sunken);
+    color: var(--pga-muted);
+    border-color: transparent;
+    cursor: default;
+}
 
 .pga-btn-icon {
     background: rgba(255, 255, 255, 0.16);
