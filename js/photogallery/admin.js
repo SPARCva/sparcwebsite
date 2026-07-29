@@ -411,6 +411,123 @@ async function mountDashboard(view) {
 
 /* ---------- settings -------------------------------------------------- */
 
+/**
+ * Tier 3 rollout panel: compute ArcFace embeddings for the existing library and
+ * switch matching over — both reversible, both driven from here. Everything the
+ * ArcFace model needs (its ~90 MB weights, TensorFlow.js, the landmark net) is
+ * imported lazily, only when someone actually runs the pass.
+ */
+function buildRecognizerPanel() {
+  const panel = el("div.pga-panel");
+  const statusLine = el("p.pga-hint", { "role": "status", style: { margin: "0 0 12px" } });
+  const bar = el("div.pga-progress", { hidden: true }, el("div.pga-progress-fill"));
+  const progressText = el("p.pga-muted", { "role": "status", style: { fontSize: "0.88rem", margin: "6px 0 0" } });
+  const fill = bar.querySelector(".pga-progress-fill");
+
+  const embedBtn = el("button.pga-btn.pga-btn-blue", { type: "button" }, "Compute ArcFace embeddings");
+  const stopBtn = el("button.pga-btn.pga-btn-outline", { type: "button", hidden: true }, "Stop");
+  const switchBtn = el("button.pga-btn.pga-btn-primary", { type: "button" }, "Switch matching to ArcFace");
+
+  let st = null;
+  let abort = null;
+
+  async function refresh() {
+    try {
+      st = await api("recognizer-status");
+      const active = st.recognizer === "arcface" ? "ArcFace (high-accuracy)" : "face-api (default)";
+      statusLine.replaceChildren(
+        el("strong", { text: `Active recognizer: ${active}` }),
+        el("br"),
+        el("span", { text: `${num(st.embedded_v2)} of ${num(st.total_faces)} faces have an ArcFace embedding.` }),
+      );
+      switchBtn.textContent = st.recognizer === "arcface" ? "Switch back to face-api" : "Switch matching to ArcFace";
+      switchBtn.disabled = st.recognizer !== "arcface" && (st.embedded_v2 || 0) === 0;
+    } catch (err) { statusLine.textContent = err.message; }
+  }
+
+  async function runEmbed() {
+    embedBtn.hidden = true; stopBtn.hidden = false; bar.hidden = false;
+    abort = new AbortController();
+    const signal = abort.signal;
+    let done = 0, failed = 0, before = null;
+    try {
+      const [{ loadFaceApi }, arc] = await Promise.all([
+        import("./faces.js"), import("./faces-arcface.js"),
+      ]);
+      await loadFaceApi((m) => { progressText.textContent = m; });
+      await arc.loadArcFace((m) => { progressText.textContent = m; });
+      const total = st ? st.total_faces : 0;
+      for (;;) {
+        if (signal.aborted) break;
+        const res = await api("faces-need-embed", before ? { limit: 40, before } : { limit: 40 });
+        const faces = res.faces || [];
+        if (!faces.length) break;
+        before = faces[faces.length - 1].created_at;
+        const items = [];
+        for (const f of faces) {
+          if (signal.aborted) break;
+          try {
+            const emb = await arc.embedFace(f.image_url, f.box);
+            if (emb) items.push({ face_id: f.id, embedding_v2: emb });
+            else failed++;
+          } catch { failed++; }
+          done++;
+          progressText.textContent = `Embedded ${num(done)}${total ? ` of ${num(total)}` : ""}${failed ? ` · ${num(failed)} skipped` : ""}`;
+          if (total) fill.style.width = `${Math.min(100, Math.round((done / total) * 100))}%`;
+        }
+        if (items.length) {
+          try { await api("faces-embed-batch", { items }); } catch (err) { toastError(err); }
+        }
+      }
+      fill.style.width = "100%";
+      progressText.textContent = signal.aborted
+        ? `Stopped — ${num(done - failed)} embedded, ${num(failed)} skipped.`
+        : `Done — ${num(done - failed)} embedded${failed ? `, ${num(failed)} had no detectable face and were skipped` : ""}.`;
+      toast(signal.aborted ? "Stopped." : "Embedding pass complete.", { kind: "success" });
+    } catch (err) {
+      toastError(err);
+    }
+    embedBtn.hidden = false; stopBtn.hidden = true; abort = null;
+    await refresh();
+  }
+
+  embedBtn.addEventListener("click", () => runEmbed());
+  stopBtn.addEventListener("click", () => abort?.abort());
+
+  switchBtn.addEventListener("click", async () => {
+    const toArc = !st || st.recognizer !== "arcface";
+    const ok = await confirmDialog({
+      title: toArc ? "Switch matching to ArcFace?" : "Switch back to face-api?",
+      body: toArc
+        ? "New confirmations and suggestions will use the high-accuracy ArcFace model. Only faces that already have an ArcFace embedding can be matched, so run the embedding pass first. Suggestions are recomputed now, and you can switch back at any time."
+        : "Matching returns to the default face-api model. Nothing is lost — the ArcFace embeddings are kept. Suggestions are recomputed now.",
+      confirmLabel: toArc ? "Switch to ArcFace" : "Switch back",
+    });
+    if (!ok) return;
+    switchBtn.disabled = true;
+    try {
+      await api("recognizer-set", { recognizer: toArc ? "arcface" : "faceapi" });
+      progressText.textContent = "Recomputing suggestions in the new model…";
+      const rs = await api("resuggest");
+      toast(`Switched. Updated ${plural(rs.updated ?? 0, "suggestion")}.`, { kind: "success" });
+    } catch (err) { toastError(err); }
+    await refresh();
+  });
+
+  panel.append(
+    el("h2", { text: "High-accuracy recognizer (beta)" }),
+    el("p.pga-hint", { html:
+      "The default recognizer (face-api) is fast and runs everywhere. <strong>ArcFace</strong> is a stronger model, much better at telling similar-looking people apart. It's opt-in and reversible: compute embeddings for your existing faces, switch matching over, and switch back any time — nothing is deleted either way." }),
+    el("p.pga-hint", { html:
+      "<strong>Beta:</strong> the ArcFace model must be vendored first (see <code>js/photogallery/faceapi/arcface/README.md</code>) and its thresholds tuned on real photos. Try it on a test album before relying on it." }),
+    statusLine,
+    el("div.pga-row", null, embedBtn, stopBtn, switchBtn),
+    bar, progressText,
+  );
+  refresh();
+  return panel;
+}
+
 async function mountSettings(view) {
   const albums = el("div.pga-stack");
 
@@ -525,7 +642,7 @@ async function mountSettings(view) {
     ),
   );
 
-  view.replaceChildren(albumPanel, thumbs, maintenance, access);
+  view.replaceChildren(albumPanel, thumbs, maintenance, buildRecognizerPanel(), access);
 }
 
 /**

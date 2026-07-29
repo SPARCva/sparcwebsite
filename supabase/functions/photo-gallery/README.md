@@ -16,6 +16,10 @@ and a header "scroll" of featured photos kept in chronological order.
     photographer passphrase column
   - `migrations/20260730_unreject_and_thumb_backfill.sql` —
     `gallery_unreject_face` and `gallery_set_thumb`
+  - `migrations/20260731_gallery_arcface_recognizer.sql` — **(Tier 3, opt-in)**
+    the `embedding_v2 vector(512)` column, the `photo_gallery_config.recognizer`
+    flag, and the cosine `*_v2` matching RPCs. Additive and inert until an admin
+    opts in from Settings.
 
   All gallery tables are RLS-locked with no policies → service-role only, and
   the `gallery_*` RPCs are granted to `service_role` only. Each new function
@@ -251,10 +255,34 @@ confirmed (or the photo is tagged manually).
 | `{ action:"face-delete", face_id }` | Hard-deletes a spurious detection (poster, reflection). |
 | `{ action:"faces-review", limit?, offset?, min_distance?, max_distance?, person_id? }` | The confirm/reject queue: unnamed faces **with** a suggestion, most-confident first. `person_id` restricts to faces currently suggested as that one person (used by the "tag the rest" sweep). |
 | `{ action:"faces-unknown", limit?, offset? }` | Unnamed faces **without** a suggestion — the "who is this?" pile. |
-| `{ action:"faces-status", gallery? }` | `{ scanned_ids, unscanned_count, unnamed_count, suggested_count }` for a progress display. |
-| `{ action:"resuggest", max_distance? }` | Full re-sweep of pending suggestions. The function also runs a **targeted** re-suggest after each single confirmation, so the full sweep is rarely needed. |
+| `{ action:"faces-status", gallery? }` | `{ scanned_ids, unscanned_count, unnamed_count, suggested_count, recognizer, bands }` for a progress display. `bands` are the active recognizer's confidence-distance cutoffs, so the client labels confidence in the right metric. |
+| `{ action:"resuggest", max_distance? }` | Full re-sweep of pending suggestions **in the active recognizer's space** (`gallery_resuggest` or `gallery_resuggest_v2`). The function also runs a **targeted** re-suggest after each single confirmation, so the full sweep is rarely needed. |
 | `{ action:"photo-tag", photo_id, person_id }` | Manually links a person to a photo (no face), `via='manual'`. |
 | `{ action:"photo-untag", photo_id, person_id }` | Removes a manual link. Returns `409` if a confirmed face for that person is still on the photo (unconfirm the face instead — otherwise the trigger would just re-add the tag). |
+
+### High-accuracy recognizer (Tier 3, opt-in)
+
+A second, stronger face recognizer — **ArcFace** (512-float embeddings, cosine
+distance) — is available alongside the default **face-api** one (128-float,
+euclidean). It is opt-in and reversible: the 128-float `embedding` is never
+dropped, so switching back is a single flag. `photo_gallery_config.recognizer`
+(`'faceapi'` default / `'arcface'`) selects which drives matching; the function
+routes `resuggest`/confirm re-suggests to the matching `*_v2` RPCs. Descriptors
+are still computed **in the browser** (`js/photogallery/faces-arcface.js`, model
+vendored under `js/photogallery/faceapi/arcface/`), so nothing leaves this origin.
+
+Rollout is driven from **Settings → High-accuracy recognizer (beta)**:
+
+| Payload | Behavior |
+| --- | --- |
+| `{ action:"faces-need-embed", limit?, before? }` | Faces with no `embedding_v2` yet, newest-first, with `box`, `image_url` and `created_at`. `before` (a `created_at`) is the keyset cursor for the re-embed pass so faces that can't be embedded aren't re-fetched forever. |
+| `{ action:"faces-embed-batch", items:[{face_id, embedding_v2[512]}] }` | Stores browser-computed ArcFace embeddings (≤200). Returns `{ ok, saved, failed:[…] }`. |
+| `{ action:"recognizer-status" }` | `{ recognizer, total_faces, embedded_v2, bands }` for the rollout panel. |
+| `{ action:"recognizer-set", recognizer }` | Flips the active recognizer (`'faceapi'`\|`'arcface'`). Switching to `arcface` is refused until at least one confirmed face has an embedding. The client runs `resuggest` afterwards to recompute in the new metric. |
+
+The ArcFace cosine thresholds (`RECOGNIZER_BANDS.arcface` in `index.ts` and the
+`*_v2` RPC `p_max_distance` defaults) are conservative starting points and
+should be tuned on real photos before relying on the recognizer.
 
 ## Setting the passphrases
 
