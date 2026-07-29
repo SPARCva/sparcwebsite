@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /accesstrails/console/
+Disallow: /photogallery/admin/
+Disallow: /photogallery/upload/
 
 Sitemap: https://sparcsolutions.org/sitemap.xml

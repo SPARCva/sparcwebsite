@@ -226,7 +226,14 @@ body.pga {
 }
 
 .pga-field { display: flex; flex-direction: column; gap: 4px; }
-.pga-field.grow { flex: 1 1 240px; min-width: 0; }
+
+/* `grow` means "take the spare horizontal room in this row". Scoped to
+   .pga-row on purpose: flex-basis resolves along the container's main axis, so
+   an unscoped `flex: 1 1 240px` becomes a 240px *height* inside a column
+   container like .pga-stack, which left tall empty gaps between dialog
+   fields. */
+.pga-field.grow { min-width: 0; }
+.pga-row > .pga-field.grow { flex: 1 1 240px; }
 
 .pga-field > label,
 .pga-label {
@@ -439,15 +446,26 @@ body.pga {
 .pga-cell[data-published="false"] { border-style: dashed; border-color: var(--pga-line-strong); }
 .pga-cell[data-published="false"] .pga-cell-img { opacity: 0.6; }
 
+/* A real button box wrapping the image. Deliberately NOT display:contents —
+   that removes the button's box, which breaks hit-testing and drops the
+   button from the accessibility tree in some browsers. */
+.pga-cell-imgbtn {
+    appearance: none;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+}
+
 .pga-cell-img {
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
     display: block;
     background: #e9eef3;
-    border: none;
-    padding: 0;
-    cursor: pointer;
 }
 
 .pga-cell-meta {

@@ -23,6 +23,8 @@ import {
   emptyState, loadingState, num, plural, isoToDate, shortDate, debounce, pool,
 } from "./ui.js";
 import { context, onContextChange, setRouteParams, navigate, setTabCount } from "./admin.js";
+import { loadFaceApi, describeBox, confidenceLabel, toPixelBox } from "./faces.js";
+import { faceCropUrl } from "./imaging.js";
 
 const PAGE_SIZE = 100;
 
@@ -165,7 +167,7 @@ function makeFieldSaver(photoId, field, statusEl) {
 function createCell(editable = true) {
   const pick = el("input.pga-cell-pick", { type: "checkbox" });
   const img = el("img.pga-cell-img", { alt: "", loading: "lazy" });
-  const button = el("button.pga-cell-img", { type: "button", style: { display: "contents" } });
+  const button = el("button.pga-cell-imgbtn", { type: "button" });
   const badges = el("div.pga-cell-badges");
   const caption = el("p.pga-cell-caption", { style: { margin: "0" } });
   const people = el("span.pga-cell-people");
@@ -347,6 +349,10 @@ function openEditor(photoId) {
     el("div", null, el("p.pga-label", { text: "People in this photo" }), peopleWrap),
   );
 
+  if (photo.media_type !== "video") {
+    body.append(el("hr.pga-sep"), buildFacesPanel(photo, renderPeople));
+  }
+
   const instance = dialog({
     title: photo.caption || "Edit photo",
     body,
@@ -404,6 +410,306 @@ function openEditor(photoId) {
       },
     ],
   });
+}
+
+/* ---------- per-photo faces ------------------------------------------- */
+
+/**
+ * Faces on one photo: confirm a suggestion, unconfirm a mistake, delete a
+ * spurious detection, or draw a box the detector missed.
+ *
+ * Boxes are fractions of the image, so the overlay is placed by multiplying
+ * against the *rendered* size — correct at any display width.
+ */
+function buildFacesPanel(photo, onPeopleChange) {
+  const wrap = el("div");
+  const statusLine = el("p.pga-hint", { "role": "status", style: { margin: "0 0 8px" } });
+  const boxWrap = el("div.pga-boxwrap");
+  const image = el("img", { src: photo.image_url, alt: "", style: { maxHeight: "300px", borderRadius: "8px" } });
+  const list = el("div.pga-facegrid");
+  boxWrap.append(image);
+
+  let faces = [];
+  let drawing = null;
+
+  function placeBoxes() {
+    for (const node of Array.from(boxWrap.querySelectorAll(".pga-box"))) node.remove();
+    for (const face of faces) {
+      const px = toPixelBox(face.box, image.clientWidth, image.clientHeight);
+      const node = el("div.pga-box", {
+        "dataset": { named: String(!!face.person) },
+        style: { left: `${px.x}px`, top: `${px.y}px`, width: `${px.w}px`, height: `${px.h}px` },
+      });
+      boxWrap.append(node);
+    }
+  }
+  image.addEventListener("load", placeBoxes);
+  window.addEventListener("resize", debounce(placeBoxes, 200));
+
+  async function load() {
+    list.replaceChildren(loadingState("Loading faces…"));
+    try {
+      const res = await api("faces-for-photo", { photo_id: photo.id });
+      faces = res.faces || [];
+      statusLine.textContent = !res.scanned
+        ? "This photo hasn't been scanned for faces yet — run a scan in People & Faces."
+        : faces.length
+          ? `${plural(faces.length, "face")} found.`
+          : "No faces were detected in this photo.";
+      renderList();
+      placeBoxes();
+    } catch (err) {
+      list.replaceChildren(emptyState({ title: "Could not load faces", body: err.message, icon: null }));
+    }
+  }
+
+  function renderList() {
+    if (!faces.length) { list.replaceChildren(); return; }
+    list.replaceChildren(...faces.map((face) => {
+      const cell = el("div.pga-facecell");
+      const crop = el("img.pga-facecrop", { alt: face.person ? face.person.name : "Unidentified face" });
+      faceCropUrl(photo.image_url, face.box, 200).then((url) => { crop.src = url; }).catch(() => {});
+      cell.append(crop);
+
+      if (face.person) {
+        cell.append(
+          el("span.pga-badge.pga-badge-featured", { text: face.person.name }),
+          el("button.pga-btn.pga-btn-ghost.pga-btn-sm", {
+            type: "button",
+            onclick: async () => {
+              try {
+                await api("face-unconfirm", { face_id: face.id });
+                toast(`${face.person.name} detached from this face.`, { kind: "success" });
+                await load();
+                await syncPeople();
+              } catch (err) { toastError(err); }
+            },
+          }, "Not them"),
+        );
+      } else if (face.suggestion) {
+        cell.append(
+          el("span.pga-muted", { style: { fontSize: "0.8rem" }, text:
+            `${face.suggestion.name}? ${confidenceLabel(face.suggestion.distance)}` }),
+          el("button.pga-btn.pga-btn-primary.pga-btn-sm", {
+            type: "button",
+            onclick: async () => {
+              try {
+                await api("face-confirm", { face_id: face.id, person_id: face.suggestion.id });
+                toast(`Confirmed ${face.suggestion.name}.`, { kind: "success" });
+                await load();
+                await syncPeople();
+              } catch (err) { toastError(err); }
+            },
+          }, "Yes"),
+          el("button.pga-btn.pga-btn-outline.pga-btn-sm", {
+            type: "button",
+            onclick: async () => {
+              try {
+                await api("face-reject", { face_id: face.id, person_id: face.suggestion.id });
+                toast("Rejected — won't be suggested again.");
+                await load();
+              } catch (err) { toastError(err); }
+            },
+          }, "No"),
+        );
+      } else {
+        cell.append(el("button.pga-btn.pga-btn-blue.pga-btn-sm", {
+          type: "button",
+          onclick: () => nameFace(face),
+        }, "Name this face"));
+      }
+
+      cell.append(el("button.pga-btn.pga-btn-danger.pga-btn-sm", {
+        type: "button",
+        onclick: async () => {
+          const ok = await confirmDialog({
+            title: "Not a face?",
+            body: "For posters, reflections and blurs. The detection is deleted; the photo is untouched.",
+            confirmLabel: "Remove",
+            danger: true,
+          });
+          if (!ok) return;
+          try {
+            await api("face-delete", { face_id: face.id });
+            await load();
+          } catch (err) { toastError(err); }
+        },
+      }, "Not a face"));
+
+      return cell;
+    }));
+  }
+
+  async function syncPeople() {
+    // people[] is rebuilt by trigger, so re-read the row to reflect it.
+    try {
+      const res = await api("list-admin", { gallery: photo.gallery, year: photo.year, limit: 500 });
+      const fresh = (res.photos || []).find((p) => p.id === photo.id);
+      if (fresh) {
+        photo.people = fresh.people;
+        store.byId.set(photo.id, { ...store.byId.get(photo.id), people: fresh.people });
+        onPeopleChange();
+      }
+    } catch { /* cosmetic */ }
+  }
+
+  async function nameFace(face) {
+    const name = await promptDialog({
+      title: "Who is this?",
+      label: "Name",
+      hint: "Confirming this face teaches recognition, so future photos of this person get suggested automatically.",
+      confirmLabel: "Confirm",
+    });
+    if (!name) return;
+    try {
+      await api("face-confirm", { face_id: face.id, new_person_name: name });
+      toast(`Confirmed ${name}.`, { kind: "success" });
+      await load();
+      await syncPeople();
+    } catch (err) { toastError(err); }
+  }
+
+  /* --- draw a box the detector missed --- */
+
+  const drawBtn = el("button.pga-btn.pga-btn-outline.pga-btn-sm", { type: "button" }, "Draw a missed face");
+  const drawHint = el("p.pga-hint", { style: { margin: "6px 0 0" } });
+
+  drawBtn.addEventListener("click", async () => {
+    if (drawing) { stopDrawing(); return; }
+    drawHint.textContent = "Loading face recognition…";
+    try {
+      await loadFaceApi((m) => { drawHint.textContent = m; });
+    } catch (err) { drawHint.textContent = ""; toastError(err); return; }
+    startDrawing();
+  });
+
+  let previewBox = null;
+  let anchor = null;
+
+  function startDrawing() {
+    drawing = true;
+    drawBtn.textContent = "Cancel drawing";
+    drawHint.textContent = "Drag a rectangle around the face you want to add.";
+    image.style.cursor = "crosshair";
+    boxWrap.addEventListener("pointerdown", onDown);
+  }
+
+  function stopDrawing() {
+    drawing = false;
+    drawBtn.textContent = "Draw a missed face";
+    drawHint.textContent = "";
+    image.style.cursor = "";
+    previewBox?.remove();
+    previewBox = null;
+    anchor = null;
+    boxWrap.removeEventListener("pointerdown", onDown);
+    boxWrap.removeEventListener("pointermove", onMove);
+    boxWrap.removeEventListener("pointerup", onUp);
+  }
+
+  function relativePoint(event) {
+    const rect = image.getBoundingClientRect();
+    return {
+      x: Math.min(Math.max(event.clientX - rect.left, 0), rect.width),
+      y: Math.min(Math.max(event.clientY - rect.top, 0), rect.height),
+    };
+  }
+
+  function onDown(event) {
+    if (!drawing) return;
+    event.preventDefault();
+    anchor = relativePoint(event);
+    previewBox = el("div.pga-box", { "dataset": { named: "false" } });
+    boxWrap.append(previewBox);
+    boxWrap.addEventListener("pointermove", onMove);
+    boxWrap.addEventListener("pointerup", onUp);
+  }
+
+  function onMove(event) {
+    if (!anchor || !previewBox) return;
+    const point = relativePoint(event);
+    Object.assign(previewBox.style, {
+      left: `${Math.min(anchor.x, point.x)}px`,
+      top: `${Math.min(anchor.y, point.y)}px`,
+      width: `${Math.abs(point.x - anchor.x)}px`,
+      height: `${Math.abs(point.y - anchor.y)}px`,
+    });
+  }
+
+  async function onUp(event) {
+    if (!anchor) return;
+    const point = relativePoint(event);
+    const rect = image.getBoundingClientRect();
+    const box = {
+      x: Math.min(anchor.x, point.x) / rect.width,
+      y: Math.min(anchor.y, point.y) / rect.height,
+      w: Math.abs(point.x - anchor.x) / rect.width,
+      h: Math.abs(point.y - anchor.y) / rect.height,
+    };
+    stopDrawing();
+
+    if (box.w < 0.02 || box.h < 0.02) { toast("That box is too small.", { kind: "error" }); return; }
+
+    drawHint.textContent = "Looking for a face in that box…";
+    let described;
+    try {
+      described = await describeBox(photo.image_url, box);
+    } catch (err) { drawHint.textContent = ""; toastError(err); return; }
+
+    if (!described) {
+      drawHint.textContent = "";
+      // Honest fallback: face-add-manual needs a real descriptor, and a box
+      // around a hat would poison that person's exemplars.
+      toast(
+        "No face was found in that box. You can still tag the person without a face using the tag list above.",
+        { kind: "error", duration: 9000 },
+      );
+      return;
+    }
+
+    const name = await promptDialog({
+      title: "Who is this?",
+      label: "Name",
+      hint: "This face becomes an example for that person, improving future suggestions.",
+      confirmLabel: "Add face",
+    });
+    drawHint.textContent = "";
+    if (!name) return;
+
+    try {
+      const found = await api("people-list", { q: name, limit: 20 });
+      const person = (found.people || []).find(
+        (p) => p.display_name.toLowerCase() === name.toLowerCase());
+      const payload = {
+        photo_id: photo.id,
+        box,
+        embedding: described.embedding,
+        det_score: described.det_score,
+      };
+      if (person) payload.person_id = person.id;
+      const added = await api("face-add-manual", payload);
+      if (!person) {
+        // face-add-manual takes no new_person_name, so create the person and
+        // confirm the face it just returned.
+        const created = await api("person-create", { display_name: name });
+        await api("face-confirm", { face_id: added.face_id, person_id: created.person.id });
+      }
+      toast(`Added ${name} to this photo.`, { kind: "success" });
+      await load();
+      await syncPeople();
+    } catch (err) { toastError(err); }
+  }
+
+  wrap.append(
+    el("p.pga-label", { text: "Faces" }),
+    statusLine,
+    boxWrap,
+    el("div.pga-row", { style: { marginTop: "10px" } }, drawBtn),
+    drawHint,
+    list,
+  );
+  load();
+  return wrap;
 }
 
 async function untagPerson(photo, name, rerender) {
