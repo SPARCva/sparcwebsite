@@ -116,6 +116,13 @@ function serializeEmbedding(arr: unknown): string | null {
   return "[" + (arr as number[]).join(",") + "]";
 }
 
+// ArcFace descriptor (Tier 3). Same pgvector text form, 512 floats.
+function serializeEmbedding512(arr: unknown): string | null {
+  if (!Array.isArray(arr) || arr.length !== 512) return null;
+  for (const n of arr) if (typeof n !== "number" || !Number.isFinite(n)) return null;
+  return "[" + (arr as number[]).join(",") + "]";
+}
+
 // Boxes are FRACTIONS of the image (0..1), never pixels. Slight overflow is
 // allowed because detectors clip at the edges.
 type Box = { x: number; y: number; w: number; h: number };
@@ -267,7 +274,22 @@ async function handleGet(sb: Supa, url: URL): Promise<Response> {
 // Admin handler context + action map
 // ---------------------------------------------------------------------------
 type Role = "admin" | "photographer";
-type Ctx = { sb: Supa; payload: Record<string, unknown>; cats: Category[]; slugs: Set<string>; role: Role };
+
+// Which face recognizer drives matching (Tier 3). 'faceapi' is the default and
+// the only one live until an admin opts into 'arcface' from Settings.
+type Recognizer = "faceapi" | "arcface";
+
+// Distance bands per recognizer, echoed to the client so the confirm UI labels
+// confidence and picks its auto-confirm cutoff in the metric that's actually in
+// use — euclidean for face-api, cosine for ArcFace. `ceiling` matches each
+// recognizer's re-suggest max_distance, so a suggestion never sits above it.
+// The ArcFace numbers are conservative starting points; tune on real data.
+const RECOGNIZER_BANDS: Record<Recognizer, Record<string, number>> = {
+  faceapi: { auto: 0.36, very_likely: 0.36, likely: 0.46, possible: 0.54, ceiling: 0.55 },
+  arcface: { auto: 0.28, very_likely: 0.30, likely: 0.36, possible: 0.42, ceiling: 0.45 },
+};
+
+type Ctx = { sb: Supa; payload: Record<string, unknown>; cats: Category[]; slugs: Set<string>; role: Role; recognizer: Recognizer };
 type Handler = (c: Ctx) => Promise<Response>;
 
 // The only actions the upload-only photographer token may call. Everything
@@ -842,13 +864,19 @@ const hFacesSave: Handler = async ({ sb, payload }) => {
     const emb = serializeEmbedding(f.embedding);
     const box = parseBox(f.box);
     if (!emb || !box) continue;
-    rows.push({
+    const row: Record<string, unknown> = {
       photo_id: photoId, embedding: emb,
       box_x: box.x, box_y: box.y, box_w: box.w, box_h: box.h,
       origin: "detected",
       detector: str(f.detector) || "face-api/tiny",
       det_score: typeof f.det_score === "number" ? f.det_score : null,
-    });
+    };
+    // When the high-accuracy recognizer is running the scan, the client also
+    // sends the 512-float ArcFace descriptor; store it so the face is matchable
+    // in v2 space without a separate re-embed pass.
+    const emb2 = serializeEmbedding512(f.embedding_v2);
+    if (emb2) row.embedding_v2 = emb2;
+    rows.push(row);
   }
   if (rows.length) {
     const { error } = await sb.from("gallery_faces").insert(rows);
@@ -924,7 +952,11 @@ async function resolvePerson(sb: Supa, personId: string | null, newName: string 
   return { id: created.id as string };
 }
 
-const hFaceConfirm: Handler = async ({ sb, payload }) => {
+// The targeted re-suggest RPC for the active recognizer.
+const resuggestForPersonRpc = (recognizer: Recognizer) =>
+  recognizer === "arcface" ? "gallery_resuggest_for_person_v2" : "gallery_resuggest_for_person";
+
+const hFaceConfirm: Handler = async ({ sb, payload, recognizer }) => {
   const faceId = str(payload.face_id);
   if (!faceId) return json({ error: "Missing face_id" }, 400);
   const resolved = await resolvePerson(sb, payload.person_id ? str(payload.person_id) : null, payload.new_person_name ? str(payload.new_person_name) : null);
@@ -932,7 +964,7 @@ const hFaceConfirm: Handler = async ({ sb, payload }) => {
   const { error } = await sb.rpc("gallery_confirm_face", { p_face_id: faceId, p_person_id: resolved.id });
   if (error) { console.error("face-confirm:", error.message); return json({ error: "Could not confirm the face." }, 500); }
   // Cheap targeted re-suggest: this new exemplar may improve pending guesses.
-  await sb.rpc("gallery_resuggest_for_person", { p_person_id: resolved.id });
+  await sb.rpc(resuggestForPersonRpc(recognizer), { p_person_id: resolved.id });
   return json({ ok: true, person_id: resolved.id });
 };
 
@@ -942,7 +974,7 @@ const hFaceConfirm: Handler = async ({ sb, payload }) => {
 // makes "tag one face → tag the other hundred of the same person" cheap: the
 // client gathers a person's pending suggestions, a human keeps/deselects the
 // ones that are really them, and the kept set is confirmed together.
-const hFaceConfirmBatch: Handler = async ({ sb, payload }) => {
+const hFaceConfirmBatch: Handler = async ({ sb, payload, recognizer }) => {
   const ids = Array.isArray(payload.face_ids)
     ? Array.from(new Set(payload.face_ids.map((x) => str(x)).filter(Boolean)))
     : [];
@@ -959,7 +991,7 @@ const hFaceConfirmBatch: Handler = async ({ sb, payload }) => {
     else confirmed++;
   }
   // One re-suggest for the whole batch, not one per face.
-  await sb.rpc("gallery_resuggest_for_person", { p_person_id: resolved.id });
+  await sb.rpc(resuggestForPersonRpc(recognizer), { p_person_id: resolved.id });
   return json({ ok: true, person_id: resolved.id, confirmed, failed });
 };
 
@@ -1052,7 +1084,7 @@ const hFacesUnknown: Handler = async ({ sb, payload }) => {
   return json({ ok: true, faces: (data ?? []).map((r) => queueRow(r as Record<string, unknown>)) });
 };
 
-const hFacesStatus: Handler = async ({ sb, payload, slugs }) => {
+const hFacesStatus: Handler = async ({ sb, payload, slugs, recognizer }) => {
   const gallery = trimmed(payload.gallery);
   const hasGallery = slugs.has(gallery);
 
@@ -1074,14 +1106,96 @@ const hFacesStatus: Handler = async ({ sb, payload, slugs }) => {
     unscanned_count: unscanned ?? 0,
     unnamed_count: unnamed ?? 0,
     suggested_count: suggested ?? 0,
+    // Tier 3: the client labels confidence and picks its auto-confirm cutoff in
+    // the active recognizer's metric.
+    recognizer,
+    bands: RECOGNIZER_BANDS[recognizer],
   });
 };
 
-const hResuggest: Handler = async ({ sb, payload }) => {
-  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : 0.55;
-  const { data, error } = await sb.rpc("gallery_resuggest", { p_max_distance: maxD });
+const hResuggest: Handler = async ({ sb, payload, recognizer }) => {
+  const rpc = recognizer === "arcface" ? "gallery_resuggest_v2" : "gallery_resuggest";
+  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : RECOGNIZER_BANDS[recognizer].ceiling;
+  const { data, error } = await sb.rpc(rpc, { p_max_distance: maxD });
   if (error) { console.error("resuggest:", error.message); return json({ error: "Could not recompute suggestions." }, 500); }
   return json({ ok: true, updated: data ?? 0 });
+};
+
+// ---- Tier 3: high-accuracy recognizer rollout -----------------------------
+
+// Faces still missing an ArcFace embedding, for the in-browser re-embed pass.
+// Returns ALL such faces (confirmed exemplars included — they must be re-embedded
+// too, or v2 matching has nothing to match against), newest first, with the box
+// and full-size image so the client can crop, align and embed.
+const hFacesNeedEmbed: Handler = async ({ sb, payload }) => {
+  const limit = Math.min(200, Math.max(1, parseInt(str(payload.limit), 10) || 100));
+  // Keyset cursor: the client walks newest→oldest, passing the last row's
+  // created_at as `before`, so faces that fail to embed (and stay NULL) aren't
+  // re-fetched forever — the cursor just moves past them.
+  const before = payload.before ? str(payload.before) : null;
+  let q = sb.from("gallery_faces")
+    .select("id, photo_id, box_x, box_y, box_w, box_h, created_at, photo:photo_id(image_url)")
+    .is("embedding_v2", null)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (before) q = q.lt("created_at", before);
+  const { data, error } = await q;
+  if (error) { console.error("faces-need-embed:", error.message); return json({ error: "Could not load faces." }, 500); }
+  const faces = (data ?? []).map((r) => {
+    const rec = r as Record<string, unknown>;
+    const ph = rec.photo as { image_url: string } | null;
+    return { id: rec.id, photo_id: rec.photo_id, box: boxOf(rec), image_url: ph?.image_url ?? null, created_at: rec.created_at };
+  }).filter((f) => f.image_url);
+  return json({ ok: true, faces });
+};
+
+// Store ArcFace embeddings computed in the browser. Skips faces whose box no
+// longer holds a detectable face (embedding null) rather than failing the batch.
+const hFacesEmbedBatch: Handler = async ({ sb, payload }) => {
+  const items = Array.isArray(payload.items) ? payload.items as Record<string, unknown>[] : [];
+  if (!items.length) return json({ error: "items is required." }, 400);
+  if (items.length > 200) return json({ error: "Embed at most 200 faces at once." }, 400);
+  let saved = 0;
+  const failed: string[] = [];
+  for (const it of items) {
+    const faceId = str(it.face_id);
+    const emb2 = serializeEmbedding512(it.embedding_v2);
+    if (!faceId || !emb2) { if (faceId) failed.push(faceId); continue; }
+    const { error } = await sb.from("gallery_faces").update({ embedding_v2: emb2 }).eq("id", faceId);
+    if (error) { console.error("faces-embed-batch:", error.message); failed.push(faceId); }
+    else saved++;
+  }
+  return json({ ok: true, saved, failed });
+};
+
+// Progress + state for the Settings rollout panel.
+const hRecognizerStatus: Handler = async ({ sb, recognizer }) => {
+  const { count: total } = await sb.from("gallery_faces").select("id", { count: "exact", head: true });
+  const { count: embedded } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).not("embedding_v2", "is", null);
+  return json({
+    ok: true,
+    recognizer,
+    total_faces: total ?? 0,
+    embedded_v2: embedded ?? 0,
+    bands: RECOGNIZER_BANDS[recognizer],
+  });
+};
+
+// Flip the active recognizer. The client is expected to run `resuggest`
+// afterwards so suggestions are recomputed in the new metric.
+const hRecognizerSet: Handler = async ({ sb, payload }) => {
+  const value = str(payload.recognizer);
+  if (value !== "faceapi" && value !== "arcface") return json({ error: "Unknown recognizer." }, 400);
+  if (value === "arcface") {
+    const { count: embedded } = await sb.from("gallery_faces").select("id", { count: "exact", head: true })
+      .not("person_id", "is", null).not("embedding_v2", "is", null);
+    if ((embedded ?? 0) === 0) {
+      return json({ error: "No confirmed faces have an ArcFace embedding yet. Run the embedding pass first." }, 400);
+    }
+  }
+  const { error } = await sb.from("photo_gallery_config").update({ recognizer: value }).eq("id", true);
+  if (error) { console.error("recognizer-set:", error.message); return json({ error: "Could not switch recognizer." }, 500); }
+  return json({ ok: true, recognizer: value });
 };
 
 // ---- manual photo tagging (no face) ---------------------------------------
@@ -1147,6 +1261,10 @@ const HANDLERS: Record<string, Handler> = {
   "faces-unknown": hFacesUnknown,
   "faces-status": hFacesStatus,
   "resuggest": hResuggest,
+  "faces-need-embed": hFacesNeedEmbed,
+  "faces-embed-batch": hFacesEmbedBatch,
+  "recognizer-status": hRecognizerStatus,
+  "recognizer-set": hRecognizerSet,
   "photo-tag": hPhotoTag,
   "photo-untag": hPhotoUntag,
 };
@@ -1167,7 +1285,8 @@ Deno.serve(async (req: Request) => {
   // passphrase with a lockout would be a self-inflicted denial of service).
   const token = req.headers.get("x-admin-token") ?? "";
   const { data: cfg } = await sb.from("photo_gallery_config")
-    .select("admin_token_sha256, photographer_token_sha256").eq("id", true).maybeSingle();
+    .select("admin_token_sha256, photographer_token_sha256, recognizer").eq("id", true).maybeSingle();
+  const recognizer: Recognizer = cfg?.recognizer === "arcface" ? "arcface" : "faceapi";
 
   let role: Role | null = null;
   if (token) {
@@ -1197,7 +1316,7 @@ Deno.serve(async (req: Request) => {
   const cats = await loadCats(sb);
   const slugs = new Set(cats.map((c) => c.slug));
   try {
-    return await handler({ sb, payload, cats, slugs, role });
+    return await handler({ sb, payload, cats, slugs, role, recognizer });
   } catch (e) {
     console.error(`action ${action}:`, e instanceof Error ? e.message : String(e));
     return json({ error: "Something went wrong." }, 500);

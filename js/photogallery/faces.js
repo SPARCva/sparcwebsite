@@ -297,14 +297,26 @@ export async function detectInFile(file) {
   }
 }
 
+// Confidence bands, in the active recognizer's distance metric. Defaults to the
+// face-api (euclidean) values; the admin backend echoes the live recognizer's
+// bands (faces-status → `bands`) and setBands() swaps them in, so the wording
+// stays correct after switching to ArcFace/cosine. Fallback keeps old behaviour
+// when the field is absent.
+let BANDS = { very_likely: 0.36, likely: 0.46, possible: 0.54 };
+
+/** Update the confidence bands from the backend's active-recognizer values. */
+export function setBands(bands) {
+  if (bands && typeof bands.very_likely === "number") BANDS = bands;
+}
+
 /**
- * Plain-English confidence from the L2 distance the matcher returns. The
- * number is always shown alongside — never colour or wording alone.
+ * Plain-English confidence from the distance the matcher returns. The number is
+ * always shown alongside — never colour or wording alone.
  */
 export function confidenceLabel(distance) {
   if (distance == null) return "No suggestion";
-  if (distance <= 0.36) return "Very likely";
-  if (distance <= 0.46) return "Likely";
-  if (distance <= 0.54) return "Possible";
+  if (distance <= BANDS.very_likely) return "Very likely";
+  if (distance <= BANDS.likely) return "Likely";
+  if (distance <= BANDS.possible) return "Possible";
   return "Uncertain";
 }

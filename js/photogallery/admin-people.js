@@ -29,7 +29,7 @@ import {
   emptyState, loadingState, num, plural, debounce,
 } from "./ui.js";
 import { context, setRouteParams, setTabCount } from "./admin.js";
-import { loadFaceApi, detectFaces, confidenceLabel, toPixelBox } from "./faces.js";
+import { loadFaceApi, detectFaces, confidenceLabel, toPixelBox, setBands } from "./faces.js";
 import { faceCropUrl } from "./imaging.js";
 
 const PANELS = [
@@ -52,6 +52,12 @@ async function refreshStatus() {
   try {
     const res = await api("faces-status");
     status = res;
+    // Tier 3: label confidence and pick the auto-confirm cutoff in the active
+    // recognizer's metric (euclidean for face-api, cosine for ArcFace).
+    if (res.bands) {
+      setBands(res.bands);
+      if (typeof res.bands.auto === "number") AUTO_MAX = res.bands.auto;
+    }
     setTabCount("people", res.suggested_count, { attention: true, noun: "faces to confirm" });
     for (const panel of PANELS) {
       const chip = host?.querySelector(`[data-panel="${panel.id}"] .pga-chip-count`);
@@ -112,7 +118,7 @@ function faceImage(face, size, altText, { fixedWidth = null } = {}) {
 //   AUTO_MAX‥suggestion ceiling         → shown pre-checked for a single glance
 // The grid keeps the promise that a human confirms every name, while collapsing
 // a hundred keystrokes into one or two.
-const AUTO_MAX = 0.36;
+let AUTO_MAX = 0.36;
 
 // One sweep at a time: a fast Y-Y-Y in the triage queue must not stack two
 // review grids on top of each other. While a sweep is in flight, later
