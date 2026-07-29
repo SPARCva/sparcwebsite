@@ -18,9 +18,22 @@
      - The global :focus-visible shape from styles.css (3px solid,
        offset 2px) is preserved everywhere; only the colour changes on dark
        surfaces, where blue would fail contrast.
+     - Text contrast is measured, not assumed. Note that white on
+       --sparc-kelly-green (#4CBB17) is only 2.49:1 and white on
+       --sparc-kelly-green-dark (#3a9212) only 3.96:1 — both fail WCAG AA for
+       button-sized text, so neither is used behind white text here (the
+       marketing site's .btn-primary does; that's a separate problem). Kelly
+       green is kept for non-text decoration only: tab underline, selection
+       borders, progress fill, drop-zone highlight. Filled buttons with white
+       text use --pga-green, which measures 5.37:1.
    ========================================================================== */
 
 :root {
+    /* Kelly green darkened until white text reaches WCAG AA (5.37:1). Still
+       reads as the SPARC green; only used where text sits on top. */
+    --pga-green: #2f7a10;
+    --pga-green-hover: #276608;   /* 7.02:1 */
+
     --pga-max: 1400px;
     --pga-line: #dbe3ec;
     --pga-line-strong: #c3d0dd;
@@ -103,7 +116,10 @@ body.pga {
     border: none;
     border-bottom: 4px solid transparent;
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.82);
+    /* 6.23:1 on royal blue. 82% white measured only 4.05:1, which fails AA at
+       this size — the active tab is distinguished by the underline, not by
+       making the inactive ones too faint to read. */
+    color: #dce8f4;
     font-family: var(--font-heading);
     font-size: 0.9rem;
     font-weight: 600;
@@ -135,7 +151,8 @@ body.pga {
     text-align: center;
 }
 
-.pga-tab-count.attn { background: var(--sparc-kelly-green); color: #fff; }
+/* Count pills carry white text, so they need the accessible green too. */
+.pga-tab-count.attn { background: var(--pga-green); color: #fff; }
 
 /* ---------- context bar (album + year) -------------------------------- */
 
@@ -286,8 +303,8 @@ body.pga {
     transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.pga-btn-primary { background: var(--sparc-kelly-green); color: #fff; }
-.pga-btn-primary:hover { background: var(--sparc-kelly-green-dark); }
+.pga-btn-primary { background: var(--pga-green); color: #fff; }
+.pga-btn-primary:hover { background: var(--pga-green-hover); }
 
 .pga-btn-blue { background: var(--sparc-royal-blue); color: #fff; }
 .pga-btn-blue:hover { background: var(--sparc-dark-navy); }
