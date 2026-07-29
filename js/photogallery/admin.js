@@ -19,7 +19,7 @@
 
 import { api, signIn, signOut, hasToken, onAuthLost, PGError } from "./api.js";
 import {
-  el, toast, toastError, dialog, promptDialog, emptyState, loadingState,
+  el, toast, toastError, confirmDialog, promptDialog, emptyState, loadingState,
   num, plural,
 } from "./ui.js";
 
@@ -423,6 +423,18 @@ async function mountSettings(view) {
     ),
   );
 
+  async function patchCategory(cat, patch, describe) {
+    try {
+      await api("category-update", { slug: cat.slug, patch });
+      await loadCategories();
+      renderAlbums();
+      emitContextChange();
+      toast(describe, { kind: "success" });
+    } catch (err) {
+      toastError(err);
+    }
+  }
+
   function renderAlbums() {
     albums.replaceChildren(...context.categories.map((cat) => el("div.pga-toolbar", null,
       el("span.pga-toolbar-count", { text: cat.name }),
@@ -430,6 +442,41 @@ async function mountSettings(view) {
         ? el("span.pga-badge.pga-badge-featured", { text: "Public" })
         : el("span.pga-badge.pga-badge-hidden", { text: "Private" }),
       el("code", { text: `/${cat.slug}/`, style: { fontSize: "0.82rem", color: "var(--pga-muted)" } }),
+      el("button.pga-btn.pga-btn-ghost.pga-btn-sm", {
+        type: "button",
+        onclick: async () => {
+          const name = await promptDialog({
+            title: "Rename album", label: "Album name", value: cat.name, confirmLabel: "Save",
+            hint: "Only the display name changes. The web address stays the same, so existing links keep working.",
+          });
+          if (!name || name === cat.name) return;
+          patchCategory(cat, { name }, `Renamed to “${name}”.`);
+        },
+      }, "Rename"),
+      cat.is_public
+        ? el("button.pga-btn.pga-btn-ghost.pga-btn-sm", {
+            type: "button",
+            onclick: async () => {
+              const ok = await confirmDialog({
+                title: `Make “${cat.name}” private?`,
+                body: "The album disappears from the public website immediately. Nothing is deleted, and you can make it public again at any time.",
+                confirmLabel: "Make private",
+                danger: true,
+              });
+              if (ok) patchCategory(cat, { is_public: false }, `“${cat.name}” is now private.`);
+            },
+          }, "Make private")
+        : el("button.pga-btn.pga-btn-primary.pga-btn-sm", {
+            type: "button",
+            onclick: async () => {
+              const ok = await confirmDialog({
+                title: `Publish “${cat.name}”?`,
+                body: `Every approved photo in this album becomes visible to the public at /photogallery/${cat.slug}/. Hidden photos stay hidden.`,
+                confirmLabel: "Publish album",
+              });
+              if (ok) patchCategory(cat, { is_public: true }, `“${cat.name}” is now on the website.`);
+            },
+          }, "Publish"),
     )));
   }
   renderAlbums();

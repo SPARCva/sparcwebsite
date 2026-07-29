@@ -107,9 +107,16 @@ session-based.
 
 Downloads each image and **re-hosts it in the bucket** (so expiring share URLs
 never break), then inserts rows. De-dupes on `(source, external_id)`. ≤200 per
-call, ≤25 MB per image. `thumb_path` is left `null` for imports — a later
-backfill renders their 400 px thumbnails. Sets `needs_alt` unless a caption or
-alt was supplied.
+call, ≤25 MB per image. Sets `needs_alt` unless a caption or alt was supplied.
+
+**Imports get no thumbnail, and this cannot be fixed from the browser.**
+`thumb_path` is left `null`, and there is no way to attach one afterwards:
+`upload-urls` only mints fresh UUID paths, and `buildPatch` does not accept
+`thumb_path`. The consequence is cosmetic rather than broken — `publicRow`
+falls back to `thumb_url ?? image_url`, so imported photos serve their
+full-size image into grids, which is slower to load. Closing the gap needs a
+server-side action (a signed URL for an existing `thumb_path`, or a
+`thumb_path` field on `update`); it is deliberately not attempted client-side.
 
 **SSRF allowlist:** `import` only fetches `https:` URLs whose host is (a suffix
 of) `googleusercontent.com`, `googleapis.com`, `photoslibrary.googleapis.com`,

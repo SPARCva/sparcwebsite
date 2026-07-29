@@ -513,7 +513,10 @@ export function mount(view) {
       "Paste image links, one per line. For security these must be Google or Dropbox " +
       "addresses — arbitrary hosts are rejected, so a link from somewhere else needs " +
       "downloading and uploading above instead." }),
-    el("div.pga-field.grow", null, linkArea),
+    el("div.pga-field.grow", null,
+      el("label", { for: "pga-import-urls", text: "Image links" }),
+      linkArea,
+    ),
     el("div.pga-row", { style: { marginTop: "10px" } },
       el("div.pga-field", null, el("label", { for: "pga-import-source", text: "Source label" }), sourceSelect),
       el("button.pga-btn.pga-btn-blue", {
