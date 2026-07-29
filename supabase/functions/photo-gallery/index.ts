@@ -1,7 +1,25 @@
 // photo-gallery
-// Backend for /photogallery. PUBLIC reads (GET); AUTH writes (POST, x-admin-token)
-// at admin or photographer level; face-recognition, review-queue, dynamic
-// categories, and embedded-video support.
+// -----------------------------------------------------------------------------
+// Backend for /photogallery.
+//   * PUBLIC reads  — GET  ?action=list  (only the Supabase gateway apikey)
+//   * ADMIN writes  — POST + x-admin-token (SHA-256 checked, constant-time)
+//
+// This is the v2 backend, targeting the schema in
+// migrations/20260729_gallery_people_and_faces_v2.sql plus the helpers in
+// migrations/20260729_gallery_resuggest_and_search.sql. Key differences from v1:
+//
+//   * There is no photographer role. Auth is a boolean: valid admin token or 401.
+//   * gallery_photos.people[] is a TRIGGER-MAINTAINED CACHE derived from
+//     gallery_photo_people. The function NEVER writes it directly. To tag a
+//     photo, insert into gallery_photo_people; the trigger rebuilds people[].
+//   * Face descriptors are vector(128). Matching happens in Postgres RPCs, not
+//     in JavaScript. Naming a face no longer auto-writes across the DB — it is
+//     a suggest → human-confirm/reject loop.
+//   * Uploads are direct-to-storage via signed URLs; the function never touches
+//     the image bytes for uploads (only imports still re-host).
+//
+// Postgres error text is never echoed to the client (it leaks schema); errors
+// are logged server-side and a generic message is returned.
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -13,21 +31,40 @@ const CORS = {
 };
 
 const BUCKET = "gallery";
-const SOURCES = ["upload", "photographer", "google_photos", "gdrive", "onedrive", "facebook", "repo", "youtube", "vimeo"];
-// A neutral video poster used when a provider gives us no thumbnail (e.g. some Vimeo videos).
+const SOURCES = ["upload", "google_photos", "gdrive", "dropbox", "repo", "youtube", "vimeo"];
+const PERSON_KINDS = ["participant", "staff", "board", "family", "guest", "unknown"];
+// Hosts the `import` action is allowed to fetch from. Matched as suffixes, so
+// e.g. lh3.googleusercontent.com is covered by "googleusercontent.com". Without
+// this the function would be an open SSRF proxy for any URL the caller sends.
+const IMPORT_HOST_SUFFIXES = [
+  "googleusercontent.com", "googleapis.com", "photoslibrary.googleapis.com",
+  "drive.google.com", "dropboxusercontent.com", "dropbox.com",
+];
+// A neutral video poster used when a provider gives us no thumbnail.
 const VIDEO_POSTER = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='480'%20height='270'%3E%3Crect%20width='100%25'%20height='100%25'%20fill='%23002b50'/%3E%3Cpolygon%20points='205,108 205,162 260,135'%20fill='white'/%3E%3C/svg%3E";
 
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), { status, headers: { ...CORS, "Content-Type": "application/json" } });
-}
+type Supa = ReturnType<typeof supa>;
 
 function supa() {
   return createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 }
 
+function json(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), { status, headers: { ...CORS, "Content-Type": "application/json" } });
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((res) => setTimeout(res, ms));
+}
+
+// ---------------------------------------------------------------------------
+// Small utilities
+// ---------------------------------------------------------------------------
 type Category = { slug: string; name: string; is_public: boolean; sort_order: number };
-async function loadCats(sb: ReturnType<typeof supa>): Promise<Category[]> {
-  const { data } = await sb.from("gallery_categories").select("slug, name, is_public, sort_order").order("sort_order", { ascending: true }).order("name", { ascending: true });
+async function loadCats(sb: Supa): Promise<Category[]> {
+  const { data } = await sb.from("gallery_categories")
+    .select("slug, name, is_public, sort_order")
+    .order("sort_order", { ascending: true }).order("name", { ascending: true });
   return (data ?? []) as Category[];
 }
 
@@ -48,47 +85,56 @@ function tokenMatches(provided: string, stored: string | null | undefined): bool
   return diff === 0;
 }
 
-async function authLevel(req: Request, sb: ReturnType<typeof supa>): Promise<"admin" | "photographer" | null> {
-  const token = req.headers.get("x-admin-token") ?? "";
-  if (!token) return null;
-  const { data } = await sb.from("photo_gallery_config").select("admin_token_sha256, photographer_token_sha256").eq("id", true).maybeSingle();
-  const provided = await sha256Hex(token);
-  if (tokenMatches(provided, data?.admin_token_sha256)) return "admin";
-  if (tokenMatches(provided, data?.photographer_token_sha256)) return "photographer";
-  return null;
-}
-
-function publicRow(r: Record<string, unknown>) {
-  return {
-    id: r.id, gallery: r.gallery, year: r.year,
-    image_url: r.image_url, thumb_url: r.thumb_url ?? r.image_url,
-    caption: r.caption ?? "",
-    alt_text: (r.alt_text as string) || (r.caption as string) || "",
-    people: r.people ?? [], taken_at: r.taken_at,
-    is_featured: r.is_featured, featured_order: r.featured_order,
-    sort_order: r.sort_order, width: r.width, height: r.height,
-    media_type: r.media_type ?? "photo", video_url: r.video_url ?? null,
-  };
-}
-
-function matchesQuery(r: Record<string, unknown>, q: string): boolean {
-  const needle = q.toLowerCase();
-  if (String(r.caption ?? "").toLowerCase().includes(needle)) return true;
-  const people = (r.people as string[]) ?? [];
-  return people.some((p) => String(p).toLowerCase().includes(needle));
-}
-
-function normPeople(input: unknown): string[] {
-  if (Array.isArray(input)) return input.map((s) => String(s).trim()).filter(Boolean).slice(0, 60);
-  if (typeof input === "string") return input.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 60);
-  return [];
-}
-
 function extFromType(type: string, url: string): string {
-  const map: Record<string, string> = { "image/jpeg": "jpg", "image/jpg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/heic": "heic" };
+  const map: Record<string, string> = {
+    "image/jpeg": "jpg", "image/jpg": "jpg", "image/png": "png",
+    "image/webp": "webp", "image/gif": "gif", "image/heic": "heic",
+  };
   if (map[type]) return map[type];
-  const m = url.split("?")[0].match(/\.([a-z0-9]{3,4})$/i);
+  const m = (url ?? "").split("?")[0].match(/\.([a-z0-9]{3,4})$/i);
   return m ? m[1].toLowerCase() : "jpg";
+}
+
+function nonEmpty(s: unknown): boolean {
+  return typeof s === "string" && s.trim() !== "";
+}
+
+// Face descriptors are vector(128); PostgREST needs the pgvector text form,
+// not a JS array. Validate length + finiteness, then serialize.
+function serializeEmbedding(arr: unknown): string | null {
+  if (!Array.isArray(arr) || arr.length !== 128) return null;
+  for (const n of arr) if (typeof n !== "number" || !Number.isFinite(n)) return null;
+  return "[" + (arr as number[]).join(",") + "]";
+}
+
+// Boxes are FRACTIONS of the image (0..1), never pixels. Slight overflow is
+// allowed because detectors clip at the edges.
+type Box = { x: number; y: number; w: number; h: number };
+function parseBox(raw: unknown): Box | null {
+  if (!raw || typeof raw !== "object") return null;
+  const b = raw as Record<string, unknown>;
+  const x = Number(b.x), y = Number(b.y), w = Number(b.w), h = Number(b.h);
+  for (const v of [x, y, w, h]) if (!Number.isFinite(v)) return null;
+  if (w <= 0 || h <= 0) return null;
+  if ([x, y, w, h].some((v) => v < -0.5 || v > 1.5)) return null;
+  return { x, y, w, h };
+}
+
+function boxOf(r: Record<string, unknown>): Box {
+  return { x: r.box_x as number, y: r.box_y as number, w: r.box_w as number, h: r.box_h as number };
+}
+
+function importHostAllowed(urlStr: string): boolean {
+  let u: URL;
+  try { u = new URL(urlStr); } catch { return false; }
+  if (u.protocol !== "https:") return false;
+  const host = u.hostname.toLowerCase();
+  if (
+    host === "localhost" || host === "::1" || host === "[::1]" ||
+    host.startsWith("127.") || host.startsWith("10.") ||
+    host.startsWith("192.168.") || host.startsWith("169.254.")
+  ) return false;
+  return IMPORT_HOST_SUFFIXES.some((s) => host === s || host.endsWith("." + s));
 }
 
 // Parse a YouTube/Vimeo URL into an embeddable form + a thumbnail.
@@ -112,330 +158,830 @@ async function parseVideo(raw: string): Promise<{ provider: string; embed: strin
   return null;
 }
 
-async function storeBytes(sb: ReturnType<typeof supa>, gallery: string, year: number, bytes: Uint8Array, contentType: string, ext: string): Promise<{ path: string; url: string }> {
-  const rand = crypto.randomUUID();
-  const path = `${gallery}/${year}/${rand}.${ext}`;
+// Download an external image (import only) and re-host it in the bucket.
+async function storeBytes(sb: Supa, gallery: string, year: number, bytes: Uint8Array, contentType: string, ext: string): Promise<{ path: string; url: string }> {
+  const path = `${gallery}/${year}/${crypto.randomUUID()}.${ext}`;
   const { error } = await sb.storage.from(BUCKET).upload(path, bytes, { contentType: contentType || "image/jpeg", upsert: false });
   if (error) throw new Error(`storage upload failed: ${error.message}`);
   const { data } = sb.storage.from(BUCKET).getPublicUrl(path);
   return { path, url: data.publicUrl };
 }
 
+async function objectExists(sb: Supa, path: string): Promise<boolean> {
+  // A short-lived signed URL succeeds only if the object is really there, so a
+  // failed browser PUT can't leave us inserting an orphan row.
+  const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(path, 60);
+  return !error && !!data?.signedUrl;
+}
+
+// ---------------------------------------------------------------------------
+// Response shapers
+// ---------------------------------------------------------------------------
+// Public row shape — the public gallery JS depends on this exact contract.
+function publicRow(r: Record<string, unknown>) {
+  return {
+    id: r.id, gallery: r.gallery, year: r.year,
+    image_url: r.image_url, thumb_url: r.thumb_url ?? r.image_url,
+    caption: r.caption ?? "",
+    alt_text: (r.alt_text as string) || (r.caption as string) || "",
+    people: r.people ?? [], taken_at: r.taken_at,
+    is_featured: r.is_featured, featured_order: r.featured_order,
+    sort_order: r.sort_order, width: r.width, height: r.height,
+    media_type: r.media_type ?? "photo", video_url: r.video_url ?? null,
+  };
+}
+
+// Admin grid row — the management UI needs the operational columns too.
+function adminRow(r: Record<string, unknown>) {
+  return {
+    ...publicRow(r),
+    published: r.published, source: r.source,
+    storage_path: r.storage_path, thumb_path: r.thumb_path,
+    submission: r.submission, video_provider: r.video_provider,
+    needs_alt: r.needs_alt, face_scanned: r.face_scanned,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// GET — public list
+// ---------------------------------------------------------------------------
+async function handleGet(sb: Supa, url: URL): Promise<Response> {
+  const action = url.searchParams.get("action") ?? "list";
+  if (action !== "list") return json({ error: "Unknown action" }, 400);
+
+  const gallery = String(url.searchParams.get("gallery") ?? "").trim();
+  const cats = await loadCats(sb);
+  const cat = cats.find((c) => c.slug === gallery);
+  if (!cat || !cat.is_public) return json({ error: "Unknown gallery" }, 400);
+
+  const yearParam = url.searchParams.get("year");
+  const q = (url.searchParams.get("q") ?? "").trim();
+
+  const { data: yearRows, error: yearErr } = await sb.from("gallery_photos")
+    .select("year").eq("gallery", gallery).eq("published", true);
+  if (yearErr) { console.error("years:", yearErr.message); return json({ error: "Could not load gallery." }, 500); }
+  const years = [...new Set((yearRows ?? []).map((r) => r.year as number))].sort((a, b) => b - a);
+
+  const { data: featRows } = await sb.from("gallery_photos").select("*")
+    .eq("gallery", gallery).eq("published", true).eq("is_featured", true)
+    .order("featured_order", { ascending: true, nullsFirst: false })
+    .order("taken_at", { ascending: true, nullsFirst: false })
+    .order("created_at", { ascending: true }).limit(60);
+
+  let selectedYear: number | null = null;
+  if (yearParam && yearParam !== "all") { const n = parseInt(yearParam, 10); if (!Number.isNaN(n)) selectedYear = n; }
+  else if (yearParam !== "all") selectedYear = years[0] ?? null;
+
+  // Search is pushed into SQL (caption ILIKE + people[] unnest ILIKE) via the
+  // gallery_list_photos helper, which also enforces published = true and the
+  // taken_at → sort_order → created_at ordering and the 2000-row cap.
+  const { data: photoRows, error: photoErr } = await sb.rpc("gallery_list_photos", {
+    p_gallery: gallery,
+    p_year: selectedYear,
+    p_q: q || null,
+  });
+  if (photoErr) { console.error("photos:", photoErr.message); return json({ error: "Could not load gallery." }, 500); }
+
+  const photos = (photoRows ?? []).map(publicRow);
+  const featured = (featRows ?? []).map(publicRow);
+  return json({ ok: true, gallery, name: cat.name, years, selectedYear, featured, photos, count: photos.length });
+}
+
+// ---------------------------------------------------------------------------
+// Admin handler context + action map
+// ---------------------------------------------------------------------------
+type Ctx = { sb: Supa; payload: Record<string, unknown>; cats: Category[]; slugs: Set<string> };
+type Handler = (c: Ctx) => Promise<Response>;
+
+const str = (v: unknown, max = 0): string => { const s = String(v ?? ""); return max ? s.slice(0, max) : s; };
+const trimmed = (v: unknown, max = 0): string => str(v, max).trim();
+
+// ---- categories -----------------------------------------------------------
+const hCategories: Handler = async ({ cats }) => json({ ok: true, categories: cats });
+
+const hCategoryCreate: Handler = async ({ sb, payload, cats, slugs }) => {
+  const name = trimmed(payload.name, 80);
+  if (!name) return json({ error: "Category name is required." }, 400);
+  const slug = slugify(str(payload.slug) || name);
+  if (!slug) return json({ error: "Could not derive a valid slug from that name." }, 400);
+  if (slugs.has(slug)) return json({ error: "A category with that slug already exists." }, 409);
+  const sort = cats.length ? Math.max(...cats.map((c) => c.sort_order)) + 1 : 1;
+  const { data, error } = await sb.from("gallery_categories")
+    .insert({ slug, name, is_public: payload.is_public === true, sort_order: sort }).select("*").single();
+  if (error) { console.error("category-create:", error.message); return json({ error: "Could not create the category." }, 500); }
+  return json({ ok: true, category: data });
+};
+
+// ---- uploads (signed direct-to-storage) -----------------------------------
+const hUploadUrls: Handler = async ({ sb, payload, slugs }) => {
+  const gallery = trimmed(payload.gallery);
+  const year = parseInt(str(payload.year), 10);
+  if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
+  if (Number.isNaN(year) || year < 1990 || year > 2100) return json({ error: "Invalid year" }, 400);
+  const files = Array.isArray(payload.files) ? payload.files as Record<string, unknown>[] : [];
+  if (!files.length) return json({ error: "No files." }, 400);
+  if (files.length > 50) return json({ error: "Request at most 50 upload URLs at a time." }, 400);
+
+  const uploads: unknown[] = [];
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
+    const ext = extFromType(str(f.content_type), str(f.name));
+    const uuid = crypto.randomUUID();
+    const mainPath = `${gallery}/${year}/${uuid}.${ext}`;
+    const thumbPath = `${gallery}/${year}/thumbs/${uuid}.jpg`;
+    const [main, thumb] = await Promise.all([
+      sb.storage.from(BUCKET).createSignedUploadUrl(mainPath),
+      sb.storage.from(BUCKET).createSignedUploadUrl(thumbPath),
+    ]);
+    if (main.error || thumb.error) {
+      console.error("upload-urls:", main.error?.message ?? thumb.error?.message);
+      return json({ error: "Could not create upload URLs." }, 500);
+    }
+    uploads.push({
+      index: i,
+      main: { path: main.data.path, token: main.data.token, signedUrl: main.data.signedUrl },
+      thumb: { path: thumb.data.path, token: thumb.data.token, signedUrl: thumb.data.signedUrl },
+    });
+  }
+  return json({ ok: true, uploads });
+};
+
+const hUploadCommit: Handler = async ({ sb, payload, slugs }) => {
+  const gallery = trimmed(payload.gallery);
+  const year = parseInt(str(payload.year), 10);
+  if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
+  if (Number.isNaN(year) || year < 1990 || year > 2100) return json({ error: "Invalid year" }, 400);
+  const items = Array.isArray(payload.items) ? payload.items as Record<string, unknown>[] : [];
+  if (!items.length) return json({ error: "No items to commit." }, 400);
+  if (items.length > 50) return json({ error: "Commit at most 50 photos at a time." }, 400);
+
+  const rows: Record<string, unknown>[] = [];
+  const skipped: { index: number; reason: string }[] = [];
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const storagePath = trimmed(it.storage_path);
+    const thumbPath = trimmed(it.thumb_path);
+    if (!storagePath) { skipped.push({ index: i, reason: "missing storage_path" }); continue; }
+    // Guard against orphan rows: the object must really exist in the bucket.
+    if (!(await objectExists(sb, storagePath))) { skipped.push({ index: i, reason: "object not found in storage" }); continue; }
+
+    const source = trimmed(it.source) || "upload";
+    if (!SOURCES.includes(source)) { skipped.push({ index: i, reason: "invalid source" }); continue; }
+
+    const caption = str(it.caption, 2000);
+    const alt = str(it.alt_text, 2000);
+    const { data: imgPub } = sb.storage.from(BUCKET).getPublicUrl(storagePath);
+    const thumbUrl = thumbPath ? sb.storage.from(BUCKET).getPublicUrl(thumbPath).data.publicUrl : null;
+
+    rows.push({
+      gallery, year, source,
+      storage_path: storagePath, thumb_path: thumbPath || null,
+      image_url: imgPub.publicUrl, thumb_url: thumbUrl,
+      caption, alt_text: alt,
+      taken_at: it.taken_at ? str(it.taken_at) : null,
+      width: it.width != null ? Number(it.width) || null : null,
+      height: it.height != null ? Number(it.height) || null : null,
+      is_featured: it.is_featured === true,
+      needs_alt: !(nonEmpty(alt) || nonEmpty(caption)),
+      published: true,
+    });
+  }
+
+  if (!rows.length) return json({ ok: true, inserted: 0, ids: [], skipped }, 200);
+  const { data, error } = await sb.from("gallery_photos").insert(rows).select("id");
+  if (error) { console.error("upload-commit:", error.message); return json({ error: "Could not record the uploaded photos." }, 500); }
+  return json({ ok: true, inserted: (data ?? []).length, ids: (data ?? []).map((r) => r.id), skipped });
+};
+
+// ---- import (re-host external images) -------------------------------------
+const hImport: Handler = async ({ sb, payload, slugs }) => {
+  const gallery = trimmed(payload.gallery);
+  const year = parseInt(str(payload.year), 10);
+  const source = str(payload.source) || "google_photos";
+  const items = Array.isArray(payload.items) ? payload.items as Record<string, unknown>[] : [];
+  const auth = payload.auth ? str(payload.auth) : null;
+  if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
+  if (Number.isNaN(year) || year < 1990 || year > 2100) return json({ error: "Invalid year" }, 400);
+  if (!SOURCES.includes(source)) return json({ error: "Unknown source" }, 400);
+  if (!items.length) return json({ error: "No items to import." }, 400);
+  if (items.length > 200) return json({ error: "Import at most 200 photos at a time." }, 400);
+
+  const results: { ok: boolean; error?: string; id?: string }[] = [];
+  for (const it of items) {
+    const imageUrl = trimmed(it.image_url);
+    const externalId = it.external_id ? str(it.external_id) : null;
+    const caption = str(it.caption, 2000);
+    const alt = str(it.alt_text, 2000);
+    if (!imageUrl) { results.push({ ok: false, error: "missing image_url" }); continue; }
+    // Allowlist the host so the function can't be used as an SSRF proxy.
+    if (!importHostAllowed(imageUrl)) { results.push({ ok: false, error: "host not allowed" }); continue; }
+    if (externalId) {
+      const { data: dup } = await sb.from("gallery_photos").select("id").eq("source", source).eq("external_id", externalId).maybeSingle();
+      if (dup) { results.push({ ok: true, id: dup.id as string }); continue; }
+    }
+    try {
+      const resp = await fetch(imageUrl, auth ? { headers: { Authorization: "Bearer " + auth } } : undefined);
+      if (!resp.ok) throw new Error(`fetch ${resp.status}`);
+      const ct = resp.headers.get("content-type") ?? "image/jpeg";
+      if (!ct.startsWith("image/")) throw new Error("not an image");
+      const bytes = new Uint8Array(await resp.arrayBuffer());
+      if (bytes.length > 25 * 1024 * 1024) throw new Error("too large");
+      const stored = await storeBytes(sb, gallery, year, bytes, ct, extFromType(ct, imageUrl));
+      // thumb_path is left null for imports; a later backfill renders 400px
+      // thumbnails for imported rows (uploads carry their own browser-made thumb).
+      const { data, error } = await sb.from("gallery_photos").insert({
+        gallery, year, storage_path: stored.path, thumb_path: null, image_url: stored.url,
+        caption, alt_text: alt, needs_alt: !(nonEmpty(alt) || nonEmpty(caption)),
+        taken_at: it.taken_at ? str(it.taken_at) : null,
+        source, external_id: externalId,
+        width: it.width ? Number(it.width) : null, height: it.height ? Number(it.height) : null,
+      }).select("id").single();
+      if (error) throw new Error(error.message);
+      results.push({ ok: true, id: data.id as string });
+    } catch (e) {
+      console.error("import item:", e instanceof Error ? e.message : String(e));
+      results.push({ ok: false, error: "import failed" });
+    }
+  }
+  const imported = results.filter((r) => r.ok).length;
+  return json({ ok: true, imported, failed: results.length - imported, results });
+};
+
+// ---- video ----------------------------------------------------------------
+const hVideoAdd: Handler = async ({ sb, payload, slugs }) => {
+  const gallery = trimmed(payload.gallery);
+  const year = parseInt(str(payload.year), 10);
+  if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
+  if (Number.isNaN(year) || year < 1990 || year > 2100) return json({ error: "Invalid year" }, 400);
+  const vid = await parseVideo(str(payload.video_url));
+  if (!vid) return json({ error: "That doesn't look like a YouTube or Vimeo link." }, 400);
+  const caption = str(payload.caption, 2000);
+  const alt = str(payload.alt_text, 2000);
+  const row = {
+    gallery, year, media_type: "video", image_url: vid.thumb,
+    video_url: vid.embed, video_provider: vid.provider, source: vid.provider,
+    caption, alt_text: alt,
+    taken_at: payload.taken_at ? str(payload.taken_at) : null,
+    is_featured: payload.is_featured === true,
+    submission: payload.submission ? str(payload.submission, 200) : null,
+    published: true,
+  };
+  const { data, error } = await sb.from("gallery_photos").insert(row).select("*").single();
+  if (error) { console.error("video-add:", error.message); return json({ error: "Could not save the video." }, 500); }
+  return json({ ok: true, photo: publicRow(data) });
+};
+
+// ---- admin list (paginated) -----------------------------------------------
+const hListAdmin: Handler = async ({ sb, payload, slugs }) => {
+  const gallery = trimmed(payload.gallery);
+  const year = parseInt(str(payload.year), 10);
+  const filter = str(payload.filter);
+  const limit = Math.min(500, Math.max(1, parseInt(str(payload.limit), 10) || 100));
+  const offset = Math.max(0, parseInt(str(payload.offset), 10) || 0);
+
+  // "untagged" is an anti-join against gallery_photo_people; resolve the tagged
+  // id set once and exclude it from both the data query and the count query.
+  let taggedIds: string[] = [];
+  if (filter === "untagged") {
+    const { data: tagged } = await sb.from("gallery_photo_people").select("photo_id");
+    taggedIds = [...new Set((tagged ?? []).map((r) => r.photo_id as string))];
+  }
+
+  // deno-lint-ignore no-explicit-any
+  const applyFilters = (q: any) => {
+    if (slugs.has(gallery)) q = q.eq("gallery", gallery);
+    if (!Number.isNaN(year)) q = q.eq("year", year);
+    if (filter === "needs_alt") q = q.eq("needs_alt", true);
+    else if (filter === "unscanned") q = q.eq("face_scanned", false);
+    else if (filter === "unpublished") q = q.eq("published", false);
+    else if (filter === "untagged" && taggedIds.length) q = q.not("id", "in", "(" + taggedIds.join(",") + ")");
+    return q;
+  };
+
+  const { count, error: cErr } = await applyFilters(
+    sb.from("gallery_photos").select("id", { count: "exact", head: true }),
+  );
+  if (cErr) { console.error("list-admin count:", cErr.message); return json({ error: "Could not load photos." }, 500); }
+
+  const { data, error } = await applyFilters(
+    sb.from("gallery_photos").select("*")
+      .order("year", { ascending: false })
+      .order("taken_at", { ascending: true, nullsFirst: false })
+      .order("created_at", { ascending: true })
+      .range(offset, offset + limit - 1),
+  );
+  if (error) { console.error("list-admin:", error.message); return json({ error: "Could not load photos." }, 500); }
+  return json({ ok: true, photos: (data ?? []).map(adminRow), total: count ?? 0 });
+};
+
+// ---- patch builder (people[] deliberately excluded — it is a cache) --------
+function buildPatch(patch: Record<string, unknown>, validSlugs: Set<string>): Record<string, unknown> {
+  const clean: Record<string, unknown> = {};
+  if ("caption" in patch) clean.caption = str(patch.caption, 2000);
+  if ("alt_text" in patch) clean.alt_text = str(patch.alt_text, 2000);
+  if ("year" in patch) { const y = parseInt(str(patch.year), 10); if (!Number.isNaN(y) && y >= 1990 && y <= 2100) clean.year = y; }
+  if ("gallery" in patch && validSlugs.has(str(patch.gallery))) clean.gallery = patch.gallery;
+  if ("is_featured" in patch) clean.is_featured = !!patch.is_featured;
+  if ("featured_order" in patch) { const n = parseInt(str(patch.featured_order), 10); clean.featured_order = Number.isNaN(n) ? null : n; }
+  if ("sort_order" in patch) { const n = parseInt(str(patch.sort_order), 10); if (!Number.isNaN(n)) clean.sort_order = n; }
+  if ("taken_at" in patch) clean.taken_at = patch.taken_at ? str(patch.taken_at) : null;
+  if ("published" in patch) clean.published = !!patch.published;
+  if ("submission" in patch) clean.submission = patch.submission ? str(patch.submission, 200) : null;
+  return clean;
+}
+
+const hUpdate: Handler = async ({ sb, payload, slugs }) => {
+  const id = str(payload.id);
+  if (!id) return json({ error: "Missing id" }, 400);
+  const patch = (payload.patch ?? {}) as Record<string, unknown>;
+  const clean = buildPatch(patch, slugs);
+  if (!Object.keys(clean).length) return json({ error: "Nothing to update." }, 400);
+
+  // Recompute needs_alt whenever caption or alt_text changes: it depends on the
+  // FINAL value of both fields, so fold in whichever isn't in the patch.
+  if ("caption" in clean || "alt_text" in clean) {
+    const { data: cur } = await sb.from("gallery_photos").select("caption, alt_text, media_type").eq("id", id).maybeSingle();
+    if (cur && cur.media_type === "photo") {
+      const finalCaption = "caption" in clean ? clean.caption : cur.caption;
+      const finalAlt = "alt_text" in clean ? clean.alt_text : cur.alt_text;
+      clean.needs_alt = !(nonEmpty(finalAlt) || nonEmpty(finalCaption));
+    }
+  }
+
+  const { data, error } = await sb.from("gallery_photos").update(clean).eq("id", id).select("*").single();
+  if (error) { console.error("update:", error.message); return json({ error: "Could not update the photo." }, 500); }
+  return json({ ok: true, photo: adminRow(data) });
+};
+
+const hBulkUpdate: Handler = async ({ sb, payload, slugs }) => {
+  const ids = Array.isArray(payload.ids) ? payload.ids.map(String) : [];
+  if (!ids.length) return json({ error: "No photos selected." }, 400);
+  if (ids.length > 1000) return json({ error: "Too many photos selected." }, 400);
+  const patch = (payload.patch ?? {}) as Record<string, unknown>;
+  const clean = buildPatch(patch, slugs);
+  if (!Object.keys(clean).length) return json({ error: "Nothing to update." }, 400);
+
+  const { error } = await sb.from("gallery_photos").update(clean).in("id", ids);
+  if (error) { console.error("bulk-update:", error.message); return json({ error: "Could not update the photos." }, 500); }
+
+  // needs_alt depends per-row on the field NOT in the patch, so recompute from
+  // each affected photo's resulting values and write it back in two grouped
+  // updates (true / false) rather than one per row.
+  if ("caption" in clean || "alt_text" in clean) {
+    const { data: rows } = await sb.from("gallery_photos").select("id, caption, alt_text, media_type").in("id", ids);
+    const needTrue: string[] = [], needFalse: string[] = [];
+    for (const r of rows ?? []) {
+      if (r.media_type !== "photo") continue;
+      (!(nonEmpty(r.alt_text) || nonEmpty(r.caption)) ? needTrue : needFalse).push(r.id as string);
+    }
+    if (needTrue.length) await sb.from("gallery_photos").update({ needs_alt: true }).in("id", needTrue);
+    if (needFalse.length) await sb.from("gallery_photos").update({ needs_alt: false }).in("id", needFalse);
+  }
+  return json({ ok: true, updated: ids.length });
+};
+
+const hDelete: Handler = async ({ sb, payload }) => {
+  const id = str(payload.id);
+  if (!id) return json({ error: "Missing id" }, 400);
+  const { data: row } = await sb.from("gallery_photos").select("storage_path, thumb_path").eq("id", id).maybeSingle();
+  const paths = [row?.storage_path, row?.thumb_path].filter((p): p is string => !!p);
+  if (paths.length) await sb.storage.from(BUCKET).remove(paths);
+  const { error } = await sb.from("gallery_photos").delete().eq("id", id);
+  if (error) { console.error("delete:", error.message); return json({ error: "Could not delete the photo." }, 500); }
+  return json({ ok: true });
+};
+
+// ---- people roster --------------------------------------------------------
+const hPeopleList: Handler = async ({ sb, payload }) => {
+  const q = trimmed(payload.q).toLowerCase();
+  const limit = Math.min(500, Math.max(1, parseInt(str(payload.limit), 10) || 100));
+  const offset = Math.max(0, parseInt(str(payload.offset), 10) || 0);
+
+  // The roster is small and naturally bounded, so fetch it and filter for
+  // case-insensitive substring over display_name + aliases in JS (PostgREST
+  // cannot substring-match text[] elements), then paginate.
+  const { data: allPeople, error } = await sb.from("gallery_people")
+    .select("id, display_name, sort_name, aliases, kind, hidden, notes")
+    .order("sort_name", { ascending: true, nullsFirst: false })
+    .order("display_name", { ascending: true });
+  if (error) { console.error("people-list:", error.message); return json({ error: "Could not load people." }, 500); }
+
+  let people = allPeople ?? [];
+  if (q) {
+    people = people.filter((p) => {
+      if (String(p.display_name).toLowerCase().includes(q)) return true;
+      return ((p.aliases as string[]) ?? []).some((a) => String(a).toLowerCase().includes(q));
+    });
+  }
+  const total = people.length;
+  const page = people.slice(offset, offset + limit);
+  const ids = page.map((p) => p.id as string);
+
+  // Aggregate photo_count / face_count / cover for just this page in two queries.
+  const photoCount = new Map<string, Set<string>>();
+  const faceCount = new Map<string, number>();
+  const cover = new Map<string, { photo_id: string; image_url: string | null; box: Box }>();
+  if (ids.length) {
+    const { data: links } = await sb.from("gallery_photo_people").select("person_id, photo_id").in("person_id", ids);
+    for (const l of links ?? []) {
+      const set = photoCount.get(l.person_id as string) ?? new Set<string>();
+      set.add(l.photo_id as string);
+      photoCount.set(l.person_id as string, set);
+    }
+    const { data: faces } = await sb.from("gallery_faces")
+      .select("person_id, photo_id, box_x, box_y, box_w, box_h, photo:photo_id(image_url)")
+      .in("person_id", ids).not("person_id", "is", null);
+    for (const f of faces ?? []) {
+      const pid = f.person_id as string;
+      faceCount.set(pid, (faceCount.get(pid) ?? 0) + 1);
+      if (!cover.has(pid)) {
+        const ph = (f as Record<string, unknown>).photo as Record<string, unknown> | null;
+        cover.set(pid, { photo_id: f.photo_id as string, image_url: (ph?.image_url as string) ?? null, box: boxOf(f as Record<string, unknown>) });
+      }
+    }
+  }
+
+  return json({
+    ok: true, total,
+    people: page.map((p) => ({
+      id: p.id, display_name: p.display_name, sort_name: p.sort_name,
+      aliases: p.aliases ?? [], kind: p.kind, hidden: p.hidden, notes: p.notes,
+      photo_count: photoCount.get(p.id as string)?.size ?? 0,
+      face_count: faceCount.get(p.id as string) ?? 0,
+      cover: cover.get(p.id as string) ?? null,
+    })),
+  });
+};
+
+const hPersonCreate: Handler = async ({ sb, payload }) => {
+  const display_name = trimmed(payload.display_name, 120);
+  if (!display_name) return json({ error: "A name is required." }, 400);
+  const kind = PERSON_KINDS.includes(str(payload.kind)) ? str(payload.kind) : "unknown";
+  const sort_name = payload.sort_name ? trimmed(payload.sort_name, 120) : null;
+  const aliases = Array.isArray(payload.aliases)
+    ? [...new Set(payload.aliases.map((a) => String(a).trim()).filter(Boolean))].slice(0, 30) : [];
+  const { data, error } = await sb.from("gallery_people")
+    .insert({ display_name, kind, sort_name, aliases }).select("*").single();
+  if (error) {
+    if (error.code === "23505") {
+      // unique index on lower(display_name) — hand back the existing record.
+      const { data: existing } = await sb.from("gallery_people").select("id, display_name")
+        .ilike("display_name", display_name).maybeSingle();
+      return json({ error: "A person with that name already exists.", existing_id: existing?.id ?? null, existing_name: existing?.display_name ?? null }, 409);
+    }
+    console.error("person-create:", error.message);
+    return json({ error: "Could not create the person." }, 500);
+  }
+  return json({ ok: true, person: data });
+};
+
+const hPersonUpdate: Handler = async ({ sb, payload }) => {
+  const id = str(payload.id);
+  if (!id) return json({ error: "Missing id" }, 400);
+  const patch = (payload.patch ?? {}) as Record<string, unknown>;
+  const clean: Record<string, unknown> = {};
+  if ("display_name" in patch) { const v = trimmed(patch.display_name, 120); if (!v) return json({ error: "Name cannot be empty." }, 400); clean.display_name = v; }
+  if ("sort_name" in patch) clean.sort_name = patch.sort_name ? trimmed(patch.sort_name, 120) : null;
+  if ("aliases" in patch) clean.aliases = Array.isArray(patch.aliases) ? [...new Set(patch.aliases.map((a) => String(a).trim()).filter(Boolean))].slice(0, 30) : [];
+  if ("kind" in patch && PERSON_KINDS.includes(str(patch.kind))) clean.kind = patch.kind;
+  if ("hidden" in patch) clean.hidden = !!patch.hidden;
+  if ("notes" in patch) clean.notes = patch.notes ? str(patch.notes, 4000) : null;
+  if (!Object.keys(clean).length) return json({ error: "Nothing to update." }, 400);
+  const { data, error } = await sb.from("gallery_people").update(clean).eq("id", id).select("*").single();
+  if (error) {
+    if (error.code === "23505") return json({ error: "Another person already has that name." }, 409);
+    console.error("person-update:", error.message);
+    return json({ error: "Could not update the person." }, 500);
+  }
+  return json({ ok: true, person: data });
+};
+
+const hPersonMerge: Handler = async ({ sb, payload }) => {
+  const keep = str(payload.keep_id), drop = str(payload.drop_id);
+  if (!keep || !drop) return json({ error: "Both keep_id and drop_id are required." }, 400);
+  if (keep === drop) return json({ error: "Cannot merge a person into themselves." }, 400);
+  const { error } = await sb.rpc("gallery_merge_people", { p_keep: keep, p_drop: drop });
+  if (error) { console.error("person-merge:", error.message); return json({ error: "Could not merge the people." }, 500); }
+  const { data: links } = await sb.from("gallery_photo_people").select("photo_id").eq("person_id", keep);
+  const photo_count = new Set((links ?? []).map((l) => l.photo_id as string)).size;
+  return json({ ok: true, keep_id: keep, photo_count });
+};
+
+const hPersonDelete: Handler = async ({ sb, payload }) => {
+  const id = str(payload.id);
+  if (!id) return json({ error: "Missing id" }, 400);
+  const { count } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).eq("person_id", id);
+  const { error } = await sb.from("gallery_people").delete().eq("id", id);
+  if (error) { console.error("person-delete:", error.message); return json({ error: "Could not delete the person." }, 500); }
+  return json({ ok: true, orphaned_faces: count ?? 0 });
+};
+
+// ---- faces ----------------------------------------------------------------
+const hFacesSave: Handler = async ({ sb, payload }) => {
+  const photoId = str(payload.photo_id);
+  if (!photoId) return json({ error: "Missing photo_id" }, 400);
+  const faces = Array.isArray(payload.faces) ? payload.faces as Record<string, unknown>[] : [];
+  if (faces.length > 100) return json({ error: "Too many faces for one photo." }, 400);
+
+  // Don't re-scan a photo that already has confirmed faces: a re-scan would
+  // have to replace detected rows, and we can't safely carry confirmations
+  // across, so skip and leave the human's work intact.
+  const { count: confirmed } = await sb.from("gallery_faces")
+    .select("id", { count: "exact", head: true }).eq("photo_id", photoId).not("person_id", "is", null);
+  if ((confirmed ?? 0) > 0) {
+    await sb.from("gallery_photos").update({ face_scanned: true }).eq("id", photoId);
+    return json({ ok: true, inserted: 0, scanned: true, skipped: "photo has confirmed faces" });
+  }
+
+  // Replace only detector output; preserve any hand-drawn (manual) boxes.
+  await sb.from("gallery_faces").delete().eq("photo_id", photoId).eq("origin", "detected");
+
+  const rows: Record<string, unknown>[] = [];
+  for (const f of faces) {
+    const emb = serializeEmbedding(f.embedding);
+    const box = parseBox(f.box);
+    if (!emb || !box) continue;
+    rows.push({
+      photo_id: photoId, embedding: emb,
+      box_x: box.x, box_y: box.y, box_w: box.w, box_h: box.h,
+      origin: "detected",
+      detector: str(f.detector) || "face-api/tiny",
+      det_score: typeof f.det_score === "number" ? f.det_score : null,
+    });
+  }
+  if (rows.length) {
+    const { error } = await sb.from("gallery_faces").insert(rows);
+    if (error) { console.error("faces-save:", error.message); return json({ error: "Could not save faces." }, 500); }
+  }
+  // Mark scanned even when zero faces were found, so it isn't re-queued.
+  await sb.from("gallery_photos").update({ face_scanned: true }).eq("id", photoId);
+  return json({ ok: true, inserted: rows.length, scanned: true });
+};
+
+const hFacesForPhoto: Handler = async ({ sb, payload }) => {
+  const photoId = str(payload.photo_id);
+  if (!photoId) return json({ error: "Missing photo_id" }, 400);
+  const { data: ph } = await sb.from("gallery_photos").select("face_scanned").eq("id", photoId).maybeSingle();
+  const { data, error } = await sb.from("gallery_faces")
+    .select("id, box_x, box_y, box_w, box_h, origin, suggested_distance, person:person_id(id, display_name), suggestion:suggested_person_id(id, display_name)")
+    .eq("photo_id", photoId);
+  if (error) { console.error("faces-for-photo:", error.message); return json({ error: "Could not load faces." }, 500); }
+  const faces = (data ?? []).map((r) => {
+    const rec = r as Record<string, unknown>;
+    const person = rec.person as { id: string; display_name: string } | null;
+    const sugg = rec.suggestion as { id: string; display_name: string } | null;
+    return {
+      id: rec.id, box: boxOf(rec), origin: rec.origin,
+      person: person ? { id: person.id, name: person.display_name } : null,
+      suggestion: (!person && sugg) ? { id: sugg.id, name: sugg.display_name, distance: rec.suggested_distance } : null,
+    };
+  });
+  return json({ ok: true, scanned: !!ph?.face_scanned, faces });
+};
+
+const hFaceAddManual: Handler = async ({ sb, payload }) => {
+  const photoId = str(payload.photo_id);
+  if (!photoId) return json({ error: "Missing photo_id" }, 400);
+  const emb = serializeEmbedding(payload.embedding);
+  const box = parseBox(payload.box);
+  if (!emb) return json({ error: "A valid 128-value face descriptor is required." }, 400);
+  if (!box) return json({ error: "A valid face box (fractions of the image) is required." }, 400);
+  const { data, error } = await sb.from("gallery_faces").insert({
+    photo_id: photoId, embedding: emb,
+    box_x: box.x, box_y: box.y, box_w: box.w, box_h: box.h,
+    origin: "manual", detector: str(payload.detector) || "manual",
+  }).select("id").single();
+  if (error) { console.error("face-add-manual:", error.message); return json({ error: "Could not add the face." }, 500); }
+  const faceId = data.id as string;
+
+  const personId = payload.person_id ? str(payload.person_id) : null;
+  if (personId) {
+    const { error: cErr } = await sb.rpc("gallery_confirm_face", { p_face_id: faceId, p_person_id: personId });
+    if (cErr) { console.error("face-add-manual confirm:", cErr.message); return json({ error: "Face added but could not tag the person." }, 500); }
+    await sb.rpc("gallery_resuggest_for_person", { p_person_id: personId });
+    return json({ ok: true, face_id: faceId, person_id: personId });
+  }
+  return json({ ok: true, face_id: faceId });
+};
+
+// Resolve a person id from an explicit id or a (possibly new) name.
+async function resolvePerson(sb: Supa, personId: string | null, newName: string | null): Promise<{ id: string } | { error: string; status: number }> {
+  if (personId) return { id: personId };
+  const name = (newName ?? "").trim().slice(0, 120);
+  if (!name) return { error: "A person id or name is required.", status: 400 };
+  const { data: existing } = await sb.from("gallery_people").select("id").ilike("display_name", name).maybeSingle();
+  if (existing) return { id: existing.id as string };
+  const { data: created, error } = await sb.from("gallery_people").insert({ display_name: name }).select("id").single();
+  if (error) {
+    if (error.code === "23505") {
+      const { data: race } = await sb.from("gallery_people").select("id").ilike("display_name", name).maybeSingle();
+      if (race) return { id: race.id as string };
+    }
+    console.error("resolvePerson:", error.message);
+    return { error: "Could not create the person.", status: 500 };
+  }
+  return { id: created.id as string };
+}
+
+const hFaceConfirm: Handler = async ({ sb, payload }) => {
+  const faceId = str(payload.face_id);
+  if (!faceId) return json({ error: "Missing face_id" }, 400);
+  const resolved = await resolvePerson(sb, payload.person_id ? str(payload.person_id) : null, payload.new_person_name ? str(payload.new_person_name) : null);
+  if ("error" in resolved) return json({ error: resolved.error }, resolved.status);
+  const { error } = await sb.rpc("gallery_confirm_face", { p_face_id: faceId, p_person_id: resolved.id });
+  if (error) { console.error("face-confirm:", error.message); return json({ error: "Could not confirm the face." }, 500); }
+  // Cheap targeted re-suggest: this new exemplar may improve pending guesses.
+  await sb.rpc("gallery_resuggest_for_person", { p_person_id: resolved.id });
+  return json({ ok: true, person_id: resolved.id });
+};
+
+const hFaceReject: Handler = async ({ sb, payload }) => {
+  const faceId = str(payload.face_id), personId = str(payload.person_id);
+  if (!faceId || !personId) return json({ error: "face_id and person_id are required." }, 400);
+  const { error } = await sb.rpc("gallery_reject_face", { p_face_id: faceId, p_person_id: personId });
+  if (error) { console.error("face-reject:", error.message); return json({ error: "Could not reject the suggestion." }, 500); }
+  return json({ ok: true });
+};
+
+const hFaceUnconfirm: Handler = async ({ sb, payload }) => {
+  const faceId = str(payload.face_id);
+  if (!faceId) return json({ error: "Missing face_id" }, 400);
+  const { error } = await sb.rpc("gallery_unconfirm_face", { p_face_id: faceId });
+  if (error) { console.error("face-unconfirm:", error.message); return json({ error: "Could not unconfirm the face." }, 500); }
+  return json({ ok: true });
+};
+
+const hFaceDelete: Handler = async ({ sb, payload }) => {
+  const faceId = str(payload.face_id);
+  if (!faceId) return json({ error: "Missing face_id" }, 400);
+  const { error } = await sb.from("gallery_faces").delete().eq("id", faceId);
+  if (error) { console.error("face-delete:", error.message); return json({ error: "Could not delete the face." }, 500); }
+  return json({ ok: true });
+};
+
+// Shared shaper for the review / unknown queues.
+function queueRow(r: Record<string, unknown>) {
+  const ph = r.photo as Record<string, unknown> | null;
+  const sugg = r.suggestion as { id: string; display_name: string } | null;
+  return {
+    id: r.id, photo_id: r.photo_id, box: boxOf(r),
+    image_url: ph?.image_url ?? null, gallery: ph?.gallery ?? null, year: ph?.year ?? null,
+    distance: r.suggested_distance ?? null,
+    person: sugg ? { id: sugg.id, name: sugg.display_name } : null,
+  };
+}
+
+const hFacesReview: Handler = async ({ sb, payload }) => {
+  const limit = Math.min(300, Math.max(1, parseInt(str(payload.limit), 10) || 60));
+  const offset = Math.max(0, parseInt(str(payload.offset), 10) || 0);
+  const minD = typeof payload.min_distance === "number" ? payload.min_distance : null;
+  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : null;
+  let q = sb.from("gallery_faces")
+    .select("id, photo_id, box_x, box_y, box_w, box_h, suggested_distance, suggestion:suggested_person_id(id, display_name), photo:photo_id(image_url, gallery, year)")
+    .is("person_id", null).not("suggested_person_id", "is", null)
+    .order("suggested_distance", { ascending: true }).range(offset, offset + limit - 1);
+  if (minD !== null) q = q.gte("suggested_distance", minD);
+  if (maxD !== null) q = q.lte("suggested_distance", maxD);
+  const { data, error } = await q;
+  if (error) { console.error("faces-review:", error.message); return json({ error: "Could not load the review queue." }, 500); }
+  return json({ ok: true, faces: (data ?? []).map((r) => queueRow(r as Record<string, unknown>)) });
+};
+
+const hFacesUnknown: Handler = async ({ sb, payload }) => {
+  const limit = Math.min(300, Math.max(1, parseInt(str(payload.limit), 10) || 60));
+  const offset = Math.max(0, parseInt(str(payload.offset), 10) || 0);
+  const { data, error } = await sb.from("gallery_faces")
+    .select("id, photo_id, box_x, box_y, box_w, box_h, suggested_distance, suggestion:suggested_person_id(id, display_name), photo:photo_id(image_url, gallery, year)")
+    .is("person_id", null).is("suggested_person_id", null)
+    .order("created_at", { ascending: true }).range(offset, offset + limit - 1);
+  if (error) { console.error("faces-unknown:", error.message); return json({ error: "Could not load unknown faces." }, 500); }
+  return json({ ok: true, faces: (data ?? []).map((r) => queueRow(r as Record<string, unknown>)) });
+};
+
+const hFacesStatus: Handler = async ({ sb, payload, slugs }) => {
+  const gallery = trimmed(payload.gallery);
+  const hasGallery = slugs.has(gallery);
+
+  let scannedQ = sb.from("gallery_photos").select("id").eq("face_scanned", true).limit(20000);
+  if (hasGallery) scannedQ = scannedQ.eq("gallery", gallery);
+  const { data: scanned, error } = await scannedQ;
+  if (error) { console.error("faces-status:", error.message); return json({ error: "Could not load status." }, 500); }
+
+  let unscannedQ = sb.from("gallery_photos").select("id", { count: "exact", head: true }).eq("face_scanned", false);
+  if (hasGallery) unscannedQ = unscannedQ.eq("gallery", gallery);
+  const { count: unscanned } = await unscannedQ;
+
+  const { count: unnamed } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).is("person_id", null);
+  const { count: suggested } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).is("person_id", null).not("suggested_person_id", "is", null);
+
+  return json({
+    ok: true,
+    scanned_ids: (scanned ?? []).map((r) => r.id),
+    unscanned_count: unscanned ?? 0,
+    unnamed_count: unnamed ?? 0,
+    suggested_count: suggested ?? 0,
+  });
+};
+
+const hResuggest: Handler = async ({ sb, payload }) => {
+  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : 0.55;
+  const { data, error } = await sb.rpc("gallery_resuggest", { p_max_distance: maxD });
+  if (error) { console.error("resuggest:", error.message); return json({ error: "Could not recompute suggestions." }, 500); }
+  return json({ ok: true, updated: data ?? 0 });
+};
+
+// ---- manual photo tagging (no face) ---------------------------------------
+const hPhotoTag: Handler = async ({ sb, payload }) => {
+  const photoId = str(payload.photo_id), personId = str(payload.person_id);
+  if (!photoId || !personId) return json({ error: "photo_id and person_id are required." }, 400);
+  const { error } = await sb.from("gallery_photo_people")
+    .insert({ photo_id: photoId, person_id: personId, via: "manual" });
+  // 23505 = already tagged; treat as success (idempotent).
+  if (error && error.code !== "23505") {
+    if (error.code === "23503") return json({ error: "Unknown photo or person." }, 400);
+    console.error("photo-tag:", error.message);
+    return json({ error: "Could not tag the photo." }, 500);
+  }
+  return json({ ok: true });
+};
+
+const hPhotoUntag: Handler = async ({ sb, payload }) => {
+  const photoId = str(payload.photo_id), personId = str(payload.person_id);
+  if (!photoId || !personId) return json({ error: "photo_id and person_id are required." }, 400);
+  // If a confirmed face for this person is still on the photo, the trigger
+  // would immediately re-add the tag — so refuse and point at the real fix.
+  const { count } = await sb.from("gallery_faces")
+    .select("id", { count: "exact", head: true }).eq("photo_id", photoId).eq("person_id", personId);
+  if ((count ?? 0) > 0) return json({ error: "This person has a confirmed face in this photo. Unconfirm the face instead.", faces: count }, 409);
+  const { error } = await sb.from("gallery_photo_people").delete().eq("photo_id", photoId).eq("person_id", personId);
+  if (error) { console.error("photo-untag:", error.message); return json({ error: "Could not untag the photo." }, 500); }
+  return json({ ok: true });
+};
+
+// ---------------------------------------------------------------------------
+// Action registry
+// ---------------------------------------------------------------------------
+const HANDLERS: Record<string, Handler> = {
+  "categories": hCategories,
+  "category-create": hCategoryCreate,
+  "upload-urls": hUploadUrls,
+  "upload-commit": hUploadCommit,
+  "import": hImport,
+  "video-add": hVideoAdd,
+  "list-admin": hListAdmin,
+  "update": hUpdate,
+  "bulk-update": hBulkUpdate,
+  "delete": hDelete,
+  "people-list": hPeopleList,
+  "person-create": hPersonCreate,
+  "person-update": hPersonUpdate,
+  "person-merge": hPersonMerge,
+  "person-delete": hPersonDelete,
+  "faces-save": hFacesSave,
+  "faces-for-photo": hFacesForPhoto,
+  "face-add-manual": hFaceAddManual,
+  "face-confirm": hFaceConfirm,
+  "face-reject": hFaceReject,
+  "face-unconfirm": hFaceUnconfirm,
+  "face-delete": hFaceDelete,
+  "faces-review": hFacesReview,
+  "faces-unknown": hFacesUnknown,
+  "faces-status": hFacesStatus,
+  "resuggest": hResuggest,
+  "photo-tag": hPhotoTag,
+  "photo-untag": hPhotoUntag,
+};
+
+// ---------------------------------------------------------------------------
+// Entry point
+// ---------------------------------------------------------------------------
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const sb = supa();
-  const url = new URL(req.url);
 
-  if (req.method === "GET") {
-    const action = url.searchParams.get("action") ?? "list";
-    if (action !== "list") return json({ error: "Unknown action" }, 400);
-    const gallery = String(url.searchParams.get("gallery") ?? "").trim();
-    const cats = await loadCats(sb);
-    const cat = cats.find((c) => c.slug === gallery);
-    if (!cat || !cat.is_public) return json({ error: "Unknown gallery" }, 400);
-    const yearParam = url.searchParams.get("year");
-    const q = (url.searchParams.get("q") ?? "").trim();
-
-    const { data: yearRows, error: yearErr } = await sb.from("gallery_photos").select("year").eq("gallery", gallery).eq("published", true);
-    if (yearErr) { console.error("years:", yearErr.message); return json({ error: "Could not load gallery." }, 500); }
-    const years = [...new Set((yearRows ?? []).map((r) => r.year as number))].sort((a, b) => b - a);
-
-    const { data: featRows } = await sb.from("gallery_photos").select("*").eq("gallery", gallery).eq("published", true).eq("is_featured", true)
-      .order("featured_order", { ascending: true, nullsFirst: false }).order("taken_at", { ascending: true, nullsFirst: false }).order("created_at", { ascending: true }).limit(60);
-
-    let selectedYear: number | null = null;
-    if (yearParam && yearParam !== "all") { const n = parseInt(yearParam, 10); if (!Number.isNaN(n)) selectedYear = n; }
-    else if (yearParam !== "all") selectedYear = years[0] ?? null;
-
-    let photoQ = sb.from("gallery_photos").select("*").eq("gallery", gallery).eq("published", true)
-      .order("taken_at", { ascending: true, nullsFirst: false }).order("sort_order", { ascending: true }).order("created_at", { ascending: true }).limit(2000);
-    if (selectedYear !== null) photoQ = photoQ.eq("year", selectedYear);
-    const { data: photoRows, error: photoErr } = await photoQ;
-    if (photoErr) { console.error("photos:", photoErr.message); return json({ error: "Could not load gallery." }, 500); }
-
-    let photos = (photoRows ?? []).map(publicRow);
-    let featured = (featRows ?? []).map(publicRow);
-    if (q) { photos = photos.filter((r) => matchesQuery(r, q)); featured = featured.filter((r) => matchesQuery(r, q)); }
-    return json({ ok: true, gallery, name: cat.name, years, selectedYear, featured, photos, count: photos.length });
-  }
-
+  if (req.method === "GET") return handleGet(sb, new URL(req.url));
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
-  const level = await authLevel(req, sb);
-  if (!level) return json({ error: "Unauthorized. Check the gallery passphrase." }, 401);
-  const cats = await loadCats(sb);
-  const slugs = new Set(cats.map((c) => c.slug));
-  const contentType = req.headers.get("content-type") ?? "";
-
-  if (contentType.includes("multipart/form-data")) {
-    let form: FormData;
-    try { form = await req.formData(); } catch { return json({ error: "Invalid upload." }, 400); }
-    if (String(form.get("action") ?? "upload") !== "upload") return json({ error: "Unknown multipart action" }, 400);
-    const file = form.get("file");
-    if (!(file instanceof File)) return json({ error: "No file provided." }, 400);
-    const gallery = String(form.get("gallery") ?? "").trim();
-    const year = parseInt(String(form.get("year") ?? ""), 10);
-    if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
-    if (Number.isNaN(year) || year < 1990 || year > 2100) return json({ error: "Invalid year" }, 400);
-    if (file.size > 25 * 1024 * 1024) return json({ error: "Image exceeds 25MB." }, 400);
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    let stored;
-    try { stored = await storeBytes(sb, gallery, year, bytes, file.type, extFromType(file.type, file.name)); }
-    catch (e) { console.error(e); return json({ error: "Could not store the image." }, 500); }
-    const takenAtRaw = String(form.get("taken_at") ?? "").trim();
-    const isPhotographer = level === "photographer";
-    const row = {
-      gallery, year, storage_path: stored.path, image_url: stored.url,
-      caption: String(form.get("caption") ?? "").slice(0, 2000),
-      alt_text: String(form.get("alt_text") ?? "").slice(0, 2000),
-      people: normPeople(form.get("people")),
-      taken_at: takenAtRaw || null,
-      is_featured: !isPhotographer && String(form.get("is_featured") ?? "") === "true",
-      source: isPhotographer ? "photographer" : "upload",
-      published: !isPhotographer,
-      submission: String(form.get("submission") ?? "").slice(0, 200) || null,
-    };
-    const { data, error } = await sb.from("gallery_photos").insert(row).select("*").single();
-    if (error) { console.error("insert:", error.message); return json({ error: "Saved image but could not record it." }, 500); }
-    return json({ ok: true, photo: publicRow(data) });
-  }
+  // Auth is a boolean now: valid admin token or 401. On failure, wait ~300ms
+  // before responding to blunt brute-forcing (no lockout — a single shared
+  // passphrase with a lockout would be a self-inflicted denial of service).
+  const token = req.headers.get("x-admin-token") ?? "";
+  const { data: cfg } = await sb.from("photo_gallery_config").select("admin_token_sha256").eq("id", true).maybeSingle();
+  const ok = token ? tokenMatches(await sha256Hex(token), cfg?.admin_token_sha256) : false;
+  if (!ok) { await delay(300); return json({ error: "Unauthorized. Check the gallery passphrase." }, 401); }
 
   let payload: Record<string, unknown>;
   try { payload = await req.json(); } catch { return json({ error: "Invalid JSON body." }, 400); }
-  const action = String(payload.action ?? "");
+  const action = str(payload.action);
+  const handler = HANDLERS[action];
+  if (!handler) return json({ error: "Unknown action" }, 400);
 
-  // Categories are readable by any authenticated user (admin or photographer).
-  if (action === "categories") {
-    return json({ ok: true, categories: cats });
+  const cats = await loadCats(sb);
+  const slugs = new Set(cats.map((c) => c.slug));
+  try {
+    return await handler({ sb, payload, cats, slugs });
+  } catch (e) {
+    console.error(`action ${action}:`, e instanceof Error ? e.message : String(e));
+    return json({ error: "Something went wrong." }, 500);
   }
-
-  if (level !== "admin") return json({ error: "This action requires the admin passphrase." }, 403);
-
-  if (action === "category-create") {
-    const name = String(payload.name ?? "").trim().slice(0, 80);
-    if (!name) return json({ error: "Category name is required." }, 400);
-    const slug = slugify(String(payload.slug ?? "") || name);
-    if (!slug) return json({ error: "Could not derive a valid slug from that name." }, 400);
-    if (slugs.has(slug)) return json({ error: "A category with that slug already exists." }, 409);
-    const sort = cats.length ? Math.max(...cats.map((c) => c.sort_order)) + 1 : 1;
-    const { data, error } = await sb.from("gallery_categories")
-      .insert({ slug, name, is_public: payload.is_public === true, sort_order: sort }).select("*").single();
-    if (error) return json({ error: error.message }, 500);
-    return json({ ok: true, category: data });
-  }
-
-  if (action === "video-add") {
-    const gallery = String(payload.gallery ?? "").trim();
-    const year = parseInt(String(payload.year ?? ""), 10);
-    if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
-    if (Number.isNaN(year) || year < 1990 || year > 2100) return json({ error: "Invalid year" }, 400);
-    const vid = await parseVideo(String(payload.video_url ?? ""));
-    if (!vid) return json({ error: "That doesn't look like a YouTube or Vimeo link." }, 400);
-    const row = {
-      gallery, year, media_type: "video", image_url: vid.thumb,
-      video_url: vid.embed, video_provider: vid.provider, source: vid.provider,
-      caption: String(payload.caption ?? "").slice(0, 2000),
-      alt_text: String(payload.alt_text ?? "").slice(0, 2000),
-      people: normPeople(payload.people),
-      taken_at: payload.taken_at ? String(payload.taken_at) : null,
-      is_featured: payload.is_featured === true,
-      submission: payload.submission ? String(payload.submission).slice(0, 200) : null,
-      published: true,
-    };
-    const { data, error } = await sb.from("gallery_photos").insert(row).select("*").single();
-    if (error) { console.error("video insert:", error.message); return json({ error: "Could not save the video." }, 500); }
-    return json({ ok: true, photo: publicRow(data) });
-  }
-
-  if (action === "list-admin") {
-    const gallery = String(payload.gallery ?? "").trim();
-    let q = sb.from("gallery_photos").select("*").order("year", { ascending: false }).order("taken_at", { ascending: true, nullsFirst: false }).order("created_at", { ascending: true }).limit(5000);
-    if (slugs.has(gallery)) q = q.eq("gallery", gallery);
-    const { data, error } = await q;
-    if (error) return json({ error: error.message }, 500);
-    return json({ ok: true, photos: (data ?? []).map((r) => ({ ...publicRow(r), published: r.published, source: r.source, storage_path: r.storage_path, submission: r.submission, video_provider: r.video_provider })) });
-  }
-
-  if (action === "import") {
-    const gallery = String(payload.gallery ?? "").trim();
-    const year = parseInt(String(payload.year ?? ""), 10);
-    const source = String(payload.source ?? "google_photos");
-    const items = Array.isArray(payload.items) ? payload.items : [];
-    const auth = payload.auth ? String(payload.auth) : null;
-    if (!slugs.has(gallery)) return json({ error: "Unknown gallery" }, 400);
-    if (Number.isNaN(year)) return json({ error: "Invalid year" }, 400);
-    if (!SOURCES.includes(source)) return json({ error: "Unknown source" }, 400);
-    if (!items.length) return json({ error: "No items to import." }, 400);
-    if (items.length > 200) return json({ error: "Import at most 200 photos at a time." }, 400);
-    const results: { ok: boolean; error?: string; id?: string }[] = [];
-    for (const it of items as Record<string, unknown>[]) {
-      const imageUrl = String(it.image_url ?? "").trim();
-      const externalId = it.external_id ? String(it.external_id) : null;
-      if (!imageUrl) { results.push({ ok: false, error: "missing image_url" }); continue; }
-      if (externalId) {
-        const { data: dup } = await sb.from("gallery_photos").select("id").eq("source", source).eq("external_id", externalId).maybeSingle();
-        if (dup) { results.push({ ok: true, id: dup.id as string }); continue; }
-      }
-      try {
-        const resp = await fetch(imageUrl, auth ? { headers: { Authorization: "Bearer " + auth } } : undefined);
-        if (!resp.ok) throw new Error(`fetch ${resp.status}`);
-        const ct = resp.headers.get("content-type") ?? "image/jpeg";
-        if (!ct.startsWith("image/")) throw new Error("not an image");
-        const bytes = new Uint8Array(await resp.arrayBuffer());
-        if (bytes.length > 25 * 1024 * 1024) throw new Error("too large");
-        const stored = await storeBytes(sb, gallery, year, bytes, ct, extFromType(ct, imageUrl));
-        const { data, error } = await sb.from("gallery_photos").insert({
-          gallery, year, storage_path: stored.path, image_url: stored.url,
-          caption: String(it.caption ?? "").slice(0, 2000), alt_text: String(it.alt_text ?? "").slice(0, 2000),
-          people: normPeople(it.people), taken_at: it.taken_at ? String(it.taken_at) : null,
-          source, external_id: externalId,
-          width: it.width ? Number(it.width) : null, height: it.height ? Number(it.height) : null,
-        }).select("id").single();
-        if (error) throw new Error(error.message);
-        results.push({ ok: true, id: data.id as string });
-      } catch (e) { results.push({ ok: false, error: e instanceof Error ? e.message : String(e) }); }
-    }
-    const imported = results.filter((r) => r.ok).length;
-    return json({ ok: true, imported, failed: results.length - imported, results });
-  }
-
-  if (action === "update") {
-    const id = String(payload.id ?? "");
-    const patch = (payload.patch ?? {}) as Record<string, unknown>;
-    if (!id) return json({ error: "Missing id" }, 400);
-    const clean = buildPatch(patch, slugs);
-    if (!Object.keys(clean).length) return json({ error: "Nothing to update." }, 400);
-    const { data, error } = await sb.from("gallery_photos").update(clean).eq("id", id).select("*").single();
-    if (error) return json({ error: error.message }, 500);
-    return json({ ok: true, photo: publicRow(data) });
-  }
-
-  if (action === "bulk-update") {
-    const ids = Array.isArray(payload.ids) ? payload.ids.map(String) : [];
-    const patch = (payload.patch ?? {}) as Record<string, unknown>;
-    const addPeople = normPeople(patch.add_people);
-    const clean = buildPatch(patch, slugs);
-    if (!ids.length) return json({ error: "No photos selected." }, 400);
-    if (ids.length > 1000) return json({ error: "Too many photos selected." }, 400);
-    if (addPeople.length) {
-      const { data: rows } = await sb.from("gallery_photos").select("id, people").in("id", ids);
-      for (const r of rows ?? []) {
-        const merged = [...new Set([...((r.people as string[]) ?? []), ...addPeople])];
-        await sb.from("gallery_photos").update({ people: merged }).eq("id", r.id);
-      }
-    }
-    if (Object.keys(clean).length) {
-      const { error } = await sb.from("gallery_photos").update(clean).in("id", ids);
-      if (error) return json({ error: error.message }, 500);
-    }
-    return json({ ok: true, updated: ids.length });
-  }
-
-  if (action === "delete") {
-    const id = String(payload.id ?? "");
-    if (!id) return json({ error: "Missing id" }, 400);
-    const { data: row } = await sb.from("gallery_photos").select("storage_path").eq("id", id).maybeSingle();
-    if (row?.storage_path) await sb.storage.from(BUCKET).remove([row.storage_path as string]);
-    const { error } = await sb.from("gallery_photos").delete().eq("id", id);
-    if (error) return json({ error: error.message }, 500);
-    return json({ ok: true });
-  }
-
-  // ---- FACE RECOGNITION (descriptors computed in-browser by face-api.js) ----
-  if (action === "faces-status") {
-    const gallery = String(payload.gallery ?? "").trim();
-    let q = sb.from("gallery_photos").select("id").eq("face_scanned", true).limit(20000);
-    if (slugs.has(gallery)) q = q.eq("gallery", gallery);
-    const { data, error } = await q;
-    if (error) return json({ error: error.message }, 500);
-    return json({ ok: true, scanned: (data ?? []).map((r) => r.id) });
-  }
-
-  if (action === "faces-save") {
-    const photos = Array.isArray(payload.photos) ? payload.photos : [];
-    if (!photos.length) return json({ error: "No photos." }, 400);
-    let inserted = 0;
-    for (const p of photos as Record<string, unknown>[]) {
-      const photoId = String(p.photo_id ?? "");
-      if (!photoId) continue;
-      const faces = Array.isArray(p.faces) ? p.faces as Record<string, unknown>[] : [];
-      await sb.from("gallery_faces").delete().eq("photo_id", photoId);
-      const valid = faces.filter((f) => Array.isArray(f.embedding) && (f.embedding as unknown[]).length === 128);
-      if (valid.length) {
-        const rows = valid.map((f) => ({ photo_id: photoId, embedding: f.embedding, box: f.box ?? null }));
-        const { error } = await sb.from("gallery_faces").insert(rows);
-        if (!error) inserted += rows.length;
-      }
-      await sb.from("gallery_photos").update({ face_scanned: true }).eq("id", photoId);
-    }
-    return json({ ok: true, inserted });
-  }
-
-  if (action === "faces-unnamed") {
-    const { data, error } = await sb.from("gallery_faces").select("id, photo_id, box, photo:gallery_photos(image_url, gallery, year)").is("person_name", null).limit(3000);
-    if (error) return json({ error: error.message }, 500);
-    const faces = (data ?? []).map((r) => {
-      const ph = (r as Record<string, unknown>).photo as Record<string, unknown> | null;
-      return { id: r.id, photo_id: r.photo_id, box: r.box, image_url: ph?.image_url, gallery: ph?.gallery, year: ph?.year };
-    });
-    return json({ ok: true, faces });
-  }
-
-  if (action === "faces-for-photo") {
-    const photoId = String(payload.photo_id ?? "");
-    if (!photoId) return json({ error: "Missing photo_id" }, 400);
-    const { data: ph } = await sb.from("gallery_photos").select("face_scanned").eq("id", photoId).maybeSingle();
-    const { data, error } = await sb.from("gallery_faces").select("id, box, person_name").eq("photo_id", photoId);
-    if (error) return json({ error: error.message }, 500);
-    return json({ ok: true, scanned: !!ph?.face_scanned, faces: data ?? [] });
-  }
-
-  if (action === "faces-name") {
-    const name = String(payload.name ?? "").trim().slice(0, 120);
-    const faceId = String(payload.face_id ?? "");
-    const threshold = typeof payload.threshold === "number" ? payload.threshold : 0.55;
-    if (!name) return json({ error: "Missing name." }, 400);
-    if (!faceId) return json({ error: "Missing face." }, 400);
-    const { data: src } = await sb.from("gallery_faces").select("embedding").eq("id", faceId).maybeSingle();
-    const emb = src?.embedding as number[] | undefined;
-    if (!Array.isArray(emb) || emb.length !== 128) return json({ error: "Invalid face." }, 400);
-    const { data: faces, error } = await sb.from("gallery_faces").select("id, photo_id, embedding").is("person_name", null).limit(20000);
-    if (error) return json({ error: error.message }, 500);
-    const matchedFaceIds: string[] = [];
-    const matchedPhotoIds = new Set<string>();
-    for (const f of faces ?? []) {
-      const fe = f.embedding as number[];
-      if (!Array.isArray(fe) || fe.length !== 128) continue;
-      let sum = 0;
-      for (let i = 0; i < 128; i++) { const d = fe[i] - emb[i]; sum += d * d; }
-      if (Math.sqrt(sum) <= threshold) { matchedFaceIds.push(f.id as string); matchedPhotoIds.add(f.photo_id as string); }
-    }
-    if (!matchedFaceIds.length) return json({ ok: true, faces: 0, photos: 0 });
-    await sb.from("gallery_faces").update({ person_name: name }).in("id", matchedFaceIds);
-    const photoIds = [...matchedPhotoIds];
-    const { data: prows } = await sb.from("gallery_photos").select("id, people").in("id", photoIds);
-    for (const r of prows ?? []) {
-      const merged = [...new Set([...((r.people as string[]) ?? []), name])];
-      await sb.from("gallery_photos").update({ people: merged }).eq("id", r.id);
-    }
-    return json({ ok: true, faces: matchedFaceIds.length, photos: photoIds.length });
-  }
-
-  return json({ error: "Unknown action" }, 400);
 });
-
-function buildPatch(patch: Record<string, unknown>, validSlugs: Set<string>): Record<string, unknown> {
-  const clean: Record<string, unknown> = {};
-  if ("caption" in patch) clean.caption = String(patch.caption ?? "").slice(0, 2000);
-  if ("alt_text" in patch) clean.alt_text = String(patch.alt_text ?? "").slice(0, 2000);
-  if ("people" in patch) clean.people = normPeople(patch.people);
-  if ("year" in patch) { const y = parseInt(String(patch.year), 10); if (!Number.isNaN(y) && y >= 1990 && y <= 2100) clean.year = y; }
-  if ("gallery" in patch && validSlugs.has(String(patch.gallery))) clean.gallery = patch.gallery;
-  if ("is_featured" in patch) clean.is_featured = !!patch.is_featured;
-  if ("featured_order" in patch) { const n = parseInt(String(patch.featured_order), 10); clean.featured_order = Number.isNaN(n) ? null : n; }
-  if ("sort_order" in patch) { const n = parseInt(String(patch.sort_order), 10); if (!Number.isNaN(n)) clean.sort_order = n; }
-  if ("taken_at" in patch) clean.taken_at = patch.taken_at ? String(patch.taken_at) : null;
-  if ("published" in patch) clean.published = !!patch.published;
-  if ("submission" in patch) clean.submission = patch.submission ? String(patch.submission).slice(0, 200) : null;
-  return clean;
-}
