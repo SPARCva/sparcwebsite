@@ -14,7 +14,7 @@ alter table public.gallery_categories enable row level security;
 
 insert into public.gallery_categories (slug, name, is_public, sort_order) values
   ('gala','Annual Gala', true, 1),
-  ('summit','Virtual Summit', true, 2),
+  ('summit','Summit', true, 2),
   ('life','Life at SPARC', true, 3)
 on conflict (slug) do nothing;
 
