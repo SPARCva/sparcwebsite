@@ -1,0 +1,924 @@
+/* ==========================================================================
+   SPARC Photo Gallery Admin — shared by /photogallery/admin/ and
+   /photogallery/upload/.
+
+   Layered on top of /css/styles.css, which supplies the brand tokens
+   (--sparc-royal-blue, --sparc-kelly-green, --sparc-dark-navy,
+   --sparc-soft-gray, --font-heading, --font-primary, --shadow-*).
+   Everything here is prefixed "pga-" so it can never collide with the
+   marketing site's classes.
+
+   Layout rule (CLAUDE.md): all content sits in ONE centered column. Only
+   .pga-wrap carries a max-width — no inner block is ever capped narrower
+   than its container, or the page reads as shifted left on wide screens.
+
+   Accessibility rules borrowed from accesstrails.css:
+     - Status is never conveyed by colour alone. Every .pga-badge carries a
+       text label AND a border treatment (solid / dashed / double).
+     - The global :focus-visible shape from styles.css (3px solid,
+       offset 2px) is preserved everywhere; only the colour changes on dark
+       surfaces, where blue would fail contrast.
+   ========================================================================== */
+
+:root {
+    --pga-max: 1400px;
+    --pga-line: #dbe3ec;
+    --pga-line-strong: #c3d0dd;
+    --pga-ink: #2b3440;
+    --pga-muted: #5b6875;         /* 5.6:1 on #fff — WCAG AA for body text */
+    --pga-card: #ffffff;
+    --pga-sunken: #f4f8fb;
+    --pga-danger: #a4001a;        /* 6.4:1 on #fff */
+    --pga-danger-bg: #fdecef;
+    --pga-warn: #7a4b00;          /* 6.3:1 on #fff */
+    --pga-warn-bg: #fff6e5;
+    --pga-ok: #2f7a10;            /* 4.7:1 on #fff */
+    --pga-ok-bg: #eef8e8;
+    --pga-radius: 12px;
+    --pga-radius-sm: 7px;
+    --pga-bar-h: 60px;
+}
+
+body.pga {
+    background: var(--sparc-soft-gray);
+    color: var(--pga-ink);
+    font-family: var(--font-primary);
+    margin: 0;
+}
+
+/* Admin tools deliberately drop the marketing nav/footer, so nothing needs
+   the fixed-header top clearance the public pages compensate for. */
+
+/* ---------- app bar ---------------------------------------------------- */
+
+.pga-bar {
+    background: var(--sparc-dark-navy);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 20px;
+    min-height: var(--pga-bar-h);
+    padding-top: env(safe-area-inset-top);
+}
+
+.pga-bar img { height: 34px; width: auto; display: block; }
+
+.pga-bar h1 {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.pga-bar-spacer { margin-left: auto; }
+
+.pga-bar a,
+.pga-bar button { color: #fff; }
+
+/* Blue focus rings are invisible on navy — use the brand green here. */
+.pga-bar :focus-visible,
+.pga-tabs :focus-visible {
+    outline: 3px solid var(--sparc-kelly-green);
+    outline-offset: 2px;
+}
+
+/* ---------- tab navigation -------------------------------------------- */
+
+.pga-tabs {
+    background: var(--sparc-royal-blue);
+    display: flex;
+    gap: 2px;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.pga-tab {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 4px solid transparent;
+    color: rgba(255, 255, 255, 0.82);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 13px 16px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.pga-tab:hover { color: #fff; }
+
+.pga-tab[aria-current="page"] {
+    color: #fff;
+    border-bottom-color: var(--sparc-kelly-green);
+}
+
+/* Count pill on a tab. aria-hidden in markup — the accessible name carries
+   the count as text, so screen readers don't hear a bare number. */
+.pga-tab-count {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    min-width: 1.2em;
+    text-align: center;
+}
+
+.pga-tab-count.attn { background: var(--sparc-kelly-green); color: #fff; }
+
+/* ---------- context bar (album + year) -------------------------------- */
+
+.pga-context {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #fff;
+    border-bottom: 1px solid var(--pga-line);
+    box-shadow: 0 1px 6px rgba(0, 43, 80, 0.06);
+}
+
+.pga-context-inner {
+    max-width: var(--pga-max);
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+/* ---------- page shell ------------------------------------------------ */
+
+.pga-wrap {
+    max-width: var(--pga-max);
+    margin: 0 auto;
+    padding: 22px 20px 90px;
+}
+
+.pga-panel {
+    background: var(--pga-card);
+    border: 1px solid var(--pga-line);
+    border-radius: var(--pga-radius);
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.pga-panel > h2 {
+    font-family: var(--font-heading);
+    color: var(--sparc-royal-blue);
+    font-size: 1.2rem;
+    margin: 0 0 4px;
+}
+
+.pga-panel > h3 {
+    font-family: var(--font-heading);
+    color: var(--sparc-royal-blue);
+    font-size: 1.02rem;
+    margin: 0 0 4px;
+}
+
+.pga-hint {
+    color: var(--pga-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin: 0 0 16px;
+    max-width: 68ch;   /* prose only — measure, not a layout cap */
+}
+
+.pga-sep { border: none; border-top: 1px solid var(--pga-line); margin: 18px 0; }
+
+/* ---------- forms ----------------------------------------------------- */
+
+.pga-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.pga-field { display: flex; flex-direction: column; gap: 4px; }
+.pga-field.grow { flex: 1 1 240px; min-width: 0; }
+
+.pga-field > label,
+.pga-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--pga-ink);
+}
+
+.pga-field input,
+.pga-field select,
+.pga-field textarea,
+.pga-input {
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    color: var(--pga-ink);
+    background: #fff;
+    padding: 9px 11px;
+    border: 2px solid var(--pga-line);
+    border-radius: var(--pga-radius-sm);
+    transition: border-color var(--transition-fast);
+    max-width: 100%;
+}
+
+.pga-field input:hover,
+.pga-field select:hover,
+.pga-field textarea:hover { border-color: var(--pga-line-strong); }
+
+.pga-field input:focus,
+.pga-field select:focus,
+.pga-field textarea:focus { border-color: var(--sparc-royal-blue); }
+
+.pga-field textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+
+/* Error state is driven by aria-invalid, so the visual and the accessible
+   state can never drift apart. */
+.pga-field [aria-invalid="true"] { border-color: var(--pga-danger); }
+
+.pga-error { color: var(--pga-danger); font-size: 0.85rem; margin: 4px 0 0; }
+.pga-error:empty { display: none; }
+
+.pga-check {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.88rem;
+    color: var(--pga-ink);
+    cursor: pointer;
+}
+
+.pga-check input { width: 17px; height: 17px; accent-color: var(--sparc-royal-blue); }
+
+.pga-counter { font-size: 0.76rem; color: var(--pga-muted); font-variant-numeric: tabular-nums; }
+
+/* Off-screen rather than display:none so bots still fill it. */
+.pga-honey { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- buttons --------------------------------------------------- */
+
+.pga-btn {
+    appearance: none;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: var(--pga-radius-sm);
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-decoration: none;
+    line-height: 1.3;
+    transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.pga-btn-primary { background: var(--sparc-kelly-green); color: #fff; }
+.pga-btn-primary:hover { background: var(--sparc-kelly-green-dark); }
+
+.pga-btn-blue { background: var(--sparc-royal-blue); color: #fff; }
+.pga-btn-blue:hover { background: var(--sparc-dark-navy); }
+
+.pga-btn-ghost { background: #eef2f6; color: var(--sparc-royal-blue); }
+.pga-btn-ghost:hover { background: #e1e9f1; }
+
+.pga-btn-outline { background: #fff; color: var(--sparc-royal-blue); border-color: var(--pga-line-strong); }
+.pga-btn-outline:hover { border-color: var(--sparc-royal-blue); }
+
+.pga-btn-danger { background: var(--pga-danger-bg); color: var(--pga-danger); }
+.pga-btn-danger:hover { background: #fbdae0; }
+
+.pga-btn-sm { font-size: 0.82rem; padding: 6px 11px; }
+.pga-btn-lg { font-size: 1rem; padding: 12px 22px; }
+
+.pga-btn:disabled { opacity: 0.5; cursor: default; }
+
+.pga-btn-icon {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    padding: 7px 13px;
+}
+.pga-btn-icon:hover { background: rgba(255, 255, 255, 0.28); }
+
+/* ---------- badges — label + shape, never colour alone ---------------- */
+
+.pga-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1.5px solid currentColor;
+    white-space: nowrap;
+}
+
+/* Solid border = needs your attention. */
+.pga-badge-alt { color: var(--pga-warn); background: var(--pga-warn-bg); }
+/* Dashed border = deliberately withheld from the public site. */
+.pga-badge-hidden { color: var(--pga-muted); background: var(--pga-sunken); border-style: dashed; }
+/* Double border = promoted / featured. */
+.pga-badge-featured { color: var(--pga-ok); background: var(--pga-ok-bg); border-style: double; border-width: 3px; }
+.pga-badge-video { color: var(--sparc-royal-blue); background: #e8f1fa; }
+.pga-badge-untagged { color: var(--pga-muted); background: var(--pga-sunken); border-style: dotted; }
+
+/* ---------- filter chips (role=tablist) ------------------------------- */
+
+.pga-chiprow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 16px;
+}
+
+.pga-chip {
+    appearance: none;
+    background: #fff;
+    border: 2px solid var(--pga-line);
+    border-radius: 999px;
+    color: var(--pga-ink);
+    font-family: var(--font-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.pga-chip:hover { border-color: var(--pga-line-strong); }
+
+/* Selected chips carry a checkmark glyph as well as the colour change. */
+.pga-chip[aria-selected="true"] {
+    background: var(--sparc-royal-blue);
+    border-color: var(--sparc-royal-blue);
+    color: #fff;
+}
+
+.pga-chip[aria-selected="true"]::before { content: "\2713"; font-weight: 700; }
+
+.pga-chip-count {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.78rem;
+    opacity: 0.85;
+}
+
+/* ---------- toolbars -------------------------------------------------- */
+
+.pga-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    align-items: center;
+    padding: 11px 13px;
+    background: var(--pga-sunken);
+    border: 1px solid var(--pga-line);
+    border-radius: var(--pga-radius-sm);
+    margin-bottom: 15px;
+}
+
+.pga-toolbar-count { font-weight: 700; color: var(--sparc-royal-blue); margin-right: auto; }
+
+/* ---------- photo grid ------------------------------------------------ */
+
+.pga-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+}
+
+.pga-cell {
+    position: relative;
+    background: #fff;
+    border: 2px solid var(--pga-line);
+    border-radius: var(--pga-radius-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.pga-cell[data-selected="true"] { border-color: var(--sparc-kelly-green); }
+
+/* Hidden photos read as withheld via a dashed border, not just opacity —
+   opacity alone is invisible to anyone who can't compare side by side. */
+.pga-cell[data-published="false"] { border-style: dashed; border-color: var(--pga-line-strong); }
+.pga-cell[data-published="false"] .pga-cell-img { opacity: 0.6; }
+
+.pga-cell-img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    background: #e9eef3;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.pga-cell-meta {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.pga-cell-caption {
+    color: var(--pga-ink);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+}
+
+.pga-cell-people { color: var(--sparc-royal-blue); font-weight: 600; }
+
+.pga-cell-badges {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+    max-width: calc(100% - 48px);
+}
+
+.pga-cell-pick {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    width: 22px;
+    height: 22px;
+    accent-color: var(--sparc-kelly-green);
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* ---------- pagination ------------------------------------------------ */
+
+.pga-pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.pga-pager-status { color: var(--pga-muted); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+
+/* ---------- upload queue ---------------------------------------------- */
+
+.pga-drop {
+    border: 2.5px dashed var(--pga-line-strong);
+    border-radius: var(--pga-radius);
+    padding: 34px 20px;
+    text-align: center;
+    color: var(--pga-muted);
+    background: #fff;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.pga-drop strong { color: var(--pga-ink); font-size: 1.05rem; }
+.pga-drop:hover { border-color: var(--sparc-royal-blue); }
+.pga-drop.drag { border-color: var(--sparc-kelly-green); background: #f2fbec; }
+
+.pga-queue { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+
+.pga-qitem {
+    display: grid;
+    grid-template-columns: 92px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--pga-line);
+    border-radius: var(--pga-radius-sm);
+}
+
+.pga-qitem img {
+    width: 92px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 5px;
+    background: #e9eef3;
+    display: block;
+}
+
+.pga-qfields { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.pga-qfields input,
+.pga-qfields textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-primary);
+    font-size: 0.86rem;
+    padding: 7px 9px;
+    border: 1.5px solid var(--pga-line);
+    border-radius: 6px;
+}
+
+.pga-qside { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+.pga-qstatus { font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+.pga-qstatus[data-state="failed"] { color: var(--pga-danger); }
+.pga-qstatus[data-state="committed"] { color: var(--pga-ok); }
+.pga-qstatus[data-state="uploading"],
+.pga-qstatus[data-state="resizing"] { color: var(--sparc-royal-blue); }
+.pga-qstatus[data-state="queued"] { color: var(--pga-muted); }
+
+.pga-progress {
+    height: 9px;
+    background: #e3eaf1;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 14px 0 6px;
+}
+
+.pga-progress-fill {
+    height: 100%;
+    background: var(--sparc-kelly-green);
+    width: 0;
+    transition: width 0.2s ease;
+}
+
+/* ---------- faces ----------------------------------------------------- */
+
+.pga-facegrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.pga-facecell {
+    border: 2px solid var(--pga-line);
+    border-radius: var(--pga-radius-sm);
+    padding: 8px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pga-facecell[data-selected="true"] { border-color: var(--sparc-kelly-green); }
+
+.pga-facecrop {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #e9eef3;
+    display: block;
+}
+
+/* Triage: one big crop, decisions on the right. */
+.pga-triage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.pga-triage-crop {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--pga-radius);
+    background: #e9eef3;
+    display: block;
+}
+
+.pga-triage-name {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--sparc-royal-blue);
+    margin: 0 0 4px;
+}
+
+.pga-triage-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+
+.pga-kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+    background: rgba(0, 0, 0, 0.14);
+    border-radius: 4px;
+    padding: 1px 5px;
+}
+
+.pga-exemplars { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.pga-exemplars img {
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+    border-radius: 5px;
+    background: #e9eef3;
+    border: 1px solid var(--pga-line);
+}
+
+/* Box overlay for the manual face tool. */
+.pga-boxwrap { position: relative; display: inline-block; max-width: 100%; }
+.pga-boxwrap img { display: block; max-width: 100%; height: auto; }
+.pga-box {
+    position: absolute;
+    border: 2px solid var(--sparc-kelly-green);
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+.pga-box[data-named="false"] { border-color: #ffb300; border-style: dashed; }
+
+/* ---------- dialog ---------------------------------------------------- */
+
+.pga-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 20, 40, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.pga-scrim.open { opacity: 1; }
+
+.pga-dialog {
+    background: #fff;
+    border-radius: var(--pga-radius);
+    box-shadow: 0 20px 60px rgba(0, 20, 40, 0.35);
+    width: 100%;
+    max-width: 720px;
+    max-height: 90dvh;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.97);
+    transition: transform var(--transition-fast);
+}
+
+.pga-dialog.wide { max-width: 1000px; }
+.pga-scrim.open .pga-dialog { transform: scale(1); }
+
+.pga-dialog-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--pga-line);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.pga-dialog-head h2 {
+    font-family: var(--font-heading);
+    font-size: 1.12rem;
+    color: var(--sparc-royal-blue);
+    margin: 0;
+    flex: 1;
+}
+
+.pga-dialog-body { padding: 18px 20px; overflow-y: auto; flex: 1; }
+
+.pga-dialog-foot {
+    padding: 14px 20px;
+    border-top: 1px solid var(--pga-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.pga-close {
+    appearance: none;
+    background: #eef2f6;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--pga-ink);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.pga-close:hover { background: #e1e9f1; }
+
+/* ---------- toast ----------------------------------------------------- */
+
+.pga-toasts {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    align-items: center;
+    width: max-content;
+    max-width: calc(100vw - 40px);
+    pointer-events: none;
+}
+
+.pga-toast {
+    background: var(--sparc-dark-navy);
+    color: #fff;
+    border-radius: var(--pga-radius-sm);
+    padding: 11px 16px;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 24px rgba(0, 20, 40, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto;
+    animation: pga-toast-in 0.18s ease;
+}
+
+.pga-toast[data-kind="error"] { background: var(--pga-danger); }
+.pga-toast[data-kind="success"] { background: #1f6b0c; }
+
+.pga-toast button {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 5px 11px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pga-toast :focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+@keyframes pga-toast-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- empty + loading states ------------------------------------ */
+
+.pga-empty {
+    text-align: center;
+    padding: 46px 20px;
+    color: var(--pga-muted);
+}
+
+.pga-empty svg { color: var(--pga-line-strong); margin-bottom: 12px; }
+
+.pga-empty h3 {
+    font-family: var(--font-heading);
+    color: var(--sparc-royal-blue);
+    font-size: 1.05rem;
+    margin: 0 0 6px;
+}
+
+.pga-empty p { margin: 0 auto 16px; max-width: 46ch; font-size: 0.92rem; line-height: 1.55; }
+
+.pga-loading { color: var(--pga-muted); font-size: 0.92rem; padding: 22px 0; }
+
+/* ---------- dashboard task cards -------------------------------------- */
+
+.pga-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+}
+
+.pga-card {
+    background: #fff;
+    border: 1px solid var(--pga-line);
+    border-left: 5px solid var(--sparc-royal-blue);
+    border-radius: var(--pga-radius-sm);
+    padding: 16px 18px;
+    text-decoration: none;
+    color: var(--pga-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.pga-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.pga-card.attn { border-left-color: var(--pga-warn); }
+.pga-card.done { border-left-color: var(--pga-ok); }
+
+.pga-card-n {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--sparc-royal-blue);
+    font-variant-numeric: tabular-nums;
+}
+
+.pga-card-label { font-weight: 600; font-size: 0.92rem; }
+.pga-card-sub { color: var(--pga-muted); font-size: 0.82rem; }
+
+/* ---------- login ----------------------------------------------------- */
+
+.pga-login {
+    max-width: 420px;
+    margin: 8vh auto;
+    background: #fff;
+    border-radius: var(--pga-radius);
+    padding: 32px;
+    box-shadow: 0 8px 30px rgba(0, 43, 80, 0.12);
+}
+
+.pga-login h2 {
+    font-family: var(--font-heading);
+    color: var(--sparc-royal-blue);
+    margin: 0 0 6px;
+    font-size: 1.35rem;
+}
+
+.pga-login p { color: var(--pga-muted); font-size: 0.92rem; line-height: 1.55; }
+.pga-login .pga-field { margin: 18px 0; }
+.pga-login .pga-field input { width: 100%; box-sizing: border-box; padding: 12px; font-size: 1rem; }
+.pga-login .pga-btn { width: 100%; padding: 12px; font-size: 1rem; }
+
+/* ---------- utilities ------------------------------------------------- */
+
+.pga-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.pga-stack { display: flex; flex-direction: column; gap: 14px; }
+.pga-inline { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pga-muted { color: var(--pga-muted); }
+.pga-nowrap { white-space: nowrap; }
+[hidden] { display: none !important; }
+
+/* ---------- responsive ------------------------------------------------ */
+
+@media (max-width: 900px) {
+    .pga-triage { grid-template-columns: 1fr; }
+    .pga-triage-crop { max-width: 100%; }
+}
+
+@media (max-width: 700px) {
+    .pga-bar h1 { font-size: 0.95rem; }
+    .pga-wrap { padding: 16px 14px 80px; }
+    .pga-panel { padding: 16px 14px; border-radius: var(--pga-radius-sm); }
+    .pga-context-inner { padding: 10px 14px; }
+    .pga-tabs { padding: 0 8px; }
+    .pga-tab { padding: 12px 11px 9px; font-size: 0.84rem; }
+    .pga-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .pga-qitem { grid-template-columns: 66px 1fr; }
+    .pga-qitem img { width: 66px; height: 52px; }
+    .pga-qside { grid-column: 1 / -1; align-items: flex-start; flex-direction: row; }
+    .pga-field.grow { flex-basis: 100%; }
+    .pga-dialog { max-height: 94dvh; }
+    .pga-dialog-foot { justify-content: stretch; }
+    .pga-dialog-foot .pga-btn { flex: 1; }
+}
+
+/* styles.css has no reduced-motion block, so declare one here. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .pga-card:hover { transform: none; }
+}
