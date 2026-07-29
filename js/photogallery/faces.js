@@ -28,8 +28,13 @@
 
 import { renderToCanvas, decode, loadImage } from "./imaging.js";
 
-/** Long edge we detect against. Fixed cost per photo regardless of source. */
-export const DETECT_EDGE = 1000;
+/** Long edge we detect against. Fixed cost per photo regardless of source.
+ *  Bumped from 1000 → 1600: event photos are crowds of small faces, and the
+ *  detector only ever sees the pixels we hand it. At 1000px a face that's 5% of
+ *  a group shot is ~50px; at 1600px it's ~80px — the difference between "missed"
+ *  and "found". Costs more compute per photo, which is the right trade for a
+ *  one-time scan whose whole job is recall. */
+export const DETECT_EDGE = 1600;
 
 // Vendored rather than loaded from jsDelivr. This tool gets used at events on
 // unreliable wifi, and a CDN outage or a blocked third-party request would take
@@ -68,9 +73,15 @@ export function loadFaceApi(onProgress) {
 
   modelsPromise = scriptPromise.then(async () => {
     if (!window.faceapi) throw new Error("The face recognition library did not load.");
-    if (onProgress) onProgress("Loading face recognition models (about 6 MB, once per session)…");
+    if (onProgress) onProgress("Loading face recognition models (about 10 MB, once per session)…");
+    // SSD MobileNet v1 instead of the tiny detector: it is the accuracy-first
+    // detector in this library, and it is markedly better at the faces event
+    // photos are full of — small, partially hidden, or at an angle. It is ~6 MB
+    // heavier and a little slower per photo; recognition (the 128-float
+    // descriptors and everyone already tagged) is unchanged, so this is a pure
+    // detection upgrade with no re-tagging.
     await Promise.all([
-      window.faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+      window.faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
       window.faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
       window.faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
     ]);
@@ -110,29 +121,115 @@ export function toPixelBox(box, width, height) {
   return { x: box.x * width, y: box.y * height, w: box.w * width, h: box.h * height };
 }
 
+// minConfidence 0.3 leans toward recall: on event photos a missed face costs a
+// person a tag, while the odd false box is cheap to reject in "Not a face".
 function detectorOptions() {
-  return new window.faceapi.TinyFaceDetectorOptions({ inputSize: 512, scoreThreshold: 0.45 });
+  return new window.faceapi.SsdMobilenetv1Options({ minConfidence: 0.3, maxResults: 200 });
+}
+
+const DETECTOR = "ssd_mobilenetv1";
+
+/**
+ * Intersection-over-union of two pixel boxes ({x,y,width,height}).
+ * Used to drop the duplicate detections that overlapping tiles produce.
+ */
+function iou(a, b) {
+  const ax2 = a.x + a.width, ay2 = a.y + a.height;
+  const bx2 = b.x + b.width, by2 = b.y + b.height;
+  const ix = Math.max(0, Math.min(ax2, bx2) - Math.max(a.x, b.x));
+  const iy = Math.max(0, Math.min(ay2, by2) - Math.max(a.y, b.y));
+  const inter = ix * iy;
+  const union = a.width * a.height + b.width * b.height - inter;
+  return union > 0 ? inter / union : 0;
+}
+
+/**
+ * Run the detector over the full frame plus a grid of overlapping tiles, then
+ * merge. Tiling is Tier 2: a face that is 40px in the whole frame is 80px once
+ * a quarter of the frame fills the detector's input, which is often the
+ * difference between found and missed in a crowd. Boxes are expressed in
+ * pixels of the full render throughout, so a face found in a tile lands in the
+ * same coordinate space as one found full-frame and the two dedupe cleanly.
+ *
+ * @param {HTMLCanvasElement} canvas full render (DETECT_EDGE long edge)
+ * @param {boolean} tile  whether to add the overlapping-tile passes
+ */
+async function detectOnCanvas(canvas, tile) {
+  const passes = [{ sx: 0, sy: 0, sw: canvas.width, sh: canvas.height }];
+
+  // Only tile when the frame is big enough that tiling buys resolution; skip it
+  // for small images where the full frame is already the detector's input size.
+  if (tile && Math.max(canvas.width, canvas.height) >= 1100) {
+    const cols = 2, rows = 2, overlap = 0.2;
+    const tw = canvas.width / cols, th = canvas.height / rows;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const sx = Math.max(0, c * tw - tw * overlap);
+        const sy = Math.max(0, r * th - th * overlap);
+        const sw = Math.min(canvas.width - sx, tw * (1 + overlap * 2));
+        const sh = Math.min(canvas.height - sy, th * (1 + overlap * 2));
+        passes.push({ sx, sy, sw, sh });
+      }
+    }
+  }
+
+  const found = [];
+  for (const p of passes) {
+    // Full-frame pass reuses the canvas directly; tiles are drawn upscaled to
+    // ~1000px so small faces reach a usable size for the detector and the
+    // landmark/descriptor nets.
+    let surface = canvas, offX = 0, offY = 0, scale = 1;
+    if (p.sx !== 0 || p.sy !== 0 || p.sw !== canvas.width || p.sh !== canvas.height) {
+      scale = Math.max(1, 1000 / Math.max(p.sw, p.sh));
+      const tileCanvas = document.createElement("canvas");
+      tileCanvas.width = Math.round(p.sw * scale);
+      tileCanvas.height = Math.round(p.sh * scale);
+      tileCanvas.getContext("2d").drawImage(canvas, p.sx, p.sy, p.sw, p.sh, 0, 0, tileCanvas.width, tileCanvas.height);
+      surface = tileCanvas; offX = p.sx; offY = p.sy;
+    }
+    const dets = await window.faceapi
+      .detectAllFaces(surface, detectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+    for (const det of (dets || [])) {
+      const b = det.detection.box;
+      // Map the box back into full-render pixels.
+      found.push({
+        det,
+        fullBox: { x: offX + b.x / scale, y: offY + b.y / scale, width: b.width / scale, height: b.height / scale },
+        score: typeof det.detection.score === "number" ? det.detection.score : 0,
+      });
+    }
+  }
+
+  // Non-max suppression: keep the highest-scoring box, drop anything that
+  // overlaps it heavily (the same face seen by the full frame and a tile).
+  found.sort((a, b) => b.score - a.score);
+  const kept = [];
+  for (const cand of found) {
+    if (kept.some((k) => iou(k.fullBox, cand.fullBox) > 0.4)) continue;
+    kept.push(cand);
+  }
+  return kept;
 }
 
 /**
  * Detect every face in one image.
  *
  * @param {string} imageUrl full-size image URL (not the thumbnail)
+ * @param {{tile?: boolean}} [opts] tile large images for better small-face recall
  * @returns {Promise<Array<{embedding: number[], box: {x,y,w,h}, det_score: number, detector: string}>>}
  */
-export async function detectFaces(imageUrl) {
+export async function detectFaces(imageUrl, { tile = true } = {}) {
   const img = await loadImage(imageUrl);
   const { canvas, width, height } = renderToCanvas(img, DETECT_EDGE);
-  const detections = await window.faceapi
-    .detectAllFaces(canvas, detectorOptions())
-    .withFaceLandmarks()
-    .withFaceDescriptors();
+  const kept = await detectOnCanvas(canvas, tile);
 
-  return (detections || []).map((det) => ({
-    embedding: Array.from(det.descriptor),
-    box: toFractionBox(det.detection.box, width, height),
-    det_score: typeof det.detection.score === "number" ? det.detection.score : null,
-    detector: "tiny_face_detector",
+  return kept.map((k) => ({
+    embedding: Array.from(k.det.descriptor),
+    box: toFractionBox(k.fullBox, width, height),
+    det_score: k.score || null,
+    detector: DETECTOR,
   }));
 }
 
@@ -193,7 +290,7 @@ export async function detectInFile(file) {
       embedding: Array.from(det.descriptor),
       box: toFractionBox(det.detection.box, width, height),
       det_score: det.detection.score ?? null,
-      detector: "tiny_face_detector",
+      detector: DETECTOR,
     }));
   } finally {
     if (source.close) source.close();

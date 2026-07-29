@@ -208,10 +208,13 @@ the trigger rebuilds `people[]`.
 
 ## People roster & face recognition
 
-Faces are detected **in the browser** by the open-source **face-api.js** (128-float
-descriptors); the descriptors are stored in `gallery_faces` as `vector(128)` and
-**never leave SPARC infrastructure**. Matching runs inside Postgres (the
-`gallery_match_face` / `gallery_resuggest*` RPCs), not in JavaScript.
+Faces are detected **in the browser** by the open-source **face-api.js**
+(`@vladmandic/face-api`). Detection uses the **SSD MobileNet v1** detector over
+the full frame plus overlapping tiles (better recall on the small, angled and
+partly-hidden faces in event photos); recognition produces **128-float**
+descriptors stored in `gallery_faces` as `vector(128)`, and **nothing leaves
+SPARC infrastructure**. Matching runs inside Postgres (the `gallery_match_face`
+/ `gallery_resuggest*` RPCs), not in JavaScript.
 
 ### Suggest → confirm/reject (this is the important part)
 
@@ -240,12 +243,13 @@ confirmed (or the photo is tagged manually).
 | `{ action:"faces-save", photo_id, faces:[{embedding[128], box:{x,y,w,h}, det_score?, detector?}] }` | Stores detector output for a photo (≤100). Boxes are **fractions of the image (0..1)**. Replaces prior `detected` faces but preserves `manual` ones; **skips photos that already have confirmed faces**; marks `face_scanned=true` even with zero faces. |
 | `{ action:"faces-for-photo", photo_id }` | `{ ok, scanned, faces:[{id, box, origin, person|null, suggestion|null}] }`. |
 | `{ action:"face-add-manual", photo_id, box, embedding, person_id? }` | Hand-drawn face the detector missed (`origin='manual'`). With `person_id`, confirms it immediately so it becomes an exemplar. |
-| `{ action:"face-confirm", face_id, person_id? \| new_person_name? }` | Confirms a face. With `new_person_name`, creates (or reuses on case-insensitive name match) the person first. Returns the `person_id`. |
+| `{ action:"face-confirm", face_id, person_id? \| new_person_name? }` | Confirms a face. With `new_person_name`, creates (or reuses on case-insensitive name match) the person first. Returns the `person_id`. Runs a targeted re-suggest afterwards. |
+| `{ action:"face-confirm-batch", face_ids:[…], person_id? \| new_person_name? }` | Confirms up to **500** faces as one person, re-suggesting **once** at the end (not per face). Returns `{ ok, person_id, confirmed, failed:[face_id…] }`. Powers the admin's "tag one → tag the rest of the same person" sweep. |
 | `{ action:"face-reject", face_id, person_id }` | Records the rejection and clears the suggestion. |
 | `{ action:"face-unreject", face_id, person_id, max_distance? }` | Undoes a rejection: drops the `(face, person)` row and recomputes that face's suggestion. Returns `{ ok, suggestion }`, where `suggestion` is `null` if that person is no longer the closest match — so the UI can say "undone, but no longer a match" rather than implying the guess returned. Only re-suggests for a face nobody has named. |
 | `{ action:"face-unconfirm", face_id }` | Detaches a confirmed face; drops the photo link if it was the only reason for it. |
 | `{ action:"face-delete", face_id }` | Hard-deletes a spurious detection (poster, reflection). |
-| `{ action:"faces-review", limit?, offset?, min_distance?, max_distance? }` | The confirm/reject queue: unnamed faces **with** a suggestion, most-confident first. |
+| `{ action:"faces-review", limit?, offset?, min_distance?, max_distance?, person_id? }` | The confirm/reject queue: unnamed faces **with** a suggestion, most-confident first. `person_id` restricts to faces currently suggested as that one person (used by the "tag the rest" sweep). |
 | `{ action:"faces-unknown", limit?, offset? }` | Unnamed faces **without** a suggestion — the "who is this?" pile. |
 | `{ action:"faces-status", gallery? }` | `{ scanned_ids, unscanned_count, unnamed_count, suggested_count }` for a progress display. |
 | `{ action:"resuggest", max_distance? }` | Full re-sweep of pending suggestions. The function also runs a **targeted** re-suggest after each single confirmation, so the full sweep is rarely needed. |
