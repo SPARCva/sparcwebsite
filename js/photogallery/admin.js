@@ -19,8 +19,8 @@
 
 import { api, signIn, signOut, hasToken, onAuthLost, PGError } from "./api.js";
 import {
-  el, toast, toastError, confirmDialog, promptDialog, emptyState, loadingState,
-  num, plural,
+  el, toast, toastError, announce, confirmDialog, promptDialog, emptyState,
+  loadingState, num, plural,
 } from "./ui.js";
 
 /* ---------- shared context -------------------------------------------- */
@@ -504,6 +504,8 @@ async function mountSettings(view) {
     ),
   );
 
+  const thumbs = buildThumbBackfill();
+
   const access = el("div.pga-panel", null,
     el("h2", { text: "Access" }),
     el("p.pga-hint", { html:
@@ -523,7 +525,121 @@ async function mountSettings(view) {
     ),
   );
 
-  view.replaceChildren(albumPanel, maintenance, access);
+  view.replaceChildren(albumPanel, thumbs, maintenance, access);
+}
+
+/**
+ * Generate the missing thumbnails that imports leave behind.
+ *
+ * The `import` action re-hosts external images but can't render a thumbnail —
+ * there's no image library in the edge runtime — so those rows carry
+ * thumb_path null and serve their full-size image into every grid. The browser
+ * renders them here and PUTs to signed URLs, exactly like a normal upload:
+ * thumb-urls → canvas → PUT → thumb-commit.
+ */
+function buildThumbBackfill() {
+  const status = el("p.pga-hint", { "role": "status", style: { margin: "0 0 12px" } });
+  const bar = el("div.pga-progress", { hidden: true }, el("div.pga-progress-fill"));
+  const fill = bar.querySelector(".pga-progress-fill");
+  const runBtn = el("button.pga-btn.pga-btn-blue", { type: "button" }, "Generate missing thumbnails");
+  let cancel = false;
+
+  async function count() {
+    try {
+      const res = await api("list-admin", { filter: "no_thumb", limit: 1 });
+      return res.total || 0;
+    } catch { return null; }
+  }
+
+  async function refreshCount() {
+    const n = await count();
+    status.textContent = n == null
+      ? "Could not check for missing thumbnails."
+      : n === 0
+        ? "Every photo has a thumbnail. Nothing to do."
+        : `${plural(n, "photo")} ${n === 1 ? "has" : "have"} no thumbnail and ${n === 1 ? "is" : "are"} loading at full size in grids.`;
+    runBtn.disabled = !n;
+  }
+
+  runBtn.addEventListener("click", async () => {
+    // Lazily imported so the resize code isn't pulled into the shell bundle.
+    const { thumbnail } = await import("./imaging.js");
+    const { putSigned } = await import("./api.js");
+
+    cancel = false;
+    runBtn.disabled = true;
+    runBtn.textContent = "Generating…";
+    bar.hidden = false;
+
+    let done = 0;
+    let failed = 0;
+    const total = (await count()) || 0;
+
+    try {
+      // Re-query each round rather than paging by offset: a committed thumbnail
+      // leaves the "no_thumb" set, so an offset would skip work.
+      for (;;) {
+        if (cancel) break;
+        const page = await api("list-admin", { filter: "no_thumb", limit: 25 });
+        const photos = page.photos || [];
+        if (!photos.length) break;
+
+        const urls = await api("thumb-urls", { ids: photos.map((p) => p.id) });
+        const commit = [];
+        for (const slot of urls.uploads || []) {
+          if (cancel) break;
+          status.textContent = `Generating ${num(done + 1)} of ${num(total)}…`;
+          fill.style.width = `${total ? Math.round((done / total) * 100) : 0}%`;
+          try {
+            // Fetch the stored original, render a 400px JPEG, PUT it back.
+            const response = await fetch(slot.image_url);
+            if (!response.ok) throw new Error(`could not read the image (${response.status})`);
+            const rendered = await thumbnail(await response.blob());
+            await putSigned(slot.thumb.signedUrl, rendered.blob, rendered.contentType);
+            commit.push({ id: slot.id, thumb_path: slot.thumb.path });
+          } catch {
+            failed++;
+          }
+          done++;
+        }
+
+        if (commit.length) {
+          const res = await api("thumb-commit", { items: commit });
+          failed += (res.skipped || []).length;
+        }
+        // Nothing succeeded this round — stop rather than looping forever on
+        // rows we can never thumbnail.
+        if (!commit.length) break;
+      }
+      fill.style.width = "100%";
+      status.textContent = failed
+        ? `Done — generated ${num(done - failed)}, ${num(failed)} could not be generated.`
+        : `Done — generated ${plural(done, "thumbnail")}.`;
+      announce(status.textContent, { force: true });
+      if (done - failed > 0) toast(`Generated ${plural(done - failed, "thumbnail")}.`, { kind: "success" });
+    } catch (err) {
+      toastError(err);
+    }
+
+    bar.hidden = true;
+    fill.style.width = "0%";
+    runBtn.textContent = "Generate missing thumbnails";
+    await refreshCount();
+  });
+
+  const panel = el("div.pga-panel", null,
+    el("h2", { text: "Thumbnails" }),
+    el("p.pga-hint", { text:
+      "Photos imported from Google Photos or Drive arrive without a thumbnail, because " +
+      "thumbnails are made in the browser rather than on the server. Until one exists, " +
+      "those photos load at full size in the gallery grid, which is slow on a phone. " +
+      "This renders the missing ones. Safe to re-run — it only ever fills in what's absent." }),
+    status,
+    el("div.pga-row", null, runBtn),
+    bar,
+  );
+  refreshCount();
+  return panel;
 }
 
 /* ---------- sign-in --------------------------------------------------- */

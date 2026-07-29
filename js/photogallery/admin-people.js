@@ -333,6 +333,26 @@ function renderTriage() {
         await api("face-reject", { face_id: face.id, person_id: face.person.id });
         rejected++;
         announce(`Rejected. ${face.person.name} won't be suggested for this face again.`);
+        toast(`Rejected — ${face.person.name} won't be suggested for this face again.`, {
+          duration: 6000,
+          action: {
+            label: "Undo",
+            run: async () => {
+              try {
+                const res = await api("face-unreject", { face_id: face.id, person_id: face.person.id });
+                rejected--;
+                decided.delete(face.id);
+                // The rejection is gone either way, but the suggestion only
+                // comes back if that person is still the closest match — say
+                // which happened rather than implying it returned.
+                toast(res.suggestion
+                  ? `Undone — ${res.suggestion.name} is suggested again.`
+                  : "Undone. That guess no longer matches closely enough to be re-suggested.");
+                await refreshStatus();
+              } catch (err) { toastError(err); }
+            },
+          },
+        });
       } else if (action === "delete") {
         await api("face-delete", { face_id: face.id });
         announce("Removed — not a face.");
@@ -451,8 +471,8 @@ function renderTriage() {
       contextWrap,
       actions,
       el("p.pga-hint", { style: { marginTop: "14px" }, text:
-        "Saying no means this face won't be suggested as that person again — it can't be " +
-        "undone, so skip instead if you're unsure." }),
+        "Saying no means this face won't be suggested as that person again. Both yes and no " +
+        "offer an Undo for a few seconds afterwards, so a mis-click is recoverable." }),
     );
 
     stage.replaceChildren(el("div.pga-triage", null, crop, details));
