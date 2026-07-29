@@ -43,12 +43,25 @@ get `401`.
 
 | Payload | Behavior |
 | --- | --- |
-| multipart `action=upload` + `file` + `gallery,year,caption,alt_text,people,taken_at,is_featured` | Stores the image in the bucket at `gallery/<album>/<year>/<uuid>.<ext>` and inserts a row. |
+| multipart `action=upload` + `file` + `gallery,year,caption,alt_text,people,taken_at,is_featured,submission` | Stores the image in the bucket at `gallery/<album>/<year>/<uuid>.<ext>` and inserts a row. `submission` is an optional album/batch label used to group the admin review queue. |
+| `{ action:"video-add", gallery, year, video_url, caption?, alt_text?, people?, submission? }` | Adds an **embedded video** (YouTube/Vimeo). Parses the link, stores the embed URL in `video_url`, the thumbnail in `image_url`, and `media_type='video'`. No file is stored. Admin-only. |
 | `{ action:"import", gallery, year, source, items:[{image_url, external_id?, caption?, people?, taken_at?}] }` | Downloads each image and **re-hosts it in the bucket** (so expiring share URLs never break), then inserts rows. De-dupes on `(source, external_id)`. ≤200 per call. |
-| `{ action:"list-admin", gallery? }` | All rows incl. unpublished, for the management grid. |
-| `{ action:"update", id, patch:{…} }` | Edits one row (caption, alt_text, people, year, gallery, is_featured, featured_order, sort_order, taken_at, published). |
-| `{ action:"bulk-update", ids:[…], patch:{…} }` | Same fields across many rows. `patch.add_people` **appends** tags without clobbering existing ones. |
+| `{ action:"list-admin", gallery? }` | All rows incl. unpublished, for the management grid. Omit `gallery` to get every album (used to build the review queue). |
+| `{ action:"categories" }` | Lists gallery categories/albums. Readable by admin **and** photographer tokens. |
+| `{ action:"category-create", name, slug?, is_public? }` | Creates a new category (slug auto-derived from `name`). Defaults to `is_public:false` (admin-only; not served on the public site). Admin-only. |
+| `{ action:"update", id, patch:{…} }` | Edits one row (caption, alt_text, people, year, gallery, is_featured, featured_order, sort_order, taken_at, published, submission). Changing `gallery` reassigns the item to another category. |
+| `{ action:"bulk-update", ids:[…], patch:{…} }` | Same fields across many rows. `patch.add_people` **appends** tags without clobbering existing ones. Approving a review batch is `bulk-update` with `patch:{published:true}`. |
 | `{ action:"delete", id }` | Deletes the row and its storage object. |
+
+**Categories / albums** live in `gallery_categories` (`slug`, `name`, `is_public`,
+`sort_order`). `gala`/`summit`/`life` are seeded as public; new categories the
+admin creates default to **private** (admin-only) since only the seeded three
+have public gallery pages. The public `GET ?action=list` serves a category only
+when `is_public = true`. See `migrations/20260728_gallery_categories_and_video.sql`.
+
+**Videos** are embeds, never uploaded files — `media_type='video'`,
+`video_url` holds the provider embed URL, `image_url` the thumbnail. Both the
+public gallery lightbox and the admin edit modal render them in an `<iframe>`.
 
 ## People search & face recognition
 

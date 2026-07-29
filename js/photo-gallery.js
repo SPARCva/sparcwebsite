@@ -108,6 +108,7 @@
           title: p.caption || (p.people || []).join(", "),
           onclick: function () { openLightbox(indexOfPhoto(p)); },
         }, [img]);
+        if (p.media_type === "video") { item.style.position = "relative"; item.appendChild(playBadge()); }
         if ((p.people || []).length) {
           item.appendChild(el("span", { class: "pg-scroll-name", text: p.people[0] }));
         }
@@ -195,6 +196,14 @@
     });
   }
 
+  // A play-button overlay for video items.
+  function playBadge() {
+    return el("span", {
+      "aria-hidden": "true", html: "&#9654;",
+      style: "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(0,20,40,.62);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;padding-left:4px;box-sizing:border-box;pointer-events:none;",
+    });
+  }
+
   // ---- grid -----------------------------------------------------------------
   function buildGrid() {
     if (state.loading) return el("div", { class: "pg-empty", text: "Loading photos…" });
@@ -212,6 +221,7 @@
         loading: "lazy", decoding: "async",
       });
       var fig = el("figure", { class: "pg-card" }, [img]);
+      if (p.media_type === "video") { fig.style.position = "relative"; fig.appendChild(playBadge()); }
       if (p.caption || (p.people || []).length) {
         fig.appendChild(el("figcaption", { class: "pg-card-cap" }, [
           p.caption ? el("span", { class: "pg-card-caption", text: p.caption }) : null,
@@ -244,10 +254,14 @@
     if (!lb) return;
     lb.hidden = true;
     document.body.style.overflow = "";
+    var vid = lb.querySelector(".pg-lb-video");
+    if (vid) vid.src = "";  // stop playback
     document.removeEventListener("keydown", lbKeys);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function step(d) {
+    var vid = lb.querySelector(".pg-lb-video");
+    if (vid) vid.src = "";  // stop any playing video before moving on
     lbIndex = (lbIndex + d + state.photos.length) % state.photos.length;
     renderLightbox();
   }
@@ -269,6 +283,12 @@
       el("button", { class: "pg-lb-nav pg-lb-prev", type: "button", "aria-label": "Previous photo", html: "&#8249;", onclick: function () { step(-1); } }),
       el("figure", { class: "pg-lb-figure" }, [
         el("img", { class: "pg-lb-img", alt: "" }),
+        el("iframe", {
+          class: "pg-lb-video", hidden: "hidden", title: "Video",
+          allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          allowfullscreen: "true",
+          style: "width:min(90vw,960px);aspect-ratio:16/9;max-height:80vh;border:0;background:#000;border-radius:8px;",
+        }),
         el("figcaption", { class: "pg-lb-cap" }),
       ]),
       el("button", { class: "pg-lb-nav pg-lb-next", type: "button", "aria-label": "Next photo", html: "&#8250;", onclick: function () { step(1); } }),
@@ -280,17 +300,28 @@
     var p = state.photos[lbIndex];
     if (!p) return;
     var img = lb.querySelector(".pg-lb-img");
-    img.src = p.image_url;
-    img.alt = p.alt_text || p.caption || "SPARC photo";
+    var vid = lb.querySelector(".pg-lb-video");
+    var isVideo = p.media_type === "video" && p.video_url;
+    if (isVideo) {
+      img.hidden = true; img.src = "";
+      vid.hidden = false; vid.src = p.video_url;
+    } else {
+      vid.hidden = true; vid.src = "";
+      img.hidden = false;
+      img.src = p.image_url;
+      img.alt = p.alt_text || p.caption || "SPARC photo";
+    }
     var cap = lb.querySelector(".pg-lb-cap");
     cap.innerHTML = "";
     if (p.caption) cap.appendChild(el("span", { class: "pg-lb-caption", text: p.caption }));
     if ((p.people || []).length) cap.appendChild(el("span", { class: "pg-lb-people", text: p.people.join(" · ") }));
     if (p.taken_at) cap.appendChild(el("span", { class: "pg-lb-date", text: fmtDate(p.taken_at) }));
-    cap.appendChild(el("button", {
-      class: "pg-lb-download", type: "button", html: "&#8681; Download photo",
-      onclick: function (e) { downloadOne(p, e.currentTarget); },
-    }));
+    if (!isVideo) {
+      cap.appendChild(el("button", {
+        class: "pg-lb-download", type: "button", html: "&#8681; Download photo",
+        onclick: function (e) { downloadOne(p, e.currentTarget); },
+      }));
+    }
     cap.appendChild(el("span", { class: "pg-lb-count", text: (lbIndex + 1) + " of " + state.photos.length }));
   }
 
