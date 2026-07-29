@@ -102,6 +102,132 @@ function faceImage(face, size, altText, { fixedWidth = null } = {}) {
   return img;
 }
 
+/* ---------- "tag one → tag the rest" cascade -------------------------- */
+
+// Confirming a face teaches recognition, so the rest of that person's photos
+// immediately pick up suggestions. Rather than make someone press "Yes" on all
+// hundred of them one at a time, we sweep them up right after the first
+// confirmation:
+//   distance ≤ AUTO_MAX ("Very likely") → auto-confirmed silently, batch-Undo
+//   AUTO_MAX‥suggestion ceiling         → shown pre-checked for a single glance
+// The grid keeps the promise that a human confirms every name, while collapsing
+// a hundred keystrokes into one or two.
+const AUTO_MAX = 0.36;
+
+// One sweep at a time: a fast Y-Y-Y in the triage queue must not stack two
+// review grids on top of each other. While a sweep is in flight, later
+// confirmations still succeed — they just don't launch their own sweep.
+let cascadeBusy = false;
+
+/**
+ * Show the borderline matches in a pre-checked grid; resolve to the ids the
+ * human kept, or null if they skipped the batch.
+ */
+function reviewMatchesGrid(faces, name) {
+  const selected = new Set(faces.map((f) => f.id));
+  const grid = el("div.pga-facegrid");
+  grid.replaceChildren(...faces.map((face) => {
+    const cell = el("div.pga-facecell", { "dataset": { selected: "true" } });
+    const label = `${name} in ${context.name(face.gallery)}${face.year ? ` ${face.year}` : ""}`;
+    const pick = el("label.pga-check", null,
+      el("input", {
+        type: "checkbox", checked: true, "aria-label": `This is ${label}`,
+        onchange: (event) => {
+          if (event.target.checked) selected.add(face.id);
+          else selected.delete(face.id);
+          cell.dataset.selected = String(event.target.checked);
+        },
+      }),
+      `Is ${name}`,
+    );
+    cell.append(faceImage(face, 200, label), pick);
+    return cell;
+  }));
+
+  const instance = dialog({
+    title: `More photos of ${name}?`,
+    wide: true,
+    body: el("div", null,
+      el("p.pga-hint", { text:
+        `These look like ${name} but aren't a sure match. Untick anyone who isn't ${name}, then confirm — they're all tagged at once.` }),
+      grid,
+    ),
+    actions: [
+      { label: "Skip these", kind: "ghost", value: null },
+      { label: "Confirm ticked", kind: "primary", run: () => Array.from(selected) },
+    ],
+  });
+  return instance.result;
+}
+
+/**
+ * After a face has been confirmed as `personId`/`name`, gather that person's
+ * remaining suggestions and confirm the rest — auto for the near-certain,
+ * a grid for the borderline. Best-effort: the trigger confirm already
+ * succeeded, so any failure here just leaves those faces in the normal queue.
+ * Returns the set of face ids it newly confirmed so the caller can drop them
+ * from its own view.
+ */
+async function cascadeConfirm(personId, name, { excludeIds = new Set() } = {}) {
+  if (cascadeBusy) return new Set();
+  cascadeBusy = true;
+  try {
+    return await runCascade(personId, name, excludeIds);
+  } finally {
+    cascadeBusy = false;
+  }
+}
+
+async function runCascade(personId, name, excludeIds) {
+  let candidates;
+  try {
+    const res = await api("faces-review", { person_id: personId, limit: 300 });
+    candidates = (res.faces || []).filter((f) => !excludeIds.has(f.id));
+  } catch {
+    return new Set();
+  }
+  if (!candidates.length) return new Set();
+
+  const confirmed = new Set();
+  const auto = candidates.filter((f) => f.distance != null && f.distance <= AUTO_MAX);
+  const review = candidates.filter((f) => !(f.distance != null && f.distance <= AUTO_MAX));
+
+  if (auto.length) {
+    try {
+      const res = await api("face-confirm-batch", { person_id: personId, face_ids: auto.map((f) => f.id) });
+      const n = res.confirmed ?? auto.length;
+      auto.forEach((f) => confirmed.add(f.id));
+      announce(`Auto-confirmed ${plural(n, "more photo")} of ${name}.`, { force: true });
+      toast(`Also tagged ${plural(n, "very-likely photo")} of ${name}.`, {
+        kind: "success",
+        duration: 8000,
+        action: {
+          label: "Undo",
+          run: async () => {
+            for (const f of auto) { try { await api("face-unconfirm", { face_id: f.id }); } catch { /* ignore */ } }
+            toast("Undone.");
+            refreshStatus();
+          },
+        },
+      });
+    } catch (err) { toastError(err); }
+  }
+
+  if (review.length) {
+    const kept = await reviewMatchesGrid(review, name);
+    if (kept && kept.length) {
+      try {
+        const res = await api("face-confirm-batch", { person_id: personId, face_ids: kept });
+        kept.forEach((id) => confirmed.add(id));
+        toast(`Confirmed ${plural(res.confirmed ?? kept.length, "more photo")} of ${name}.`, { kind: "success" });
+      } catch (err) { toastError(err); }
+    }
+  }
+
+  if (confirmed.size) { await refreshPeople(); refreshStatus(); }
+  return confirmed;
+}
+
 /* ---------- panel: scan ------------------------------------------------ */
 
 let scanAbort = null;
@@ -263,8 +389,9 @@ function renderTriage() {
     el("h2", { text: "Confirm names" }),
     el("p.pga-hint", { text:
       "Each face below has a suggested name based on people you've already confirmed. " +
-      "Say yes or no. Confirming teaches the recognition, so it gets better as you go. " +
-      "Suggestions cover every album, since a person can appear in more than one." }),
+      "Say yes or no. Confirming one face sweeps up the rest of that person automatically — " +
+      "near-certain matches are tagged for you, and any maybes are shown in a grid to confirm " +
+      "in one go, so you don't work through a hundred photos of the same person one at a time." }),
     progress,
     stage,
   );
@@ -309,10 +436,12 @@ function renderTriage() {
     decided.add(face.id);
     try {
       if (action === "confirm") {
-        await api("face-confirm", { face_id: face.id, person_id: personId || face.person.id });
+        const pid = personId || face.person.id;
+        const pname = face.person.name;
+        await api("face-confirm", { face_id: face.id, person_id: pid });
         confirmed++;
-        announce(`Confirmed ${face.person.name}.`);
-        toast(`Confirmed ${face.person.name}.`, {
+        announce(`Confirmed ${pname}.`);
+        toast(`Confirmed ${pname}.`, {
           kind: "success",
           duration: 6000,
           // Confirm is reversible; reject is not, so only this gets an Undo.
@@ -329,6 +458,12 @@ function renderTriage() {
             },
           },
         });
+        // Sweep up the rest of this person so a hundred photos aren't a hundred
+        // keystrokes. Ids it confirms are marked decided so they don't come
+        // back around the queue one at a time.
+        const swept = await cascadeConfirm(pid, pname, { excludeIds: decided });
+        swept.forEach((id) => decided.add(id));
+        confirmed += swept.size;
       } else if (action === "reject") {
         await api("face-reject", { face_id: face.id, person_id: face.person.id });
         rejected++;
@@ -430,11 +565,17 @@ function renderTriage() {
         const payload = existing
           ? { face_id: target.id, person_id: existing.id }
           : { face_id: target.id, new_person_name: name };
-        await api("face-confirm", payload);
+        const res = await api("face-confirm", payload);
         decided.add(target.id);
         confirmed++;
         toast(`Confirmed ${name}.`, { kind: "success" });
         await refreshPeople();
+        const pid = res.person_id || existing?.id;
+        if (pid) {
+          const swept = await cascadeConfirm(pid, name, { excludeIds: decided });
+          swept.forEach((id) => decided.add(id));
+          confirmed += swept.size;
+        }
         refreshStatus();
         await advance();
       } catch (err) {
@@ -526,6 +667,9 @@ function renderUnknown() {
     else toast(`Named ${plural(ids.length, "face")} as ${person.display_name}.`, { kind: "success" });
     announce(`Named ${plural(ids.length, "face")} as ${person.display_name}.`, { force: true });
     await refreshPeople();
+    // Naming these exemplars may have produced suggestions elsewhere — sweep
+    // them up too, so the whole person is handled in one action.
+    await cascadeConfirm(person.id, person.display_name, { excludeIds: new Set(ids) });
     refreshStatus();
     await load();
   }

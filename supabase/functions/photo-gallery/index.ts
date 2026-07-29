@@ -853,6 +853,33 @@ const hFaceConfirm: Handler = async ({ sb, payload }) => {
   return json({ ok: true, person_id: resolved.id });
 };
 
+// Confirm many faces as one person in a single call, re-suggesting ONCE at the
+// end instead of after every face (face-confirm re-suggests per call, so a
+// hundred separate confirms would trigger a hundred re-suggests). This is what
+// makes "tag one face → tag the other hundred of the same person" cheap: the
+// client gathers a person's pending suggestions, a human keeps/deselects the
+// ones that are really them, and the kept set is confirmed together.
+const hFaceConfirmBatch: Handler = async ({ sb, payload }) => {
+  const ids = Array.isArray(payload.face_ids)
+    ? Array.from(new Set(payload.face_ids.map((x) => str(x)).filter(Boolean)))
+    : [];
+  if (!ids.length) return json({ error: "face_ids is required." }, 400);
+  if (ids.length > 500) return json({ error: "Confirm at most 500 faces at once." }, 400);
+  const resolved = await resolvePerson(sb, payload.person_id ? str(payload.person_id) : null, payload.new_person_name ? str(payload.new_person_name) : null);
+  if ("error" in resolved) return json({ error: resolved.error }, resolved.status);
+
+  let confirmed = 0;
+  const failed: string[] = [];
+  for (const faceId of ids) {
+    const { error } = await sb.rpc("gallery_confirm_face", { p_face_id: faceId, p_person_id: resolved.id });
+    if (error) { console.error("face-confirm-batch:", error.message); failed.push(faceId); }
+    else confirmed++;
+  }
+  // One re-suggest for the whole batch, not one per face.
+  await sb.rpc("gallery_resuggest_for_person", { p_person_id: resolved.id });
+  return json({ ok: true, person_id: resolved.id, confirmed, failed });
+};
+
 const hFaceReject: Handler = async ({ sb, payload }) => {
   const faceId = str(payload.face_id), personId = str(payload.person_id);
   if (!faceId || !personId) return json({ error: "face_id and person_id are required." }, 400);
@@ -894,10 +921,15 @@ const hFacesReview: Handler = async ({ sb, payload }) => {
   const offset = Math.max(0, parseInt(str(payload.offset), 10) || 0);
   const minD = typeof payload.min_distance === "number" ? payload.min_distance : null;
   const maxD = typeof payload.max_distance === "number" ? payload.max_distance : null;
+  // Optional: only faces currently suggested as one person. Powers the "tag
+  // one → sweep up the rest" flow, which pulls a single person's whole pending
+  // pile so the human confirms it in one pass instead of one crop at a time.
+  const personId = payload.person_id ? str(payload.person_id) : null;
   let q = sb.from("gallery_faces")
     .select("id, photo_id, box_x, box_y, box_w, box_h, suggested_distance, suggestion:suggested_person_id(id, display_name), photo:photo_id(image_url, gallery, year)")
-    .is("person_id", null).not("suggested_person_id", "is", null)
-    .order("suggested_distance", { ascending: true }).range(offset, offset + limit - 1);
+    .is("person_id", null).not("suggested_person_id", "is", null);
+  if (personId) q = q.eq("suggested_person_id", personId);
+  q = q.order("suggested_distance", { ascending: true }).range(offset, offset + limit - 1);
   if (minD !== null) q = q.gte("suggested_distance", minD);
   if (maxD !== null) q = q.lte("suggested_distance", maxD);
   const { data, error } = await q;
@@ -1000,6 +1032,7 @@ const HANDLERS: Record<string, Handler> = {
   "faces-for-photo": hFacesForPhoto,
   "face-add-manual": hFaceAddManual,
   "face-confirm": hFaceConfirm,
+  "face-confirm-batch": hFaceConfirmBatch,
   "face-reject": hFaceReject,
   "face-unconfirm": hFaceUnconfirm,
   "face-delete": hFaceDelete,
