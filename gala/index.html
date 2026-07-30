@@ -166,6 +166,26 @@
             line-height: 1.7;
             text-align: left;
         }
+        /* Special Tribute (group photo, not a circular headshot) */
+        .hero-award-card.tribute-card {
+            max-width: 560px;
+        }
+        .tribute-photo {
+            width: 100%;
+            max-width: 340px;
+            height: auto;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            margin: 0 auto 18px;
+            display: block;
+        }
+        .tribute-caption {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 12px;
+        }
         .hero-award-description p {
             margin-bottom: 1rem;
         }
@@ -1257,7 +1277,8 @@
             border: 1px solid var(--gala-gold);
             border-radius: 10px;
         }
-        .page-gala .hero-award-card .honoree-photo {
+        .page-gala .hero-award-card .honoree-photo,
+        .page-gala .tribute-photo {
             border-color: var(--gala-gold);
         }
         .page-gala .hero-award-card .honoree-name {
@@ -1761,6 +1782,23 @@
                 </div>
                 <div class="hero-award-description fade-in">
                     <p>We are also proud to honor Hannah Irsfeld, Esq., whose visionary leadership, extraordinary pro bono service, and groundbreaking policy research have transformed SPARC, helped secure historic public investments, and positioned our organization for an even stronger future.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Special Tribute -->
+        <section class="hero-award-section" style="padding-top: 0;">
+            <div class="container">
+                <h2 class="fade-in">Special Tribute</h2>
+                <p class="award-subtitle fade-in">In heartfelt recognition of</p>
+                <div class="hero-award-card tribute-card fade-in">
+                    <img src="/images/ellen-dyke-a-call-to-conscience.jpg" alt="Leaders gathered at A Call to Conscience, SPARC's advocacy summit at The George Washington University" class="tribute-photo">
+                    <div class="honoree-name">Ellen Dyke</div>
+                    <div class="honoree-title">A Call to Conscience</div>
+                    <p class="tribute-caption">A Call to Conscience &mdash; The George Washington University</p>
+                </div>
+                <div class="hero-award-description fade-in">
+                    <p>We offer a special tribute to Ellen Dyke in recognition of her extraordinary leadership in bringing A Call to Conscience to life &mdash; and for inspiring a conversation that will continue to advance inclusion, dignity, and opportunity for adults with severe and multiple disabilities.</p>
                 </div>
             </div>
         </section>
