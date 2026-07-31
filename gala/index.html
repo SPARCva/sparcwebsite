@@ -1290,6 +1290,47 @@
         .page-gala .hero-award-description {
             color: rgba(248, 248, 240, 0.92);
         }
+        /* ---------- Honorary Host Committee ---------- */
+        .host-committee-lead {
+            text-align: center;
+            margin: 0 auto 34px;
+        }
+        .host-committee-lead .honoree-name {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: var(--gala-ivory);
+            line-height: 1.3;
+        }
+        .host-committee-lead .honoree-title {
+            color: rgba(248, 248, 240, 0.85);
+            margin-top: 4px;
+        }
+        .host-committee-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 46rem;
+        }
+        .host-committee-list li {
+            position: relative;
+            padding: 14px 0 14px 26px;
+            border-bottom: 1px solid rgba(248, 248, 240, 0.14);
+            color: rgba(248, 248, 240, 0.95);
+            font-size: 1.08rem;
+            line-height: 1.4;
+        }
+        .host-committee-list li:last-child {
+            border-bottom: none;
+        }
+        .host-committee-list li::before {
+            content: "\2666";
+            position: absolute;
+            left: 0;
+            top: 14px;
+            color: var(--gala-gold);
+            font-size: 0.9rem;
+        }
 
         /* ---------- Sponsor carousel ---------- */
         .page-gala .sponsor-carousel-section {
@@ -1813,6 +1854,27 @@
                     <div class="honoree-name">Mark Ingrao</div>
                     <div class="honoree-title">CEO, Aspen Strategies, LLC</div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Honorary Host Committee -->
+        <section class="hero-award-section" style="padding-top: 0;">
+            <div class="container">
+                <h2 class="fade-in">Honorary Host Committee</h2>
+                <div class="host-committee-lead fade-in">
+                    <div class="honoree-name">The Honorable Donald S. Beyer Jr.</div>
+                    <div class="honoree-title">United States Congress</div>
+                </div>
+                <ul class="host-committee-list fade-in">
+                    <li>The Honorable Kate Hanley, Former Secretary of the Commonwealth of Virginia</li>
+                    <li>Dr. Anne M. Kress, President, Northern Virginia Community College</li>
+                    <li>Arlington County Supervisor J.D. Spain, Sr.</li>
+                    <li>Fairfax County Supervisor Rodney Lusk</li>
+                    <li>Fairfax County Supervisor Walter Alcorn</li>
+                    <li>Fairfax County Supervisor Jimmy Bierman</li>
+                    <li>Loudoun County Supervisor Sylvia Glass</li>
+                    <li>Buddy Rizer, Executive Director, Loudoun County Department of Economic Development</li>
+                </ul>
             </div>
         </section>
 
