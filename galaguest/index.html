@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD1XQ0NDCD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PD1XQ0NDCD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RSVP for An Evening to SPARCle 2026 — SPARC's signature gala on Saturday, November 14, 2026 at the Washington Dulles Airport Marriott.">
+    <title>Guest RSVP | An Evening to SPARCle | SPARC</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* Elegant safari reskin, scoped to .page-gala — mirrors /gala/. */
+        .page-gala {
+            --gala-green-deep:  #184030;
+            --gala-green-dark:  #082820;
+            --gala-green-sage:  #587860;
+            --gala-gold:        #D8A040;
+            --gala-gold-bright: #E8B850;
+            --gala-gold-deep:   #B88020;
+            --gala-ivory:       #F8F8F0;
+            --gala-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+            background: var(--gala-ivory);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        /* Screen-reader-only heading helper (keeps a real <h1> in the DOM) */
+        .page-gala .gala-sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Visible focus ring for every interactive element on the page */
+        .page-gala a:focus-visible,
+        .page-gala button:focus-visible,
+        .page-gala .btn:focus-visible,
+        .page-gala [onclick]:focus-visible {
+            outline: 3px solid var(--gala-gold-deep);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* ---------- Reusable gold-diamond divider ---------- */
+        .page-gala .gala-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 320px;
+            margin: 18px auto;
+        }
+        .page-gala .gala-divider .gala-divider-rule {
+            flex: 1;
+            height: 1px;
+            background: var(--gala-gold);
+            opacity: 0.85;
+        }
+        .page-gala .gala-divider .gala-divider-diamond {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+            background: var(--gala-gold);
+        }
+
+        /* ---------- Hero (arch centerpiece) ---------- */
+        .page-gala .gala-hero {
+            background: var(--gala-ivory);
+            padding: 116px 0 54px;
+            overflow: hidden;
+        }
+        .page-gala .gala-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+            align-items: end;
+            gap: 56px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        .page-gala .gala-hero-arch-col {
+            display: flex;
+            justify-content: center;
+        }
+        .page-gala .gala-hero-info-col {
+            text-align: center;
+        }
+        .page-gala .gala-arch {
+            display: block;
+            width: 100%;
+            max-width: 460px;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        /* Date / venue block — live text framed in a gold hairline */
+        .page-gala .gala-datecard {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 30px 34px;
+            background: #ffffff;
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(24, 64, 48, 0.06);
+        }
+        .page-gala .gala-sun {
+            display: inline-block;
+            color: var(--gala-gold);
+            line-height: 0;
+            margin-bottom: 12px;
+        }
+        .page-gala .gala-date {
+            font-family: var(--gala-serif);
+            font-size: 2rem;
+            line-height: 1.15;
+            font-weight: 600;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .gala-time {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gala-gold-deep);
+            margin-top: 10px;
+        }
+        .page-gala .gala-datecard .gala-divider {
+            margin: 16px auto;
+            max-width: 180px;
+        }
+        .page-gala .gala-venue {
+            font-family: var(--gala-serif);
+            font-style: italic;
+            font-size: 1.45rem;
+            line-height: 1.3;
+            color: var(--gala-green-deep);
+        }
+        .page-gala .gala-city {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gala-green-sage);
+            margin-top: 8px;
+        }
+
+        /* Themed invitation line under the hero title */
+        .page-gala .gala-invite-line {
+            max-width: 620px;
+            margin: 0 auto 26px;
+            font-family: var(--gala-serif);
+            font-style: italic;
+            font-size: 1.4rem;
+            line-height: 1.4;
+            color: var(--gala-green-sage);
+            text-align: center;
+        }
+
+        /* ---------- Primary CTA ---------- */
+        .page-gala .gala-hero-buttons {
+            margin: 0 0 26px;
+            gap: 14px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .page-gala .gala-hero-info-col .gala-btn {
+            min-width: 266px;
+        }
+        .page-gala .gala-btn {
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .page-gala .gala-btn-tickets {
+            background: linear-gradient(180deg, var(--gala-gold-bright) 0%, var(--gala-gold) 100%);
+            color: var(--gala-green-deep);
+            border: 1px solid var(--gala-gold-bright);
+            box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.5),
+                        0 4px 14px rgba(184, 128, 32, 0.28);
+        }
+        .page-gala .gala-btn-tickets:hover {
+            background: linear-gradient(180deg, #f0c968 0%, var(--gala-gold-bright) 100%);
+            color: var(--gala-green-deep);
+            transform: translateY(-2px);
+        }
+
+        /* ---------- RSVP form section (deep-green field) ---------- */
+        .page-gala .rsvp-section {
+            background: linear-gradient(160deg, var(--gala-green-deep) 0%, var(--gala-green-dark) 100%);
+            padding: 74px 0 90px;
+            scroll-margin-top: 84px;
+        }
+        .page-gala .rsvp-section .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-gala .rsvp-section .section-header h2 {
+            font-family: var(--gala-serif);
+            font-weight: 600;
+            font-size: 2.5rem;
+            color: var(--gala-ivory);
+            margin-bottom: 0.75rem;
+        }
+        .page-gala .rsvp-section .section-header p {
+            color: rgba(248, 248, 240, 0.85);
+            font-size: 1.1rem;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .page-gala .rsvp-form-wrapper {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1.5px solid var(--gala-gold);
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 12px 34px rgba(8, 40, 32, 0.28);
+        }
+
+        /* Bloomerang embedded-form field styling (matches /gala-register/) */
+        .registration-form label { color: var(--sparc-charcoal); font-family: 'Open Sans', sans-serif; }
+        .registration-form h3 { color: var(--gala-green-deep); font-family: var(--gala-serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0ede4; }
+        .registration-form .field input[type="text"], .registration-form .field input[type="email"], .registration-form .field input[type="tel"], .registration-form .field input[type="number"], .registration-form .field select, .registration-form .field textarea { max-width: 100% !important; width: 100% !important; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; font-family: 'Open Sans', sans-serif; box-sizing: border-box; }
+        .registration-form .field.radio label { padding: 10px 14px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 6px; cursor: pointer; display: block; width: 100%; box-sizing: border-box; transition: all 0.2s ease; }
+        .registration-form .field.radio label:hover { background: #f6f4ec; border-color: var(--gala-gold); }
+        .registration-form .btn-submit-registration { background: var(--gala-green-deep); color: #fff; border: none; padding: 14px 32px; font-size: 1rem; font-weight: 600; border-radius: 999px; cursor: pointer; width: 100%; margin-top: 15px; transition: background 0.3s ease; }
+        .registration-form .btn-submit-registration:hover { background: var(--gala-green-dark); }
+        .registration-form .errors { border-radius: 8px; margin-bottom: 15px; }
+        .registration-form .section.true-impact { display: none !important; }
+
+        /* ---------- Responsive tweaks ---------- */
+        @media (max-width: 900px) {
+            .page-gala .gala-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                max-width: 560px;
+            }
+            .page-gala .gala-hero-arch-col {
+                order: -1;
+            }
+            .page-gala .gala-arch {
+                max-width: 400px;
+            }
+        }
+        @media (max-width: 768px) {
+            .page-gala .gala-hero {
+                padding: 92px 0 40px;
+            }
+            .page-gala .gala-arch {
+                max-width: 340px;
+            }
+            .page-gala .gala-date {
+                font-size: 1.6rem;
+            }
+            .page-gala .gala-venue {
+                font-size: 1.2rem;
+            }
+            .page-gala .rsvp-section .section-header h2 {
+                font-size: 2rem;
+            }
+            .page-gala .rsvp-form-wrapper {
+                padding: 26px 20px;
+            }
+        }
+
+        /* ---------- Reduced motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .page-gala .gala-btn,
+            .page-gala .gala-btn-tickets:hover {
+                transition: none;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="page-gala">
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="SPARC - Specially Adapted Resource Centers" style="height: 50px; width: auto;">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/about/" class="nav-link">About</a>
+                    <div class="dropdown-menu">
+                        <a href="/team/">Our Team</a>
+                        <a href="/board/">Board of Directors</a>
+                        <a href="/financials/">Financials</a>
+                        <a href="/strategic-plan/">Strategic Plan</a>
+                        <a href="/news/">SPARC in the News</a>
+                        <a href="/compliance/">ADA Compliance</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/programs/" class="nav-link">Programs</a>
+                    <div class="dropdown-menu">
+                        <a href="/programs/sensory-lab/">Mobile Exploration Lab</a>
+                        <a href="/programs/enrollment/">Enrollment Information</a>
+                    </div>
+                </li>
+                <li><a href="/locations/" class="nav-link">Locations</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="/stories/" class="nav-link">Stories</a>
+                    <div class="dropdown-menu">
+                        <a href="/podcast/">The Access Point Podcast</a>
+                        <a href="/blog/">Blog</a>
+                        <a href="/newsletter/">Newsletter</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/events/" class="nav-link active">Events</a>
+                    <div class="dropdown-menu">
+                        <a href="/gala/">An Evening to SPARCle</a>
+                        <a href="/summit/">A Call to Conscience</a>
+                        <a href="/bingo/">Bingo</a>
+                        <a href="/photogallery/">Photo Gallery</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="/get-involved/" class="nav-link">Get Involved</a>
+                    <div class="dropdown-menu">
+                        <a href="/advocate/">Advocate for SPARC</a>
+                        <a href="/volunteer/">Volunteer</a>
+                        <a href="/participants/">Participants &amp; Families</a>
+                        <a href="javascript:void(0)" onclick="openMailingListModal()">Join Our Mailing List</a>
+                        <a href="https://teamlocker.squadlocker.com/#/lockers/specially-adapted-resource-centers" target="_blank" rel="noopener noreferrer">Purchase SPARC Swag</a>
+                    </div>
+                </li>
+                <li class="nav-item-dropdown nav-donate-dropdown">
+                    <a href="/donate-checkout/" class="nav-link nav-donate" aria-haspopup="true" aria-expanded="false">Donate<span class="caret" aria-hidden="true"></span></a>
+                    <div class="dropdown-menu donate-dropdown-menu" role="menu">
+                        <a href="/donate-checkout/" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Once</span>
+                                <span class="dd-sub">Make a one-time gift</span>
+                            </span>
+                        </a>
+                        <a href="/monthly/" class="dd-monthly" role="menuitem">
+                            <span>
+                                <span class="dd-label">Give Monthly</span>
+                                <span class="dd-sub">Light the Way monthly donor</span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <div class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Gala Hero Header -->
+    <section class="gala-hero">
+        <div class="container gala-hero-content">
+            <!-- Real <h1> kept in the DOM for SEO / screen readers; the visible
+                 title lives inside the arch lockup image. -->
+            <h1 class="gala-sr-only">An Evening to SPARCle — Guest RSVP</h1>
+
+            <div class="gala-hero-grid">
+              <div class="gala-hero-arch-col">
+                <img src="/images/gala/sparcle-arch-lockup.png"
+                     alt="An Evening to SPARCle — Adventure Begins with Inclusion"
+                     class="gala-arch" width="480" height="500">
+              </div>
+
+              <div class="gala-hero-info-col">
+                <p class="gala-invite-line">You're invited — we'd be delighted to have you join us.</p>
+
+                <div class="gala-hero-buttons">
+                    <a href="#rsvp" class="btn btn-lg gala-btn gala-btn-tickets">RSVP Now!</a>
+                </div>
+
+                <!-- Date / venue block: live text styled after the date-venue graphic -->
+                <div class="gala-datecard">
+                    <span class="gala-sun" aria-hidden="true">
+                        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" focusable="false" aria-hidden="true">
+                            <path d="M6 34h36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M24 34a10 10 0 0 1 20 0" fill="currentColor" opacity="0.9"/>
+                            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <path d="M24 8v6"/>
+                                <path d="M10.5 13.5l4 4"/>
+                                <path d="M37.5 13.5l-4 4"/>
+                                <path d="M4 27h5"/>
+                                <path d="M44 27h-5"/>
+                            </g>
+                        </svg>
+                    </span>
+                    <p class="gala-date">Saturday, November 14, 2026</p>
+                    <p class="gala-time">4 PM &ndash; 8 PM</p>
+                    <div class="gala-divider" aria-hidden="true">
+                        <span class="gala-divider-rule"></span>
+                        <span class="gala-divider-diamond"></span>
+                        <span class="gala-divider-rule"></span>
+                    </div>
+                    <p class="gala-venue">Washington Dulles Airport Marriott</p>
+                    <p class="gala-city">Dulles, Virginia</p>
+                </div>
+              </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- RSVP form -->
+        <section class="rsvp-section" id="rsvp">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>RSVP for An Evening to SPARCle</h2>
+                    <p>Please complete the form below to let us know you'll be joining us for the evening.</p>
+                </div>
+                <div class="rsvp-form-wrapper">
+                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/18702336.js" type="text/javascript"></script>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="color: white;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="/images/SPARC_logo_white.png" alt="SPARC" style="height: 60px; width: auto; margin-bottom: 15px;">
+                    <p>Specially Adapted Resource Centers provides community-integrated day programs for adults with severe and multiple disabilities in Northern Virginia. We believe every adult deserves a meaningful life filled with connection, purpose, and belonging.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=100064372517571" class="social-link" aria-label="Facebook" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/sparc.solutions/" class="social-link" aria-label="Instagram" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/specially-adapted-resource-centers" class="social-link" aria-label="LinkedIn" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@SPARC_VA" class="social-link" aria-label="YouTube" target="_blank">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="mailto:debi@sparcsolutions.org" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/about/">About Us</a></li>
+                        <li><a href="/programs/">Programs</a></li>
+                        <li><a href="/locations/">Locations</a></li>
+                        <li><a href="/events/">Events</a></li>
+                        <li><a href="/stories/">Stories &amp; Impact</a></li>
+                        <li><a href="/donate-checkout/">Donate</a></li>
+                        <li><a href="/monthly/"><strong>Monthly Giving</strong></a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/financials/">Annual Reports</a></li>
+                        <li><a href="/board/">Board of Directors</a></li>
+                        <li><a href="/news/">News &amp; Press</a></li>
+                        <li><a href="/get-involved/">Get Involved</a></li>
+                        <li><a href="/contact/">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><strong>Mailing Address:</strong><br>
+                    1775 Tysons Blvd., Fifth Floor<br>
+                    Tysons, VA 22102</p>
+                    <p><strong>Phone:</strong> <a href="tel:571-407-1807" style="color: white;">(571) 407-1807</a></p>
+                    <p><a href="mailto:debi@sparcsolutions.org" style="color: white;">debi@sparcsolutions.org</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom-bar" style="background: white; padding: 30px 0; color: var(--sparc-dark-navy);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="margin: 0 0 5px 0; color: var(--sparc-dark-navy);">&copy; 2025 SPARC - Specially Adapted Resource Centers. All rights reserved.</p>
+                <p style="margin: 0 0 10px 0; color: var(--sparc-dark-navy);">501(c)(3) Nonprofit Organization | EIN: 20-5513060</p>
+                <nav aria-label="Legal links">
+                    <a href="/accessibility/" style="color: var(--sparc-dark-navy); text-decoration: none;">Accessibility</a> |
+                    <a href="/contact/" style="color: var(--sparc-dark-navy); text-decoration: none;">Contact</a>
+                </nav>
+            </div>
+            <img src="/images/Powered by Google.png" alt="Powered by Google" style="height: 160px; width: auto;">
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
