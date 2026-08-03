@@ -62,6 +62,7 @@
                         <a href="/podcast/">The Access Point Podcast</a>
                         <a href="/blog/">Blog</a>
                         <a href="/newsletter/">Newsletter</a>
+                        <a href="/photogallery/">Photo Gallery</a>
                     </div>
                 </li>
                 <li class="nav-item-dropdown">
@@ -176,6 +177,106 @@
                 </div>
             </div>
         </section>
+
+        <!-- Photo gallery scroll — randomized photos from all albums, beneath "Our Innovative Model" -->
+        <style>
+            .sgs { padding: 60px 0 30px; background: var(--sparc-soft-gray); overflow: hidden; }
+            .sgs-head { text-align: center; margin-bottom: 34px; }
+            .sgs-head h2 { color: var(--sparc-royal-blue); margin-bottom: 12px; }
+            .sgs-head p { color: var(--sparc-charcoal); max-width: 720px; margin: 0 auto; font-size: 1.05rem; }
+            .sgs-head a { color: var(--sparc-green-accessible); font-weight: 600; text-decoration: none; white-space: nowrap; }
+            .sgs-head a:hover, .sgs-head a:focus-visible { text-decoration: underline; }
+            .sgs-marquee { position: relative; overflow: hidden; padding: 8px 0; }
+            .sgs-marquee::before, .sgs-marquee::after { content: ""; position: absolute; top: 0; bottom: 0; width: 90px; z-index: 2; pointer-events: none; }
+            .sgs-marquee::before { left: 0; background: linear-gradient(90deg, var(--sparc-soft-gray), transparent); }
+            .sgs-marquee::after { right: 0; background: linear-gradient(270deg, var(--sparc-soft-gray), transparent); }
+            .sgs-track { display: flex; gap: 14px; width: max-content; animation: sgs-scroll 120s linear infinite; will-change: transform; }
+            @keyframes sgs-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+            .sgs-marquee:hover .sgs-track, .sgs-marquee:focus-within .sgs-track { animation-play-state: paused; }
+            .sgs-item { flex: 0 0 auto; display: block; height: 190px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0, 43, 80, 0.16); background: #dfe6ed; }
+            .sgs-item img { height: 190px; width: auto; display: block; transition: transform 0.35s ease; }
+            .sgs-item:hover img, .sgs-item:focus-visible img { transform: scale(1.06); }
+            .sgs-item:focus-visible { outline: 3px solid var(--sparc-kelly-green); outline-offset: 2px; }
+            @media (max-width: 640px) { .sgs-item, .sgs-item img { height: 140px; } }
+            @media (prefers-reduced-motion: reduce) { .sgs-track { animation: none; } .sgs-marquee { overflow-x: auto; } }
+        </style>
+        <section class="sgs" id="sparcGalleryScroll" aria-labelledby="sgs-heading" hidden>
+            <div class="container sgs-head">
+                <h2 id="sgs-heading">Moments Across the SPARC Community</h2>
+                <p>A glimpse from every album — the Gala, the Summit, and everyday life at SPARC. <a href="/photogallery/">Explore the full photo gallery &rarr;</a></p>
+            </div>
+            <div class="sgs-marquee" aria-label="A scrolling selection of photos from across SPARC's albums">
+                <div class="sgs-track" id="sgsTrack"></div>
+            </div>
+        </section>
+        <script>
+            // Pull photos from every SPARC album, shuffle them, and run a seamless,
+            // pause-on-hover marquee. Each photo links to its album. If nothing loads,
+            // the section stays hidden so the page never shows an empty strip.
+            (function () {
+                var section = document.getElementById("sparcGalleryScroll");
+                var track = document.getElementById("sgsTrack");
+                if (!section || !track) return;
+
+                var ENDPOINT = "https://ldxpockcgcxvsrbyhcnt.supabase.co/functions/v1/photo-gallery";
+                var KEY = "sb_publishable_3tn2UadRVekIf5Pw6F5z-A_40ZbdvTm";
+                var GALLERIES = [
+                    { g: "gala", href: "/photogallery/gala/", label: "An Evening to SPARCle" },
+                    { g: "summit", href: "/photogallery/summit/", label: "A Call to Conscience Summit" },
+                    { g: "life", href: "/photogallery/life/", label: "Everyday Life at SPARC" }
+                ];
+                var MAX = 42;
+
+                function shuffle(a) {
+                    for (var i = a.length - 1; i > 0; i--) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var t = a[i]; a[i] = a[j]; a[j] = t;
+                    }
+                    return a;
+                }
+
+                Promise.all(GALLERIES.map(function (item) {
+                    return fetch(ENDPOINT + "?action=list&gallery=" + item.g + "&year=all", {
+                        headers: { apikey: KEY, Authorization: "Bearer " + KEY }
+                    })
+                        .then(function (r) { return r.json(); })
+                        .then(function (d) {
+                            if (!d || !d.ok) return [];
+                            return (d.photos || []).map(function (p) {
+                                p._href = item.href; p._label = item.label; return p;
+                            });
+                        })
+                        .catch(function () { return []; });
+                })).then(function (lists) {
+                    var pool = [];
+                    lists.forEach(function (l) { pool = pool.concat(l); });
+                    pool = pool.filter(function (p) { return p && (p.thumb_url || p.image_url); });
+                    if (!pool.length) return; // leave the section hidden
+
+                    var picks = shuffle(pool).slice(0, MAX);
+                    // Duplicate the sequence so the -50% marquee loops seamlessly.
+                    [0, 1].forEach(function (pass) {
+                        picks.forEach(function (p) {
+                            var a = document.createElement("a");
+                            a.className = "sgs-item";
+                            a.href = p._href;
+                            a.setAttribute("aria-label", "View " + p._label + " photos");
+                            if (pass === 1) { a.setAttribute("aria-hidden", "true"); a.tabIndex = -1; }
+                            var img = document.createElement("img");
+                            img.src = p.thumb_url || p.image_url;
+                            img.alt = pass === 1 ? "" : (p.alt_text || p.caption || (p._label + " photo"));
+                            img.loading = "lazy";
+                            img.decoding = "async";
+                            a.appendChild(img);
+                            track.appendChild(a);
+                        });
+                    });
+                    // Keep the on-screen speed steady regardless of how many photos load.
+                    track.style.animationDuration = Math.max(40, picks.length * 3) + "s";
+                    section.hidden = false;
+                });
+            })();
+        </script>
 
         <!-- Recognition Section -->
         <section class="testimonial-section bg-light">
