@@ -36,6 +36,22 @@ import { renderToCanvas, decode, loadImage } from "./imaging.js";
  *  one-time scan whose whole job is recall. */
 export const DETECT_EDGE = 1600;
 
+/** Faces narrower than this (in pixels of the detection render) produce a
+ *  descriptor too weak to trust, so they are marked quality 'low': still shown
+ *  and taggable in the library, but never an exemplar, a match source, or a
+ *  queue entry. Mirrors the server's coarse backfill floor (box_w < 0.03 of a
+ *  1600px render ≈ 48px); the client is authoritative because it knows the
+ *  actual pixel size. A weak detector score gates a face too. */
+export const MIN_FACE_PX = 48;
+const MIN_DET_SCORE = 0.5;
+
+/** Quality tag for one detected face, from its pixel width and detector score. */
+function faceQuality(pxWidth, detScore) {
+  if (pxWidth < MIN_FACE_PX) return "low";
+  if (typeof detScore === "number" && detScore < MIN_DET_SCORE) return "low";
+  return "ok";
+}
+
 // Vendored rather than loaded from jsDelivr. This tool gets used at events on
 // unreliable wifi, and a CDN outage or a blocked third-party request would take
 // face tagging down entirely. Serving from our own origin also means no
@@ -230,6 +246,7 @@ export async function detectFaces(imageUrl, { tile = true } = {}) {
     box: toFractionBox(k.fullBox, width, height),
     det_score: k.score || null,
     detector: DETECTOR,
+    quality: faceQuality(k.fullBox.width, k.score),
   }));
 }
 
@@ -291,6 +308,7 @@ export async function detectInFile(file) {
       box: toFractionBox(det.detection.box, width, height),
       det_score: det.detection.score ?? null,
       detector: DETECTOR,
+      quality: faceQuality(det.detection.box.width, det.detection.score),
     }));
   } finally {
     if (source.close) source.close();

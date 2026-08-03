@@ -281,12 +281,14 @@ type Recognizer = "faceapi" | "arcface";
 
 // Distance bands per recognizer, echoed to the client so the confirm UI labels
 // confidence and picks its auto-confirm cutoff in the metric that's actually in
-// use — euclidean for face-api, cosine for ArcFace. `ceiling` matches each
-// recognizer's re-suggest max_distance, so a suggestion never sits above it.
-// The ArcFace numbers are conservative starting points; tune on real data.
+// use — euclidean for face-api, cosine for ArcFace. `ceiling` mirrors each
+// recognizer's re-suggest max_distance (gallery_recognizer_params in the DB is
+// the source of truth), so a suggestion never sits above it. The ceilings were
+// loosened when scoring moved from min() to a mean of the k nearest exemplars;
+// the sub-bands are conservative starting points and want tuning on real data.
 const RECOGNIZER_BANDS: Record<Recognizer, Record<string, number>> = {
-  faceapi: { auto: 0.36, very_likely: 0.36, likely: 0.46, possible: 0.54, ceiling: 0.55 },
-  arcface: { auto: 0.28, very_likely: 0.30, likely: 0.36, possible: 0.42, ceiling: 0.45 },
+  faceapi: { auto: 0.36, very_likely: 0.36, likely: 0.46, possible: 0.54, ceiling: 0.58 },
+  arcface: { auto: 0.28, very_likely: 0.30, likely: 0.36, possible: 0.42, ceiling: 0.48 },
 };
 
 type Ctx = { sb: Supa; payload: Record<string, unknown>; cats: Category[]; slugs: Set<string>; role: Role; recognizer: Recognizer };
@@ -864,12 +866,20 @@ const hFacesSave: Handler = async ({ sb, payload }) => {
     const emb = serializeEmbedding(f.embedding);
     const box = parseBox(f.box);
     if (!emb || !box) continue;
+    const detScore = typeof f.det_score === "number" ? f.det_score : null;
+    // The client gates on real pixel size and sends quality; the server keeps a
+    // coarse floor as a backstop so a too-small or too-weak face is never an
+    // exemplar or a match source even if the client failed to mark it. A face
+    // the client called 'low' stays low; the server can only demote, not promote.
+    const clientLow = str(f.quality) === "low";
+    const serverLow = box.w < 0.03 || (detScore !== null && detScore < 0.5);
     const row: Record<string, unknown> = {
       photo_id: photoId, embedding: emb,
       box_x: box.x, box_y: box.y, box_w: box.w, box_h: box.h,
       origin: "detected",
       detector: str(f.detector) || "face-api/tiny",
-      det_score: typeof f.det_score === "number" ? f.det_score : null,
+      det_score: detScore,
+      quality: (clientLow || serverLow) ? "low" : "ok",
     };
     // When the high-accuracy recognizer is running the scan, the client also
     // sends the 512-float ArcFace descriptor; store it so the face is matchable
@@ -892,7 +902,7 @@ const hFacesForPhoto: Handler = async ({ sb, payload }) => {
   if (!photoId) return json({ error: "Missing photo_id" }, 400);
   const { data: ph } = await sb.from("gallery_photos").select("face_scanned").eq("id", photoId).maybeSingle();
   const { data, error } = await sb.from("gallery_faces")
-    .select("id, box_x, box_y, box_w, box_h, origin, suggested_distance, person:person_id(id, display_name), suggestion:suggested_person_id(id, display_name)")
+    .select("id, box_x, box_y, box_w, box_h, origin, quality, suggested_distance, person:person_id(id, display_name), suggestion:suggested_person_id(id, display_name)")
     .eq("photo_id", photoId);
   if (error) { console.error("faces-for-photo:", error.message); return json({ error: "Could not load faces." }, 500); }
   const faces = (data ?? []).map((r) => {
@@ -900,7 +910,7 @@ const hFacesForPhoto: Handler = async ({ sb, payload }) => {
     const person = rec.person as { id: string; display_name: string } | null;
     const sugg = rec.suggestion as { id: string; display_name: string } | null;
     return {
-      id: rec.id, box: boxOf(rec), origin: rec.origin,
+      id: rec.id, box: boxOf(rec), origin: rec.origin, quality: rec.quality ?? "ok",
       person: person ? { id: person.id, name: person.display_name } : null,
       suggestion: (!person && sugg) ? { id: sugg.id, name: sugg.display_name, distance: rec.suggested_distance } : null,
     };
@@ -952,11 +962,7 @@ async function resolvePerson(sb: Supa, personId: string | null, newName: string 
   return { id: created.id as string };
 }
 
-// The targeted re-suggest RPC for the active recognizer.
-const resuggestForPersonRpc = (recognizer: Recognizer) =>
-  recognizer === "arcface" ? "gallery_resuggest_for_person_v2" : "gallery_resuggest_for_person";
-
-const hFaceConfirm: Handler = async ({ sb, payload, recognizer }) => {
+const hFaceConfirm: Handler = async ({ sb, payload }) => {
   const faceId = str(payload.face_id);
   if (!faceId) return json({ error: "Missing face_id" }, 400);
   const resolved = await resolvePerson(sb, payload.person_id ? str(payload.person_id) : null, payload.new_person_name ? str(payload.new_person_name) : null);
@@ -964,7 +970,8 @@ const hFaceConfirm: Handler = async ({ sb, payload, recognizer }) => {
   const { error } = await sb.rpc("gallery_confirm_face", { p_face_id: faceId, p_person_id: resolved.id });
   if (error) { console.error("face-confirm:", error.message); return json({ error: "Could not confirm the face." }, 500); }
   // Cheap targeted re-suggest: this new exemplar may improve pending guesses.
-  await sb.rpc(resuggestForPersonRpc(recognizer), { p_person_id: resolved.id });
+  // The RPC reads the active recognizer itself, so no routing here.
+  await sb.rpc("gallery_resuggest_for_person", { p_person_id: resolved.id });
   return json({ ok: true, person_id: resolved.id });
 };
 
@@ -974,7 +981,7 @@ const hFaceConfirm: Handler = async ({ sb, payload, recognizer }) => {
 // makes "tag one face → tag the other hundred of the same person" cheap: the
 // client gathers a person's pending suggestions, a human keeps/deselects the
 // ones that are really them, and the kept set is confirmed together.
-const hFaceConfirmBatch: Handler = async ({ sb, payload, recognizer }) => {
+const hFaceConfirmBatch: Handler = async ({ sb, payload }) => {
   const ids = Array.isArray(payload.face_ids)
     ? Array.from(new Set(payload.face_ids.map((x) => str(x)).filter(Boolean)))
     : [];
@@ -991,7 +998,7 @@ const hFaceConfirmBatch: Handler = async ({ sb, payload, recognizer }) => {
     else confirmed++;
   }
   // One re-suggest for the whole batch, not one per face.
-  await sb.rpc(resuggestForPersonRpc(recognizer), { p_person_id: resolved.id });
+  await sb.rpc("gallery_resuggest_for_person", { p_person_id: resolved.id });
   return json({ ok: true, person_id: resolved.id, confirmed, failed });
 };
 
@@ -1010,10 +1017,12 @@ const hFaceReject: Handler = async ({ sb, payload }) => {
 const hFaceUnreject: Handler = async ({ sb, payload }) => {
   const faceId = str(payload.face_id), personId = str(payload.person_id);
   if (!faceId || !personId) return json({ error: "face_id and person_id are required." }, 400);
-  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : 0.55;
-  const { data, error } = await sb.rpc("gallery_unreject_face", {
-    p_face_id: faceId, p_person_id: personId, p_max_distance: maxD,
-  });
+  // Let the RPC default p_max_distance/p_min_margin from the active recognizer;
+  // only override when the caller explicitly supplies one. The old hardcoded
+  // 0.55 euclidean default compared ArcFace cosine vectors against the wrong scale.
+  const rpcArgs: Record<string, unknown> = { p_face_id: faceId, p_person_id: personId };
+  if (typeof payload.max_distance === "number") rpcArgs.p_max_distance = payload.max_distance;
+  const { data, error } = await sb.rpc("gallery_unreject_face", rpcArgs);
   if (error) { console.error("face-unreject:", error.message); return json({ error: "Could not undo the rejection." }, 500); }
   // The RPC returns the restored suggestion, or no rows if nothing matches now
   // — the caller should say which, rather than implying the guess came back.
@@ -1063,7 +1072,7 @@ const hFacesReview: Handler = async ({ sb, payload }) => {
   const personId = payload.person_id ? str(payload.person_id) : null;
   let q = sb.from("gallery_faces")
     .select("id, photo_id, box_x, box_y, box_w, box_h, suggested_distance, suggestion:suggested_person_id(id, display_name), photo:photo_id(image_url, gallery, year)")
-    .is("person_id", null).not("suggested_person_id", "is", null);
+    .is("person_id", null).not("suggested_person_id", "is", null).eq("quality", "ok");
   if (personId) q = q.eq("suggested_person_id", personId);
   q = q.order("suggested_distance", { ascending: true }).range(offset, offset + limit - 1);
   if (minD !== null) q = q.gte("suggested_distance", minD);
@@ -1078,7 +1087,7 @@ const hFacesUnknown: Handler = async ({ sb, payload }) => {
   const offset = Math.max(0, parseInt(str(payload.offset), 10) || 0);
   const { data, error } = await sb.from("gallery_faces")
     .select("id, photo_id, box_x, box_y, box_w, box_h, suggested_distance, suggestion:suggested_person_id(id, display_name), photo:photo_id(image_url, gallery, year)")
-    .is("person_id", null).is("suggested_person_id", null)
+    .is("person_id", null).is("suggested_person_id", null).eq("quality", "ok")
     .order("created_at", { ascending: true }).range(offset, offset + limit - 1);
   if (error) { console.error("faces-unknown:", error.message); return json({ error: "Could not load unknown faces." }, 500); }
   return json({ ok: true, faces: (data ?? []).map((r) => queueRow(r as Record<string, unknown>)) });
@@ -1097,8 +1106,9 @@ const hFacesStatus: Handler = async ({ sb, payload, slugs, recognizer }) => {
   if (hasGallery) unscannedQ = unscannedQ.eq("gallery", gallery);
   const { count: unscanned } = await unscannedQ;
 
-  const { count: unnamed } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).is("person_id", null);
-  const { count: suggested } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).is("person_id", null).not("suggested_person_id", "is", null);
+  // Only gated-in faces are in the queues, so the counts must match them.
+  const { count: unnamed } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).is("person_id", null).eq("quality", "ok");
+  const { count: suggested } = await sb.from("gallery_faces").select("id", { count: "exact", head: true }).is("person_id", null).not("suggested_person_id", "is", null).eq("quality", "ok");
 
   return json({
     ok: true,
@@ -1113,10 +1123,13 @@ const hFacesStatus: Handler = async ({ sb, payload, slugs, recognizer }) => {
   });
 };
 
-const hResuggest: Handler = async ({ sb, payload, recognizer }) => {
-  const rpc = recognizer === "arcface" ? "gallery_resuggest_v2" : "gallery_resuggest";
-  const maxD = typeof payload.max_distance === "number" ? payload.max_distance : RECOGNIZER_BANDS[recognizer].ceiling;
-  const { data, error } = await sb.rpc(rpc, { p_max_distance: maxD });
+const hResuggest: Handler = async ({ sb, payload }) => {
+  // gallery_resuggest reads the active recognizer (and its ceiling/margin) itself
+  // now, so there's no v1/v2 routing here. Only override the ceiling when the
+  // caller explicitly supplies one.
+  const args: Record<string, unknown> = {};
+  if (typeof payload.max_distance === "number") args.p_max_distance = payload.max_distance;
+  const { data, error } = await sb.rpc("gallery_resuggest", args);
   if (error) { console.error("resuggest:", error.message); return json({ error: "Could not recompute suggestions." }, 500); }
   return json({ ok: true, updated: data ?? 0 });
 };

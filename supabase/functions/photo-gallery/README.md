@@ -20,6 +20,14 @@ and a header "scroll" of featured photos kept in chronological order.
     the `embedding_v2 vector(512)` column, the `photo_gallery_config.recognizer`
     flag, and the cosine `*_v2` matching RPCs. Additive and inert until an admin
     opts in from Settings.
+  - `migrations/20260803_gallery_match_quality.sql` — match-quality overhaul:
+    the `gallery_faces.quality` gate ('ok'/'low'), robust scoring (mean of the
+    k nearest exemplars instead of `min()`), a runner-up **margin test** before a
+    suggestion is written, and the collapse of the v1/v2 recognizer fork —
+    `gallery_match_face` / `gallery_resuggest` / `gallery_resuggest_for_person` /
+    `gallery_unreject_face` now read the active recognizer themselves and branch
+    internally, so the `*_v2` RPC names are **dropped** and this function no
+    longer routes by recognizer. Tuning lives in `gallery_recognizer_params()`.
 
   All gallery tables are RLS-locked with no policies → service-role only, and
   the `gallery_*` RPCs are granted to `service_role` only. Each new function
@@ -254,9 +262,9 @@ confirmed (or the photo is tagged manually).
 | `{ action:"face-unconfirm", face_id }` | Detaches a confirmed face; drops the photo link if it was the only reason for it. |
 | `{ action:"face-delete", face_id }` | Hard-deletes a spurious detection (poster, reflection). |
 | `{ action:"faces-review", limit?, offset?, min_distance?, max_distance?, person_id? }` | The confirm/reject queue: unnamed faces **with** a suggestion, most-confident first. `person_id` restricts to faces currently suggested as that one person (used by the "tag the rest" sweep). |
-| `{ action:"faces-unknown", limit?, offset? }` | Unnamed faces **without** a suggestion — the "who is this?" pile. |
-| `{ action:"faces-status", gallery? }` | `{ scanned_ids, unscanned_count, unnamed_count, suggested_count, recognizer, bands }` for a progress display. `bands` are the active recognizer's confidence-distance cutoffs, so the client labels confidence in the right metric. |
-| `{ action:"resuggest", max_distance? }` | Full re-sweep of pending suggestions **in the active recognizer's space** (`gallery_resuggest` or `gallery_resuggest_v2`). The function also runs a **targeted** re-suggest after each single confirmation, so the full sweep is rarely needed. |
+| `{ action:"faces-unknown", limit?, offset? }` | Unnamed faces **without** a suggestion — the "who is this?" pile. Low-quality (gated) faces are excluded from both queues; they stay visible on the photo (`faces-for-photo`) and remain manually taggable. |
+| `{ action:"faces-status", gallery? }` | `{ scanned_ids, unscanned_count, unnamed_count, suggested_count, recognizer, bands }` for a progress display. Counts cover gated-in (`quality='ok'`) faces only, matching the queues. `bands` are the active recognizer's confidence-distance cutoffs, so the client labels confidence in the right metric. |
+| `{ action:"resuggest", max_distance? }` | Full re-sweep of pending suggestions. `gallery_resuggest` reads the active recognizer (and its ceiling/margin from `gallery_recognizer_params`) itself — no v1/v2 routing. The function also runs a **targeted** re-suggest after each single confirmation, so the full sweep is rarely needed. |
 | `{ action:"photo-tag", photo_id, person_id }` | Manually links a person to a photo (no face), `via='manual'`. |
 | `{ action:"photo-untag", photo_id, person_id }` | Removes a manual link. Returns `409` if a confirmed face for that person is still on the photo (unconfirm the face instead — otherwise the trigger would just re-add the tag). |
 
@@ -266,10 +274,13 @@ A second, stronger face recognizer — **ArcFace** (512-float embeddings, cosine
 distance) — is available alongside the default **face-api** one (128-float,
 euclidean). It is opt-in and reversible: the 128-float `embedding` is never
 dropped, so switching back is a single flag. `photo_gallery_config.recognizer`
-(`'faceapi'` default / `'arcface'`) selects which drives matching; the function
-routes `resuggest`/confirm re-suggests to the matching `*_v2` RPCs. Descriptors
-are still computed **in the browser** (`js/photogallery/faces-arcface.js`, model
-vendored under `js/photogallery/faceapi/arcface/`), so nothing leaves this origin.
+(`'faceapi'` default / `'arcface'`) selects which drives matching. As of
+`20260803_gallery_match_quality.sql` the matching RPCs read that flag themselves
+and branch between euclidean/`embedding` and cosine/`embedding_v2` internally —
+the `*_v2` RPC names are gone and this function no longer routes by recognizer.
+Descriptors are still computed **in the browser**
+(`js/photogallery/faces-arcface.js`, model vendored under
+`js/photogallery/faceapi/arcface/`), so nothing leaves this origin.
 
 Rollout is driven from **Settings → High-accuracy recognizer (beta)**:
 
@@ -280,9 +291,12 @@ Rollout is driven from **Settings → High-accuracy recognizer (beta)**:
 | `{ action:"recognizer-status" }` | `{ recognizer, total_faces, embedded_v2, bands }` for the rollout panel. |
 | `{ action:"recognizer-set", recognizer }` | Flips the active recognizer (`'faceapi'`\|`'arcface'`). Switching to `arcface` is refused until at least one confirmed face has an embedding. The client runs `resuggest` afterwards to recompute in the new metric. |
 
-The ArcFace cosine thresholds (`RECOGNIZER_BANDS.arcface` in `index.ts` and the
-`*_v2` RPC `p_max_distance` defaults) are conservative starting points and
-should be tuned on real photos before relying on the recognizer.
+The distance thresholds — `gallery_recognizer_params()` (ceiling + runner-up
+margin, per recognizer, in the DB) and the `RECOGNIZER_BANDS` confidence
+sub-bands echoed from `index.ts` — are conservative starting points. They were
+loosened when scoring moved from `min()` to a mean of the k nearest exemplars,
+and should be tuned on real photos: raise the ceiling if true matches land in
+"Who is this?", raise the margin if confident suggestions turn out wrong.
 
 ## Setting the passphrases
 

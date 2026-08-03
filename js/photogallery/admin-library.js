@@ -528,6 +528,14 @@ function buildFacesPanel(photo, onPeopleChange) {
           }, "No"),
         );
       } else {
+        // A gated ('low') face is too small/weak to match, so it never gets a
+        // suggestion and stays out of the queues — but it's still taggable here.
+        if (face.quality === "low") {
+          cell.append(el("span.pga-muted", {
+            style: { fontSize: "0.8rem" },
+            text: "Low quality — too small to match, but you can still name it.",
+          }));
+        }
         cell.append(el("button.pga-btn.pga-btn-blue.pga-btn-sm", {
           type: "button",
           onclick: () => nameFace(face),
