@@ -21,11 +21,14 @@
   var GALA_SPONSORS_API = 'https://script.google.com/macros/s/AKfycbyGrTkUFa-EW77MeiMP_lBRioXyY6o5LTRVVCZ47RzZNXMlREn9KAZb2YcCaqSbwr4qeg/exec';
 
   /* Pledges to hide from the public carousel even if they're still marked
-     Approved in the backend sheet (e.g. test submissions). Match is by
-     sponsor name, case-insensitive. Remove an entry here once the matching
-     row has been deleted / un-approved in the "Gala Sponsor Pledges" sheet. */
+     Approved in the backend sheet (e.g. test submissions, or a pledge whose
+     logo is already curated as a static slide in the page HTML so it would
+     otherwise appear twice). Match is by sponsor name, case-insensitive.
+     Remove an entry here once the matching row has been deleted / un-approved
+     in the "Gala Sponsor Pledges" sheet. */
   var HIDDEN_SPONSOR_NAMES = [
-    'specially adapted resource clubs' // "THIS IS A TEST" pledge submitted 2026-07-13
+    'specially adapted resource clubs', // "THIS IS A TEST" pledge submitted 2026-07-13
+    'the shrivastava family' // curated static slide already in the carousel HTML; hide the pledge-feed duplicate
   ];
 
   function isConfigured() {
