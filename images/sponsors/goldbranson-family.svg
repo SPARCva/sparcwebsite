@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 170" width="520" height="170" role="img" aria-label="The Goldbranson Family">
+  <style>
+    .gf { font-family: 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; fill: #2360B0; letter-spacing: -1px; }
+  </style>
+  <text x="260" y="78" text-anchor="middle" class="gf" font-size="70" textLength="500" lengthAdjust="spacingAndGlyphs">GOLDBRANSON</text>
+  <text x="260" y="150" text-anchor="middle" class="gf" font-size="70">FAMILY</text>
+</svg>
