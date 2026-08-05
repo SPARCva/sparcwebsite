@@ -923,6 +923,67 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* ===== Summit Resources (Compendium + White Paper) ===== */
+        .summit-resources { padding: 80px 0; background: #fff; }
+        .summit-resources .resource-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .summit-resources .resource-card {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid var(--sparc-royal-blue);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 4px 14px rgba(0, 43, 80, 0.06);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .summit-resources .resource-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 43, 80, 0.12);
+            transform: translateY(-3px);
+        }
+        .summit-resources .resource-icon {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            background: var(--sparc-royal-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .summit-resources .resource-icon svg { width: 26px; height: 26px; }
+        .summit-resources .resource-body { flex: 1; }
+        .summit-resources .resource-body h3 {
+            color: var(--sparc-dark-navy);
+            margin: 0 0 8px;
+            font-size: 1.15rem;
+        }
+        .summit-resources .resource-body p {
+            color: var(--sparc-charcoal);
+            margin: 0 0 14px;
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+        .summit-resources .resource-meta {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--sparc-green-accessible);
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .summit-resources .resource-list { grid-template-columns: 1fr; }
+        }
     </style>
 
     <!-- Favicon -->
@@ -1127,6 +1188,40 @@
                             <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                         </span>
                         <span class="gv-label">Virtual Art Gallery</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summit Resources: Compendium + White Paper -->
+        <section class="summit-resources" aria-labelledby="summit-resources-heading">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2 id="summit-resources-heading">Summit Resources</h2>
+                    <p>Read and share the reports that came out of A Call to Conscience.</p>
+                </div>
+                <div class="resource-list fade-in">
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>
+                        </div>
+                        <div class="resource-body">
+                            <span class="resource-meta">Summit Compendium &middot; PDF</span>
+                            <h3>A Call to Conscience: A Call to Action</h3>
+                            <p>The Summit Compendium captures the obstacles and solutions raised by summit participants &mdash; a collective blueprint for advancing inclusion for adults with disabilities who have significant support needs.</p>
+                            <a href="/documents/SPARC-Summit-Compendium.pdf" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Read the Compendium (PDF)</a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>
+                        </div>
+                        <div class="resource-body">
+                            <span class="resource-meta">White Paper &middot; Word Document</span>
+                            <h3>Call for Action to Address Research Gaps Impacting People with Severe and Multiple Disabilities</h3>
+                            <p>This white paper documents how adults with severe and multiple disabilities remain &ldquo;invisible&rdquo; in research, health systems, and public data, and lays out a research agenda to characterize their needs, understand poor outcomes, and test interventions that improve care and quality of life.</p>
+                            <a href="/documents/SPARC-White-Paper-Research-Gaps-SMD.docx" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Download the White Paper (DOCX)</a>
+                        </div>
                     </div>
                 </div>
             </div>
