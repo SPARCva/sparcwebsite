@@ -1,2 +1,6 @@
 # Large video files (over GitHub's 100MB limit)
 videos/sparc-gala-2025.mp4
+
+# Node deps for the operator scripts in scripts/ (dev tooling, not the site)
+scripts/node_modules/
+scripts/package-lock.json
