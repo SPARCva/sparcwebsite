@@ -350,7 +350,11 @@ function findFile(name: string): string | null {
 function readRows(path: string): Row[] {
   const content = readFileSync(path, "utf8");
   return parse(content, {
-    columns: true,
+    // Trim header names: Bloomerang pads the LAST column of the header (and of
+    // each row) with trailing spaces, e.g. `...,Value  ` — so a naive
+    // `columns: true` yields the key "Value  " and r["Value"] is undefined.
+    // Values are left verbatim; the coercion helpers (str/num/…) trim as needed.
+    columns: (header: string[]) => header.map((h) => h.trim()),
     skip_empty_lines: true,
     bom: true, // Bloomerang prepends a UTF-8 BOM
     relax_column_count: true, // tolerate an occasional trailing note row
