@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Stay up to date with SPARC news, announcements, and stories from our programs serving adults with intellectual and developmental disabilities.">
-    <title>News & Updates | SPARC</title>
+    <title>News | SPARC</title>
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -404,6 +404,143 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
+
+        /* ===== Stories from SPARC (merged from Blog) ===== */
+        /* Blog Posts Section */
+        .blog-posts-section {
+            padding: 80px 0;
+            background: white;
+        }
+        .blog-posts-section .section-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+        .blog-posts-section .section-intro h2 {
+            color: var(--sparc-dark-navy);
+            margin-bottom: 1rem;
+        }
+        .blog-posts-section .section-intro p {
+            color: var(--sparc-charcoal);
+            font-size: 1.1rem;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        .blog-grid.single-post {
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .blog-post-card {
+            background: var(--sparc-soft-gray);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .blog-post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--sparc-kelly-green);
+        }
+
+        .blog-post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .blog-post-video {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        .blog-post-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .blog-post-body {
+            padding: 30px;
+        }
+
+        .blog-post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: var(--sparc-charcoal);
+        }
+        .blog-post-meta .date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .blog-post-meta .category {
+            background: var(--sparc-royal-blue);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .blog-post-body h3 {
+            color: var(--sparc-dark-navy);
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .blog-post-body p {
+            color: var(--sparc-charcoal);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .blog-post-body .read-more {
+            color: var(--sparc-royal-blue);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .blog-post-body .read-more:hover {
+            color: var(--sparc-kelly-green);
+        }
+
+        .blog-post-full-content {
+            display: none;
+            color: var(--sparc-charcoal);
+            line-height: 1.8;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .blog-post-full-content.expanded {
+            display: block;
+        }
+        .blog-post-full-content p {
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .blog-grid { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; }
+        }
     </style>
     <!-- Meta Pixel Code -->
     <script>
@@ -438,10 +575,9 @@
                         <a href="/board/">Board of Directors</a>
                         <a href="/financials/">Financials</a>
                         <a href="/strategic-plan/">Strategic Plan</a>
-                        <a href="/news/">SPARC in the News</a>
+                        <a href="/news/">News</a>
                         <a href="/compliance/">ADA Compliance</a>
                         <a href="/podcast/">The Access Point Podcast</a>
-                        <a href="/blog/">Blog</a>
                         <a href="/newsletter/">Newsletter</a>
                         <a href="/stories/">Stories & Impact</a>
                         <a href="/photogallery/">Photo Gallery</a>
@@ -729,6 +865,155 @@
                             </ul>
                         </div>
                     </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stories from SPARC -->
+        <section class="blog-posts-section" id="stories">
+            <div class="container">
+                <div class="section-intro">
+                    <h2>Stories from SPARC</h2>
+                    <p>Feature stories, milestones, and reflections from the SPARC community.</p>
+                </div>
+
+                <div class="blog-grid single-post">
+<!-- Post: Our Participants Take Center Stage at an Inclusive Fashion Show -->
+                    <div class="blog-post-card fade-in">
+                        <img src="/images/sparc-fashion-show.jpg" alt="A SPARC participant models a green blazer hand-painted with the SPARC seal and the motto &quot;Nothing About Us Without Us&quot; at the inclusive fashion show" class="blog-post-image">
+                        <div class="blog-post-body">
+                            <div class="blog-post-meta">
+                                <span class="date"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> August 7, 2026</span>
+                                <span class="category">In the News</span>
+                            </div>
+                            <h3>Raising the Bar: Our Participants Take Center Stage at an Inclusive Fashion Show</h3>
+                            <p>At SPARC, we don't simply fill the hours in someone's day. Our participants deserve far more than activities designed to keep them occupied &mdash; and few projects capture that better than the inclusive fashion show our team brought to life this summer, now featured in the Fairfax County Times.</p>
+                            <a class="read-more" onclick="this.parentElement.querySelector('.blog-post-full-content').classList.toggle('expanded'); this.textContent = this.textContent === 'Read Less' ? 'Read More →' : 'Read Less';">Read More &rarr;</a>
+                            <div class="blog-post-full-content">
+                                <p>SPARC creates programming that is ambitious, age-appropriate, creative, engaging, and exciting. We give adults with severe and multiple disabilities opportunities to learn, make choices, express themselves, build relationships, take on new challenges, and be visible and valued members of their communities. The inclusive fashion show is a wonderful example of exactly that.</p>
+                                <p>Led by SPARC's <strong>Nicky Sullivan</strong>, the show was the culmination of months of hands-on work. Participants were involved at every step &mdash; thrifting fabric, gathering ideas on community outings, designing original collections around playful themes, and finally taking center stage as models before an audience of family, friends, and community leaders at the <strong>Old Firehouse Teen Center in McLean</strong> on July 31. Four of our Northern Virginia centers took part, each with its own theme.</p>
+                                <p>"They really breathed life into this project," said Nicky Sullivan. "I might have offered them the bones, but they're the ones that put all the life into it. This is six months of such hard work and thought and love and effort to get these clothes ready for this. They did so well."</p>
+                                <p>Dranesville District Supervisor <strong>Jimmy Bierman</strong> came out to cheer the designers on. "I love what SPARC does to empower people in our community," he said. "This fashion show is just a really awesome opportunity for people who go to SPARC on a day-to-day basis to really show their creativity and show off everything that they do."</p>
+                                <p>This is what meaningful day programming can and should look like. Rather than asking adults with disabilities to remain on the sidelines, SPARC creates opportunities for them to participate, contribute, and be recognized as an important part of community life. We're grateful to Nicky, our staff, our participants, and our community partners for raising the bar once again &mdash; and to the Fairfax County Times for helping share their story.</p>
+                                <p><a href="https://www.fairfaxtimes.com/articles/inclusive-fashion-on-display-at-the-old-firehouse-teen-center-in-mclean/article_cee8b49e-812b-4e92-ac82-fa9affa167dc.html" target="_blank" rel="noopener noreferrer">Read the full Fairfax County Times story by Kristin Johnson &rarr;</a></p>
+                            </div>
+                            <div class="share-buttons">
+                                <span>Share:</span>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.fairfaxtimes.com/articles/inclusive-fashion-on-display-at-the-old-firehouse-teen-center-in-mclean/article_cee8b49e-812b-4e92-ac82-fa9affa167dc.html" target="_blank" rel="noopener noreferrer" class="share-btn facebook" aria-label="Share on Facebook"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+                                <a href="https://twitter.com/intent/tweet?url=https://www.fairfaxtimes.com/articles/inclusive-fashion-on-display-at-the-old-firehouse-teen-center-in-mclean/article_cee8b49e-812b-4e92-ac82-fa9affa167dc.html&text=Raising the Bar: SPARC participants take center stage at an inclusive fashion show" target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Share on X"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.fairfaxtimes.com/articles/inclusive-fashion-on-display-at-the-old-firehouse-teen-center-in-mclean/article_cee8b49e-812b-4e92-ac82-fa9affa167dc.html" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" aria-label="Share on LinkedIn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                                <a href="mailto:?subject=SPARC participants take center stage at an inclusive fashion show&body=Read the full Fairfax County Times story: https://www.fairfaxtimes.com/articles/inclusive-fashion-on-display-at-the-old-firehouse-teen-center-in-mclean/article_cee8b49e-812b-4e92-ac82-fa9affa167dc.html" class="share-btn email" aria-label="Share via Email"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post: Resource Center for Adults with Disabilities Launches in Hybla Valley -->
+                    <div class="blog-post-card fade-in">
+                        <img src="/ribbon-cutting/Ribbon-Cutting-1.jpg" alt="SPARC participants, families, staff, and elected officials gathered with the Mobile Exploration Lab van for the Hybla Valley center ribbon cutting" class="blog-post-image">
+                        <div class="blog-post-body">
+                            <div class="blog-post-meta">
+                                <span class="date"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> April 23, 2026</span>
+                                <span class="category">In the News</span>
+                            </div>
+                            <h3>Resource Center for Adults with Disabilities Launches in Hybla Valley</h3>
+                            <p>FFXnow reports that SPARC has officially opened its newest Specially Adapted Resource Center at the Hybla Valley Community Center, expanding life-changing day programming for adults with severe and multiple disabilities in southeastern Fairfax County.</p>
+                            <a class="read-more" onclick="this.parentElement.querySelector('.blog-post-full-content').classList.toggle('expanded'); this.textContent = this.textContent === 'Read Less' ? 'Read More →' : 'Read Less';">Read More &rarr;</a>
+                            <div class="blog-post-full-content">
+                                <p>On April 17, SPARC celebrated the ribbon cutting of its newest center at the <strong>Hybla Valley Community Center, 7950 Audubon Avenue</strong>, with local and state elected officials, program participants, and families gathered to mark the milestone.</p>
+                                <p>The new center operates weekdays from 10 a.m. to 2 p.m. and offers social and recreational activities, life skills training, education programs, and excursions &mdash; designed for young adults who have aged out of public school but cannot access traditional Medicaid programs because of the severity of their disabilities.</p>
+                                <p>SPARC also debuted its <strong>Mobile Exploration Lab</strong>, a custom van designed to meet the varied sensory needs of participants and bring enriching experiences directly to the community.</p>
+                                <p>Founded in 2006, SPARC now operates centers across Northern Virginia &mdash; including locations in McLean, Reston, Arlington, and Leesburg &mdash; specifically serving adults with multiple, severe disabilities and complex medical needs, a population often overlooked by state-funded providers.</p>
+                                <p>"By funding SPARC's existing centers and funding additional centers across the Commonwealth, Virginia can deliver dignity, belonging, and meaningful engagement to a population that has been historically underserved," said SPARC CEO Debi Alexander.</p>
+                                <p>SPARC extended special thanks to <strong>Franconia District Supervisor Rodney Lusk</strong> for helping make the Hybla Valley facility a reality, and recognized <strong>Congressman Don Beyer</strong>, <strong>State Senator Kannan Srinivasan</strong>, and the many community leaders who joined the celebration.</p>
+                                <p><a href="https://www.ffxnow.com/2026/04/23/resource-center-for-adults-with-disabilities-launches-in-hybla-valley/" target="_blank" rel="noopener noreferrer">Read the full FFXnow article by Angela Woolsey &rarr;</a></p>
+                            </div>
+                            <div class="share-buttons">
+                                <span>Share:</span>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.ffxnow.com/2026/04/23/resource-center-for-adults-with-disabilities-launches-in-hybla-valley/" target="_blank" rel="noopener noreferrer" class="share-btn facebook" aria-label="Share on Facebook"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+                                <a href="https://twitter.com/intent/tweet?url=https://www.ffxnow.com/2026/04/23/resource-center-for-adults-with-disabilities-launches-in-hybla-valley/&text=Resource Center for Adults with Disabilities Launches in Hybla Valley" target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Share on X"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.ffxnow.com/2026/04/23/resource-center-for-adults-with-disabilities-launches-in-hybla-valley/" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" aria-label="Share on LinkedIn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                                <a href="mailto:?subject=Resource Center for Adults with Disabilities Launches in Hybla Valley&body=SPARC's newest center has opened in Hybla Valley. Read the full story: https://www.ffxnow.com/2026/04/23/resource-center-for-adults-with-disabilities-launches-in-hybla-valley/" class="share-btn email" aria-label="Share via Email"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post: Transforming Lives Through Inclusion (Video) -->
+                    <div class="blog-post-card fade-in">
+                        <div class="blog-post-video">
+                            <iframe src="https://www.youtube.com/embed/GHvX5TgJeAY" title="Transforming Lives Through Inclusion with Debi Alexander of SPARC" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                        <div class="blog-post-body">
+                            <div class="blog-post-meta">
+                                <span class="date"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> April 23, 2026</span>
+                                <span class="category">Video</span>
+                            </div>
+                            <h3>Transforming Lives Through Inclusion: Debi Alexander on The Route to Success Podcast</h3>
+                            <p>SPARC founder Debi Alexander joins The Route to Success podcast (Season 1, Episode 3) by 3Raptor Consulting for a heartfelt conversation about how SPARC is transforming the lives of adults with severe and multiple disabilities through community-integrated day programs and a vision of true inclusion.</p>
+                            <a class="read-more" onclick="this.parentElement.querySelector('.blog-post-full-content').classList.toggle('expanded'); this.textContent = this.textContent === 'Read Less' ? 'Read More →' : 'Read Less';">Read More &rarr;</a>
+                            <div class="blog-post-full-content">
+                                <p>In this episode of <em>The Route to Success</em>, host 3Raptor Consulting sits down with SPARC founder Debi Alexander to explore the origin, mission, and impact of Specially Adapted Resource Centers (SPARC).</p>
+                                <p>Debi shares the powerful story behind SPARC's creation &mdash; a moment more than two decades ago when a young woman in a Medicaid facility slipped her a note that read &ldquo;Help me.&rdquo; That encounter set Debi on a mission to build a better path for adults with severe and multiple disabilities, one rooted in dignity, purpose, and community.</p>
+                                <p>Throughout the conversation, Debi discusses:</p>
+                                <ul style="margin-left: 20px; margin-bottom: 16px;">
+                                    <li>How SPARC delivers a higher-quality, inclusive day program at less than one-third the cost to taxpayers compared to Medicaid-supported alternatives</li>
+                                    <li>The therapeutic recreation curriculum that fuels skill-building, learning, exercise, field trips, art, music, and community engagement</li>
+                                    <li>Why inclusion &mdash; not warehousing &mdash; is the answer for adults with disabilities and their families</li>
+                                    <li>The peace of mind SPARC provides to caregivers who need time to work and care for themselves</li>
+                                    <li>How supporters can get involved to help SPARC continue growing across Northern Virginia</li>
+                                </ul>
+                                <p>Watch the full episode above to hear Debi's vision for a world where every adult is seen, valued, and given the chance to reach their potential.</p>
+                            </div>
+                            <div class="share-buttons">
+                                <span>Share:</span>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.youtube.com/watch?v=GHvX5TgJeAY" target="_blank" rel="noopener noreferrer" class="share-btn facebook" aria-label="Share on Facebook"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+                                <a href="https://twitter.com/intent/tweet?url=https://www.youtube.com/watch?v=GHvX5TgJeAY&text=Transforming Lives Through Inclusion with Debi Alexander of SPARC" target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Share on X"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.youtube.com/watch?v=GHvX5TgJeAY" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" aria-label="Share on LinkedIn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                                <a href="mailto:?subject=Transforming Lives Through Inclusion - SPARC on The Route to Success&body=Watch SPARC founder Debi Alexander on The Route to Success podcast: https://www.youtube.com/watch?v=GHvX5TgJeAY" class="share-btn email" aria-label="Share via Email"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post: I am Me... I am Worthy -->
+                    <div class="blog-post-card fade-in">
+                        <img src="/images/SPARC joy.jpg" alt="SPARC participants celebrating together" class="blog-post-image">
+                        <div class="blog-post-body">
+                            <div class="blog-post-meta">
+                                <span class="date"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> October 22, 2025</span>
+                                <span class="category">Blog</span>
+                            </div>
+                            <h3>I am Me... I am Worthy</h3>
+                            <p>When touring a Medicaid facility, a young woman who was in a wheelchair slipped Donna Goldbranson a note saying: Help me. SPARC was born from this moment more than 20 years ago because Donna knew that each person has potential and deserved a chance to learn, grow, and be seen.</p>
+                            <a class="read-more" onclick="this.parentElement.querySelector('.blog-post-full-content').classList.toggle('expanded'); this.textContent = this.textContent === 'Read Less' ? 'Read More \u2192' : 'Read Less';">Read More &rarr;</a>
+                            <div class="blog-post-full-content">
+                                <p>Every day at SPARC we celebrate human potential.</p>
+                                <p>SPARC hosts centers that operate five days a week at various locations in Fairfax, Arlington, and Loudoun with staff-led programming based on a curriculum rooted in therapeutic recreation principles that consist of continued education/leisure learning, skill building, exercise, field trips, cooking, music, art, lectures, discussion groups, and more. Our SPARC clients require support with all daily living activities. Without SPARC, they are often neglected and forgotten.</p>
+                                <p>As Donna realized, warehousing and ignoring people with severe and multiple disabilities is not the answer. Cultivating their interests and passions helps them to reach their potential and recognizes their humanity. To capture the vitality that makes our attendees special, we did a vision board exercise at each of our centers to find out more about their goals and aspirations or simply what makes them happy. Here are some of the responses:</p>
+                                <blockquote style="border-left: 4px solid var(--sparc-kelly-green); padding: 20px 24px; margin: 20px 0; background: rgba(76, 187, 23, 0.05); border-radius: 0 8px 8px 0; font-style: italic; line-height: 2;">
+                                    I want to stay at SPARC to see my friends<br>
+                                    I want to stay healthy<br>
+                                    I love myself just as I am<br>
+                                    I capture every moment<br>
+                                    I deserve to be happy<br>
+                                    I am strong and capable<br>
+                                    I love wildlife<br>
+                                    I enjoy family and life<br>
+                                    I want to make money, be at SPARC and find a boyfriend<br>
+                                    I aspire to get a dream job<br>
+                                    I am open to receiving love
+                                </blockquote>
+                                <p>Reading their insights and seeing the art our participants created as part of this exercise drives home the point that our participants are people. Just because high school and the supported services it provided ended for these young adults, doesn't mean that their lives did too.</p>
+                                <p>At SPARC, we create community. The energy in our classrooms and activities and the excitement that comes from learning or experiencing something new is palpable. Through community, people like Akila, Mejie, Chris, Sandy, Adam, and so many more flourish while their families have peace of mind, time to make a living, and a moment to care for themselves too.</p>
+                                <p>SPARC delivers a higher-quality, inclusive day program for adults with severe disabilities at less than one-third of the cost to taxpayers than the Medicaid supported programs. More importantly, SPARC ensures that the dreams, hope, and essence that define each of our participants flourishes. They are not simply a number in an imperfect and overburdened system. Instead, SPARC members shine as we ignite their interests, encourage them to reach their potential, and help them share the sparkle that makes each of them unique. They are worthy.</p>
+                            </div>
+                            <div class="share-buttons">
+                                <span>Share:</span>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=https://sparcsolutions.org/news/" target="_blank" rel="noopener noreferrer" class="share-btn facebook" aria-label="Share on Facebook"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+                                <a href="https://twitter.com/intent/tweet?url=https://sparcsolutions.org/news/&text=I am Me... I am Worthy - SPARC Blog" target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Share on X"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://sparcsolutions.org/news/" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" aria-label="Share on LinkedIn"><svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                                <a href="mailto:?subject=I am Me... I am Worthy - SPARC Blog&body=Check out this post from SPARC: https://sparcsolutions.org/news/" class="share-btn email" aria-label="Share via Email"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
