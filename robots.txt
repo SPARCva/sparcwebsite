@@ -3,5 +3,6 @@ Allow: /
 Disallow: /accesstrails/console/
 Disallow: /photogallery/admin/
 Disallow: /photogallery/upload/
+Disallow: /devdash/
 
 Sitemap: https://sparcsolutions.org/sitemap.xml

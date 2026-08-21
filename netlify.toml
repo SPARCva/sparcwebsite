@@ -18,6 +18,55 @@
   status = 200
   force = true
 
+# Donor Operations dashboard (/devdash) — internal staff tool, proxied from its
+# own Netlify project `sparc-donor-ops` (repo SPARCva/sparc-donor-ops). Nothing
+# is copied into this repo: that project stays the single source of truth and a
+# push to its main branch updates /devdash immediately.
+#
+# The bare path is redirected to the trailing-slash form first. The dashboard's
+# asset references are relative (app.css, app.js, fonts/*), so they only resolve
+# correctly under /devdash/ — without the slash the browser would look for
+# /app.css at the site root.
+[[redirects]]
+  from = "/devdash"
+  to = "/devdash/"
+  status = 301
+
+# Must precede the catch-all pretty-URL rule; force=true so no local file can
+# shadow it. The splat maps onto the dashboard project's root.
+[[redirects]]
+  from = "/devdash/*"
+  to = "https://sparc-donor-ops.netlify.app/:splat"
+  status = 200
+  force = true
+
+# The dashboard shows donor names, addresses and gift amounts. It sets these
+# headers on its own project too; they are repeated here so the posture does not
+# depend on what survives the proxy hop. Keep the two copies in agreement —
+# the source is netlify.toml in SPARCva/sparc-donor-ops.
+[[headers]]
+  for = "/devdash/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cache-Control = "no-store, max-age=0"
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self';
+      style-src 'self';
+      font-src 'self';
+      img-src 'self' data:;
+      connect-src https://ldxpockcgcxvsrbyhcnt.supabase.co;
+      form-action 'self';
+      frame-ancestors 'none';
+      base-uri 'none';
+      object-src 'none'
+    """
+
 # Redirect board-portal.html to board-portal directory
 [[redirects]]
   from = "/board-portal.html"
