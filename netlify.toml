@@ -1,16 +1,17 @@
 # Netlify configuration for SPARC website
 #
-# NOTE: sparcsolutions.org and www.sparcsolutions.org are both served by GitHub
-# Pages from this repository (CNAME + .nojekyll), not by Netlify — check with
-# `curl -sI https://sparcsolutions.org | grep server`. Nothing in this file
-# affects the live site today; it is served as a plain file at
-# /netlify.toml. The rules here apply only to the Netlify project
-# (main--sparcwebsite.netlify.app) and to deploy previews.
+# Netlify serves sparcsolutions.org and www.sparcsolutions.org from this
+# repository, so the rules below apply to the live site — not just to
+# main--sparcwebsite.netlify.app and deploy previews. Treat edits here as
+# production changes.
 #
-# GitHub Pages serves static files only: no rewrites, no proxies, no custom
-# headers. So anything that needs to appear under a path on the live domain has
-# to be a real file in this repo. That is why /devdash is a page in devdash/
-# rather than a rewrite to the dashboard's own project.
+# Because Netlify handles rewrites, proxies and headers, a path on the live
+# domain does NOT have to be a real file in this repo: a `status = 200`
+# redirect can proxy it from another site (see /accessibility below).
+#
+# The repo still carries CNAME and .nojekyll from an earlier GitHub Pages
+# setup. They are inert under Netlify; left in place deliberately rather than
+# removed as part of an unrelated change.
 
 [build]
   publish = "."
