@@ -31,6 +31,24 @@
   status = 200
   force = true
 
+# Development Dashboard — proxied from its own Netlify project.
+# Must precede the catch-all pretty-URL rule; force=true so no local file can
+# shadow it. The app is built with base path /devdash, so the target keeps the
+# /devdash/ prefix: proxying to the project root instead would send
+# /devdash/app.css to that project's catch-all and return HTML with the wrong
+# content type.
+[[redirects]]
+  from = "/devdash"
+  to = "https://sparc-donor-ops.netlify.app/devdash/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/devdash/*"
+  to = "https://sparc-donor-ops.netlify.app/devdash/:splat"
+  status = 200
+  force = true
+
 # Redirect board-portal.html to board-portal directory
 [[redirects]]
   from = "/board-portal.html"
