@@ -18,15 +18,38 @@
 
    The tracked structure (chosen 2026-08):
 
-       Fund      Gala 2026
-       Campaign  An Evening to SPARCle 2026
-       Appeals   Gala 2026 - Tickets
-                 Gala 2026 - Sponsorship
-                 Gala 2026 - Raffle
+       Fund      Gala 2026                     (id 18870272)
+       Campaign  An Evening To SPARCle 2026    (id 4915201, capital "To")
+       Appeals   Gala - Tickets                (id 18871296)
+                 Gala - Sponsorship            (id 18872320)
+                 Gala - Raffle                 (id 18873344)
 
    Names are plain ASCII (a simple " - " hyphen, not an en/em dash) so that what
    is typed into the Bloomerang admin can be copy-pasted from here and matched
    exactly. A mismatched name is the main failure mode.
+
+   VERIFIED AGAINST THE LIVE API, 26 Aug 2026. Every name above and its id was
+   read from GET /funds, /campaigns and /appeals, not from a planning document.
+   The previous values in this file did not exist in Bloomerang at all: the
+   campaign was written with a lowercase "to", and the three appeals were named
+   "Gala 2026 - X" where Bloomerang has "Gala - X". Enabling attribution with
+   those names would have sent a fund/appeal Bloomerang does not recognise, on
+   live donation forms — exactly the failure this comment warns about.
+
+   TWO THINGS TO KNOW BEFORE FLIPPING THE SWITCH:
+
+   1. All seven 2026 gala transactions in Bloomerang today are filed to the
+      fund "Unrestricted", not "Gala 2026", and to the generic appeal
+      "An Evening to SPARCle 2026" (4926464) rather than split by type. Turning
+      this on starts writing to a different fund from the gifts already
+      recorded, so gala revenue will report across two funds until the earlier
+      ones are re-filed. That is a decision for Erica and Debi, not a code fix.
+
+   2. "Registration Type" on the Bloomerang form carries the sponsorship level
+      as free text, and one of its options is misspelt "Sponsorship Level: Even
+      Sponsor" — it should read "Event Sponsor". The $25,000 gift of 18 Aug
+      2026 carries that value. Fixing it is a change in the Bloomerang form
+      builder; nothing here can correct it.
 
    >>> READ BEFORE ENABLING <<<
    ATTRIBUTION_ENABLED is false until the Fund, Campaign and the three Appeals
@@ -49,12 +72,12 @@
   var ATTRIBUTION_ENABLED = false;
 
   var FUND = 'Gala 2026';
-  var CAMPAIGN = 'An Evening to SPARCle 2026';
+  var CAMPAIGN = 'An Evening To SPARCle 2026';
 
   var APPEALS = {
-    tickets:     'Gala 2026 - Tickets',
-    sponsorship: 'Gala 2026 - Sponsorship',
-    raffle:      'Gala 2026 - Raffle'
+    tickets:     'Gala - Tickets',
+    sponsorship: 'Gala - Sponsorship',
+    raffle:      'Gala - Raffle'
   };
 
   /* Radio ID -> revenue type. The appeal is decided per selected radio rather
