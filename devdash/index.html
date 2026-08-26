@@ -5,21 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Development Dashboard — SPARC</title>
-<!-- Deliberately no analytics or visitor-tracking snippets. This page is the
-     staff entry point to a dashboard full of donor names, addresses and gift
-     amounts; the dashboard itself carries no third-party scripts and neither
-     should its doorway. -->
-<!-- WHY THIS PAGE EXISTS ALONGSIDE THE /devdash PROXY IN netlify.toml.
-     Both are needed, and they do not conflict:
-       - While GitHub Pages answers sparcsolutions.org (it does today — check
-         with `curl -sI https://sparcsolutions.org/gala/ | grep server`), only
-         a real file can serve this path. Redirect rules are not honoured, so
-         without this page /devdash is a 404.
-       - Once Netlify serves the domain, the netlify.toml rules take over:
-         they are `force = true`, which wins over a static file at the same
-         path, so the proxy serves the app on the sparcsolutions.org origin
-         and this page stops being reached.
-     Deleting either one breaks /devdash in one of those two worlds. -->
+
+<!-- WHY THIS IS A FILE AND NOT A REWRITE — please read before "fixing" it.
+     ================================================================
+     sparcsolutions.org is answered by GitHub Pages, from this repository.
+     Not by Netlify. The Netlify project `sparcwebsite` is real, is claimed,
+     deploys fine and lists sparcsolutions.org as its primary URL — which is
+     exactly why this is so easy to get wrong.
+
+     Check it in one command before changing anything here:
+
+         curl -sI https://sparcsolutions.org | grep server     ->  GitHub.com
+         curl -s  https://sparcsolutions.org/netlify.toml      ->  200, the file
+
+     That second one is the proof. A host that hands you netlify.toml as a
+     download is not reading it. Netlify consumes that file and returns 404
+     for it; try the same path on main--sparcwebsite.netlify.app.
+
+     GitHub Pages serves static files and nothing else: no rewrites, no
+     proxies, no custom headers. So a path on the live domain has to be a
+     real file in this repo. /accessibility works the same way — it is
+     accessibility/index.html, not the proxy rule that also sits in
+     netlify.toml for it.
+
+     This has been reverted to a `status = 200` proxy twice (21 Aug, then
+     25 Aug in 6af0662) and both times sparcsolutions.org/devdash went to a
+     404 for staff while still working on *.netlify.app, which is where it
+     gets tested. .github/workflows/devdash-guard.yml now fails the build if
+     this file goes missing again.
+
+     The dashboard is NOT copied here on purpose. It holds donor names,
+     addresses and gift amounts, and its own Netlify project sends a
+     Content-Security-Policy, X-Frame-Options and X-Robots-Tag that GitHub
+     Pages cannot send at all. Forwarding keeps the app on its hardened
+     origin and keeps one copy of it. The cost is that the address bar
+     changes after the hop.
+
+     No analytics here, unlike the rest of this site. This is the doorway to
+     a screen full of donor records. -->
+
+<link rel="canonical" href="https://sparc-donor-ops.netlify.app/devdash/">
 <meta http-equiv="refresh" content="0; url=https://sparc-donor-ops.netlify.app/devdash/">
 <style>
   :root { --ink:#10203d; --paper:#f4f5f8; --muted:#5b6478; }
@@ -52,7 +77,7 @@
   <main class="card">
     <div class="mark">SPARC<span>Development Dashboard</span></div>
     <p>Taking you to the dashboard. If nothing happens, use the button below.</p>
-    <a class="btn" href="https://sparc-donor-ops.netlify.app/devdash/">Open the Development Dashboard</a>
+    <a class="btn" href="https://sparc-donor-ops.netlify.app/devdash/">Open the dashboard</a>
   </main>
   <script>
     // replace() rather than assign(), so Back does not bounce off this page.

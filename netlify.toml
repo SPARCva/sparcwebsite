@@ -1,17 +1,38 @@
 # Netlify configuration for SPARC website
 #
-# Netlify serves sparcsolutions.org and www.sparcsolutions.org from this
-# repository, so the rules below apply to the live site — not just to
-# main--sparcwebsite.netlify.app and deploy previews. Treat edits here as
-# production changes.
+# READ THIS BEFORE EDITING. This note was "corrected" to the opposite of the
+# truth once already (302a558, 25 Aug) and it took the dashboard off the live
+# domain for staff. Verify, do not assume:
 #
-# Because Netlify handles rewrites, proxies and headers, a path on the live
-# domain does NOT have to be a real file in this repo: a `status = 200`
-# redirect can proxy it from another site (see /accessibility below).
+#     curl -sI https://sparcsolutions.org | grep server            ->  GitHub.com
+#     curl -s  https://sparcsolutions.org/netlify.toml             ->  200, this file
+#     curl -sI https://main--sparcwebsite.netlify.app/netlify.toml ->  404
 #
-# The repo still carries CNAME and .nojekyll from an earlier GitHub Pages
-# setup. They are inert under Netlify; left in place deliberately rather than
-# removed as part of an unrelated change.
+# sparcsolutions.org and www.sparcsolutions.org are served by GITHUB PAGES
+# from this repository — CNAME + .nojekyll, apex A records on
+# 185.199.108-111.153, www CNAME on erica-83.github.io. NOTHING IN THIS FILE
+# REACHES THE LIVE SITE. It is downloadable at /netlify.toml, which is what a
+# static host does with a config file it knows nothing about. The rules here
+# apply only to the Netlify project (main--sparcwebsite.netlify.app) and to
+# deploy previews.
+#
+# The Netlify project `sparcwebsite` is real, claimed, deploying, and lists
+# sparcsolutions.org as its primary URL. That is a claim on the domain, not a
+# fact about DNS, and it is why this keeps being misread. Netlify wants the
+# domain; GitHub Pages answers it.
+#
+# CONSEQUENCE: GitHub Pages serves static files only — no rewrites, no
+# proxies, no custom headers. Anything that must appear under a path on the
+# live domain HAS TO BE A REAL FILE IN THIS REPO. That is why /devdash is
+# devdash/index.html and /accessibility is accessibility/index.html. The
+# proxy rules below are dormant on the live domain; they are kept only so the
+# Netlify preview mirrors production, and adding one is never a way to put a
+# new path on sparcsolutions.org.
+#
+# .github/workflows/devdash-guard.yml enforces the /devdash half of this.
+#
+# CNAME and .nojekyll are load-bearing, not leftovers from an old setup.
+# Deleting either takes sparcsolutions.org down until DNS is repointed.
 
 [build]
   publish = "."
@@ -31,23 +52,19 @@
   status = 200
   force = true
 
-# Development Dashboard — proxied from its own Netlify project.
-# Must precede the catch-all pretty-URL rule; force=true so no local file can
-# shadow it. The app is built with base path /devdash, so the target keeps the
-# /devdash/ prefix: proxying to the project root instead would send
-# /devdash/app.css to that project's catch-all and return HTML with the wrong
-# content type.
-[[redirects]]
-  from = "/devdash"
-  to = "https://sparc-donor-ops.netlify.app/devdash/"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/devdash/*"
-  to = "https://sparc-donor-ops.netlify.app/devdash/:splat"
-  status = 200
-  force = true
+# Development Dashboard — deliberately NOT a proxy rule. See the header.
+#
+# /devdash on the live domain is devdash/index.html, a real file, because
+# GitHub Pages answers sparcsolutions.org and cannot proxy anything. A
+# `status = 200` rule here would work on main--sparcwebsite.netlify.app —
+# which is where it gets tested — and 404 for every member of staff. That is
+# exactly what happened on 21 Aug and again on 25 Aug.
+#
+# The dashboard is not copied into this repo either: it carries donor names,
+# addresses and gift amounts, and its own project sends a
+# Content-Security-Policy, X-Frame-Options and X-Robots-Tag that GitHub Pages
+# cannot send. It stays on its hardened origin and devdash/index.html
+# forwards staff to it.
 
 # Redirect board-portal.html to board-portal directory
 [[redirects]]
