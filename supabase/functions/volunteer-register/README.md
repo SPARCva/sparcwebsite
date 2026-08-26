@@ -31,7 +31,25 @@ RLS enabled, no policies → service-role only):
 | --- | --- |
 | `webhook_url` | The Apps Script deployment URL (ends in `/exec`). Null until deployed → emails pause, applications still save. |
 | `shared_secret` | Random hex string; must match `SHARED_SECRET` in the deployed script. Never committed. |
-| `notify_email` | Optional staff-inbox override; defaults to the script owner. |
+| `notify_email` | Staff inbox that receives each application; null falls back to the script owner. |
+
+### Where applications are sent
+
+Staff notifications go to `notify_email`. The intended destination is
+**Steve@pivotpointrecovery.org**. To point them somewhere else:
+
+```sql
+update public.volunteer_email_relay_config
+set notify_email = 'someone@example.org', updated_at = now()
+where id;
+```
+
+`notify_email` is passed straight to `MailApp.sendEmail({ to: ... })`, so a
+comma-separated list works if more than one person should be notified.
+This only changes the *recipient* — the mail is still **sent from** the
+Google work account that deployed the Apps Script, with reply-to set to the
+applicant. The applicant's confirmation email is unaffected, and every
+application is saved to `volunteer_applications` regardless.
 
 ### Deploying the script (one-time)
 
