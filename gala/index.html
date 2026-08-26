@@ -1705,7 +1705,7 @@
 
               <div class="gala-hero-info-col">
                 <div class="gala-hero-buttons">
-                    <a href="/gala/?tier=ticket" onclick="event.preventDefault(); selectTier('4925440');" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
+                    <a href="/gala/?tier=ticket" onclick="event.preventDefault(); selectTier('18879488');" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
                     <a href="/gala-sponsorships/" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
                 </div>
 
@@ -2142,7 +2142,7 @@
                 </div>
 
                 <div class="tickets-grid">
-                    <div class="ticket-card fade-in" onclick="selectTier('4925440')">
+                    <div class="ticket-card fade-in" onclick="selectTier('18879488')">
                         <div class="ticket-card-header">
                             <div class="ticket-qty">1</div>
                             <div class="ticket-label">Gala Ticket</div>
@@ -2156,7 +2156,7 @@
                         </div>
                     </div>
 
-                    <div class="ticket-card fade-in" onclick="selectRaffle('4936704')">
+                    <div class="ticket-card fade-in" onclick="selectRaffle('4932608')">
                         <div class="ticket-card-header raffle-header">
                             <div class="ticket-qty">1</div>
                             <div class="ticket-label">Raffle Ticket</div>
@@ -2170,7 +2170,7 @@
                         </div>
                     </div>
 
-                    <div class="ticket-card fade-in" onclick="selectRaffle('4936705')">
+                    <div class="ticket-card fade-in" onclick="selectRaffle('4932609')">
                         <div class="ticket-card-header raffle-header">
                             <div class="ticket-qty">5</div>
                             <div class="ticket-label">Raffle Tickets</div>
@@ -2185,7 +2185,7 @@
                         </div>
                     </div>
 
-                    <div class="ticket-card fade-in" onclick="selectRaffle('4936706')">
+                    <div class="ticket-card fade-in" onclick="selectRaffle('4932610')">
                         <div class="ticket-card-header raffle-header">
                             <div class="ticket-qty">15</div>
                             <div class="ticket-label">Raffle Tickets</div>
@@ -2226,7 +2226,7 @@
                     <p>Fill out the form below to secure your spot</p>
                 </div>
                 <div class="form-wrapper">
-                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/4923392.js" type="text/javascript"></script>
+                    <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/18877440.js" type="text/javascript"></script>
                 </div>
             </div>
         </div>
@@ -2708,9 +2708,9 @@
             }
         });
 
-        // The $100 ticket radio and the sponsorship level radios share one
-        // Bloomerang form (widget 4923392), so re-stamp the appeal whenever the
-        // supporter switches selection by hand inside the modal.
+        // Tickets, sponsorships and raffle are three separate Bloomerang forms,
+        // so re-stamp the appeal whenever the supporter switches selection by
+        // hand rather than through one of the buttons above.
         if (window.GalaTracking) { window.GalaTracking.watchForm(); }
 
         /* Deep links, so an emailed or posted link lands on a specific ask and
@@ -2730,7 +2730,7 @@
             var level = params.get('level');
             if (level) { openSponsorModal(level); return; }
 
-            if (params.get('tier') === 'ticket') { selectTier('4925440'); }
+            if (params.get('tier') === 'ticket') { selectTier('18879488'); }
         });
     </script>
 

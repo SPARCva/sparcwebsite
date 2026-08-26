@@ -618,7 +618,7 @@
                         </div>
                     </div>
 
-                    <div class="ticket-card" role="button" tabindex="0" onclick="selectRaffle('4936704')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRaffle('4936704');}">
+                    <div class="ticket-card" role="button" tabindex="0" onclick="selectRaffle('4932608')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRaffle('4932608');}">
                         <div class="ticket-card-header raffle-header">
                             <div class="ticket-qty">1</div>
                             <div class="ticket-label">Raffle Ticket</div>
@@ -632,7 +632,7 @@
                         </div>
                     </div>
 
-                    <div class="ticket-card" role="button" tabindex="0" onclick="selectRaffle('4936705')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRaffle('4936705');}">
+                    <div class="ticket-card" role="button" tabindex="0" onclick="selectRaffle('4932609')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRaffle('4932609');}">
                         <div class="ticket-card-header raffle-header">
                             <div class="ticket-qty">5</div>
                             <div class="ticket-label">Raffle Tickets</div>
@@ -647,7 +647,7 @@
                         </div>
                     </div>
 
-                    <div class="ticket-card" role="button" tabindex="0" onclick="selectRaffle('4936706')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRaffle('4936706');}">
+                    <div class="ticket-card" role="button" tabindex="0" onclick="selectRaffle('4932610')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRaffle('4932610');}">
                         <div class="ticket-card-header raffle-header">
                             <div class="ticket-qty">15</div>
                             <div class="ticket-label">Raffle Tickets</div>
@@ -1117,9 +1117,10 @@
             document.getElementById('levelsSection').scrollIntoView({ behavior: 'smooth' });
         };
 
-        // ---- Buy a single gala admission ticket ----
-        // Reuses the Bloomerang widget already embedded in the payment panel
-        // (radio 4925440 = 1 Gala Ticket, $100) instead of loading a 2nd copy.
+        // ---- Preselect a radio inside the embedded Bloomerang form ----
+        // Used for sponsorship levels. Gala admission is NOT preselectable here:
+        // tickets moved to their own form (widget 18877440) in 2026-08, so the
+        // ticket card links out to /gala-register/ instead.
         function preselectRadio(radioId) {
             if (!radioId) { return; }
             var tries = 0;
@@ -1136,13 +1137,16 @@
             }, 250);
         }
 
+        // Gala admission lives in a separate Bloomerang form, so send buyers to
+        // the registration page rather than preselecting a radio that is not
+        // present in the sponsorship widget embedded on this page.
         window.openGalaTicket = function () {
-            var panel = document.getElementById('paymentPanel');
-            document.getElementById('paymentNote').textContent = 'Purchasing gala admission — complete your secure payment below.';
-            document.getElementById('paymentLevelSub').textContent = 'Your 1 Gala Ticket ($100) is preselected below.';
-            panel.style.display = 'block';
-            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            preselectRadio('4925440');
+            if (window.GalaTracking) {
+                window.GalaTracking.track('tickets', {
+                    radioId: '18879488', label: 'Gala Ticket', amount: 100
+                });
+            }
+            window.location.href = '/gala-register/';
         };
 
         // ---- Sponsor wall carousel ----

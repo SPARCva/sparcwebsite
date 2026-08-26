@@ -47,13 +47,13 @@ This part cannot be done from the repo — it is admin UI work in Bloomerang.
 
    | Form (widget ID) | Used by | Fund / Campaign | Default appeal |
    |---|---|---|---|
-   | `4923392` — event registration | `/gala/` ticket + sponsorship modal, `/gala-register/`, `/gala-sponsorships/`, `/gala-sponsorships-form/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Tickets` |
-   | `4934656` — raffle | `/gala-raffle-form/` (iframed into `/gala/` and `/gala-sponsorships/`) | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Raffle` |
+   | `18877440` — ticket registration | `/gala/` registration modal, `/gala-register/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Tickets` |
+   | `4923392` — sponsorship registration | `/gala/` sponsorship modal, `/gala-sponsorships/`, `/gala-sponsorships-form/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Sponsorship` |
+   | `4930560` — raffle | `/gala-raffle-form/` (iframed into `/gala/` and `/gala-sponsorships/`), `/raffle/`, `/raffle-form/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Raffle` |
 
-   Form `4923392` carries both the $100 ticket radio and all seven sponsorship
-   level radios, so it cannot have one correct default for every purchase. Set
-   its default to Tickets; the website overrides it to Sponsorship when a level
-   is selected (see below).
+   Since 2026-08 each revenue type has its own form, so each one has a single
+   correct default appeal — set it on all three and the attribution holds even
+   if the website's JavaScript never runs.
 
 5. **Switch on the website side.** In `js/gala-tracking.js`, change:
 
@@ -63,9 +63,9 @@ This part cannot be done from the repo — it is admin UI work in Bloomerang.
 
    to `true`, then commit and deploy.
 
-6. **Test with one real transaction.** Buy a single $5 raffle ticket and one
-   $100 gala ticket, confirm in Bloomerang that each landed on `Gala 2026` with
-   the right appeal, then refund both.
+6. **Test with one real transaction.** Buy a single $5 raffle ticket, confirm
+   in Bloomerang that it landed on `Gala 2026` with the `- Raffle` appeal, then
+   refund it.
 
 Do step 5 only after steps 1–4. Until the fund and appeals exist in Bloomerang,
 sending those names with a live payment risks the transaction being rejected,
@@ -74,7 +74,8 @@ and these are real donation forms taking real money.
 ## What the website does
 
 `js/gala-tracking.js` is loaded by `/gala/`, `/gala-register/`,
-`/gala-sponsorships/`, `/gala-sponsorships-form/` and `/gala-raffle-form/`.
+`/gala-sponsorships/`, `/gala-sponsorships-form/`, `/gala-raffle-form/`,
+`/raffle/` and `/raffle-form/`.
 
 **Bloomerang attribution.** Bloomerang's JS API exposes chainable setters that
 write into the payload every form type posts to `v1/OnlineDonation`:
@@ -85,16 +86,15 @@ Bloomerang.Donation.fund(FUND).campaign(CAMPAIGN).appeal(appeal)
 
 The module maps each radio ID to a revenue type and stamps the matching appeal:
 
-| Radio ID | Item | Appeal |
-|---|---|---|
-| `4925440` | 1 Gala Ticket — $100 | Tickets |
-| `4925441`–`4925447` | Friend $500 → Event Sponsor $25,000 | Sponsorship |
-| `4936704`–`4936706` | 1 / 5 / 15 raffle tickets | Raffle |
+| Radio ID | Form | Item | Appeal |
+|---|---|---|---|
+| `18879488` | `18877440` | General Admission — $100 | Tickets |
+| `4925441`–`4925447` | `4923392` | Friend $500 → Event Sponsor $25,000 | Sponsorship |
+| `4932608`–`4932610` | `4930560` | 1 / 5 / 15 raffle tickets | Raffle |
 
 It re-stamps on any manual radio change inside the form, not just on the
-website's own buttons, so someone who opens the ticket modal and then picks a
-sponsorship level is still attributed correctly. Anything unmapped is left
-alone, and any error is swallowed — attribution never blocks a payment.
+website's own buttons. Anything unmapped is left alone, and any error is
+swallowed — attribution never blocks a payment.
 
 **Google Analytics.** Each selection fires a GA4 `select_item` event carrying
 the item name, category and price, so the web funnel breaks down the same way
@@ -117,8 +117,10 @@ Add UTM parameters on top for channel reporting, e.g.
 
 Copy the fund, campaign and appeal names with the new year, update `FUND`,
 `CAMPAIGN` and `APPEALS` at the top of `js/gala-tracking.js`, and refresh
-`RADIO_TYPES` if the Bloomerang forms are rebuilt (the radio IDs change when
-registration options are recreated).
+`RADIO_TYPES` if the Bloomerang forms are rebuilt — the widget AND radio IDs
+both change when registration options are recreated, as they did in 2026-08
+when tickets, sponsorships and raffle were split into three separate forms.
+The widget IDs are embedded per page; grep for `widget-js` to find them all.
 
 ## If you later want per-tier Stripe links instead
 
