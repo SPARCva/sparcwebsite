@@ -814,6 +814,12 @@
 
     <script src="/js/main.js"></script>
     <script src="/js/gala-sponsors.js"></script>
+    <script src="/js/gala-tracking.js"></script>
+    <script>
+        // The inline widget on this page takes sponsorships; the raffle sits in an
+        // iframe (/gala-raffle-form/) which applies the raffle appeal itself.
+        if (window.GalaTracking) { window.GalaTracking.setPageDefault('sponsorship'); }
+    </script>
     <script>
     (function () {
         'use strict';
@@ -1009,6 +1015,13 @@
             var panel = document.getElementById('paymentPanel');
             panel.style.display = 'block';
             var lvl = levelByName(levelName);
+            if (window.GalaTracking) {
+                window.GalaTracking.track('sponsorship', {
+                    radioId: (lvl && lvl.radioId) || undefined,
+                    label: (lvl && lvl.name) || levelName || 'Sponsorship',
+                    amount: (lvl && lvl.amount) || undefined
+                });
+            }
             document.getElementById('paymentLevelSub').textContent = (lvl && lvl.amount)
                 ? ('Your selected level (' + lvl.name + ' — $' + fmt(lvl.amount) + ') is preselected below.')
                 : 'Select your level below to complete payment.';

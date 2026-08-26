@@ -1705,7 +1705,7 @@
 
               <div class="gala-hero-info-col">
                 <div class="gala-hero-buttons">
-                    <a href="javascript:void(0)" onclick="selectTier('4925440')" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
+                    <a href="/gala/?tier=ticket" onclick="event.preventDefault(); selectTier('4925440');" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
                     <a href="/gala-sponsorships/" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
                 </div>
 
@@ -2499,6 +2499,7 @@
 
     <script src="/js/main.js"></script>
     <script src="/js/gala-sponsors.js"></script>
+    <script src="/js/gala-tracking.js"></script>
     <script>
         function toggleTranscript(button) {
             const content = document.getElementById('transcript');
@@ -2575,6 +2576,11 @@
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
+            // Record the Bloomerang appeal + GA event for this selection.
+            if (window.GalaTracking) {
+                window.GalaTracking.select(radioId, { label: 'Gala Ticket', amount: 100 });
+            }
+
             // Wait for modal to show and Bloomerang form to load, then select the radio
             setTimeout(function() {
                 var radio = document.getElementById(radioId);
@@ -2632,6 +2638,21 @@
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
+            // The raffle widget lives in the iframe, so /gala-raffle-form/ applies
+            // the Bloomerang appeal itself; only the GA event belongs here.
+            if (window.GalaTracking) {
+                var bundle = null;
+                var bundles = window.GalaTracking.raffleBundles;
+                for (var qty in bundles) {
+                    if (bundles[qty].radioId === String(radioId)) { bundle = bundles[qty]; break; }
+                }
+                window.GalaTracking.track('raffle', {
+                    radioId: radioId,
+                    label: bundle ? bundle.label : 'Raffle Tickets',
+                    amount: bundle ? bundle.amount : undefined
+                });
+            }
+
             var iframe = document.getElementById('raffleIframe');
             // Send message to iframe to select the radio button
             setTimeout(function() {
@@ -2649,6 +2670,11 @@
         // Open the sponsorship form in a modal, preselecting the chosen level so
         // the form pops up with the amount already filled in (no full-page redirect).
         function openSponsorModal(level) {
+            if (window.GalaTracking) {
+                // The sponsorship widget lives in the iframe, which applies the
+                // Bloomerang appeal itself; only the GA event belongs here.
+                window.GalaTracking.track('sponsorship', { label: level || 'Sponsorship' });
+            }
             var modal = document.getElementById('sponsorFormModal');
             var iframe = document.getElementById('sponsorFormIframe');
             var src = '/gala-sponsorships-form/';
@@ -2680,6 +2706,31 @@
                 var m = document.getElementById('sponsorFormModal');
                 if (m && m.style.display !== 'none') { closeSponsorModal(); }
             }
+        });
+
+        // The $100 ticket radio and the sponsorship level radios share one
+        // Bloomerang form (widget 4923392), so re-stamp the appeal whenever the
+        // supporter switches selection by hand inside the modal.
+        if (window.GalaTracking) { window.GalaTracking.watchForm(); }
+
+        /* Deep links, so an emailed or posted link lands on a specific ask and
+           is attributable on arrival:
+             /gala/?tier=ticket     -> ticket form
+             /gala/?raffle=1|5|15   -> raffle form, that bundle preselected
+             /gala/?level=Hero      -> sponsorship form, that level preselected */
+        document.addEventListener('DOMContentLoaded', function () {
+            var params = new URLSearchParams(window.location.search);
+
+            var raffle = params.get('raffle');
+            if (raffle) {
+                var bundle = window.GalaTracking && window.GalaTracking.raffleBundles[raffle];
+                if (bundle) { selectRaffle(bundle.radioId); return; }
+            }
+
+            var level = params.get('level');
+            if (level) { openSponsorModal(level); return; }
+
+            if (params.get('tier') === 'ticket') { selectTier('4925440'); }
         });
     </script>
 

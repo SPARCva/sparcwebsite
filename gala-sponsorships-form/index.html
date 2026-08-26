@@ -453,6 +453,11 @@
     </main>
 
     <script src="/js/gala-sponsors.js"></script>
+    <script src="/js/gala-tracking.js"></script>
+    <script>
+        // This form only ever takes sponsorships, so the appeal is fixed.
+        if (window.GalaTracking) { window.GalaTracking.setPageDefault('sponsorship'); }
+    </script>
     <script>
     (function () {
         'use strict';
@@ -655,6 +660,13 @@
                 ? 'Your logo has been added to the sponsor wall. Complete your secure payment below to finish.'
                 : 'Complete your secure payment below to finish.';
             var lvl = levelByName(levelName);
+            if (window.GalaTracking) {
+                window.GalaTracking.track('sponsorship', {
+                    radioId: (lvl && lvl.radioId) || undefined,
+                    label: (lvl && lvl.name) || levelName || 'Sponsorship',
+                    amount: (lvl && lvl.amount) || undefined
+                });
+            }
             document.getElementById('paymentLevelSub').textContent = (lvl && lvl.amount)
                 ? ('Your selected level (' + lvl.name + ' — $' + fmt(lvl.amount) + ') is preselected below.')
                 : 'Select your level below to complete payment.';
