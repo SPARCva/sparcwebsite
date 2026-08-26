@@ -1770,6 +1770,88 @@
                 </div>
                 <div class="form-wrapper">
                     <script src="https://s3-us-west-2.amazonaws.com/bloomerang-public-cdn/speciallyadaptedresourceclubs/.widget-js/18702336.js" type="text/javascript"></script>
+                    <script>
+                    /* Guest RSVP is free, but we need to be able to reach people and
+                       mail them event details, so phone and address are required here
+                       even though the Bloomerang form ships them optional.
+
+                       Bloomerang validates with jQuery Validation, which reads the
+                       "required" class off each field at validation time — so adding
+                       the class is exactly what the form builder's own "required"
+                       toggle produces. The matching <span class="required-star">*</span>
+                       is the same marker Bloomerang puts on First/Last Name and Email.
+
+                       If these fields are ever marked required in the Bloomerang form
+                       builder instead, this block becomes a harmless no-op. */
+                    (function () {
+                        'use strict';
+
+                        // Always required, regardless of country.
+                        var ALWAYS = ['phone-number', 'street-address', 'city'];
+                        // Country-dependent: US uses state + ZIP, everywhere else
+                        // province + postal code. Only the visible pair is enforced.
+                        var US_ONLY = ['state', 'zip-code'];
+                        var NON_US = ['province', 'postal-code'];
+
+                        function isVisible(el) {
+                            return !!(el && el.offsetParent !== null);
+                        }
+
+                        function markRequired(el) {
+                            if (!el) { return; }
+                            if (!el.classList.contains('required')) { el.classList.add('required'); }
+                            var label = document.querySelector('label[for="' + el.id + '"]');
+                            if (label && !label.querySelector('.required-star')) {
+                                var star = document.createElement('span');
+                                star.className = 'required-star';
+                                star.textContent = '*';
+                                label.appendChild(star);
+                            }
+                        }
+
+                        function unmarkRequired(el) {
+                            if (!el) { return; }
+                            el.classList.remove('required');
+                            var label = document.querySelector('label[for="' + el.id + '"]');
+                            var star = label && label.querySelector('.required-star');
+                            if (star) { star.parentNode.removeChild(star); }
+                        }
+
+                        function apply() {
+                            var phone = document.getElementById('phone-number');
+                            if (!phone) { return false; }   // widget hasn't rendered yet
+
+                            ALWAYS.forEach(function (id) { markRequired(document.getElementById(id)); });
+
+                            // Enforce whichever of the region/postcode pairs is on screen,
+                            // and clear the other so a hidden field can never block submit.
+                            US_ONLY.concat(NON_US).forEach(function (id) {
+                                var el = document.getElementById(id);
+                                if (!el) { return; }
+                                if (isVisible(el)) { markRequired(el); } else { unmarkRequired(el); }
+                            });
+                            return true;
+                        }
+
+                        // The widget builds its DOM asynchronously and rebuilds parts of
+                        // it as the country changes, so re-apply on mutation as well.
+                        var observer = new MutationObserver(function () { apply(); });
+                        observer.observe(document.body, { childList: true, subtree: true });
+
+                        document.addEventListener('change', function (e) {
+                            if (e.target && e.target.id === 'country') { apply(); }
+                        }, true);
+
+                        // Stop observing once things have settled, to avoid running for
+                        // the life of the page.
+                        var tries = 0;
+                        var iv = setInterval(function () {
+                            tries++;
+                            var ready = apply();
+                            if ((ready && tries > 8) || tries > 60) { clearInterval(iv); }
+                        }, 250);
+                    })();
+                    </script>
                 </div>
             </div>
         </div>

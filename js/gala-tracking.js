@@ -57,12 +57,19 @@
     raffle:      'Gala 2026 - Raffle'
   };
 
-  /* The gala ticket radio and the sponsorship level radios live in the SAME
-     Bloomerang form (widget 4923392), so the appeal has to be decided per
-     selected radio rather than per page. Keep in sync with the LEVELS arrays in
-     /gala-sponsorships/ and /gala-sponsorships-form/. */
+  /* Radio ID -> revenue type. The appeal is decided per selected radio rather
+     than per page, because one form can carry more than one kind of purchase.
+     Keep in sync with the LEVELS arrays in /gala-sponsorships/ and
+     /gala-sponsorships-form/.
+
+     Tickets, sponsorships and raffle are three SEPARATE Bloomerang forms as of
+     2026-08. Verified against the live form definitions on 2026-08-26
+     (POST v1/Widget/<id>?ApiKey=<public key>):
+       18877440  "…2026 Registration"              — 18879488 (ticket)
+       4923392   "…2026 Sponsorship Registration"  — 4925441-4925447
+       4930560   "…2026 Registration"              — 4932608-4932610 (raffle) */
   var RADIO_TYPES = {
-    '4925440': 'tickets',      // 1 Gala Ticket — $100
+    '18879488': 'tickets',     // General Admission — $100
     '4925441': 'sponsorship',  // Friend — $500
     '4925442': 'sponsorship',  // Advocate — $1,000
     '4925443': 'sponsorship',  // Partner — $2,500
@@ -70,17 +77,17 @@
     '4925445': 'sponsorship',  // Hero — $7,500
     '4925446': 'sponsorship',  // Champion — $10,000
     '4925447': 'sponsorship',  // Event Sponsor — $25,000
-    '4936704': 'raffle',       // 1 raffle ticket — $5
-    '4936705': 'raffle',       // 5 raffle tickets — $20
-    '4936706': 'raffle'        // 15 raffle tickets — $50
+    '4932608': 'raffle',       // 1 raffle ticket — $5
+    '4932609': 'raffle',       // 5 raffle tickets — $20
+    '4932610': 'raffle'        // 15 raffle tickets — $50
   };
 
   /* Raffle bundles as sold on /gala/ — used for deep links (?raffle=5) and for
      the GA value on each selection. */
   var RAFFLE_BUNDLES = {
-    '1':  { radioId: '4936704', amount: 5,  label: '1 Raffle Ticket' },
-    '5':  { radioId: '4936705', amount: 20, label: '5 Raffle Tickets' },
-    '15': { radioId: '4936706', amount: 50, label: '15 Raffle Tickets' }
+    '1':  { radioId: '4932608', amount: 5,  label: '1 Raffle Ticket' },
+    '5':  { radioId: '4932609', amount: 20, label: '5 Raffle Tickets' },
+    '15': { radioId: '4932610', amount: 50, label: '15 Raffle Tickets' }
   };
 
   function typeForRadio(radioId) {
