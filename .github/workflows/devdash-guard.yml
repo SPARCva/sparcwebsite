@@ -1,0 +1,76 @@
+# Stops /devdash from silently disappearing off the live domain again.
+#
+# sparcsolutions.org is served by GitHub Pages from this repository, which
+# serves static files and nothing else. A `status = 200` proxy in netlify.toml
+# works on main--sparcwebsite.netlify.app — where changes get tested — and
+# 404s for every member of staff. That mistake has shipped twice: 21 Aug, then
+# again on 25 Aug in 6af0662, which deleted devdash/index.html outright.
+#
+# This job fails the build on the two shapes that break it.
+
+name: devdash guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: /devdash must be a real file
+        run: |
+          if [ ! -f devdash/index.html ]; then
+            echo "::error file=devdash/index.html::devdash/index.html is missing."
+            echo ""
+            echo "sparcsolutions.org is served by GitHub Pages, not Netlify. Confirm:"
+            echo "  curl -sI https://sparcsolutions.org | grep server   -> GitHub.com"
+            echo "  curl -s  https://sparcsolutions.org/netlify.toml    -> 200, the file itself"
+            echo ""
+            echo "Pages cannot proxy. /devdash has to be a real file in this repo, the"
+            echo "same way /accessibility is accessibility/index.html. Restore it with:"
+            echo "  git checkout 6af0662^ -- devdash/index.html"
+            exit 1
+          fi
+
+      - name: netlify.toml must not re-add a /devdash proxy
+        run: |
+          if grep -qE '^[[:space:]]*from[[:space:]]*=[[:space:]]*"/devdash' netlify.toml; then
+            echo "::error file=netlify.toml::netlify.toml declares a /devdash redirect."
+            echo ""
+            echo "That rule is dead on the live domain. GitHub Pages answers"
+            echo "sparcsolutions.org and ignores this file entirely - it serves it as a"
+            echo "download at /netlify.toml. The rule will appear to work on"
+            echo "main--sparcwebsite.netlify.app and 404 for staff."
+            echo ""
+            echo "Keep /devdash as devdash/index.html. See the header of netlify.toml."
+            exit 1
+          fi
+
+      - name: the forwarding target must be the dashboard's own origin
+        run: |
+          if ! grep -q 'sparc-donor-ops.netlify.app/devdash/' devdash/index.html; then
+            echo "::error file=devdash/index.html::the page no longer forwards to the dashboard."
+            echo "Expected a link to https://sparc-donor-ops.netlify.app/devdash/"
+            exit 1
+          fi
+
+      - name: GitHub Pages markers must stay
+        run: |
+          missing=""
+          [ -f CNAME ] || missing="$missing CNAME"
+          [ -f .nojekyll ] || missing="$missing .nojekyll"
+          if [ -n "$missing" ]; then
+            echo "::error::missing Pages marker(s):$missing"
+            echo "These are load-bearing. GitHub Pages serves sparcsolutions.org from"
+            echo "this repo; without CNAME the custom domain is dropped and the site"
+            echo "goes down until DNS is repointed."
+            exit 1
+          fi
+          if [ "$(tr -d '[:space:]' < CNAME)" != "sparcsolutions.org" ]; then
+            echo "::error file=CNAME::CNAME must contain sparcsolutions.org"
+            exit 1
+          fi
