@@ -17,13 +17,20 @@ recorded on each Bloomerang transaction. That is what this setup establishes.
 
 ## The structure
 
-| | Name (copy exactly) |
-|---|---|
-| Fund | `Gala 2026` |
-| Campaign | `An Evening to SPARCle 2026` |
-| Appeal | `Gala 2026 - Tickets` |
-| Appeal | `Gala 2026 - Sponsorship` |
-| Appeal | `Gala 2026 - Raffle` |
+| | Name (copy exactly) | Bloomerang ID |
+|---|---|---|
+| Fund | `Gala 2026` | 18870272 |
+| Campaign | `An Evening To SPARCle 2026` | 4915201 |
+| Appeal | `Gala - Tickets` | 18871296 |
+| Appeal | `Gala - Sponsorship` | 18872320 |
+| Appeal | `Gala - Raffle` | 18873344 |
+
+**These already exist in Bloomerang.** Every name and ID above was read from the
+live API (`GET /funds`, `/campaigns`, `/appeals`) on 26 Aug 2026, not from a
+plan. Note the campaign has a capital **T** in "To", and the appeals are
+`Gala - X`, *not* `Gala 2026 - X`. Both were written the other way in an earlier
+draft of this document; creating the names as they were written there would have
+produced a second, duplicate set alongside the real ones.
 
 One fund and one campaign give a single gala total. The three appeals give the
 breakdown by revenue type.
@@ -36,10 +43,13 @@ but is a different character will not match. Copy from the table above.
 
 This part cannot be done from the repo — it is admin UI work in Bloomerang.
 
-1. **Create the fund.** Settings → Funds → New Fund. Name it `Gala 2026`.
-2. **Create the campaign.** Settings → Campaigns → New Campaign. Name it
-   `An Evening to SPARCle 2026`.
-3. **Create the three appeals** under that campaign, named exactly as above.
+1. **Confirm the fund exists.** Settings → Funds. `Gala 2026` (18870272)
+   should already be there. Only create it if it is genuinely missing.
+2. **Confirm the campaign exists.** Settings → Campaigns.
+   `An Evening To SPARCle 2026` (4915201).
+3. **Confirm the three appeals exist** under that campaign, with the exact
+   names and IDs in the table above. Do not create new ones to match a
+   different spelling — fix the spelling here instead.
 4. **Set the defaults on each form.** This is the important step — the form's
    own configuration is authoritative and is what protects you if the website's
    JavaScript is ever blocked, cached stale, or changed. In the Bloomerang form
@@ -47,9 +57,9 @@ This part cannot be done from the repo — it is admin UI work in Bloomerang.
 
    | Form (widget ID) | Used by | Fund / Campaign | Default appeal |
    |---|---|---|---|
-   | `18877440` — ticket registration | `/gala/` registration modal, `/gala-register/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Tickets` |
-   | `4923392` — sponsorship registration | `/gala/` sponsorship modal, `/gala-sponsorships/`, `/gala-sponsorships-form/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Sponsorship` |
-   | `4930560` — raffle | `/gala-raffle-form/` (iframed into `/gala/` and `/gala-sponsorships/`), `/raffle/`, `/raffle-form/` | `Gala 2026` / `An Evening to SPARCle 2026` | `Gala 2026 - Raffle` |
+   | `18877440` — ticket registration | `/gala/` registration modal, `/gala-register/` | `Gala 2026` / `An Evening To SPARCle 2026` | `Gala - Tickets` |
+   | `4923392` — sponsorship registration | `/gala/` sponsorship modal, `/gala-sponsorships/`, `/gala-sponsorships-form/` | `Gala 2026` / `An Evening To SPARCle 2026` | `Gala - Sponsorship` |
+   | `4930560` — raffle | `/gala-raffle-form/` (iframed into `/gala/` and `/gala-sponsorships/`), `/raffle/`, `/raffle-form/` | `Gala 2026` / `An Evening To SPARCle 2026` | `Gala - Raffle` |
 
    Since 2026-08 each revenue type has its own form, so each one has a single
    correct default appeal — set it on all three and the attribution holds even
