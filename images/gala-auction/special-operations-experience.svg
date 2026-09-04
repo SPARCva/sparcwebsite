@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100" role="img" aria-label="Special Operations Experience">
-  <rect width="400" height="100" fill="#002B50" rx="8"/>
-  <text x="200" y="45" text-anchor="middle" font-family="Georgia, serif" font-size="25" font-weight="bold" fill="white">Special Operations</text>
-  <text x="200" y="76" text-anchor="middle" font-family="Georgia, serif" font-size="25" font-weight="bold" fill="white">Experience</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 190" width="300" height="190" role="img" aria-label="Special Operations Experience">
+  <rect width="300" height="190" fill="#002B50"/>
+  <text x="150" y="66" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="white">Special</text>
+  <text x="150" y="106" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="white">Operations</text>
+  <text x="150" y="146" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="white">Experience</text>
 </svg>

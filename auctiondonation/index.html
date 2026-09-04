@@ -57,6 +57,14 @@
             font-size: 0.97rem;
         }
         .auction-intro p:last-child { margin-bottom: 0; }
+        .auction-intro .auction-deadline {
+            margin-top: 18px;
+            padding: 14px 18px;
+            border-left: 4px solid var(--sparc-kelly-green);
+            background: rgba(255,255,255,0.10);
+            border-radius: 0 6px 6px 0;
+            opacity: 1;
+        }
 
         /* Event facts + donor benefits, side by side on desktop */
         .auction-facts {
@@ -96,7 +104,7 @@
         .auction-form-wrapper {
             background: white;
             border-radius: 16px;
-            padding: 28px;
+            padding: 28px 28px 20px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
         }
         .auction-form-wrapper h2 {
@@ -118,12 +126,12 @@
         }
         .auction-iframe-wrapper iframe {
             width: 100%;
-            min-height: 1500px;
+            min-height: 1120px;
             border: 0;
             display: block;
         }
         .auction-form-fallback {
-            margin: 18px 0 0;
+            margin: 10px 0 0;
             font-size: 0.9rem;
             color: #555;
             text-align: center;
@@ -153,8 +161,8 @@
             background: white;
             border: 1px solid #e6e9ee;
             border-radius: 10px;
-            padding: 18px;
-            min-height: 118px;
+            padding: 14px;
+            min-height: 128px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -171,9 +179,23 @@
         }
         .auction-donor-card img {
             max-width: 100%;
-            max-height: 82px;
+            max-height: 100px;
             width: auto;
             height: auto;
+            object-fit: contain;
+        }
+        /* Logos that are essentially a name set in type read far too small when
+           boxed to 82px. Let the navy ones use the full card height. */
+        .auction-donor-card.on-navy img { max-height: 100px; }
+        .auction-donor-card.on-navy { padding: 12px; }
+        /* Our own SVG wordmarks carry the navy field themselves, so they can go
+           edge to edge — the card and the artwork are the same colour. */
+        .auction-donor-card.wordmark { padding: 0; overflow: hidden; }
+        .auction-donor-card.wordmark img {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
             object-fit: contain;
         }
         .auction-donors-note {
@@ -335,6 +357,7 @@
                     <h2>Your item helps build a rightful place in the community</h2>
                     <p>An Evening to SPARCle is SPARC's signature annual celebration, and the silent auction is one of the evening's most important sources of support. Every dollar raised goes to work in our centers &mdash; 1:1 support from trusted Direct Support Professionals, community outings, art and music therapy, and the adaptive tools that make participation possible for adults with severe and multiple disabilities.</p>
                     <p>If you own a business, represent one, or simply have an experience worth bidding on, we would be grateful for your donation. Gift certificates, tickets, getaways, services, tastings, rounds of golf, jewelry, artwork and unique experiences all bid especially well with our guests.</p>
+                    <p class="auction-deadline"><strong>Please submit your donation by Tuesday, October 20, 2026,</strong> so that we can include your business in the gala program and our printed materials.</p>
                 </div>
 
                 <div class="auction-facts">
@@ -345,6 +368,7 @@
                             <li>Saturday, November 14, 2026, 4 PM &ndash; 8 PM</li>
                             <li>Washington Dulles Airport Marriott<br>45020 Aviation Drive, Dulles, VA 20166</li>
                             <li>Benefiting SPARC &mdash; Specially Adapted Resource Centers, a 501(c)(3) nonprofit (EIN 20-5513060)</li>
+                            <li><strong>Donation deadline: Tuesday, October 20, 2026</strong></li>
                         </ul>
                     </div>
                     <div class="auction-card">
@@ -361,7 +385,7 @@
 
                 <div class="auction-form-wrapper">
                     <h2>Auction Donation Form</h2>
-                    <p>Please complete the form below to tell us about your donation. After you submit it, we will be in touch to arrange delivery or pickup and to confirm the details for your recognition.</p>
+                    <p>Please complete the form below by <strong>Tuesday, October 20, 2026</strong> to tell us about your donation. After you submit it, we will be in touch to arrange delivery or pickup and to confirm the details for your recognition.</p>
 
                     <div class="auction-iframe-wrapper">
                         <iframe
@@ -369,7 +393,7 @@
                             title="SPARC Gala Auction Donation Form"
                             loading="lazy"
                             width="100%"
-                            height="1500"
+                            height="1120"
                             frameborder="0"
                             marginheight="0"
                             marginwidth="0">Loading&hellip;</iframe>
@@ -381,7 +405,7 @@
                     </p>
                 </div>
 
-                <div class="auction-card" style="margin-top: 32px;">
+                <div class="auction-card" style="margin-top: 24px;">
                     <h3>Sending your item, logo and photos</h3>
                     <p>Please email a company logo (a .jpg for social media and a vector file for banners), photos of the donated item, and any advertising materials to <a href="mailto:debi@sparcsolutions.org">debi@sparcsolutions.org</a>.</p>
                     <p>Physical items may be mailed to SPARC at 1775 Tysons Blvd., Fifth Floor, Tysons, VA 22102, or we are glad to arrange a pickup &mdash; just tell us on the form which you prefer.</p>
@@ -400,7 +424,7 @@
                 </div>
 
                 <div class="auction-donor-grid">
-                    <div class="auction-donor-card on-navy">
+                    <div class="auction-donor-card on-navy wordmark">
                         <img src="/images/gala-auction/angie-erschens.svg" alt="Angie Erschens">
                     </div>
                     <div class="auction-donor-card">
@@ -409,7 +433,7 @@
                     <div class="auction-donor-card">
                         <img src="/images/gala-auction/capture-joy-photography.png" alt="Capture Joy Photography">
                     </div>
-                    <div class="auction-donor-card on-navy">
+                    <div class="auction-donor-card on-navy wordmark">
                         <img src="/images/gala-auction/experience-bluemont.svg" alt="Experience Bluemont — Great Country Farms, Bluemont Vineyard and Dirt Farm Brewing">
                     </div>
                     <div class="auction-donor-card">
@@ -421,16 +445,16 @@
                     <div class="auction-donor-card">
                         <img src="/images/pancake-breakfast/glory-days.svg" alt="Glory Days Grill">
                     </div>
-                    <div class="auction-donor-card on-navy">
+                    <div class="auction-donor-card on-navy wordmark">
                         <img src="/images/gala-auction/jiffy-lube-live.svg" alt="Live Nation Premium at Jiffy Lube Live">
                     </div>
-                    <div class="auction-donor-card on-navy">
+                    <div class="auction-donor-card on-navy wordmark">
                         <img src="/images/gala-auction/king-street-oyster-bar.svg" alt="King Street Oyster Bar">
                     </div>
                     <div class="auction-donor-card">
                         <img src="/images/pancake-breakfast/McCabe_s%20Printing.png" alt="McCabe's Printing">
                     </div>
-                    <div class="auction-donor-card on-navy">
+                    <div class="auction-donor-card on-navy wordmark">
                         <img src="/images/gala-auction/meadows-farms.svg" alt="Meadows Farms">
                     </div>
                     <div class="auction-donor-card on-navy">
@@ -445,7 +469,7 @@
                     <div class="auction-donor-card on-navy">
                         <img src="/images/pancake-breakfast/raspberry-golf-management.svg" alt="Raspberry Golf Management">
                     </div>
-                    <div class="auction-donor-card on-navy">
+                    <div class="auction-donor-card on-navy wordmark">
                         <img src="/images/gala-auction/special-operations-experience.svg" alt="Special Operations Experience">
                     </div>
                     <div class="auction-donor-card">
