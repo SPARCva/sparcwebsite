@@ -1185,9 +1185,40 @@
             margin: 0 0 26px; /* buttons sit above the date card */
             gap: 14px;
         }
-        /* Equal-width CTAs so the stacked pair reads as intentional */
+        /* The single ticket CTA sits directly above the date card */
         .page-gala .gala-hero-info-col .gala-btn {
             min-width: 266px;
+        }
+        /* Sponsorships + auction sit in one row beneath both hero graphics */
+        /* Same grid as .gala-hero-grid, so each button centres under the
+           graphic in its own column rather than floating in the gutter. */
+        .page-gala .gala-hero-actions {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+            gap: 56px;
+            align-items: start;
+            max-width: 1080px;
+            margin: 38px auto 0;
+        }
+        .page-gala .gala-hero-actions .gala-btn {
+            justify-self: center;
+        }
+        @media (max-width: 900px) {
+            .page-gala .gala-hero-actions {
+                grid-template-columns: 1fr;
+                gap: 18px;
+                max-width: 560px;
+            }
+        }
+        @media (max-width: 560px) {
+            .page-gala .gala-hero-actions {
+                gap: 14px;
+                margin-top: 30px;
+            }
+            .page-gala .gala-hero-actions .gala-btn {
+                width: 100%;
+                max-width: 320px;
+            }
         }
         .page-gala .gala-btn {
             border-radius: 999px;
@@ -1717,8 +1748,6 @@
               <div class="gala-hero-info-col">
                 <div class="gala-hero-buttons">
                     <a href="/gala/?tier=ticket" onclick="event.preventDefault(); selectTier('18879488');" class="btn btn-lg gala-btn gala-btn-tickets">Tickets On Sale Now</a>
-                    <a href="/gala-sponsorships/" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
-                    <a href="/auctiondonation/" class="btn btn-lg gala-btn gala-btn-sponsorships">Donate an Auction Item</a>
                 </div>
 
                 <!-- Date / venue block: live text styled after the date-venue graphic -->
@@ -1752,6 +1781,12 @@
                 <p class="gala-theme-line">Adventure Begins with Inclusion.</p>
                 -->
               </div>
+            </div>
+
+            <!-- Secondary CTAs: one row across the hero, under both graphics -->
+            <div class="gala-hero-actions">
+                <a href="/gala-sponsorships/" class="btn btn-lg gala-btn gala-btn-sponsorships">Sponsorships Available</a>
+                <a href="/auctiondonation/" class="btn btn-lg gala-btn gala-btn-sponsorships">Donate an Auction Item</a>
             </div>
         </div>
     </section>
@@ -2235,7 +2270,7 @@
                     <p>Support the evening with an in-kind gift &mdash; a donation of goods or services rather than cash.</p>
                 </div>
                 <div class="gala-inkind fade-in">
-                    <p>A gift certificate, a case of wine, a weekend stay, a round of golf, a session with your studio, tickets to something people can't buy easily &mdash; all of it bids beautifully, and all of it counts as an in-kind donation. The silent auction is one of the most important sources of support for An Evening to SPARCle, and every dollar it raises goes straight to work in our centers: 1:1 support from trusted Direct Support Professionals, community outings, art and music therapy, and the adaptive tools that make participation possible for adults with severe and multiple disabilities.</p>
+                    <p>A gift certificate, a case of wine, a weekend stay, a round of golf, a session with your studio, tickets to something people can't buy easily &mdash; all of it bids beautifully, and all of it counts as an in-kind donation. The silent auction is one of the most important sources of support for An Evening to SPARCle, and every dollar it raises goes straight to work in our centers.</p>
                     <p>Donors are recognized in the gala program, on our website and in our annual report, and across SPARC's social media &mdash; and you'll receive an in-kind gift receipt for your records. Whether you own a business, represent one, or simply have an experience worth bidding on, we would be grateful to hear from you by <strong>Tuesday, October 20, 2026</strong>.</p>
                 </div>
                 <div style="text-align:center;">
