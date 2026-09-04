@@ -187,8 +187,20 @@
         .page-gala .logo-preview { border: 1.5px solid var(--gala-gold); border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 12px; min-height: 120px; }
         .page-gala .logo-preview img { max-width: 100%; max-height: 108px; object-fit: contain; }
         .page-gala .logo-preview .lp-empty { font-size: 0.78rem; color: #b7b09a; text-align: center; }
+        .page-gala .logo-input-col { display: flex; flex-direction: column; gap: 8px; }
+        .page-gala .logo-input-col .logo-dropzone { flex: 1; }
+        .page-gala .logo-remove {
+            align-self: flex-start;
+            background: none; border: none; padding: 0; cursor: pointer;
+            font: inherit; font-size: 0.82rem; font-weight: 600;
+            color: var(--gala-green-sage); text-decoration: underline;
+        }
+        .page-gala .logo-remove:hover { color: var(--gala-green-deep); }
+        /* .consent-row and .logo-remove are toggled with the hidden attribute;
+           their display rules would otherwise win over it. */
+        .page-gala .logo-remove[hidden], .page-gala .consent-row[hidden] { display: none; }
 
-        /* ---------- Consent ---------- */
+        /* ---------- Consent (shown only once a logo is attached) ---------- */
         .page-gala .consent-row { grid-column: 1 / -1; display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: var(--gala-green-deep); line-height: 1.5; }
         .page-gala .consent-row input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--gala-green-deep); }
 
@@ -319,8 +331,8 @@
             <div class="container">
                 <div class="pledge-form-card" id="pledgeCard">
                     <span class="step-eyebrow">Step 2</span>
-                    <h2>Your Details &amp; Logo</h2>
-                    <p class="pledge-form-intro">Fields marked with <span style="color:#b23b2e">*</span> are required. A logo is optional &mdash; if you add one, it appears on the gala sponsor wall.</p>
+                    <h2>Your Details</h2>
+                    <p class="pledge-form-intro">Fields marked with <span style="color:#b23b2e">*</span> are required. Adding a logo is entirely optional &mdash; you can sponsor without one, and we&rsquo;ll list your name. If you do add a logo, it appears on the gala sponsor wall.</p>
 
                     <div class="selected-banner" id="selectedBanner" style="display:none">
                         Selected level: <strong id="selectedBannerText"></strong>
@@ -350,8 +362,9 @@
                                 <input type="tel" id="phone" name="phone" autocomplete="tel">
                             </div>
                             <div class="form-field">
-                                <label for="website">Website (for your logo link)</label>
+                                <label for="website">Website</label>
                                 <input type="url" id="website" name="website" placeholder="https://">
+                                <span class="field-hint">Links your sponsor listing &mdash; and your logo, if you add one.</span>
                             </div>
 
                             <div class="form-field">
@@ -367,16 +380,19 @@
                                 <span class="field-hint">Required to pledge. For &ldquo;Pay Now,&rdquo; your level sets the amount at checkout.</span>
                             </div>
 
-                            <!-- Logo uploader -->
+                            <!-- Logo uploader (always optional — nothing here gates the form) -->
                             <div class="logo-uploader">
-                                <div class="logo-dropzone" id="logoDropzone" role="button" tabindex="0" aria-label="Upload your logo">
-                                    <div class="lz-icon" aria-hidden="true">
-                                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <div class="logo-input-col">
+                                    <div class="logo-dropzone" id="logoDropzone" role="button" tabindex="0" aria-label="Upload your logo (optional)">
+                                        <div class="lz-icon" aria-hidden="true">
+                                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        </div>
+                                        <div class="lz-title">Upload your logo <span class="lz-optional">(optional)</span></div>
+                                        <div class="lz-sub">PNG, JPG, SVG or WEBP &bull; up to 5&nbsp;MB<br>Click or drag &amp; drop &mdash; or skip this step entirely</div>
+                                        <div class="lz-file" id="logoFileName"></div>
+                                        <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" hidden>
                                     </div>
-                                    <div class="lz-title">Upload your logo <span class="lz-optional">(optional)</span></div>
-                                    <div class="lz-sub">PNG, JPG, SVG or WEBP &bull; up to 5&nbsp;MB<br>Click or drag &amp; drop</div>
-                                    <div class="lz-file" id="logoFileName"></div>
-                                    <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" hidden>
+                                    <button type="button" class="logo-remove" id="logoRemoveBtn" hidden>Remove logo</button>
                                 </div>
                                 <div class="logo-preview" id="logoPreview">
                                     <span class="lp-empty">Logo<br>preview</span>
@@ -388,7 +404,7 @@
                                 <textarea id="message" name="message" placeholder="Anything you'd like us to know?"></textarea>
                             </div>
 
-                            <label class="consent-row">
+                            <label class="consent-row" id="consentRow" hidden>
                                 <input type="checkbox" id="consent" checked>
                                 <span>I authorize SPARC to display our organization's logo on the gala sponsor wall, website, and event materials in recognition of this sponsorship.</span>
                             </label>
@@ -400,7 +416,7 @@
                                 <div class="path-buttons">
                                     <button type="button" class="path-btn pay" id="payNowBtn">
                                         <span class="pb-title">Pay Now</span>
-                                        <span class="pb-sub">Add your logo &amp; pay securely by card</span>
+                                        <span class="pb-sub">Pay securely by card</span>
                                     </button>
                                     <button type="button" class="path-btn pledge" id="pledgeBtn">
                                         <span class="pb-title">Submit a Pledge</span>
@@ -465,6 +481,14 @@
         // Sponsorship levels — matches sparcsolutions.org/gala. radioId is the
         // Bloomerang widget radio for that level (used by "Pay Now"). A level
         // with amount 0 is a custom amount and has no Bloomerang radio.
+        //
+        // The payment panel below embeds Bloomerang widget 4923392, "An Evening
+        // to SPARCle 2026 Sponsorship Registration" — the sponsorship form, not
+        // the ticket form (18877440) or the raffle form (4930560). Its seven
+        // registration-type radios, re-verified against the live definition
+        // (POST v1/Widget/4923392?ApiKey=<public key>) on 2026-09-04, are the
+        // radioIds below, with amounts and ticket counts matching this table.
+        // Keep in sync with /gala-sponsorships/ and /js/gala-tracking.js.
         var LEVELS = [
             { name: 'Event Sponsor', amount: 25000, tickets: '10 Tickets', radioId: '4925447' },
             { name: 'Champion',      amount: 10000, tickets: '8 Tickets',  radioId: '4925446' },
@@ -545,6 +569,27 @@
         var fileInput = document.getElementById('logoInput');
         var previewBox = document.getElementById('logoPreview');
         var fileNameEl = document.getElementById('logoFileName');
+        var removeBtn = document.getElementById('logoRemoveBtn');
+        var consentRow = document.getElementById('consentRow');
+        var consentBox = document.getElementById('consent');
+
+        // The logo is optional, so the display-consent question only applies
+        // once one is actually attached — and an attached logo can be taken
+        // back off without reloading the page.
+        function setLogoAttached(attached) {
+            removeBtn.hidden = !attached;
+            consentRow.hidden = !attached;
+            if (!attached) { consentBox.checked = true; }
+        }
+
+        function clearLogo() {
+            logoDataUrl = '';
+            logoFileNameStr = '';
+            fileInput.value = '';
+            fileNameEl.textContent = '';
+            previewBox.innerHTML = '<span class="lp-empty">Logo<br>preview</span>';
+            setLogoAttached(false);
+        }
 
         dropzone.addEventListener('click', function () { fileInput.click(); });
         dropzone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
@@ -552,6 +597,7 @@
         ['dragleave', 'drop'].forEach(function (ev) { dropzone.addEventListener(ev, function (e) { e.preventDefault(); dropzone.classList.remove('dragover'); }); });
         dropzone.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) { handleFile(e.dataTransfer.files[0]); } });
         fileInput.addEventListener('change', function () { if (fileInput.files && fileInput.files[0]) { handleFile(fileInput.files[0]); } });
+        removeBtn.addEventListener('click', function (e) { e.stopPropagation(); clearLogo(); hideError(); dropzone.focus(); });
 
         function handleFile(file) {
             var okTypes = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'];
@@ -564,6 +610,7 @@
                 logoFileNameStr = file.name;
                 fileNameEl.textContent = file.name;
                 previewBox.innerHTML = '<img src="' + logoDataUrl + '" alt="Logo preview">';
+                setLogoAttached(true);
             };
             reader.readAsDataURL(file);
         }
@@ -667,9 +714,12 @@
                     amount: (lvl && lvl.amount) || undefined
                 });
             }
+            // Bloomerang form 4923392 only sells the seven set levels, so a
+            // custom amount can't be preselected — say so rather than sending
+            // someone hunting for an option that isn't there.
             document.getElementById('paymentLevelSub').textContent = (lvl && lvl.amount)
                 ? ('Your selected level (' + lvl.name + ' — $' + fmt(lvl.amount) + ') is preselected below.')
-                : 'Select your level below to complete payment.';
+                : 'The card form below offers our seven set levels. Choose the closest one and add the difference under “Additional Donation,” or use “Submit a Pledge” and we’ll invoice your custom amount.';
             panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             // Preselect the Bloomerang radio for this level (widget loads async).
@@ -747,12 +797,9 @@
 
         window.resetSponsorForm = function () {
             document.getElementById('pledgeForm').reset();
-            logoDataUrl = ''; logoFileNameStr = '';
-            fileNameEl.textContent = '';
-            previewBox.innerHTML = '<span class="lp-empty">Logo<br>preview</span>';
+            clearLogo();
             Array.prototype.forEach.call(levelsGrid.children, function (c) { c.classList.remove('selected'); });
             banner.style.display = 'none';
-            document.getElementById('consent').checked = true;
             hideError();
             document.getElementById('pledgeSuccess').style.display = 'none';
             document.getElementById('paymentPanel').style.display = 'none';
