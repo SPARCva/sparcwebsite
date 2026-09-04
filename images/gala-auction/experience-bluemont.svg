@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100" role="img" aria-label="Experience Bluemont — Great Country Farms, Bluemont Vineyard and Dirt Farm Brewing">
+  <rect width="400" height="100" fill="#002B50" rx="8"/>
+  <text x="200" y="45" text-anchor="middle" font-family="Georgia, serif" font-size="27" font-weight="bold" fill="white">Experience Bluemont</text>
+  <text x="200" y="66" text-anchor="middle" font-family="'Open Sans', Arial, sans-serif" font-size="11" fill="#9fc4e8">GREAT COUNTRY FARMS &#183; BLUEMONT VINEYARD</text>
+  <text x="200" y="82" text-anchor="middle" font-family="'Open Sans', Arial, sans-serif" font-size="11" fill="#9fc4e8">DIRT FARM BREWING</text>
+</svg>
